@@ -358,55 +358,125 @@ public class LicenseController {
 //		    }
 //		 
 //			-------------------------------------------licensefile--------------------------------------------
-			@PostMapping("/uploadfile")
-		    public ResponseEntity<License> upload(@RequestParam("audioFile") MultipartFile File,@RequestParam("lastModifiedDate") String lastModifiedDate)
-		      {
-		        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			// @PostMapping("/uploadfile")
+		 //    public ResponseEntity<License> upload(@RequestParam("audioFile") MultipartFile File,@RequestParam("lastModifiedDate") String lastModifiedDate)
+		 //      {
+		 //        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				
-		        try {
-		            // Save audio with file using the service 
-		        	License savedAudio = this.saveFile(File);
-		            DocumentBuilder builder = factory.newDocumentBuilder();
+		 //        try {
+		 //            // Save audio with file using the service 
+		 //        	License savedAudio = this.saveFile(File);
+		 //            DocumentBuilder builder = factory.newDocumentBuilder();
 		    		
 		    		
-					Document document = builder.parse(new File("Audio/"+file));
+			// 		Document document = builder.parse(new File("Audio/"+file));
 					
-					Element rootElement=document.getDocumentElement();
-					System.out.println("Root Element ="+rootElement.getNodeName());
-					 NodeList personList = rootElement.getElementsByTagName("data");
-			            for (int i = 0; i < personList.getLength(); i++) {
-			                Element person = (Element) personList.item(i);
-			                // Get the <name> element inside each <person> element
-			                Element product = (Element) person.getElementsByTagName("product_name").item(0);
-			                Element company = (Element) person.getElementsByTagName("company_name").item(0);
-			                Element version_name = (Element) person.getElementsByTagName("version").item(0);
-			                Element key_name = (Element) person.getElementsByTagName("key").item(0);
-			                Element type_name = (Element) person.getElementsByTagName("type").item(0);
-			                Element courses = (Element) person.getElementsByTagName("Video").item(0);
-			                Element validity_date = (Element) person.getElementsByTagName("validity").item(0);
-			                // Get the text content of the <name> element
-			                String product_name = product.getTextContent();
-			                String company_name = company.getTextContent();
-			                String version = version_name.getTextContent();
-			                String key = key_name.getTextContent();
-			                String type = type_name.getTextContent();
-			                String course = courses.getTextContent();
-			                String validity = validity_date.getTextContent();
-			                this.licensedetails(product_name, company_name, key, validity,course,type,file);
-			                System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-			                System.out.println("product_name:" + product_name+" company_name: "+company_name+" version: "+version+" key: "+key+" type: "+type+" validity: "+validity+"Video"+course+"lastModifiedDate"+lastModifiedDate);
-			                System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+			// 		Element rootElement=document.getDocumentElement();
+			// 		System.out.println("Root Element ="+rootElement.getNodeName());
+			// 		 NodeList personList = rootElement.getElementsByTagName("data");
+			//             for (int i = 0; i < personList.getLength(); i++) {
+			//                 Element person = (Element) personList.item(i);
+			//                 // Get the <name> element inside each <person> element
+			//                 Element product = (Element) person.getElementsByTagName("product_name").item(0);
+			//                 Element company = (Element) person.getElementsByTagName("company_name").item(0);
+			//                 Element version_name = (Element) person.getElementsByTagName("version").item(0);
+			//                 Element key_name = (Element) person.getElementsByTagName("key").item(0);
+			//                 Element type_name = (Element) person.getElementsByTagName("type").item(0);
+			//                 Element courses = (Element) person.getElementsByTagName("Video").item(0);
+			//                 Element validity_date = (Element) person.getElementsByTagName("validity").item(0);
+			//                 // Get the text content of the <name> element
+			//                 String product_name = product.getTextContent();
+			//                 String company_name = company.getTextContent();
+			//                 String version = version_name.getTextContent();
+			//                 String key = key_name.getTextContent();
+			//                 String type = type_name.getTextContent();
+			//                 String course = courses.getTextContent();
+			//                 String validity = validity_date.getTextContent();
+			//                 this.licensedetails(product_name, company_name, key, validity,course,type,file);
+			//                 System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+			//                 System.out.println("product_name:" + product_name+" company_name: "+company_name+" version: "+version+" key: "+key+" type: "+type+" validity: "+validity+"Video"+course+"lastModifiedDate"+lastModifiedDate);
+			//                 System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 			                
-			            }
+			//             }
 	
 		               
 			            
+		 //            return ResponseEntity.ok().body(savedAudio);
+		 //        } catch (ParserConfigurationException |SAXException|IOException  e) {
+		 //            e.printStackTrace();
+		 //            return ResponseEntity.badRequest().build();
+		 //        }
+		 //    }
+	 @PostMapping("/uploadfile")
+		    public ResponseEntity<License> upload(@RequestParam("audioFile") MultipartFile File, @RequestParam("lastModifiedDate") String lastModifiedDate) {
+		        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		        
+		        try {
+		            // Save audio with file using the service 
+		            License savedAudio = this.saveFile(File);
+		            DocumentBuilder builder = factory.newDocumentBuilder();
+		            
+		            // Define the date-time formatter for the custom format
+		            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy, h:mm:ss a");
+
+		            // Parse the string to a LocalDateTime
+		            LocalDateTime localDateTime;
+		            try {
+		                localDateTime = LocalDateTime.parse(lastModifiedDate, formatter);
+		            } catch (DateTimeParseException e) {
+		                System.err.println("Error parsing date string: " + e.getMessage());
+		                return ResponseEntity.badRequest().build();
+		            }
+
+		            // Convert LocalDateTime to Instant
+		            Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+
+		            // Create a FileTime from the Instant
+		            FileTime newModifiedTime = FileTime.from(instant);
+
+		            Path filePath = Paths.get("Audio/" + File.getOriginalFilename());
+		            Files.setLastModifiedTime(filePath, newModifiedTime);
+
+		            Document document = builder.parse(new File("Audio/" + File.getOriginalFilename()));
+		            
+		            Element rootElement = document.getDocumentElement();
+		            System.out.println("Root Element = " + rootElement.getNodeName());
+		            NodeList personList = rootElement.getElementsByTagName("data");
+		            for (int i = 0; i < personList.getLength(); i++) {
+		                Element person = (Element) personList.item(i);
+		                Element product = (Element) person.getElementsByTagName("product_name").item(0);
+		                Element company = (Element) person.getElementsByTagName("company_name").item(0);
+		                Element versionName = (Element) person.getElementsByTagName("version").item(0);
+		                Element keyName = (Element) person.getElementsByTagName("key").item(0);
+		                Element typeName = (Element) person.getElementsByTagName("type").item(0);
+		                Element courses = (Element) person.getElementsByTagName("Video").item(0);
+		                Element validityDate = (Element) person.getElementsByTagName("validity").item(0);
+
+		                String productName = product.getTextContent();
+		                String companyName = company.getTextContent();
+		                String version = versionName.getTextContent();
+		                String key = keyName.getTextContent();
+		                String type = typeName.getTextContent();
+		                String course = courses.getTextContent();
+		                String validity = validityDate.getTextContent();
+		                
+		                
+		                this.licensedetails(productName, companyName, key, validity,course,type,file);
+
+//		                this.licensedetails(productName, companyName, key, validity, course, type);
+//		                this.licensedetails(productName, companyName, key, validity,course,type,file);
+		                System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		                System.out.println("product_name: " + productName + " company_name: " + companyName + " version: " + version + " key: " + key + " type: " + type + " validity: " + validity + " Video: " + course + " lastModifiedDate: " + lastModifiedDate);
+		                System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		            }
+		            
 		            return ResponseEntity.ok().body(savedAudio);
-		        } catch (ParserConfigurationException |SAXException|IOException  e) {
+		        } catch (ParserConfigurationException | SAXException | IOException e) {
 		            e.printStackTrace();
 		            return ResponseEntity.badRequest().build();
 		        }
 		    }
+
 			
 			 public  License saveFile(MultipartFile File) throws IOException {
 			        // Save the audio file to the server and get the file path
