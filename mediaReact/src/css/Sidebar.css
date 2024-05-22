@@ -1,0 +1,80 @@
+/* Sidebar.css */
+@media (max-width: 768px) {
+
+   *{
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .navbar-nav.sidebar {
+      position: fixed;
+      height: 100%;
+      top: 0;
+      left: -250px; /* Hide the sidebar by default */
+      overflow-x: hidden;
+      transition: all 0.3s;
+      z-index: 999;
+    }
+
+
+  .container-fluid {
+      padding:20px !important;
+    }
+    .navbar{
+      position: relative;
+    }
+
+  
+    .navbar-nav.sidebar.active {
+      left: 0; /* Show the sidebar when active */
+    }
+   .samp{
+    margin-left: 0 !important;
+   }
+}
+.container2{
+  height: 100vh;
+  margin-bottom: 60px;
+  margin-left: 60px;
+  margin-right: 60px;
+  border-color: #DFDAD2;
+  border-style: solid;
+  border-width: 3px;
+  border-radius: 8px;
+  box-shadow: 5px 10px #949391;
+  /* padding-bottom: 300px; */
+  
+  overflow-x: auto;overflow-y: auto;
+}
+.row{
+padding: 40px;
+}
+.temp{
+  display: flex;
+  flex-wrap: wrap;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-bottom: 5px;
+
+}
+/* Style for sidebar */
+#sidebar {
+  width: 200px;
+  height: 100vh;
+  background-color: #333;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: -200px; /* Initially hidden */
+  transition: left 0.3s ease;
+}
+
+#sidebar.show {
+  left: 0; /* Show sidebar */
+}
+
+main {
+  margin-left: 200px; /* Adjust main content when sidebar is shown */
+}
+   
+
