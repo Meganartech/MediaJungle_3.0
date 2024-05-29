@@ -17,6 +17,7 @@ const AddAudio = () => {
   const [categoryId, setCategoryId] = useState('');
   const [audioFile, setAudioFile] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
+  const [selected, setSelected] = useState(false); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +47,7 @@ const AddAudio = () => {
         category: categoryId,
         audioFile: audioFile,
         thumbnail: thumbnail,
+        paid : selected ? 1:0,
       };
       console.log(audioData)
   
@@ -99,6 +101,10 @@ const AddAudio = () => {
     setErrors(errors);
     return isValid;
   };
+
+  const handleRadioClick = () => {
+    setSelected(!selected); // Toggle the value of 'selected'
+  };
   
   return (
     <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
@@ -141,6 +147,31 @@ const AddAudio = () => {
                   {errors.categoryId && <div className="error-message">{errors.categoryId}</div>}
                   <br />
                   <br />
+
+                  
+<div className='modal-body text-center'>
+                          <label className='modal-title modal-header' style={{fontFamily:'Poppins'}}>
+
+                            Paid:
+                            <div 
+                              className={`radio-button${selected ? ' selected' : ''}`} // Apply 'selected' class if radio button is selected
+                              onClick={handleRadioClick} // Handle click event
+                            >
+                              {/* Display custom radio button */}
+                              <div className="radio-circle" style={{margin:'0 0 0 -1800px'}}>
+                              <input
+                                  type="radio"
+                                  value="paid"
+                                  checked={selected}
+                                  
+                              />
+                              </div>
+                            </div>
+                          </label>
+                        </div>
+
+
+
                   <h5 className='modal-title modal-header' id='exampleModalLongTitle' style={{fontFamily:'Poppins'}}>
                     Add New Audio File
                   </h5>

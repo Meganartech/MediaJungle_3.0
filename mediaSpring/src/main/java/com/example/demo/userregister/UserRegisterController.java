@@ -1,5 +1,6 @@
 package com.example.demo.userregister;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,14 +9,21 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.compresser.ImageUtils;
+
 
 
 
@@ -27,6 +35,10 @@ public class UserRegisterController {
     
     @Autowired
     private UserRegisterRepository userregisterrepository;
+    
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
+
     
     @Autowired
     private JwtUtil jwtUtil; // Autowire JwtUtil
@@ -57,52 +69,53 @@ public class UserRegisterController {
             return ResponseEntity.notFound().build();
         }
     }
-
+  
     
     @PostMapping("/login")
-    public ResponseEntity<?> login (@RequestBody Map<String,String> loginRequest){
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         
-        String username = loginRequest.get("email");
+        String email = loginRequest.get("email");
         String password = loginRequest.get("password");
         
-        UserRegister user = userregisterrepository.findByEmail(username);
+        Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
         
-        if (user == null) {
-             // User with the provided username doesn't exist
-             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\": \"User not found\"}");
-         }
+        if (!userOptional.isPresent()) {
+            // User with the provided email doesn't exist
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\": \"User not found\"}");
+        }
 
-         // Check if the password matches (you should use proper password hashing)
-         if (!user.getPassword().equals(password)) {
-             // Incorrect password
-             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Incorrect password\"}");
-         }
+        UserRegister user = userOptional.get();
 
-         // Generate JWT token
-         String jwtToken = jwtUtil.generateToken(username); // Use jwtUtil
-         Map<String, Object> responseBody = new HashMap<>();
-         responseBody.put("token", jwtToken);
-         responseBody.put("message", "Login successful");
-         String name=user.getUsername();
-         String email=user.getEmail();
-         String pword=user.getPassword();
-         long userId = user.getId();
-         responseBody.put("name", name);
-         responseBody.put("email", email);
-         responseBody.put("password",pword);
-          
-         responseBody.put("userId",userId);
+        // Check if the password matches (you should use proper password hashing)
+        if (!user.getPassword().equals(password)) {
+            // Incorrect password
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Incorrect password\"}");
+        }
+
+        // Generate JWT token
+        String jwtToken = jwtUtil.generateToken(email); // Use jwtUtil
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("token", jwtToken);
+        responseBody.put("message", "Login successful");
+        String name=user.getUsername();
+      String Email=user.getEmail();
+      String pword=user.getPassword();
+      long userId = user.getId();
+        responseBody.put("name", user.getUsername());
+        responseBody.put("email", user.getEmail());
+        responseBody.put("password", user.getPassword()); // Consider removing password from the response for security reasons
+        responseBody.put("userId", user.getId());
         
         System.out.println(name);
-        System.out.println(jwtToken);
-        System.out.println(userId);
-        System.out.println(email);
-        System.out.println(pword);
+      System.out.println(jwtToken);
+      System.out.println(userId);
+      System.out.println(Email);
+      System.out.println(pword);
         
-         // Successful login
-         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        // Successful login
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
-    
+
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
         // Extract the token from the Authorization header
@@ -113,4 +126,51 @@ public class UserRegisterController {
         // Respond with a success message
         return ResponseEntity.ok().body("Logged out successfully");
     }
+    
+//    @PostMapping("/forgetPassword")
+//    public ResponseEntity<?> forgetPassword( String email) {
+//        // Finding the user by email
+//        Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
+//
+//        // If the user doesn't exist, return 404 Not Found
+//        if (userOptional.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        } else {
+//            // If the user exists, return 200 OK
+//            return ResponseEntity.ok().build();
+//        }
+//    }
+
+    @PostMapping("/forgetPassword")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> loginRequest) {
+        // Finding the user by email
+    	
+    	String email = loginRequest.get("email");
+        String password = loginRequest.get("password");
+        String confirmpassword = loginRequest.get("confirmPassword");
+        Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
+
+        // If the user doesn't exist, return 404 Not Found
+        if (!userOptional.isPresent()) {
+            System.out.println("User not found: " + email);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        UserRegister user = userOptional.get();
+
+        // If passwords do not match, return 400 Bad Request
+        if (!password.equals(confirmpassword)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
+        }
+
+        // Assuming you have a method to hash the password
+        user.setPassword(password);
+        user.setConfirmPassword(confirmpassword);
+        // Do not set confirmPassword in the entity, it's used only for validation
+
+        userregisterrepository.save(user);
+
+        return ResponseEntity.ok("Password reset successfully");
+    }
+
 }

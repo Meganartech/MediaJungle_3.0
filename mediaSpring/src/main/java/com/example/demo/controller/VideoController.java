@@ -159,14 +159,14 @@ public class VideoController {
 			@GetMapping(value = "/play/{id}")
 			 private ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
 		        try {
-//		            Optional<videoLessons> optionalLesson = lessonrepo.findById(lessId);
+
 		            Optional<VideoDescription> optionalLesson = videodescriptionRepository.findById(id);
 		            if (!optionalLesson.isPresent()) {
 		                return ResponseEntity.notFound().build();
 		            }
 		            
 		            
-//		            videoLessons lesson = optionalLesson.get();
+
 		            String filename =optionalLesson.get().getName();
 		   
 		            if (filename != null) {

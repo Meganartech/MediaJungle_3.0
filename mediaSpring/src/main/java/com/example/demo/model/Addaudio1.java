@@ -1,6 +1,12 @@
 package com.example.demo.model;
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.userregister.UserRegister;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -25,8 +32,12 @@ public class Addaudio1 {
 	@JoinColumn(name = "category_id")
 	private AddNewCategories category;
 	
+	private String songname ;
+	
+	private String musicdirector;
+	
 	@Transient
-	 private MultipartFile audioFile;
+	private MultipartFile audioFile;
 	
 	private String  fileName;
 	
@@ -36,20 +47,27 @@ public class Addaudio1 {
 	
 	private boolean paid;
 
+	@ManyToMany(mappedBy = "favoriteAudios")
+	@JsonBackReference
+	private List<UserRegister> users;
+	
 	public Addaudio1() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Addaudio1(long id, AddNewCategories category, MultipartFile audioFile, String fileName, byte[] thumbnail,
-			boolean paid) {
+	public Addaudio1(long id, AddNewCategories category, String songname, String musicdirector, MultipartFile audioFile,
+			String fileName, byte[] thumbnail, boolean paid, List<UserRegister> users) {
 		super();
 		this.id = id;
 		this.category = category;
+		this.songname = songname;
+		this.musicdirector = musicdirector;
 		this.audioFile = audioFile;
 		this.fileName = fileName;
 		this.thumbnail = thumbnail;
 		this.paid = paid;
+		this.users = users;
 	}
 
 	public long getId() {
@@ -66,6 +84,22 @@ public class Addaudio1 {
 
 	public void setCategory(AddNewCategories category) {
 		this.category = category;
+	}
+
+	public String getSongname() {
+		return songname;
+	}
+
+	public void setSongname(String songname) {
+		this.songname = songname;
+	}
+
+	public String getMusicdirector() {
+		return musicdirector;
+	}
+
+	public void setMusicdirector(String musicdirector) {
+		this.musicdirector = musicdirector;
 	}
 
 	public MultipartFile getAudioFile() {
@@ -99,9 +133,14 @@ public class Addaudio1 {
 	public void setPaid(boolean paid) {
 		this.paid = paid;
 	}
+
+	public List<UserRegister> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<UserRegister> users) {
+		this.users = users;
+	}
+
 	
-	
-
-
-
 }	
