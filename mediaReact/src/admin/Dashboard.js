@@ -87,6 +87,8 @@ const Dashboard = () => {
       });
   }, []);
 
+  const paidVideos = all?.filter(video => video.paid === true) || [];
+
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAll`)
       .then(response => {
@@ -102,6 +104,8 @@ const Dashboard = () => {
         console.error('Error fetching data:', error);
       });
   }, []);
+
+  const paidAudios = getall?.filter(audio => audio.paid === true) || [];
 
    useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllUsers`)
@@ -178,6 +182,27 @@ const Dashboard = () => {
               </div>
             </div>
 
+            <div className="col-xl-3 col-md-6">
+              <div className="card bg-warning text-white mb-4">
+                <div className="card-body">
+                  Number of Paid Videos
+                  <span style={{ fontSize: "22px" }}> </span>
+                </div>
+                <div className="card-footer d-flex align-items-center justify-content-between">
+                
+                  
+                    <span className='font-bold text-black'>{paidVideos.length}</span>
+                  
+                  <div className="small text-black">
+                  <Link to="/admin/Video" className="small text-black">
+                    <i className="fas fa-angle-right"></i>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
 
       <div className="col-xl-3 col-md-6">
         <div className="card bg-success text-white mb-4">
@@ -197,6 +222,27 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      <div className="col-xl-3 col-md-6">
+        <div className="card bg-success text-white mb-4">
+          <div className="card-body">
+            Number of Paid Audios
+            <span style={{ fontSize: "22px" }}> </span>
+          </div>
+          <div className="card-footer d-flex align-items-center justify-content-between">
+            
+            <span className='font-bold text-black'>{paidAudios.length}</span>
+            
+            <div className="small text-black">
+            <Link to="/admin/ListAudio" className="small text-black">
+              <i className="fas fa-angle-right"></i>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
       <div className="col-xl-3 col-md-6">
         <div className="card bg-danger text-white mb-4">
           <div className="card-body">

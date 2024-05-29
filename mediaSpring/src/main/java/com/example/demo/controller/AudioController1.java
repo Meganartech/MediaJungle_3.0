@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,6 +19,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -45,6 +47,8 @@ import com.example.demo.model.Addaudio1;
 import com.example.demo.repository.AddAudioRepository;
 import com.example.demo.repository.AddNewCategoriesRepository;
 import com.example.demo.service.AudioService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @CrossOrigin(origins = {"http://localhost:3000","http://localhost:3001"})
 @RestController
@@ -138,29 +142,103 @@ public class AudioController1 {
 //    }
 	
 	@GetMapping("/{filename}/file")
-    public ResponseEntity<Resource> getAudioFi(@PathVariable String filename) {
-        Path filePath = Paths.get(audioStorageDirectory,filename);
+	public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
+	    if (filename != null) {
+	        Path filePath = Paths.get(audioStorageDirectory, filename);
+	        System.out.println("filePath" + filePath);
 
-        try {
-            // Check if the file exists
-            if (filePath.toFile().exists() && filePath.toFile().isFile()) {
-                // Return the audio file as a resource
-                Resource resource = new UrlResource(filePath.toUri());
-                if (resource.exists() && resource.isReadable()) {
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
-                    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-                    return ResponseEntity.ok()
-                            .headers(headers)
-                            .body(resource);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	        try {
+	            // Check if the file exists
+	            if (filePath.toFile().exists() && filePath.toFile().isFile()) {
+	                // Return the audio file as a resource
+	                Resource resource = new UrlResource(filePath.toUri());
+	                if (resource.exists() && resource.isReadable()) {
+	                    HttpHeaders headers = new HttpHeaders();
+	                    String mimeType = Files.probeContentType(filePath);
+	                    if (mimeType == null) {
+	                        mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+	                    }
+	                    headers.add(HttpHeaders.CONTENT_TYPE, mimeType);
 
-        return ResponseEntity.notFound().build();
-    }
+	                    // Set Content-Disposition to "inline" to stream the video inline
+	                    headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline");
+
+	                    // Define the initial chunk size (5 MB)
+	                    final long INITIAL_CHUNK_SIZE = 2 * 1024 * 1024; // 5 MB
+	                    long fileSize = Files.size(filePath);
+
+	                    // Get the Range header from the request
+	                    String rangeHeader = request.getHeader(HttpHeaders.RANGE);
+
+	                    if (rangeHeader != null) {
+	                        // Handle range request from the client
+	                        String[] ranges = rangeHeader.replace("bytes=", "").split("-");
+	                        long rangeStart = Long.parseLong(ranges[0]);
+	                        long rangeEnd = ranges.length > 1 ? Long.parseLong(ranges[1]) : fileSize - 1;
+
+	                        // Calculate the content length
+	                        long contentLength = rangeEnd - rangeStart + 1;
+
+	                        System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
+	                        // Create a RandomAccessFile to read the specified range
+	                        try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
+	                            file.seek(rangeStart);
+	                            byte[] buffer = new byte[(int) contentLength];
+	                            file.readFully(buffer);
+
+	                            // Create a ByteArrayResource to hold the requested range of bytes
+	                            ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+
+	                            // Set the Content-Range header
+	                            headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
+
+	                            // Return a 206 Partial Content response
+	                            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+	                                    .headers(headers)
+	                                    .contentLength(contentLength)
+	                                    .body(byteArrayResource);
+	                        }
+	                    } else {
+	                        // No range header, send the initial 5 MB chunk
+	                        long rangeStart = 0;
+	                        long rangeEnd = Math.min(INITIAL_CHUNK_SIZE - 1, fileSize - 1);
+	                        long contentLength = rangeEnd - rangeStart + 1;
+	                        System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
+
+	                        // Create a RandomAccessFile to read the specified range
+	                        try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
+	                            file.seek(rangeStart);
+	                            byte[] buffer = new byte[(int) contentLength];
+	                            file.readFully(buffer);
+
+	                            // Create a ByteArrayResource to hold the requested range of bytes
+	                            ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+
+	                            // Set the Content-Range header
+	                            headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
+
+	                            // Return a 206 Partial Content response
+	                            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+	                                    .headers(headers)
+	                                    .contentLength(contentLength)
+	                                    .body(byteArrayResource);
+	                        }
+	                    }
+	                }
+	            } else {
+	                System.out.println("file is null");
+	            }
+	        } catch (Exception e) {
+	            // Handle exceptions
+	            e.printStackTrace();
+	        }
+
+	        // Return a 404 Not Found response if the file does not exist
+	        return ResponseEntity.notFound().build();
+	    } else {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	    }
+	}
 	
 
  

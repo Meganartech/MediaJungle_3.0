@@ -92,6 +92,8 @@ const ListAudio = () => {
                         <th>S.No</th>
                         <th>songname</th>
                         <th>category</th>
+                        <th>Paid</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -100,6 +102,7 @@ const ListAudio = () => {
                           <td>{index + 1}</td>
                           <td>{audio.fileName.replace(/^.*[\\\/]/, '').replace(/^.*_/, '').replace(/\.mp3$/, '')}</td>
                           <td>{audio.category.categories}</td>
+                          <td>{audio.paid===true?1:0}</td>
                           <td>
                             <button onClick={() => handlEdit(audio.id)}>
                               <i className="fas fa-edit" aria-hidden="true"></i>
