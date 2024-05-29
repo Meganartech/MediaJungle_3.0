@@ -59,7 +59,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v2/")
-public class LicenseSamp {
+public class LicenseController {
 	
 	
 	 @Autowired
@@ -82,7 +82,7 @@ public class LicenseSamp {
 	 private String valu1;
 	 private String file;
 	 
-	 private  Logger logger = LoggerFactory.getLogger(LicenseSamp.class);
+	 private  Logger logger = LoggerFactory.getLogger(LicenseController.class);
 
 		@GetMapping("/GetAllUser")
 		public ResponseEntity<UserListWithStatus> getAllUser() {
