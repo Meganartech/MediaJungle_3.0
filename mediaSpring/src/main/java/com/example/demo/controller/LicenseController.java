@@ -59,7 +59,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v2/")
-public class LicenseController {
+public class LicenseSamp {
 	
 	
 	 @Autowired
@@ -82,7 +82,7 @@ public class LicenseController {
 	 private String valu1;
 	 private String file;
 	 
-	 private  Logger logger = LoggerFactory.getLogger(LicenseController.class);
+	 private  Logger logger = LoggerFactory.getLogger(LicenseSamp.class);
 
 		@GetMapping("/GetAllUser")
 		public ResponseEntity<UserListWithStatus> getAllUser() {
@@ -136,10 +136,10 @@ public class LicenseController {
 		            	  StartDate=dateFormat.format(license.getStart_date());
 		            	  EndDate=dateFormat.format(license.getEnd_date());
 		  			}
-		              if(StartDate.equals(EndDate)) {
-		            	  StartDate="";
-		            	  EndDate="";
-		              }
+//		              if(StartDate.equals(EndDate)) {
+//		            	  StartDate="";
+//		            	  EndDate="";
+//		              }
 		              
 		              data1.put("Contact",Contact);
 	    		        data1.put("Email", Email);
@@ -202,12 +202,12 @@ public class LicenseController {
 		    return new ResponseEntity<>(200, HttpStatus.OK);
 			}
 			
-			else if(!(licenseList.isEmpty())&&courseString.isEmpty()) {
-				logger.info("-------------------------------------------------------");
-				logger.info("unlimited course");
-				logger.info("-------------------------------------------------------");
-			    return new ResponseEntity<>(200, HttpStatus.OK);
-			}
+//			else if(!(licenseList.isEmpty())&&courseString.isEmpty()) {
+//				logger.info("-------------------------------------------------------");
+//				logger.info("unlimited course");
+//				logger.info("-------------------------------------------------------");
+//			    return new ResponseEntity<>(200, HttpStatus.OK);
+//			}
 			else
 			{
 				logger.info("-------------------------------------------------------");
@@ -248,13 +248,8 @@ public class LicenseController {
 							Document document = builder.parse(new File("Audio/"+localFile));
 							 Element rootElement=document.getDocumentElement();
 							 NodeList personList = rootElement.getElementsByTagName("data");
-							File file = new File("Audio/"+localFile);
-							long lastModified = file.lastModified();
-							System.out.println("----------------------------------------------------------------");
-							System.out.println("Last modified string"+lastModified);
-							 Date date = new Date(lastModified);
-							 System.out.println("Last modified date"+date);
-							 SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+//							File file = new File("Audio/"+localFile);
+//							 SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
 							 Element person4 = (Element) personList.item(0);
 							  Element trai = (Element) person4.getElementsByTagName("Video").item(0);
 				              Element stud = (Element) person4.getElementsByTagName("type").item(0);
@@ -265,18 +260,18 @@ public class LicenseController {
 				              System.out.println("No of trainer"+tra);
 				              System.out.println("No of student"+stude);
 				              System.out.println("No of student"+val.isEmpty());
-					         String formattedDate = formatter.format(date)+tra+stude+val;
+					         String formattedDate =tra+stude+val;
 					         System.out.println("Last modified date complete"+formattedDate);
 				             System.out.println("----------------------------------------------------------------");
 				             System.out.println(Jwts.builder()
 				             .setSubject(formattedDate)
 					            .signWith(SignatureAlgorithm.HS256, "yourSecretKeyStringWithAtLeast256BitsLength")
 					            .compact());
-				             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				             Document doc = dBuilder.parse(file);
-				             Element root = doc.getDocumentElement();
-				             Element validity2 = doc.createElement("key");
+//				             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+//				             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+//				             Document doc = dBuilder.parse(file);
+//				             Element root = doc.getDocumentElement();
+//				             Element validity2 = doc.createElement("key");
 				             this.valu=(Jwts.builder()
 				 	                .setSubject(formattedDate)
 				 		            .signWith(SignatureAlgorithm.HS256, "yourSecretKeyStringWithAtLeast256BitsLength")
@@ -329,13 +324,13 @@ public class LicenseController {
 //		    	            System.out.println("license"+license.getEnd_date()+"       "+timestamp+"          "+ !(license.getEnd_date().equals(timestamp)));
 		    	            break; 
 		    	        }
-		    	        	else if((val.isEmpty()) && (valu.equals(valu1))) {
-			    	        		valid=true;
-				    	        	logger.info("License is valid");
-				    	        	logger.info("License validy is unlimited");
-				    	        	
-			    	        	
-			    	        	}
+//		    	        	else if((val.isEmpty()) && (valu.equals(valu1))) {
+//			    	        		valid=true;
+//				    	        	logger.info("License is valid");
+//				    	        	logger.info("License validy is unlimited");
+//				    	        	
+//			    	        	
+//			    	        	}
 		    	        else
 		    	        {
 		    	        	logger.info("License is InValid");
@@ -344,7 +339,7 @@ public class LicenseController {
 		    	        	valid=false;
 		    	        	logger.info("License is Modified");
 		    	        			}
-		    	        	else if((license.getEnd_date().equals(timestamp))&&  !(val.isEmpty())) {
+		    	        	else if(license.getEnd_date().equals(timestamp)) {
 		    	        		valid=false;
 			    	        	logger.info("License is Expired");
 		    	        	
@@ -426,25 +421,21 @@ public class LicenseController {
 		            DocumentBuilder builder = factory.newDocumentBuilder();
 		            
 		            // Define the date-time formatter for the custom format
-		            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy, h:mm:ss a");
+//		            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy, h:mm:ss a");
 
 		            // Parse the string to a LocalDateTime
-		            LocalDateTime localDateTime;
-		            try {
-		                localDateTime = LocalDateTime.parse(lastModifiedDate, formatter);
-		            } catch (DateTimeParseException e) {
-		                System.err.println("Error parsing date string: " + e.getMessage());
-		                return ResponseEntity.badRequest().build();
-		            }
+//		            LocalDateTime localDateTime;
+//		           
+//		                localDateTime = LocalDateTime.parse(lastModifiedDate, formatter);
 
 		            // Convert LocalDateTime to Instant
-		            Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+//		            Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
 
 		            // Create a FileTime from the Instant
-		            FileTime newModifiedTime = FileTime.from(instant);
+//		            FileTime newModifiedTime = FileTime.from(instant);
 
-		            Path filePath = Paths.get("Audio/" + File.getOriginalFilename());
-		            Files.setLastModifiedTime(filePath, newModifiedTime);
+//		            Path filePath = Paths.get("Audio/" + File.getOriginalFilename());
+//		            Files.setLastModifiedTime(filePath, newModifiedTime);
 
 		            Document document = builder.parse(new File("Audio/" + File.getOriginalFilename()));
 		            
@@ -480,8 +471,9 @@ public class LicenseController {
 		            }
 		            
 		            return ResponseEntity.ok().body(savedAudio);
-		        } catch (ParserConfigurationException | SAXException | IOException e) {
+		        } catch (ParserConfigurationException | SAXException |DateTimeParseException| IOException e) {
 		            e.printStackTrace();
+		            System.err.println("Error parsing date string:"+e.getMessage());
 		            return ResponseEntity.badRequest().build();
 		        }
 		    }
