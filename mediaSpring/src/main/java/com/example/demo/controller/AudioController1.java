@@ -304,22 +304,7 @@ public class AudioController1 {
         }
     }
     
-   
-    
-    
-    @GetMapping("/{fileName}")
-    public ResponseEntity<Resource> serveAudioFile(@PathVariable String fileName) throws IOException {
-        Path filePath = Paths.get(audioStorageDirectory).resolve(fileName);
-        Resource resource = new UrlResource(filePath.toUri());
 
-        if (resource.exists() && resource.isReadable()) {
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
-                    .body(resource);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
     
     @GetMapping("/GetAll")
 	public ResponseEntity<List<Addaudio1>> getAllUser() {
@@ -344,6 +329,7 @@ public class AudioController1 {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+    
     @GetMapping("/{id}/filename")
     public ResponseEntity<String> getAudioFilename(@PathVariable Long id) {
         try {
@@ -354,29 +340,7 @@ public class AudioController1 {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    
-
-    
-    @GetMapping("/thumbnail/{id}")
-    public ResponseEntity<byte[]> getThumbnailImage(@PathVariable Long id) {
-        try {
-            byte[] thumbnailBytes = audioservice.getThumbnailBytes(id);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON); // Adjust the media type based on your image format
-
-            // In a real application, you might want to set other headers like Content-Disposition
-
-            return new ResponseEntity<>(thumbnailBytes, headers, HttpStatus.OK);
-        } catch (IOException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    
-    
-
-    
+        
     @GetMapping("/GetAllThumbnail")
     public ResponseEntity<List<byte[]>> getAllThumbnail() {
         List<Addaudio1> getAudio = audiorepository.findAll();

@@ -7,18 +7,7 @@ import axios from 'axios';
 
 
 const Setting = () => {
-
   
- 
-
- 
-
-   
-    
-  
-   
-   
-
   return (
 
     <ul className='breadcrumb-item' style={{paddingLeft: '0px',backgroundColor:'beige'}}>

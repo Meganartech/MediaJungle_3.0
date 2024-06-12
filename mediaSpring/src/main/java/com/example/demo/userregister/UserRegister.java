@@ -1,11 +1,17 @@
 package com.example.demo.userregister;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.example.demo.model.Addaudio1;
+import com.example.demo.model.SubScription;
 import com.example.demo.model.VideoDescription;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 
@@ -44,6 +51,11 @@ public class UserRegister {
 	@Column(name="profile" ,length=1000000)
 	private byte[] profile;
 	
+	private String planname;
+	private String Subscriped;
+	private String orderid;
+	
+	
 	@ManyToMany
     @JoinTable(
         name = "user_favorites",
@@ -61,9 +73,7 @@ public class UserRegister {
 	)
 	@JsonManagedReference
 	private Set<VideoDescription> favoriteVideos = new HashSet<>();
-
-
-
+	
 	public UserRegister() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -72,7 +82,8 @@ public class UserRegister {
 
 
 	public UserRegister(long id, String username, String email, String password, String confirmPassword, String mobnum,
-			byte[] profile, Set<Addaudio1> favoriteAudios, Set<VideoDescription> favoriteVideos) {
+			byte[] profile, String planname, String subscriped, String orderid, Set<Addaudio1> favoriteAudios,
+			Set<VideoDescription> favoriteVideos) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -81,6 +92,9 @@ public class UserRegister {
 		this.confirmPassword = confirmPassword;
 		this.mobnum = mobnum;
 		this.profile = profile;
+		this.planname = planname;
+		Subscriped = subscriped;
+		this.orderid = orderid;
 		this.favoriteAudios = favoriteAudios;
 		this.favoriteVideos = favoriteVideos;
 	}
@@ -171,6 +185,42 @@ public class UserRegister {
 
 
 
+	public String getPlanname() {
+		return planname;
+	}
+
+
+
+	public void setPlanname(String planname) {
+		this.planname = planname;
+	}
+
+
+
+	public String getSubscriped() {
+		return Subscriped;
+	}
+
+
+
+	public void setSubscriped(String subscriped) {
+		Subscriped = subscriped;
+	}
+
+
+
+	public String getOrderid() {
+		return orderid;
+	}
+
+
+
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
+	}
+
+
+
 	public Set<Addaudio1> getFavoriteAudios() {
 		return favoriteAudios;
 	}
@@ -192,8 +242,6 @@ public class UserRegister {
 	public void setFavoriteVideos(Set<VideoDescription> favoriteVideos) {
 		this.favoriteVideos = favoriteVideos;
 	}
-
-
-
+	
 	
 	}

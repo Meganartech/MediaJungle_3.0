@@ -71,15 +71,34 @@ const Register = () => {
 
       const submitForm = async (e) => {
         e.preventDefault();
+    
         if (validateForm()) {
             try {
+                // Create a new FormData object
+                const formData = new FormData();
+    
+                // Append form data (assuming 'data' is an object containing form fields)
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        formData.append(key, data[key]);
+                    }
+                }
+    
+                // If you have any file inputs, append them like this:
+                // formData.append('fileField', fileInput.files[0]);
+    
                 const response = await axios.post(
                     `${API_URL}/api/v2/userregister`,
-                    data
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
                 );
-
+    
                 console.log('API Response:', response);
-
+    
                 if (response.status === 200) {
                     console.log("Registered successfully");
                 } else {
@@ -91,6 +110,7 @@ const Register = () => {
             }
         }
     };
+    
 
     
     return (
