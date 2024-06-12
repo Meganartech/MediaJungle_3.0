@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.userregister.UserRegister;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -47,7 +48,7 @@ public class Addaudio1 {
 	
 	private boolean paid;
 
-	@ManyToMany(mappedBy = "favoriteAudios")
+	@ManyToMany(mappedBy = "favoriteAudios", cascade = CascadeType.REMOVE)
 	@JsonBackReference
 	private List<UserRegister> users;
 	

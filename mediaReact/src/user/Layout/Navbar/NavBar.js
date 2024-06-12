@@ -85,6 +85,9 @@ const NavBar = () => {
                     </div>
                     {/* Menus */}
                     <div className='col-span-3 font-medium text-sm hidden xl:gap-14 2xl:gap-20 justify-between lg:flex xl:justify-end items-center'>
+                        <NavLink to='/PlanDetails' className="bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-6 rounded-lg w-full transition duration-300 ease-in-out" style={{width:"120px"}}>
+                            SUBSCRIBE
+                        </NavLink>
                         <NavLink to='/MoviesPage' className={Hover}>
                             Movies
                         </NavLink>

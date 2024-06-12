@@ -9,13 +9,8 @@ import "../css/Sidebar.css";
 import API_URL from '../Config';
 
 const ListAudio = () => {
-  const [image, setImage] = useState([]);
-  const [vimage, setvImage] = useState([]);
-  const [deleteStatus, setDeleteStatus] = useState(null);
-  const [filename, setFilename] = useState(null);
+
   const [getall, setGetall] = useState(null);
-  const [all, setall] = useState(null);
-  const userid = parseInt(sessionStorage.getItem('id'), 10);
   const name = sessionStorage.getItem('username');
   const navigate = useNavigate();
 
@@ -79,7 +74,7 @@ const ListAudio = () => {
           <h1 className="mt-4 text-white">{name === "admin" ? "Admin-Audios" : "User-Audios"}</h1>
 
           <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-            {getall && getall.length > 0 && (
+            
               <div className="card-1 mb-4" style={{ height: "auto" }}>
                 <div className="card-header">
                   <i className="fas fa-table me-1"></i>
@@ -97,7 +92,8 @@ const ListAudio = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {getall.map((audio, index) => (
+                    {getall && getall.length > 0 && (
+                      getall.map((audio, index) => (
                         <tr key={audio.id}>
                           <td>{index + 1}</td>
                           <td>{audio.fileName.replace(/^.*[\\\/]/, '').replace(/^.*_/, '').replace(/\.mp3$/, '')}</td>
@@ -113,12 +109,14 @@ const ListAudio = () => {
                             </button>
                           </td>
                         </tr>
-                      ))}
+                      )) )}
+                      
+                     
                     </tbody>
                   </table>
                 </div>
               </div>
-            )}
+          
           </div>
         </div>
       </div>

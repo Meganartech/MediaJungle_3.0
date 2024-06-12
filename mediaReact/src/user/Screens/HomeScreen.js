@@ -8,7 +8,9 @@ import Test from "../Test";
 // import Promos from '../Components/Home/Promos'
 // import TopRated from '../Components/Home/TopRated'
 const HomeScreen = () => {
+  
   return (
+    
     
     <Layout className='container mx-auto min-h-screen  overflow-y-auto'> 
       {/* <div className='container mx-auto min-h-screen px-2 mb-6'> */}

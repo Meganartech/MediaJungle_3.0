@@ -1,25 +1,20 @@
 package com.example.demo.mobile;
 
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Base64;
+import java.util.Collections;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,27 +22,26 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.compresser.ImageUtils;
-import com.example.demo.fileservice.AudioFileService;
+
 import com.example.demo.model.Addaudio1;
 import com.example.demo.model.VideoDescription;
 import com.example.demo.repository.AddAudioRepository;
-import com.example.demo.repository.AddNewCategoriesRepository;
+
 import com.example.demo.repository.AddVideoDescriptionRepository;
-import com.example.demo.repository.VideoRepository;
-import com.example.demo.service.AudioService;
+
 import com.example.demo.userregister.JwtUtil;
 import com.example.demo.userregister.TokenBlacklist;
 import com.example.demo.userregister.UserRegister;
 import com.example.demo.userregister.UserRegisterRepository;
 
-import jakarta.servlet.http.HttpServletRequest;
+
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -101,6 +95,32 @@ public class MobileAppController {
             return ResponseEntity.notFound().build();
         }
     }
+	
+	@GetMapping("/mobile/GetThumbnailsById/{id}")
+    public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
+        try {
+            Optional<UserRegister> profileOptional = userregisterrepository.findById(id);
+
+            if (profileOptional.isPresent()) {
+                UserRegister profile = profileOptional.get();
+
+                // Assuming decompressImage returns the raw thumbnail data
+                byte[] thumbnailData = ImageUtils.decompressImage(profile.getProfile());
+
+                // Convert the byte array to Base64
+                String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);
+
+                // Return a list with a single Base64-encoded thumbnail
+                return ResponseEntity.ok(Collections.singletonList(base64Thumbnail));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     
     @PatchMapping("/UpdateUser/mobile/{userId}")
     public ResponseEntity<String> updateUser(
@@ -164,63 +184,7 @@ public class MobileAppController {
         }
     }
     
-    
-    @PostMapping("/mobile/login")
-    public ResponseEntity<?> mobilelogin(@RequestBody Map<String, String> loginRequest) {
         
-        String email = loginRequest.get("email");
-        String password = loginRequest.get("password");
-        
-        Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
-        
-        if (!userOptional.isPresent()) {
-            // User with the provided email doesn't exist
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\": \"User not found\"}");
-        }
-
-        UserRegister user = userOptional.get();
-
-        // Check if the password matches (you should use proper password hashing)
-        if (!user.getPassword().equals(password)) {
-            // Incorrect password
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Incorrect password\"}");
-        }
-
-        // Generate JWT token
-        String jwtToken = jwtUtil.generateToken(email); // Use jwtUtil
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("token", jwtToken);
-        responseBody.put("message", "Login successful");
-        String name=user.getUsername();
-      String Email=user.getEmail();
-      String pword=user.getPassword();
-      long userId = user.getId();
-        responseBody.put("name", user.getUsername());
-        responseBody.put("email", user.getEmail());
-        responseBody.put("password", user.getPassword()); // Consider removing password from the response for security reasons
-        responseBody.put("userId", user.getId());
-        
-        System.out.println(name);
-      System.out.println(jwtToken);
-      System.out.println(userId);
-      System.out.println(Email);
-      System.out.println(pword);
-        
-        // Successful login
-        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
-    }
-
-    @PostMapping("/mobile/logout")
-    public ResponseEntity<String> mobilelogout(@RequestHeader("Authorization") String token) {
-        // Extract the token from the Authorization header
-        // Check if the token is valid (e.g., not expired)
-        // Blacklist the token to invalidate it
-        tokenBlacklist.blacklistToken(token);
-        System.out.println("Logged out successfully");
-        // Respond with a success message
-        return ResponseEntity.ok().body("Logged out successfully");
-    }
-    
     @PostMapping("/mobile/forgetPassword")
     public ResponseEntity<?> resetPasswordmobile(@RequestBody Map<String, String> loginRequest) {
         // Finding the user by email
@@ -252,318 +216,15 @@ public class MobileAppController {
 
         return ResponseEntity.ok("Password reset successfully");
     }
-    
-    
- //-------------------------------------Audio-----------------------
-    
-    @Autowired
-	private  AudioService audioservice;
-	
-	@Autowired
-    private AddAudioRepository audiorepository;
-	
-	@Autowired
-    private AddNewCategoriesRepository addnewcategoriesrepository;
-	
-	@Autowired
-    private AudioFileService fileService;
-	
-	private final String audioStorageDirectory = "Audio/";
-	
-    
-    @GetMapping("/mobile/GetAll")
-	public ResponseEntity<List<Addaudio1>> getAllUsermobile() {
-	    List<Addaudio1> getUser = audiorepository.findAll();
-	    return new ResponseEntity<>(getUser, HttpStatus.OK);
-	}
-    
-    
-    @GetMapping("/mobile/{filename}/file")
-	public ResponseEntity<Resource> getAudioFimobile(@PathVariable String filename, HttpServletRequest request) {
-	    if (filename != null) {
-	        Path filePath = Paths.get(audioStorageDirectory, filename);
-	        System.out.println("filePath" + filePath);
 
-	        try {
-	            // Check if the file exists
-	            if (filePath.toFile().exists() && filePath.toFile().isFile()) {
-	                // Return the audio file as a resource
-	                Resource resource = new UrlResource(filePath.toUri());
-	                if (resource.exists() && resource.isReadable()) {
-	                    HttpHeaders headers = new HttpHeaders();
-	                    String mimeType = Files.probeContentType(filePath);
-	                    if (mimeType == null) {
-	                        mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
-	                    }
-	                    headers.add(HttpHeaders.CONTENT_TYPE, mimeType);
-
-	                    // Set Content-Disposition to "inline" to stream the video inline
-	                    headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline");
-
-	                    // Define the initial chunk size (5 MB)
-	                    final long INITIAL_CHUNK_SIZE = 2 * 1024 * 1024; // 2 MB
-	                    long fileSize = Files.size(filePath);
-
-	                    // Get the Range header from the request
-	                    String rangeHeader = request.getHeader(HttpHeaders.RANGE);
-
-	                    if (rangeHeader != null) {
-	                        // Handle range request from the client
-	                        String[] ranges = rangeHeader.replace("bytes=", "").split("-");
-	                        long rangeStart = Long.parseLong(ranges[0]);
-	                        long rangeEnd = ranges.length > 1 ? Long.parseLong(ranges[1]) : fileSize - 1;
-
-	                        // Calculate the content length
-	                        long contentLength = rangeEnd - rangeStart + 1;
-
-	                        System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
-	                        // Create a RandomAccessFile to read the specified range
-	                        try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
-	                            file.seek(rangeStart);
-	                            byte[] buffer = new byte[(int) contentLength];
-	                            file.readFully(buffer);
-
-	                            // Create a ByteArrayResource to hold the requested range of bytes
-	                            ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
-
-	                            // Set the Content-Range header
-	                            headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
-
-	                            // Return a 206 Partial Content response
-	                            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-	                                    .headers(headers)
-	                                    .contentLength(contentLength)
-	                                    .body(byteArrayResource);
-	                        }
-	                    } else {
-	                        // No range header, send the initial 5 MB chunk
-	                        long rangeStart = 0;
-	                        long rangeEnd = Math.min(INITIAL_CHUNK_SIZE - 1, fileSize - 1);
-	                        long contentLength = rangeEnd - rangeStart + 1;
-	                        System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
-
-	                        // Create a RandomAccessFile to read the specified range
-	                        try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
-	                            file.seek(rangeStart);
-	                            byte[] buffer = new byte[(int) contentLength];
-	                            file.readFully(buffer);
-
-	                            // Create a ByteArrayResource to hold the requested range of bytes
-	                            ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
-
-	                            // Set the Content-Range header
-	                            headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
-
-	                            // Return a 206 Partial Content response
-	                            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-	                                    .headers(headers)
-	                                    .contentLength(contentLength)
-	                                    .body(byteArrayResource);
-	                        }
-	                    }
-	                }
-	            } else {
-	                System.out.println("file is null");
-	            }
-	        } catch (Exception e) {
-	            // Handle exceptions
-	            e.printStackTrace();
-	        }
-
-	        // Return a 404 Not Found response if the file does not exist
-	        return ResponseEntity.notFound().build();
-	    } else {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-	    }
-	}
-
-	
-    @GetMapping("/mobile/audio/{id}")
-	public ResponseEntity<Addaudio1> getAudioByIdmobile(@PathVariable Long id) {
-	    try {
-	        // Retrieve audio details by ID using the service
-	        Addaudio1 audio = audiorepository.findById(id).orElse(null);
-
-	        if (audio != null) {
-	            return ResponseEntity.ok().body(audio);
-	        } else {
-	            return ResponseEntity.notFound().build();
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.badRequest().build();
-	    }
-	}
-
-    //-----------------------------video-----------------------
-    
-    
-    @Autowired
-	private VideoRepository videoRepository;
-    
-    @Autowired
-	private AddVideoDescriptionRepository videodescriptionRepository;
-    
-    @Value("${project.video}")
-	private String path;
-    
-    
-    @GetMapping(value = "/mobile/videogetall")
-    public ResponseEntity<List<VideoDescription>> videogetallmobile() {
-        try {
-            List<VideoDescription> videoDetails = videodescriptionRepository.findAll();
-            System.out.println("All video passed");
-            if (!videoDetails.isEmpty()) {
-                return new ResponseEntity<>(videoDetails, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/mobile/GetvideoDetail/{id}")
-    public ResponseEntity<VideoDescription> getVideoDetailmobile(@PathVariable Long id) {
-        try {
-            Optional<VideoDescription> audioDetail = videodescriptionRepository.findById(id);
-            
-            
-            if (audioDetail.isPresent()) {
-            	System.out.println(audioDetail.get());
-                return new ResponseEntity<>(audioDetail.get(), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    
-    @GetMapping(value = "/mobile/play/{id}")
-	 private ResponseEntity<?> getVideomobile(@PathVariable Long id, HttpServletRequest request) {
-       try {
-
-           Optional<VideoDescription> optionalLesson = videodescriptionRepository.findById(id);
-           if (!optionalLesson.isPresent()) {
-               return ResponseEntity.notFound().build();
-           }
-           
-           
-
-           String filename =optionalLesson.get().getName();
-  
-           if (filename != null) {
-           	Path filePath = Paths.get(path, filename);
-           	System.out.println("filePath"+ filePath);
-   		    try {
-   		        if (filePath.toFile().exists() && filePath.toFile().isFile()) {
-   		            Resource resource = new UrlResource(filePath.toUri());
-   		            if (resource.exists() && resource.isReadable()) {
-   		                HttpHeaders headers = new HttpHeaders();
-
-   		                // Set the Content-Type based on the file's extension
-   		                String mimeType = Files.probeContentType(filePath);
-   		                if (mimeType == null) {
-   		                    mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
-   		                }
-   		                headers.add(HttpHeaders.CONTENT_TYPE, mimeType);
-
-   		                // Set Content-Disposition to "inline" to stream the video inline
-   		                headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline");
-
-   		                // Define the initial chunk size (5 MB)
-   		                final long INITIAL_CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB
-   		                long fileSize = Files.size(filePath);
-
-   		                // Get the Range header from the request
-   		                String rangeHeader = request.getHeader(HttpHeaders.RANGE);
-
-   		                if (rangeHeader != null) {
-   		                    // Handle range request from the client
-   		                    String[] ranges = rangeHeader.replace("bytes=", "").split("-");
-   		                    long rangeStart = Long.parseLong(ranges[0]);
-   		                    long rangeEnd = ranges.length > 1 ? Long.parseLong(ranges[1]) : fileSize - 1;
-
-   		                    // Calculate the content length
-   		                    long contentLength = rangeEnd - rangeStart + 1;
-
-   		                    System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
-   		                    // Create a RandomAccessFile to read the specified range
-   		                    try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
-   		                        file.seek(rangeStart);
-   		                        byte[] buffer = new byte[(int) contentLength];
-   		                        file.readFully(buffer);
-
-   		                        // Create a ByteArrayResource to hold the requested range of bytes
-   		                        ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
-
-   		                        // Set the Content-Range header
-   		                        headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
-   		                        System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
-
-   		                        // Return a 206 Partial Content response
-   		                        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-   		                                .headers(headers)
-   		                                .contentLength(contentLength)
-   		                                .body(byteArrayResource);
-   		                    }
-   		                } else {
-   		                    // No range header, send the initial 5 MB chunk
-   		                    long rangeStart = 0;
-   		                    long rangeEnd = Math.min(INITIAL_CHUNK_SIZE - 1, fileSize - 1);
-   		                    long contentLength = rangeEnd - rangeStart + 1;
-		                    System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
-
-   		                    // Create a RandomAccessFile to read the specified range
-   		                    try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
-   		                        file.seek(rangeStart);
-   		                        byte[] buffer = new byte[(int) contentLength];
-   		                        file.readFully(buffer);
-
-   		                        // Create a ByteArrayResource to hold the requested range of bytes
-   		                        ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
-
-   		                        // Set the Content-Range header
-   		                        headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
-
-   		                        // Return a 206 Partial Content response
-   		                        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-   		                                .headers(headers)
-   		                                .contentLength(contentLength)
-   		                                .body(byteArrayResource);
-   		                    }
-   		                }
-   		            }
-   		        }else {
-
-		            	System.out.println("file is null");
-   		        }
-   		    } catch (Exception e) {
-   		        // Handle exceptions
-   		        e.printStackTrace();
-   		    }
-
-   		    // Return a 404 Not Found response if the file does not exist
-   		    return ResponseEntity.notFound().build();
-
-           } else {
-               return ResponseEntity.ok(filename);
-           }
-       } catch (Exception e) {
-           // Log the exception (you can use a proper logging library)
-           e.printStackTrace();
-           // Return an internal server error response
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-       }
-       
-   }
-    
+        
     //-------------------------favorite audio---------------------------
     
     @Autowired
     private favouriteRepository favouriterepository;
+    
+    @Autowired
+    private AddAudioRepository audiorepository;
     
 
     @PostMapping("/mobile/favourite/audio")
@@ -589,7 +250,7 @@ public class MobileAppController {
                 Long favaudio = ordertable.getAudioId();
                 Long userid = ordertable.getUserId();
                 
-                Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
+                Optional<UserRegister> optionalUser = userregisterrepository.findById(userid);
                 Optional<Addaudio1> optionalAudio = audiorepository.findById(favaudio);
                 
                 if (optionalUser.isPresent() && optionalAudio.isPresent()) {
@@ -633,14 +294,6 @@ public class MobileAppController {
             UserRegister user = optionalUser.get();
             Set<Addaudio1> favoriteAudiosSet = user.getFavoriteAudios();
             List<Addaudio1> audios = new ArrayList<>(favoriteAudiosSet);
-
-            for (Addaudio1 audio : audios) {
-                byte[] images = ImageUtils.decompressImage(audio.getThumbnail());
-                audio.setCategory(null);
-                audio.setThumbnail(images);
-                audio.setUsers(null);
-            }
-            
             // Thumbnails set for all audios, now return the response
             return ResponseEntity.ok(audios);
         } else {
@@ -651,94 +304,85 @@ public class MobileAppController {
     
     //----------------------------favourite video ---------------------------------
     
-    @PostMapping("/mobile/favourite/video")
-    public ResponseEntity<String> createfavouritevidfeo(@RequestBody Map<String, Long> requestData) {
-        try {
-            Long videoId = requestData.get("videoId");
-            Long userId = requestData.get("userId");
-
-            if (videoId == null || userId == null) {
-                return new ResponseEntity<>("Invalid request data", HttpStatus.BAD_REQUEST);
-            }
-
-            Optional<VideoDescription> videoOptional = videodescriptionRepository.findById(videoId);
-            if (videoOptional.isPresent()) {
-                VideoDescription video = videoOptional.get();
-
-                favourite ordertable = new favourite();
-               
-                ordertable.setAudioId(videoId);
-                ordertable.setUserId(userId);
-                favouriterepository.save(ordertable);
-                
-                Long favvideo = ordertable.getVideoId();
-                Long userid = ordertable.getUserId();
-                
-                Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
-                Optional<VideoDescription> optionalVideo = videodescriptionRepository.findById(favvideo);
-                
-                if (optionalUser.isPresent() && optionalVideo.isPresent()) {
-                    UserRegister user = optionalUser.get();
-                    VideoDescription favVideo = optionalVideo.get();
-
-                    // Check if the user is already added this video to favorites
-                    if (user.getFavoriteVideos().contains(favVideo)) {
-                        return ResponseEntity.badRequest().body("User has already added this video to favorites");
-                    }
-                    
-                    user.getFavoriteVideos().add(video); // Add the video object, not favVideo
-                    userregisterrepository.save(user);
-     
-                    return ResponseEntity.ok("Favorite video added successfully");
-                } else {
-                    // If a user or video with the specified ID doesn't exist, return 404
-                    String errorMessage = "";
-                    if (!optionalUser.isPresent()) {
-                        errorMessage += "User with ID " + userId + " not found. ";
-                    }
-                    if (!optionalVideo.isPresent()) {
-                        errorMessage += "Video with ID " + favvideo+ " not found. ";
-                    }
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage.trim());
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Video not found");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating favorite video: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("/mobile/{userId}/UserVideos")
-    public ResponseEntity<List<VideoDescription>> getForVideoUser(@PathVariable Long userId) {
-        Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            UserRegister user = optionalUser.get();
-            
-            Set<VideoDescription> favoriteVideosSet = user.getFavoriteVideos();
-            List<VideoDescription> videos = new ArrayList<>(favoriteVideosSet);
-
-
-            for (VideoDescription vid : videos) {
-                byte[] images = ImageUtils.decompressImage(vid.getThumbnail());
-                vid.setCategory(null);
-                vid.setTags(null);
-                vid.setCertificate(null);
-                vid.setLanguage(null);
-                vid.setThumbnail(images);
-                vid.setUsers(null);
-            }
-            
-            // Thumbnails set for all audios, now return the response
-            return ResponseEntity.ok(videos);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    
-
-
-
+//    @Autowired
+//   	private AddVideoDescriptionRepository videodescriptionRepository;
+//    
+//    @PostMapping("/mobile/favourite/video")
+//    public ResponseEntity<String> createfavouritevidfeo(@RequestBody Map<String, Long> requestData) {
+//        try {
+//            Long videoId = requestData.get("videoId");
+//            Long userId = requestData.get("userId");
+//
+//            if (videoId == null || userId == null) {
+//                return new ResponseEntity<>("Invalid request data", HttpStatus.BAD_REQUEST);
+//            }
+//
+//            Optional<VideoDescription> videoOptional = videodescriptionRepository.findById(videoId);
+//            if (videoOptional.isPresent()) {
+//                VideoDescription video = videoOptional.get();
+//
+//                favourite ordertable = new favourite();
+//               
+//                ordertable.setAudioId(videoId);
+//                ordertable.setUserId(userId);
+//                favouriterepository.save(ordertable);
+//                
+//                Long favvideo = ordertable.getVideoId();
+//                Long userid = ordertable.getUserId();
+//                
+//                Optional<UserRegister> optionalUser = userregisterrepository.findById(userid);
+//                Optional<VideoDescription> optionalVideo = videodescriptionRepository.findById(favvideo);
+//                
+//                if (optionalUser.isPresent() && optionalVideo.isPresent()) {
+//                    UserRegister user = optionalUser.get();
+//                    VideoDescription favVideo = optionalVideo.get();
+//
+//                    // Check if the user is already added this video to favorites
+//                    if (user.getFavoriteVideos().contains(favVideo)) {
+//                        return ResponseEntity.badRequest().body("User has already added this video to favorites");
+//                    }
+//                    
+//                    user.getFavoriteVideos().add(video); // Add the video object, not favVideo
+//                    userregisterrepository.save(user);
+//     
+//                    return ResponseEntity.ok("Favorite video added successfully");
+//                } else {
+//                    // If a user or video with the specified ID doesn't exist, return 404
+//                    String errorMessage = "";
+//                    if (!optionalUser.isPresent()) {
+//                        errorMessage += "User with ID " + userId + " not found. ";
+//                    }
+//                    if (!optionalVideo.isPresent()) {
+//                        errorMessage += "Video with ID " + favvideo+ " not found. ";
+//                    }
+//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage.trim());
+//                }
+//            } else {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Video not found");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating favorite video: " + e.getMessage());
+//        }
+//    }
+//
+//    @GetMapping("/mobile/{userId}/UserVideos")
+//    public ResponseEntity<List<VideoDescription>> getForVideoUser(@PathVariable Long userId) {
+//        Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
+//        if (optionalUser.isPresent()) {
+//            UserRegister user = optionalUser.get();
+//            
+//            Set<VideoDescription> favoriteVideosSet = user.getFavoriteVideos();
+//            List<VideoDescription> videos = new ArrayList<>(favoriteVideosSet);
+//            // Thumbnails set for all audios, now return the response
+//            return ResponseEntity.ok(videos);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+//    
+//
+//
+//
 
 }

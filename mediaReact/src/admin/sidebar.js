@@ -131,14 +131,14 @@ const Sidebar = () => {
     <li className="nav-item " onClick={() => handleClick("/admin/AddUser")}>
       <Link className="nav-link text-white">
           <i className="fas fa-tachometer-alt"></i>
-        <span>User</span>
+        <span>Add Subadmin</span>
       </Link>
   </li> 
     
       <li className="nav-item" onClick={() => handleClick("/admin/Profile")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-user"></i>
-            <span> Profile</span>
+            <span>Subadmin List</span>
           </Link>
       </li>
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
@@ -253,6 +253,18 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Payments</div>
       </div>
+      <li className="nav-item" onClick={() => handleClick("/admin/Adminplan")}>
+          <Link className="nav-link text-white" >
+              <i className="fas fa-photo-video"></i>
+            <span>PlanDetails</span>
+          </Link>
+      </li>
+      <li className="nav-item" onClick={() => handleClick("/admin/PlanDetailsList")}>
+          <Link className="nav-link text-white" >
+              <i className="fas fa-photo-video"></i>
+            <span>List Plans</span>
+          </Link>
+      </li>
       <li className="nav-item" onClick={() => handleClick("/admin/SubscriptionPayments")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>

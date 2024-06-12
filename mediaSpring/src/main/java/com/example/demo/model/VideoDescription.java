@@ -7,6 +7,7 @@ import java.util.Set;
 import com.example.demo.userregister.UserRegister;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,7 +41,7 @@ public class VideoDescription {
 	@Column(name="thumbnail" ,length=1000000)
 	private byte[] thumbnail;
 	
-	@ManyToMany(mappedBy = "favoriteVideos")
+	@ManyToMany(mappedBy = "favoriteVideos", cascade = CascadeType.REMOVE)
 	@JsonBackReference
 	private List<UserRegister> users;
 	

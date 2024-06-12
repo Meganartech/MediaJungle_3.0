@@ -45,14 +45,34 @@ public class UserRegisterController {
 
     @Autowired
     private TokenBlacklist tokenBlacklist;
-    
+        
     @PostMapping("/userregister")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegister user){
-//    	String hashedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-//        user.setPassword(hashedPassword);
-        userregisterrepository.save(user);
-        return ResponseEntity.ok("User registered successfully");
-    }
+	public ResponseEntity<UserRegister> register(@RequestParam("username") String username,
+			            @RequestParam("email") String email,
+			            @RequestParam("password") String password,
+			            @RequestParam("mobnum") String mobnum,
+			            @RequestParam("confirmPassword") String confirmPassword,
+			            @RequestParam(value = "profile", required = false) MultipartFile profile) throws IOException {
+			if (!password.equals(confirmPassword)) {
+			return ResponseEntity.badRequest().body(null);
+			}
+			
+			UserRegister newRegister = new UserRegister();
+			newRegister.setUsername(username);
+			newRegister.setEmail(email);
+			newRegister.setPassword(password);
+			newRegister.setConfirmPassword(confirmPassword);
+			newRegister.setMobnum(mobnum);
+			
+			if (profile != null && !profile.isEmpty()) {
+			byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
+			newRegister.setProfile(thumbnailBytes);
+			}
+			
+			UserRegister savedUser = userregisterrepository.save(newRegister);
+			return ResponseEntity.ok(savedUser);
+			}
+
     
     @GetMapping("/GetAllUsers")
     public ResponseEntity<List<UserRegister>> getAllUser() {

@@ -3,6 +3,7 @@ import Layout from '../Layout/Layout';
 import { Input } from '../Components/UsedInputs';
 import { Link } from 'react-router-dom';
 import { FiLogIn } from 'react-icons/fi';
+import API_URL from '../../Config';
 
 const UserLogin = () => {
   const [user, setUser] = useState({ email: '', password: '' });
@@ -20,7 +21,7 @@ const UserLogin = () => {
               password: user.password
           };
   
-          const response = await fetch("http://localhost:8080/api/v2/login", {
+          const response = await fetch(`${API_URL}/api/v2/login`, {
               method: "POST",
               headers: {
                   "Content-Type": "application/json",
@@ -39,6 +40,7 @@ const UserLogin = () => {
               sessionStorage.setItem('token', jwtToken);
               sessionStorage.setItem('userId',userId);
               localStorage.setItem('login', true);
+              
               
               window.location.href = "/";
               

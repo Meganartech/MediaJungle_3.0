@@ -16,7 +16,7 @@ const SingleMovie = () => {
   const movie = Movies.find((movie)=>movie.name === id);
   const RelatedMovies = Movies.filter((m)=>m.category === movie.category )
   return (
-    <Layout className=' container mx-auto min-h-screen  overflow-y-auto'>
+    <Layout>
       <ShareMovieModal 
       modalOpen={modalOpen}
       setModalOpen={setModalOpen}
@@ -26,7 +26,7 @@ const SingleMovie = () => {
       movie={movie}
       setModalOpen={setModalOpen}
       />
-      <div className='px-2 my-6'>
+      <div className='container mx-auto min-h-screen px-2 my-6'>
         <MovieCasts />
         {/* Rate */}
         <MovieRates movie={movie}/>

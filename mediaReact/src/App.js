@@ -64,7 +64,12 @@ import UserPrivateRouter from './user/UserPrivateRouter';
 import AdminSignin from './admin/AdminSignin';
 import About_us from './admin/About_us';
 import EditComponent from './admin/EditComponent';
+import Adminplan from './admin/Adminplan';
 import PrivateRoutes from './user/PrivateRoutes';
+import PlanDetailsList from './admin/PlanDetailsList';
+import Editplan from './admin/Editplan';
+import PlanDescription from './admin/PlanDescription';
+
 
 const App = () => {
   const location = useLocation();
@@ -134,6 +139,7 @@ const App = () => {
           <Route path="Subscriptiondetails" element={<Subscription_details />} />
           <Route path='UserProfileScreen' element ={<UserProfileScreen />} />
           <Route path='AdminSignin' element ={<AdminSignin />} />
+          
 
           <Route path='admin' element={<Login/>}  >
              <Route element={<PrivateRoutes />}>
@@ -168,6 +174,11 @@ const App = () => {
             <Route path='addCategory'element= {<AddCategory/>} />
             <Route path='addCastCrew' element= {<AddCastCrew/>} />
             <Route path='subscriptionPayments' element= {<SubscriptionPayments/>} />
+            <Route path='Adminplan' element= {<Adminplan/>} />
+            <Route path='PlanDetailsList' element={<PlanDetailsList/>}/>
+            <Route path='Editplan' element={<Editplan />} />
+            <Route path='PlanDescription' element={<PlanDescription />} />
+            
             <Route path='setting' element= {<Setting/>} />
             <Route path='Video_setting' element= {<Video_setting/>} />
             <Route path='Setting_sidebar' element= {<Setting_sidebar/>} />

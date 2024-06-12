@@ -39,7 +39,7 @@ const Banner = () => {
     })
     .then(data => {
       setall(data);
-      // console.log(data)
+       console.log(data)
     })
     .catch(error => {
       console.error('Error fetching data:', error);
