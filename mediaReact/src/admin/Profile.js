@@ -177,7 +177,7 @@ const Profile = () => {
           <li className="breadcrumb-item text-white">
             <Link to="/Dashboard">Dashboard</Link>
           </li>
-          <li className="breadcrumb-item active">{name=="admin"?"Manage users":name}{name=="admin"?"":"Profile"}</li>
+          <li className="breadcrumb-item active">{"Manage SubAdmin"}</li>
         </ol>
       
           {/* {name === 'admin' 
