@@ -5,11 +5,13 @@ import { Movies } from '../../Data/MovieData'
 import FlexMovieItems from '../FlexMovieItems';
 import { Link } from 'react-router-dom';
 import { FaHeart } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Banner = () => {
   const [all, setall] = useState(null);
   const [vimage, setvImage] = useState([]);
   const log=localStorage.getItem('login');
+  const navigate = useNavigate();
   useEffect(() => {
     // Find the "Previous" arrow and remove its content
     // const prevArrow = document.querySelector('.slick-prev');
@@ -67,8 +69,10 @@ const Banner = () => {
 
 
   }, []);
-  const handlEdit = async (Id) => {
+  
+  const handlEdit = async (Id,moviename) => {
     localStorage.setItem('items', Id);
+    navigate(`/videoScreen/${moviename}`);
   };
 
   
@@ -123,7 +127,7 @@ const Banner = () => {
                 <div className='flex gap-5 items-center'>
                   <Link
                     to={log==="true"?"/play":"/UserLogin"}
-                    onClick={() => handlEdit(movie.id)} 
+                    onClick={() => handlEdit(movie.id, movie.moviename)}
                     className="bg-subMain hover:text-main transitions text-white px-8 py-3 rounded font-medium sm:text-sm text-xs">
                     Watch
                   </Link>

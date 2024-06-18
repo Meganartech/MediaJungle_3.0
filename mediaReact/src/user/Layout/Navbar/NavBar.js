@@ -84,7 +84,7 @@ const NavBar = () => {
                         </form>
                     </div>
                     {/* Menus */}
-                    <div className='col-span-3 font-medium text-sm hidden xl:gap-14 2xl:gap-20 justify-between lg:flex xl:justify-end items-center'>
+                    <div className='col-span-3 font-medium text-sm hidden xl:gap-14 2xl:gap-10 justify-between lg:flex xl:justify-end items-center'>
                         <NavLink to='/PlanDetails' className="bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-6 rounded-lg w-full transition duration-300 ease-in-out" style={{width:"120px"}}>
                             SUBSCRIBE
                         </NavLink>
@@ -94,9 +94,9 @@ const NavBar = () => {
                         <NavLink to='/AboutUs' className={Hover}>
                             AboutUs
                         </NavLink>
-                        {/* <NavLink to='/contact-us' className={Hover}>
-                            Contact Us
-                        </NavLink> */}
+                        <NavLink to='/Contactus' className={Hover}>
+                            ContactUs
+                        </NavLink>
 
 
                         {token!==null ? (

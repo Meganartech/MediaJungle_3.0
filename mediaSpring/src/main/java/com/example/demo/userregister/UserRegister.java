@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.example.demo.model.AddNewCategories;
 import com.example.demo.model.Addaudio1;
+import com.example.demo.model.PaymentUser;
 import com.example.demo.model.SubScription;
 import com.example.demo.model.VideoDescription;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -20,7 +22,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 
@@ -51,11 +55,6 @@ public class UserRegister {
 	@Column(name="profile" ,length=1000000)
 	private byte[] profile;
 	
-	private String planname;
-	private String Subscriped;
-	private String orderid;
-	
-	
 	@ManyToMany
     @JoinTable(
         name = "user_favorites",
@@ -74,16 +73,17 @@ public class UserRegister {
 	@JsonManagedReference
 	private Set<VideoDescription> favoriteVideos = new HashSet<>();
 	
+	@OneToOne
+	@JoinColumn(name = "Payment_details")
+	private PaymentUser paymentId;
+	
 	public UserRegister() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-
-
 	public UserRegister(long id, String username, String email, String password, String confirmPassword, String mobnum,
-			byte[] profile, String planname, String subscriped, String orderid, Set<Addaudio1> favoriteAudios,
-			Set<VideoDescription> favoriteVideos) {
+			byte[] profile,  Set<Addaudio1> favoriteAudios,Set<VideoDescription> favoriteVideos, PaymentUser paymentId) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -92,156 +92,89 @@ public class UserRegister {
 		this.confirmPassword = confirmPassword;
 		this.mobnum = mobnum;
 		this.profile = profile;
-		this.planname = planname;
-		Subscriped = subscriped;
-		this.orderid = orderid;
 		this.favoriteAudios = favoriteAudios;
 		this.favoriteVideos = favoriteVideos;
+		this.paymentId= paymentId;
 	}
-
-
 
 	public long getId() {
 		return id;
 	}
 
-
-
 	public void setId(long id) {
 		this.id = id;
 	}
-
-
 
 	public String getUsername() {
 		return username;
 	}
 
-
-
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
-
 
 	public String getEmail() {
 		return email;
 	}
 
-
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-
 
 	public String getPassword() {
 		return password;
 	}
 
-
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-
 
 	public String getConfirmPassword() {
 		return confirmPassword;
 	}
 
-
-
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
-
-
 
 	public String getMobnum() {
 		return mobnum;
 	}
 
-
-
 	public void setMobnum(String mobnum) {
 		this.mobnum = mobnum;
 	}
-
-
 
 	public byte[] getProfile() {
 		return profile;
 	}
 
-
-
 	public void setProfile(byte[] profile) {
 		this.profile = profile;
 	}
-
-
-
-	public String getPlanname() {
-		return planname;
-	}
-
-
-
-	public void setPlanname(String planname) {
-		this.planname = planname;
-	}
-
-
-
-	public String getSubscriped() {
-		return Subscriped;
-	}
-
-
-
-	public void setSubscriped(String subscriped) {
-		Subscriped = subscriped;
-	}
-
-
-
-	public String getOrderid() {
-		return orderid;
-	}
-
-
-
-	public void setOrderid(String orderid) {
-		this.orderid = orderid;
-	}
-
-
 
 	public Set<Addaudio1> getFavoriteAudios() {
 		return favoriteAudios;
 	}
 
-
-
 	public void setFavoriteAudios(Set<Addaudio1> favoriteAudios) {
 		this.favoriteAudios = favoriteAudios;
 	}
-
-
 
 	public Set<VideoDescription> getFavoriteVideos() {
 		return favoriteVideos;
 	}
 
-
-
 	public void setFavoriteVideos(Set<VideoDescription> favoriteVideos) {
 		this.favoriteVideos = favoriteVideos;
 	}
-	
-	
+
+	public PaymentUser getPaymentId() {
+		return paymentId;
 	}
+
+	public void setPaymentId(PaymentUser paymentId) {
+		this.paymentId = paymentId;
+	}
+
+}

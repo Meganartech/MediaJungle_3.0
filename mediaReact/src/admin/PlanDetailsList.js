@@ -60,6 +60,11 @@ const PlanDetailsList = () => {
     navigate('/admin/Editplan');
   };
 
+  const handlAddDescription = async (planId) => {
+            localStorage.setItem('items', planId);
+            navigate('/admin/PlanDescription');
+  };
+
 
 
   return (
@@ -90,6 +95,7 @@ const PlanDetailsList = () => {
                         <th>Amount</th>
                         <th>Validity</th>
                         <th>Action</th>
+                        <th>Add Description</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -107,6 +113,11 @@ const PlanDetailsList = () => {
                             <button onClick={() => handleDelete(plan.id)}>
                               <i className="fa fa-trash" aria-hidden="true"></i>
                             </button></td>
+                          <td>
+                            <button  onClick={() => handlAddDescription(plan.id)} className="btn btn-secondary ml-2" >
+                                Add
+                            </button>
+                          </td>
                           </tr>
                       )))}
                     </tbody>

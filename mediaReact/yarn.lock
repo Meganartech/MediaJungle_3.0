@@ -9542,10 +9542,10 @@ svgo@^2.7.0:
     picocolors "^1.0.0"
     stable "^0.1.8"
 
-sweetalert2@^11.10.8:
-  version "11.10.8"
-  resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.10.8.tgz"
-  integrity sha512-oAkYROBfXBY+4sVbQEIcN+ZxAx69lsmz5WEBwdEpyS4m59vOBNlRU5/fJpAI1MVfiDwFZiGwVzB/KBpOyfLNtg==
+sweetalert2@^11.11.1:
+  version "11.11.1"
+  resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.11.1.tgz"
+  integrity sha512-7jumu0I0/QdRa5R7K1mh05ZdhmsMV6rZOVtjpratZGidxyJD4Sn7rDSA+zmKHzvMef9hVTwPmDU3VxnvhVQMNg==
 
 swiper@^11.0.5:
   version "11.0.6"

@@ -138,7 +138,7 @@ const Sidebar = () => {
       <li className="nav-item" onClick={() => handleClick("/admin/Profile")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-user"></i>
-            <span>Subadmin List</span>
+            <span>Manage Subadmin</span>
           </Link>
       </li>
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">

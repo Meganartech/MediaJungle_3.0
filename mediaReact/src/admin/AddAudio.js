@@ -6,6 +6,8 @@ import Sidebar from './sidebar';
 import API_URL from '../Config';
 import { Link } from 'react-router-dom';
 import "../css/Sidebar.css";
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 const AddAudio = () => {
   //.....................................Admin Function............................................
@@ -18,6 +20,58 @@ const AddAudio = () => {
   const [audioFile, setAudioFile] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
   const [selected, setSelected] = useState(false); 
+  const [getall, setgetall] = useState('')
+  const navigate = useNavigate();
+
+  const [selectedOption, setSelectedOption] = useState('free');
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllPlans`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setgetall(data);
+        console.log(data)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+  
+
+    const handleRadioChange = (e) => {
+        setSelectedOption(e.target.value);
+    };
+
+    const handlePaidRadioHover = () => {
+      if (!hasPaymentPlan()) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'You first need to add a payment plan to enable this option.',
+          icon: 'error',
+          showCancelButton: true,
+          confirmButtonText: 'Go to Add plan page',
+          cancelButtonText: 'Cancel',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate('/admin/Adminplan');
+          } else if (result.isDismissed) {
+            console.log('Cancel was clicked');
+          }
+        });
+      }
+    };
+  
+
+    const hasPaymentPlan = () => {
+        // return getall.length > 0;
+        return false;
+    };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,38 +94,48 @@ const AddAudio = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const formData = new FormData();
-      const audioData = {
-        category: categoryId,
-        audioFile: audioFile,
-        thumbnail: thumbnail,
-        paid : selected ? 1:0,
-      };
-      console.log(audioData)
-  
-      // Append each property in the audioData object to FormData
-      for (const key in audioData) {
-        formData.append(key, audioData[key]);
-      }
-  
+      formData.append('category', categoryId);
+      formData.append('audioFile', audioFile);
+      formData.append('thumbnail', thumbnail);
+      formData.append('paid', selectedOption === 'paid' ? 1 : 0); // Set paid based on selectedOption
+
       const response = await axios.post(`${API_URL}/api/v2/uploadaudio`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-  
+
       console.log(response.data);
-      console.log("audio updated successfully");
-      // Handle success, e.g., show a success message to the user
+      console.log("Audio uploaded successfully");
+
+      // Optionally, show a success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Audio uploaded successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+
+      // Reset form state
+      setCategoryId('');
+      setAudioFile(null);
+      setThumbnail(null);
+      setSelectedOption('free'); // Reset selected option to 'free'
+      setErrors({}); // Clear any previous errors
     } catch (error) {
       console.error('Error uploading audio:', error);
-      // Handle error, e.g., show an error message to the user
+
+      // Optionally, show an error message
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error uploading the audio.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
-    setCategoryId('')
-    setAudioFile(null)
-    setThumbnail(null)
   };
 
     const validateForm = () => {
@@ -147,30 +211,50 @@ const AddAudio = () => {
                   {errors.categoryId && <div className="error-message">{errors.categoryId}</div>}
                   <br />
                   <br />
-
-                  
-<div className='modal-body text-center'>
-                          <label className='modal-title modal-header' style={{fontFamily:'Poppins'}}>
-
-                            Paid:
-                            <div 
-                              className={`radio-button${selected ? ' selected' : ''}`} // Apply 'selected' class if radio button is selected
-                              onClick={handleRadioClick} // Handle click event
-                            >
-                              {/* Display custom radio button */}
-                              <div className="radio-circle" style={{margin:'0 0 0 -1800px'}}>
-                              <input
-                                  type="radio"
-                                  value="paid"
-                                  checked={selected}
-                                  
-                              />
-                              </div>
-                            </div>
-                          </label>
-                        </div>
-
-
+                  <h5 className='modal-title modal-header' style={{ fontFamily: 'Poppins' }}>
+                      Choose Pricing Option
+                  </h5>
+                  <div className='temp'>
+    <div className='col-lg-1'>
+        <label>
+            <input
+                type="radio"
+                value="free"
+                checked={selectedOption === 'free'}
+                onChange={handleRadioChange}
+            />
+            Free
+        </label>
+    </div>
+    <div className='col-lg-1'>
+        <label>
+        <div
+          className={`radio-button${selectedOption === 'paid' ? ' selected' : ''}`}
+          onMouseEnter={handlePaidRadioHover}
+          onClick={() => {
+              if (hasPaymentPlan()) {
+                  setSelectedOption('paid');
+              }
+          }}
+      >
+            <input
+                type="radio"
+                value="paid"
+                checked={selectedOption === 'paid'}
+                disabled={!hasPaymentPlan()}
+                onChange={() => {
+                    if (hasPaymentPlan()) {
+                        setSelectedOption('paid');
+                    }
+                }}
+               
+            />
+            Paid
+            </div>
+        </label>
+    </div>
+</div>
+                                    
 
                   <h5 className='modal-title modal-header' id='exampleModalLongTitle' style={{fontFamily:'Poppins'}}>
                     Add New Audio File
@@ -208,101 +292,7 @@ const AddAudio = () => {
               </form>
             </div>
           </div>
-          {/* : */}
-          {/* <div className='card shadow-lg border-0 rounded-lg mt-5'>
-          <div className='card-header'>
-            <h2 className='text-center'>Add User Audios</h2>
-            <hr />
-          </div>
-          <div className='card-body'>
-            <form className='form-container' onSubmit={handleSubmit_u}>
-              <div className='modal-header bg-info'>
-                <h5 className='modal-title' id='exampleModalLongTitle'>
-                  Add New Audio
-                </h5>
-              </div>
-              <div className='modal-body text-center'>
-                <select
-                  className='form-control'
-                  name='categoryName'
-                  value={categoryName_u}
-                  onChange={(e) => setCategoryName_u(e.target.value)}
-                >
-                  <option value=''>Select Category</option>
-                  {categories_u.map((category) => (
-                    <option key={category.id} value={category.category_name}>
-                      {category.category_name}
-                    </option>
-                  ))}
-                </select>
-                {errors_u.categoryName_u && <div className="error-message">{errors_u.categoryName_u}</div>}
-                <br />
-                <select
-                  className='form-control'
-                  name='tagName'
-                  value={tagName_u}
-                  onChange={(e) => setTagName_u(e.target.value)}
-                >
-                  <option value=''>Select Tag</option>
-                  {tags_u.map((tag) => (
-                    <option key={tag.id} value={tag.tag_name}>
-                      {tag.tag_name}
-                    </option>
-                  ))}
-                </select>
-                {errors_u.tagName_u && <div className="error-message">{errors_u.tagName_u}</div>}
-                <br />
-                <select
-                  className='form-control'
-                  name='userId'
-                  value={userId_u}
-                  onChange={(e) => setUserId_u(e.target.value)}
-                >
-                  <option value=''>Select User ID</option>
-                  {users_u.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.id}
-                    </option>
-                  ))}
-                </select>
-                {errors_u.userId_u && <div className="error-message">{errors_u.userId_u}</div>}
-                <br />
-                <h5 className='modal-title modal-header bg-info' id='exampleModalLongTitle'>
-                  Add New Audio File
-                </h5>
-                <input
-                  type='file'
-                  className='form-control'
-                  placeholder='Choose Audio File'
-                  name='audioFile'
-                  onChange={(e) => setAudioFile_u(e.target.files[0])}
-                />
-                {errors_u.audioFile_u && <div className="error-message">{errors_u.audioFile_u}</div>}
-                <br />
-                <h5 className='modal-title modal-header bg-info' id='exampleModalLongTitle'>
-                  Add Thumbnail
-                </h5>
-                <input
-                  type='file'
-                  className='form-control'
-                  placeholder='Choose Thumbnail'
-                  name='thumbnail'
-                  onChange={(e) => setThumbnail_u(e.target.files[0])}
-                />
-                {errors_u.thumbnail_u && <div className="error-message">{errors_u.thumbnail_u}</div>}
-                <br />
-              </div>
-              <div className='modal-footer'>
-                <input
-                  type='submit'
-                  name='but_upload'
-                  value='Upload'
-                  className='btn btn-info'
-                />
-              </div>
-            </form>
-          </div>
-        </div>} */}
+          
           
         </div>
       </div>

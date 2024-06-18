@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,18 +16,29 @@ public class PlanDescription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	private String Description;
+	private String description;
+
+	private Long planId;
+	
+	private String active;
+	
 
 	public PlanDescription() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public PlanDescription(Long id, String description) {
+	
+
+	public PlanDescription(Long id, String description, Long planId, String active) {
 		super();
 		this.id = id;
-		Description = description;
+		this.description = description;
+		this.planId = planId;
+		this.active = active;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -36,13 +49,34 @@ public class PlanDescription {
 	}
 
 	public String getDescription() {
-		return Description;
+		return description;
 	}
 
 	public void setDescription(String description) {
-		Description = description;
+		this.description = description;
 	}
-	
-	
 
+	public Long getPlanId() {
+		return planId;
+	}
+
+	public void setPlanId(Long planId) {
+		this.planId = planId;
+	}
+
+
+
+	public String getActive() {
+		return active;
+	}
+
+
+
+	public void setActive(String active) {
+		this.active = active;
+	}
+
+	
+	
+	
 }

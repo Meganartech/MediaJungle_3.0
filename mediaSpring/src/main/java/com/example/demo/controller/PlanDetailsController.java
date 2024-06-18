@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.AddUser;
 import com.example.demo.model.PlanDetails;
+import com.example.demo.repository.PlanDescriptionRepository;
 import com.example.demo.repository.PlanDetailsRepository;
 import com.example.demo.userregister.UserRegister;
 
@@ -39,7 +40,7 @@ public class PlanDetailsController {
 		pay.setPlanname(planname);
 		pay.setAmount(amount);
 		pay.setValidity(validity);
-		PlanDetails details = planrepository.save(pay);
+		PlanDetails details = planrepository.save(pay);		
 		return ResponseEntity.ok(details);	
 	}
 	
@@ -52,6 +53,7 @@ public class PlanDetailsController {
 	@GetMapping("/GetPlanById/{id}")
     public ResponseEntity<PlanDetails> getPlanById(@PathVariable Long id) {
         Optional<PlanDetails> planOptional = planrepository.findById(id);
+        
         if (planOptional.isPresent()) {
             return ResponseEntity.ok(planOptional.get());
         } else {

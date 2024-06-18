@@ -35,7 +35,7 @@ public class PlanDetails {
 
 	
 	 @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	 @JoinColumn(name = "plan_id") // Optional: Specify the foreign key column
+	 @JoinColumn(name = "planId") // Optional: Specify the foreign key column
 	 private List<PlanDescription> descriptions = new ArrayList<>();	
 	
 	public PlanDetails() {

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { FiLogIn } from 'react-icons/fi'
 import axios from 'axios';
 import API_URL from '../../Config';
+import Swal from 'sweetalert2';
 
 const Register = () => {
 
@@ -100,13 +101,25 @@ const Register = () => {
                 console.log('API Response:', response);
     
                 if (response.status === 200) {
-                    console.log("Registered successfully");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Registered successfully',
+                        confirmButtonColor: '#FFC107'
+                    });
                 } else {
-                    console.log('Invalid User');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Registration Failed',
+                        text: 'Invalid User'
+                    });
                 }
             } catch (error) {
                 console.error('Error:', error);
-                console.log('An error occurred while registering. Please try again.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Registration Failed',
+                    text: 'An error occurred while registering. Please try again.'
+                });
             }
         }
     };

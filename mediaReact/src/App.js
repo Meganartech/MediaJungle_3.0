@@ -69,7 +69,9 @@ import PrivateRoutes from './user/PrivateRoutes';
 import PlanDetailsList from './admin/PlanDetailsList';
 import Editplan from './admin/Editplan';
 import PlanDescription from './admin/PlanDescription';
-
+import ContactUs from './user/Screens/ContactUs';
+import WatchPage from './user/Screens/WatchPage';
+import VideoScreen from './user/VideoScreen';
 
 const App = () => {
   const location = useLocation();
@@ -132,13 +134,16 @@ const App = () => {
           <Route path='UserLogin' element={<UserLogin />} />
           <Route path='Register' element={<Register />} />
           <Route path='AboutUs' element={<AboutUs />} />
-          <Route path="/movie/:id" element={<SingleMovie />} />
+          <Route path="/movie/kanidhan" element={<SingleMovie />} />
           {/* <Route path='play' element={<Userplayer/>} /> */}
           <Route path='play' element={<UserPrivateRouter isAuthenticated={log} element={<Userplayer />} />} />
           <Route path='PlanDetails' element={<PlanDetails />} />
           <Route path="Subscriptiondetails" element={<Subscription_details />} />
           <Route path='UserProfileScreen' element ={<UserProfileScreen />} />
           <Route path='AdminSignin' element ={<AdminSignin />} />
+          <Route path='Contactus' element={<ContactUs />}/>
+          <Route path='watchpage' element={<WatchPage />} />
+          <Route path='videoScreen/:id' element={<VideoScreen/>} />
           
 
           <Route path='admin' element={<Login/>}  >

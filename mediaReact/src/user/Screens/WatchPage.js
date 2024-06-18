@@ -9,8 +9,9 @@ const WatchPage = () => {
     const { id } = useParams();
     const movie = Movies.find((movie) => movie.name === id);
     const [play, setPlay] = useState(false)
-    return <Layout>
-        <div className="container mx-auto Dbg-dry p-6 mb-12">
+    return <Layout  className="container mx-auto min-h-screen   overflow-y-auto" >
+        {/* <div className="container mx-auto Dbg-dry p-4 mb-12"> */}
+        <div className='p-1 mb-5'>
             <div className="flex-btn flex-wrap mb-6 gap-2 bg-main rounded border border-gray-800 p-6">
                 <Link 
                 to={`/movie/${movie?.name}`} 
@@ -25,7 +26,7 @@ const WatchPage = () => {
                         <FaCloudDownloadAlt />Download
                     </button>
                 </div>
-            </div>
+           
             {/* Watch Video */}
             {
                 play ? (
@@ -50,6 +51,7 @@ const WatchPage = () => {
                      </div>   
                 )
             }
+        </div>
         </div>
     </Layout>
   

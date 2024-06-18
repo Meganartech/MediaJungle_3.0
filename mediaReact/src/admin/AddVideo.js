@@ -10,8 +10,11 @@ import API_URL from '../Config';
 import "../css/Sidebar.css";
 
 import "../App.css"
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 import React, { useState, useEffect } from 'react';
+
 const AddVideo = () => {
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -25,7 +28,58 @@ const AddVideo = () => {
   const [Tag, setTag] = useState([]);
   const [TagId, setTagId] = useState('');
   const [thumbnail, setThumbnail] = useState(null);
-  const [selected, setSelected] = useState(false); 
+  const [selected, setSelected] = useState(false);
+  const [getall,setgetall] = useState(''); 
+  const navigate = useNavigate();
+  const [selectedOption, setSelectedOption] = useState('free');
+
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllPlans`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setgetall(data);
+        console.log(data)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  const handleRadioChange = (e) => {
+    setSelectedOption(e.target.value);
+};
+
+const handlePaidRadioHover = () => {
+  if (!hasPaymentPlan()) {
+    Swal.fire({
+      title: 'Error!',
+      text: 'You first need to add a payment plan to enable this option.',
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonText: 'Go to Add plan page',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate('/admin/Adminplan');
+      } else if (result.isDismissed) {
+        console.log('Cancel was clicked');
+      }
+    });
+  }
+};
+
+
+const hasPaymentPlan = () => {
+    // return getall.length > 0;
+    return false;
+};
+
 
   // const fetchData = async () => {
     useEffect(() => {
@@ -215,7 +269,7 @@ const AddVideo = () => {
             };
             console.log("audioData")
             console.log(audioData)
-            const Addvideo = { Movie_name: Movie_name, tags: TagId, description: Description,category: categoryId,certificate: certificateId,Language: LanguageId,Duration:Duration,Year:Year,thumbnail:thumbnail,video:file};
+            const Addvideo = { Movie_name: Movie_name, tags: TagId, description: Description,category: categoryId,certificate: certificateId,Language: LanguageId,Duration:Duration,Year:Year,thumbnail:thumbnail,video:file,paid:selectedOption === 'paid' ? 1 : 0};
             console.log(Addvideo);
         
 
@@ -250,7 +304,7 @@ const AddVideo = () => {
        }
   
     console.log("audioData")
-    const Addvideo = { Movie_name: Movie_name, tags: TagId, description: Description,category: categoryId,certificate: certificateId,Language: LanguageId,Duration:Duration,Year:Year,thumbnail:thumbnail,video:file, paid: selected ? 1 : 0,};
+    const Addvideo = { Movie_name: Movie_name, tags: TagId, description: Description,category: categoryId,certificate: certificateId,Language: LanguageId,Duration:Duration,Year:Year,thumbnail:thumbnail,video:file, paid:selectedOption === 'paid' ? 1 : 0,};
     console.log(Addvideo);
 
 
@@ -455,24 +509,53 @@ const AddVideo = () => {
                       value={'categoryName'}
                     /> */} 
 
-                    <div className='col-lg-6'>
-                          <label>
-                            Paid:
-                            <div 
-                              className={`radio-button${selected ? ' selected' : ''}`} // Apply 'selected' class if radio button is selected
-                              onClick={handleRadioClick} // Handle click event
-                            >
-                              {/* Display custom radio button */}
-                              <div className="radio-circle">
-                              <input
-                                  type="radio"
-                                  value="paid"
-                                  checked={selected}
-                              />
-                              </div>
-                            </div>
-                          </label>
-                        </div>
+<br />
+                  <h5 className='modal-title modal-header' style={{ fontFamily: 'Poppins' }}>
+                      Choose Pricing Option
+                  </h5>
+                  <div className='temp'>
+    <div className='col-lg-1'>
+        <label>
+            <input
+                type="radio"
+                value="free"
+                checked={selectedOption === 'free'}
+                onChange={handleRadioChange}
+            />
+            Free
+        </label>
+    </div>
+    <div className='col-lg-1'>
+        <label>
+        <div
+          className={`radio-button${selectedOption === 'paid' ? ' selected' : ''}`}
+          onMouseEnter={handlePaidRadioHover}
+          onClick={() => {
+              if (hasPaymentPlan()) {
+                  setSelectedOption('paid');
+              }
+          }}
+      >
+            <input
+                type="radio"
+                value="paid"
+                checked={selectedOption === 'paid'}
+                disabled={!hasPaymentPlan()}
+                onChange={() => {
+                    if (hasPaymentPlan()) {
+                        setSelectedOption('paid');
+                    }
+                }}
+               
+            />
+            Paid
+            </div>
+        </label>
+    </div>
+</div>
+                
+
+
                         <div className='col-lg-12'>
                     <label >Thumbnail</label>
                     <br></br>
