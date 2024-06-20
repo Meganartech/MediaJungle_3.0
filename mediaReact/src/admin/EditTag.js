@@ -75,10 +75,8 @@ const EditTag = () => {
   
   
   return (
-    <div id="content-wrapper" className="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
-    <div className="container-fluid">
-  
-      <Sidebar />
+
+
 
     <div className="container-fluid">
 
@@ -121,8 +119,7 @@ const EditTag = () => {
         
       </div>
     </div>
-  </div>
-</div>
+ 
   );
 };
 

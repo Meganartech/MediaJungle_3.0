@@ -56,9 +56,6 @@ const Social_setting = () => {
 
   return (
 
-    <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem" }}>
-
-        <Sidebar />
       <div className="container-fluid"   >
         <div className='container2'>
         <ol className="breadcrumb mb-4">
@@ -155,7 +152,7 @@ const Social_setting = () => {
         </div>
       </div>
     </div>
-    </div>
+  
   );
 };
 

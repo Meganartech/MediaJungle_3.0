@@ -72,6 +72,7 @@ import PlanDescription from './admin/PlanDescription';
 import ContactUs from './user/Screens/ContactUs';
 import WatchPage from './user/Screens/WatchPage';
 import VideoScreen from './user/VideoScreen';
+import AdminLayout from './admin/AdminLayout';
 
 const App = () => {
   const location = useLocation();
@@ -142,12 +143,13 @@ const App = () => {
           <Route path='UserProfileScreen' element ={<UserProfileScreen />} />
           <Route path='AdminSignin' element ={<AdminSignin />} />
           <Route path='Contactus' element={<ContactUs />}/>
-          <Route path='watchpage' element={<WatchPage />} />
-          <Route path='videoScreen/:id' element={<VideoScreen/>} />
-          
-
-          <Route path='admin' element={<Login/>}  >
-             <Route element={<PrivateRoutes />}>
+          <Route path='watchpage/:id' element={<WatchPage />} />
+          <Route path='videoScreen/:id' element={<VideoScreen/>} /> 
+           <Route path='singlemovie/:id' element={<SingleMovie />} />
+    
+             
+           <Route path='admin' element={<Login />}  >
+           <Route element={<AdminLayout />} >
              <Route path='ViewCategory' element={<ViewCategory/>} />
             <Route path='AddLanguage' element={<AddLanguage/>} />
             <Route path='ViewLanguage' element={<ViewLanguage/>} />
@@ -195,12 +197,10 @@ const App = () => {
             <Route path='Contact_setting' element= {<Contact_setting/>} />
             <Route path='SEO_setting' element= {<SEO_setting/>} />
             <Route path='Mobile_setting' element= {<Mobile_setting/>} />
-
-
+           
              </Route>
           </Route>
           <Route path='licence' element={<Licence/>} />
-
         </Routes>
       {/* </Router> */}
     </div>

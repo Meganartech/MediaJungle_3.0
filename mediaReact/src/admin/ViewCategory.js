@@ -89,9 +89,7 @@ const ViewCategory = () => {
   
   return (
     
-  <div id="content-wrapper" className="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
 
-         <Sidebar />
       <div className="container-fluid">
    
      <div className='container2'>
@@ -203,7 +201,7 @@ const ViewCategory = () => {
         </div>
       )} */}
     </div>
-    </div>
+ 
   );
 };
 

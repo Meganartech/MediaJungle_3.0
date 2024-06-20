@@ -33,12 +33,6 @@ import com.razorpay.Utils;
 @RestController
 @RequestMapping("/api/v2/")
 public class PaymentController {
-	
-	@Value("${rzp_key_id}")
-    private String razorpayApiKey;
-
-    @Value("${rzp_key_secret}")
-    private String razorpayApiSecret;
 
     @Value("${rzp_currency}")
     private String currency;
@@ -52,13 +46,14 @@ public class PaymentController {
     @Autowired
     private PaymentsettingRepository paymentsettingrepository;
         
+
     @PostMapping("/payment")
     public String Payment(@RequestBody Map<String, String> requestData) {
         try {
-            Long amount = Long.parseLong(requestData.get("amount").toString());
-            Long userId = Long.parseLong(requestData.get("userId").toString());
+            Long amount = Long.parseLong(requestData.get("amount"));
+            Long userId = Long.parseLong(requestData.get("userId"));
             String planName = requestData.get("planname");
-            
+
             Optional<PaymentUser> optionPayment = paymentrepository.findByUserId(userId);
             Optional<UserRegister> userOption = userregisterrepository.findById(userId);
 
@@ -70,13 +65,22 @@ public class PaymentController {
                         // Return message indicating already paid and not expired
                         System.out.println("You have already paid for the plan");
                         return "You have already paid for the plan. Your subscription is valid until " + paym.getExpiryDate();
-                    } 
+                    }
                 }
+
+                // Fetch Razorpay keys from the payment settings repository
+                Optional<Paymentsettings> paymentSettingOptional = paymentsettingrepository.findById(1L); // Assuming ID is 1, adjust as needed
+                if (!paymentSettingOptional.isPresent()) {
+                    return "Payment settings not found";
+                }
+                Paymentsettings paymentSetting = paymentSettingOptional.get();
+                String razorpayApiKey = paymentSetting.getRazorpay_key();
+                String razorpayApiSecret = paymentSetting.getRazorpay_secret_key();
                 // Proceed to create a new order
                 RazorpayClient client = new RazorpayClient(razorpayApiKey, razorpayApiSecret);
                 JSONObject orderRequest = new JSONObject();
                 orderRequest.put("amount", amount * 100); // Convert amount to paisa
-                orderRequest.put("currency", currency);
+                orderRequest.put("currency", "INR");
                 orderRequest.put("notes", new JSONObject().put("user_id", userId));
                 Order order = client.orders.create(orderRequest);
                 System.out.println("orderRequest" + order);
@@ -106,69 +110,6 @@ public class PaymentController {
         }
     }
     
-//    @PostMapping("/payment")
-//    public String Payment(@RequestBody Map<String, String> requestData) {
-//        try {
-//            Long amount = Long.parseLong(requestData.get("amount"));
-//            Long userId = Long.parseLong(requestData.get("userId"));
-//            String planName = requestData.get("planname");
-//
-//            Optional<PaymentUser> optionPayment = paymentrepository.findByUserId(userId);
-//            Optional<UserRegister> userOption = userregisterrepository.findById(userId);
-//
-//            // Fetch Razorpay API keys from payment settings
-//            Optional<Paymentsettings> razorpaySettings = paymentsettingrepository.findById(1L); // Assuming the settings are stored with ID 1
-//
-//            if (userOption.isPresent() && razorpaySettings.isPresent()) {
-//                Paymentsettings setting = razorpaySettings.get();
-//                String razorpayApiKey = setting.getRazorpay_key();
-//                String razorpayApiSecret = setting.getRazorpay_secret_key();
-//                
-//                System.out.println("razorpayApiKey"+razorpayApiKey);
-//                System.out.println("razorpayApiSecret"+razorpayApiSecret);
-//
-//                // Check if the user has already made a payment
-//                if (optionPayment.isPresent()) {
-//                    PaymentUser paym = optionPayment.get();
-//                    if (paym.getExpiryDate().isAfter(LocalDate.now())) {
-//                        // Return message indicating already paid and not expired
-//                        return "You have already paid for the plan. Your subscription is valid until " + paym.getExpiryDate();
-//                    }
-//                }
-//
-//                // Proceed to create a new order
-//                RazorpayClient client = new RazorpayClient(razorpayApiKey, razorpayApiSecret);
-//                JSONObject orderRequest = new JSONObject();
-//                orderRequest.put("amount", amount * 100); // Convert amount to paisa
-//                orderRequest.put("currency", currency);
-//                orderRequest.put("notes", new JSONObject().put("user_id", userId));
-//                Order order = client.orders.create(orderRequest);
-//                System.out.println("orderRequest" + order);
-//                String orderId = order.get("id").toString();
-//
-//                // Save payment details
-//                PaymentUser payment = new PaymentUser();
-//                payment.setUserId(userId);
-//                payment.setOrderId(orderId);
-//                payment.setSubscriptionTitle(planName);
-//                payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription
-//                paymentrepository.save(payment);
-//
-//                return orderId;
-//            } else {
-//                // Return an error response if the user or settings are not found
-//                return "User not found or Razorpay settings not configured";
-//            }
-//        } catch (NumberFormatException e) {
-//            return "Invalid data format";
-//        } catch (RazorpayException e) {
-//            e.printStackTrace();
-//            return "Error creating order: " + e.getMessage();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return "Error creating order: " + e.getMessage();
-//        }
-//    }
    
 
     @PostMapping("/buy")
@@ -224,6 +165,7 @@ public class PaymentController {
         }
     }
     
+
 
     
 }

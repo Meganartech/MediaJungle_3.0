@@ -28,59 +28,6 @@ const PlanDetails = () => {
   console.log(userId)
 
 
-
-//   const handlesubmit = async (amount, userId) => {
-//     try {
-//       const response = await fetch(`${API_URL}/api/v2/payment`, {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({
-//           amount: amount,
-//           userId: userId
-//         })
-//       });
-//       const order = await response.text(); // Get the order ID from the response
-
-//       const options = {
-//         order_id: order, // Pass the order ID obtained from the server
-//         name: "Megnar", 
-//         description: "This is for testing",
-//         handler: function (response) {
-//           // Send the payment ID to the server
-//           sendPaymentIdToServer(response.razorpay_payment_id, order, response.razorpay_signature);
-//       },
-//         theme: {
-//           color: "#3399cc"
-//         }
-//       };
-
-//       var pay = new window.Razorpay(options);
-//       pay.open();
-//     } catch (error) {
-//       console.error('Error creating order:', error);
-//     }
-//   };
-//   const sendPaymentIdToServer = async (paymentId, order, signature) => {
-//     try {
-//         const response = await fetch(`${API_URL}/api/v2/buy`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({
-//                 paymentId: paymentId,
-//                 orderId: order,
-//                 signature: signature
-//             })
-//         });
-//         // Handle response from the server if needed
-//     } catch (error) {
-//         console.error('Error sending payment ID to server:', error);
-//     }
-// };
-
 const handlesubmit = async (amount, userId, planname, validity) => {
   try {
     const response = await fetch(`${API_URL}/api/v2/payment`, {

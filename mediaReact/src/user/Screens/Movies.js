@@ -10,6 +10,7 @@ const MoviesPage = () => {
   const [page,setPage] = useState(maxPage);
   const [vimage, setvImage] = useState([]);
   const [all, setall] = useState(null);
+  const userid = sessionStorage.getItem('userId')
   const HandleLoadingMore = () =>{
     setPage(page+maxPage)
   }
@@ -83,7 +84,7 @@ const MoviesPage = () => {
       {all && all.length > 0 ? (all.slice(0, all.length).map((movie, index) => (
             <div key={index} className="slider-item">
              <div className='border border-border p-1 hover:scale-95 transitions relative rounded overflow-hidden' style={{height: "16rem"}}>
-      <Link to={log==="true"?"/play":"/UserLogin"} onClick={() => handlEdit(movie.id)} className='w-full'>
+      <Link to={userid ?`/watchpage/${movie.moviename}`:"/UserLogin"} onClick={() => handlEdit(movie.id)} className='w-full'>
         <img 
         src={`data:image/png;base64,${vimage[index]}`}
         alt={movie?.name} 

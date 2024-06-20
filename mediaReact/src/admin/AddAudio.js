@@ -68,8 +68,8 @@ const AddAudio = () => {
   
 
     const hasPaymentPlan = () => {
-        // return getall.length > 0;
-        return false;
+         return getall.length > 0;
+        //return false;
     };
 
 
@@ -171,9 +171,7 @@ const AddAudio = () => {
   };
   
   return (
-    <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
-
- <Sidebar />
+    
     <div className='container-fluid'>
     
      <div className='container2'>
@@ -297,7 +295,7 @@ const AddAudio = () => {
         </div>
       </div>
     </div>
-    </div>
+   
 
   );
 };

@@ -254,9 +254,7 @@ const EditVideo = (receivedData) => {
 
 
   return (
-    <div id="content-wrapper" class="d-flex flex-column" style={{ marginLeft: "13rem" }}>
       <div className='container-fluid'>
-        <Sidebar />
         <div>
           {/* <h1 className="mt-4 text-white">Add Video</h1> */}
           <ol className="breadcrumb mb-4">
@@ -499,7 +497,7 @@ const EditVideo = (receivedData) => {
           </div>
         </div>
       </div>
-    </div>
+  
   )
 }
 

@@ -50,9 +50,7 @@ const Siteurl_setting = () => {
 
   return (
 
-    <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem" }}>
-
-       <Sidebar />
+  
 
       <div className="container-fluid"   >
         <div className='container2'>
@@ -131,7 +129,7 @@ const Siteurl_setting = () => {
         </div>
       </div>
     </div>
-    </div>
+ 
   );
 };
 

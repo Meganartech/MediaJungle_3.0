@@ -5,6 +5,8 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.compresser.ImageUtils;
+import com.example.demo.model.Addaudio1;
 import com.example.demo.model.FileModel;
 import com.example.demo.model.VideoDescription;
 import com.example.demo.model.Videos;
@@ -503,7 +506,31 @@ public class VideoController {
 //	}
 	
 	
-	
+	@GetMapping("/GetThumbnailsById/{id}")
+    public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
+        try {
+            Optional<VideoDescription> audioOptional = videodescriptionRepository.findById(id);
+
+            if (audioOptional.isPresent()) {
+                VideoDescription audio = audioOptional.get();
+
+                // Assuming decompressImage returns the raw thumbnail data
+                byte[] thumbnailData = ImageUtils.decompressImage(audio.getThumbnail());
+
+                // Convert the byte array to Base64
+                String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);
+
+                // Return a list with a single Base64-encoded thumbnail
+                return ResponseEntity.ok(Collections.singletonList(base64Thumbnail));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 			
 		
 }
