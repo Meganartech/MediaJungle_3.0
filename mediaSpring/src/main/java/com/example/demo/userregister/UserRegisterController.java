@@ -24,10 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.compresser.ImageUtils;
 
-
-
-
-
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/")
@@ -79,7 +75,7 @@ public class UserRegisterController {
         List<UserRegister> getUser = userregisterrepository.findAll();
         return new ResponseEntity<>(getUser, HttpStatus.OK);
     }
-    
+     
     @GetMapping("/GetUserById/{id}")
     public ResponseEntity<UserRegister> getUserById(@PathVariable Long id) {
         Optional<UserRegister> userOptional = userregisterrepository.findById(id);

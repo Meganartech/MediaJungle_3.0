@@ -17,6 +17,7 @@ export const Test = () => {
     const [all, setall] = useState(null);
     const [items, setItems] = useState([]);
     const log=localStorage.getItem('login');  
+    const userid = sessionStorage.getItem('userId')
     useEffect(() => {
       fetchData();
     }, [deleteStatus]);
@@ -105,7 +106,7 @@ all && all.length > 0 ? (
 all.map((get, index) => (
 
 
-<Link className="Link" onClick={() => handlEdit(get.id)} to={log==="true"?"/play":"/UserLogin"}>
+<Link className="Link" onClick={() => handlEdit(get.id)} to={userid ?`/watchpage/${get.moviename}`:"/UserLogin"}>
 <div class="col-lg-2 col-md-2 col-sm-2 col-2 wo_u work__item_user">
 
     <img src={`data:image/png;base64,${vimage[index]}`} class="im_u"   alt={`Image ${index + 1}`} />

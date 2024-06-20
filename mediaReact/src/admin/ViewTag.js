@@ -60,9 +60,6 @@ const ViewTag = () => {
 
   return (
       
-  <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
-
-        <Sidebar />
         <div className="container-fluid">
         <div className='container2'>
           <ol className="breadcrumb mb-4">
@@ -101,7 +98,6 @@ const ViewTag = () => {
               </tbody>            </table>
               </div>
               </div>
-        </div>
         </div>
   
     );

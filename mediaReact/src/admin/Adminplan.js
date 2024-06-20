@@ -36,8 +36,8 @@ const Adminplan = () => {
   }, []);
 
   const hasPaymentPlan = () => {
-    // return getall.length > 0;
-    return false;
+    return getall.length > 0;
+    // return false;
 };
 
   const fetchData = async () => {
@@ -143,8 +143,7 @@ const handleSub = async (e) => {
 
 
   return (
-<div id="content-wrapper" className="d-flex flex-column samp" style={{ marginLeft: "13rem" }}>
-  <Sidebar />
+
 
   <div className="container-fluid">
     <div className="container2">
@@ -274,7 +273,7 @@ const handleSub = async (e) => {
             </div>
             </div>
 
-      </div>
+    
     
            
     

@@ -143,8 +143,7 @@ const Payment_setting = () => {
   };
 
   return (
-    <div id="content-wrapper" className="d-flex flex-column samp" style={{ marginLeft: "13rem", height: '55rem' }}>
-      <Sidebar />
+   
       <div className="container-fluid">
         <div className='container2'>
           <ol className="breadcrumb mb-4">
@@ -214,7 +213,7 @@ const Payment_setting = () => {
           </div>
         </div>
       </div>
-    </div>
+    
   );
 };
 

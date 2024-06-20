@@ -76,8 +76,8 @@ const handlePaidRadioHover = () => {
 
 
 const hasPaymentPlan = () => {
-    // return getall.length > 0;
-    return false;
+     return getall.length > 0;
+    // return false;
 };
 
 
@@ -321,8 +321,7 @@ const hasPaymentPlan = () => {
 
   return (
 
-    <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem" }}>
-             <Sidebar />
+    
 
       <div className='container-fluid'>
         <div className='container2'>
@@ -597,7 +596,7 @@ const hasPaymentPlan = () => {
           </div>
         </div>
       </div>
-    </div>
+ 
     
   );
 }

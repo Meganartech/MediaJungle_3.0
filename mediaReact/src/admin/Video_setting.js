@@ -34,9 +34,7 @@ const save=(e)=>{
 
   return (
 
-    <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem" }}>
-
-      <Sidebar />
+  
 
       <div className="container-fluid"   >
 <div className='container2'>
@@ -96,7 +94,7 @@ const save=(e)=>{
         </div>
       </div>
     </div>
-    </div>
+
   );
 };
 

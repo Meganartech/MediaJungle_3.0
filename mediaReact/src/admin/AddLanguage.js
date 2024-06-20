@@ -93,10 +93,7 @@ const AddLanguage = () => {
   // };
 
   return (
-    <div id="content-wrapper" className="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
-
-    
-    <Sidebar />
+   
     <div className='container-fluid'>      
 <div className='container2'>
           <ol className="breadcrumb mb-4">
@@ -192,7 +189,7 @@ const AddLanguage = () => {
           {/* } */}
         </div> 
       </div>
-      </div>
+   
     
     // </div>
   );

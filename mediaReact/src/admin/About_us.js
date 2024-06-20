@@ -85,9 +85,7 @@ const About_us = () => {
     // navigate('/admin'); // Uncomment if navigation is needed
   };
   return (
-    <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
-
-    <Sidebar />
+ 
     <div className="container-fluid">
        <ol className="breadcrumb mb-4">
          <li className="breadcrumb-item"><Link to="/Dashboard">Dashboard</Link>
@@ -240,7 +238,7 @@ const About_us = () => {
              
                   </div>
      </div>
-     </div>
+   
   )
 }
 

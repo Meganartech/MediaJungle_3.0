@@ -153,9 +153,6 @@ const AddUser = () => {
 
   
   return (
-    <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
-
-      <Sidebar />
     <div className="container-fluid">
     
 <div className='container2'>
@@ -311,7 +308,6 @@ const AddUser = () => {
      
         </div>
       </form>
-    </div>
     </div>
     </div>
   );

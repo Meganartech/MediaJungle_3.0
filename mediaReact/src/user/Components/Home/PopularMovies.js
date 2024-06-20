@@ -9,8 +9,19 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '../../../index.css';
 
+const NextArrow = (props) => {
+  const { className, onClick } = props;
+  return <div className={className} onClick={onClick} />;
+};
+
+const PrevArrow = (props) => {
+  const { className, onClick } = props;
+  return <div className={className} onClick={onClick} />;
+};
+
 const PopularMovies = () => {
   const log=localStorage.getItem('login');
+  const userid = sessionStorage.getItem('userId')
   const [all, setall] = useState(null);
   const [vimage, setvImage] = useState([]);
   useEffect(() => {
@@ -99,12 +110,47 @@ const PopularMovies = () => {
     }
   };
 
+  // const sliderSettings = {
+  //   dots: false,
+  //   infinite: true,
+  //   speed: 500,
+  //   slidesToShow: 7,
+  //   slidesToScroll: 1,
+  //   responsive: [
+  //     {
+  //       breakpoint: 1024,
+  //       settings: {
+  //         slidesToShow: 7,
+  //         slidesToScroll: 1,
+  //         infinite: true,
+  //       },
+  //     },
+  //     {
+  //       breakpoint: 768,
+  //       settings: {
+  //         slidesToShow: 2,
+  //         slidesToScroll: 1,
+  //         initialSlide: 2,
+  //       },
+  //     },
+  //     {
+  //       breakpoint: 480,
+  //       settings: {
+  //         slidesToShow: 1,
+  //         slidesToScroll: 1,
+  //       },
+  //     },
+  //   ],
+  // };
+
   const sliderSettings = {
     dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 7,
     slidesToScroll: 1,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -112,6 +158,8 @@ const PopularMovies = () => {
           slidesToShow: 7,
           slidesToScroll: 1,
           infinite: true,
+          nextArrow: <NextArrow />,
+          prevArrow: <PrevArrow />,
         },
       },
       {
@@ -120,6 +168,8 @@ const PopularMovies = () => {
           slidesToShow: 2,
           slidesToScroll: 1,
           initialSlide: 2,
+          nextArrow: <NextArrow />,
+          prevArrow: <PrevArrow />,
         },
       },
       {
@@ -127,10 +177,13 @@ const PopularMovies = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          nextArrow: <NextArrow />,
+          prevArrow: <PrevArrow />,
         },
       },
     ],
   };
+
 
   return (
     <div className='my-10 mx-8'>
@@ -143,7 +196,7 @@ const PopularMovies = () => {
           {all && all.length > 0 ? (all.slice(0, all.length).map((movie, index) => (
             <div key={index} className="slider-item">
              <div className='border border-border p-1 hover:scale-95 transitions relative rounded overflow-hidden' style={{height: "16rem"}}>
-      <Link to={log==="true"?"/play":"/UserLogin"} className='w-full' onClick={() => handlEdit(movie.id)} >
+      <Link to={userid ?`/watchpage/${movie.moviename}`:"/UserLogin"} className='w-full' onClick={() => handlEdit(movie.id)} >
         <img 
         src={`data:image/png;base64,${vimage[index]}`}
         alt={movie?.name} 

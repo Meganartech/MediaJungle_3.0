@@ -60,8 +60,6 @@ const ListAudio = () => {
   };
   
   return (
-    <div id="content-wrapper" className="d-flex flex-column samp" style={{ marginLeft: '13rem' }}>
-      <Sidebar />
       <div className="container-fluid">
         <div className='container2'>
           <ol className="breadcrumb mb-4">
@@ -120,7 +118,7 @@ const ListAudio = () => {
           </div>
         </div>
       </div>
-    </div>
+  
   );
 };
 

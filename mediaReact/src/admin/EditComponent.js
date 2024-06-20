@@ -146,9 +146,7 @@ function EditComponent() {
   
 
   return (
-    <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
-
-    <Sidebar />
+  
     <div className="container-fluid">
     
       
@@ -324,7 +322,7 @@ function EditComponent() {
         </div>*/}
       </div>
     </div>
-  </div>
+  
   );
 }
 

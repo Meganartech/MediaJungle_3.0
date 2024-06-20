@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './navbar';
 import "../css/Sidebar.css";
-const Sidebar = () => {
+const Sidebar = ({ activeLink, setActiveLink }) => {
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isvalid, setIsvalid] = useState();
   const [isEmpty, setIsEmpty] = useState();
   const navigate = useNavigate();
+  const location = useLocation();
   useEffect(() => {
    
 
@@ -35,6 +37,10 @@ const Sidebar = () => {
     });
   }, []);
 
+  useEffect(() => {
+    setActiveLink(location.pathname);
+}, [location.pathname, setActiveLink]);
+
   const handleLogout = () => {
     let ab = false;
     sessionStorage.setItem("name", ab);
@@ -56,6 +62,8 @@ const Sidebar = () => {
 // };
 
   const handleClick = (link) => {
+    setActiveLink(link);
+    localStorage.setItem('activeLink', link); // Store the active link in local storage
     
     if((link==="/admin/About_us" || link==="/admin/Dashboard")&& isEmpty)
     {
@@ -117,25 +125,25 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Menu </div>
       </div>
-      <li className="nav-item " onClick={() => handleClick("/admin/Dashboard")}>
+      <li className={`nav-item  ${activeLink === "/admin/Dashboard" ? 'active' : ''}`} onClick={() => handleClick("/admin/Dashboard")}>
       {/* <Link className="nav-link text-white" onClick={() => handleClick("/admin/Dashboard")}>
           <i className="fas fa-tachometer-alt"></i>
           
         <span> Dashboard</span>
       </Link> */}
-      <Link className="nav-link text-white">
+      <Link className="nav-link text-white" >
     <i className="fas fa-tachometer-alt"></i>
-    <span> Dashboard</span>
+    <span > Dashboard</span>
 </Link>
   </li> 
-    <li className="nav-item " onClick={() => handleClick("/admin/AddUser")}>
-      <Link className="nav-link text-white">
+    <li className={`nav-item  ${activeLink === "/admin/AddUser" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddUser")}>
+      <Link className="nav-link text-blue">
           <i className="fas fa-tachometer-alt"></i>
         <span>Add Subadmin</span>
       </Link>
   </li> 
     
-      <li className="nav-item" onClick={() => handleClick("/admin/Profile")}>
+      <li className={`nav-item  ${activeLink === "/admin/Profile" ? 'active' : ''}`} onClick={() => handleClick("/admin/Profile")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-user"></i>
             <span>Manage Subadmin</span>
@@ -144,13 +152,13 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Video</div>
       </div>
-      <li className="nav-item" onClick={() => handleClick("/admin/Video")}>
+      <li className={`nav-item  ${activeLink === "/admin/Video" ? 'active' : ''}`} onClick={() => handleClick("/admin/Video")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-video"></i>
             <span> Video</span>
           </Link>
       </li>  
-      <li className="nav-item" onClick={() => handleClick("/admin/AddVideo")}>
+      <li className={`nav-item  ${activeLink === "/admin/AddVideo" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddVideo")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-upload"></i>
             <span> Add Video</span>
@@ -159,13 +167,13 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Audio</div>
       </div>
-      <li className="nav-item" onClick={() => handleClick("/admin/ListAudio")}>
+      <li className={`nav-item  ${activeLink === "/admin/ListAudio" ? 'active' : ''}`} onClick={() => handleClick("/admin/ListAudio")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-music"></i>
             <span> Audio</span>
           </Link>
       </li>
-      <li className="nav-item" onClick={() => handleClick("/admin/AddAudio")}>
+      <li className={`nav-item  ${activeLink === "/admin/AddAudio" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddAudio")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-upload"></i>
             <span> Add Audio</span>
@@ -175,13 +183,13 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Category</div>
       </div>
-      <li className="nav-item" onClick={() => handleClick("/admin/AddCategory")}>
+      <li className={`nav-item  ${activeLink === "/admin/AddCategory" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddCategory")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
             <span> Add Category</span>
           </Link>
       </li>
-      <li className="nav-item" onClick={() => handleClick("/admin/ViewCategory")}>
+      <li className={`nav-item  ${activeLink === "/admin/ViewCategory" ? 'active' : ''}`} onClick={() => handleClick("/admin/ViewCategory")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-upload"></i>
             <span> View Category</span>
@@ -191,13 +199,13 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Tag</div>
       </div>
-      <li className="nav-item" onClick={() => handleClick("/admin/AddTag")}>
+      <li className={`nav-item  ${activeLink === "/admin/AddTag" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddTag")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
             <span> Add Tag</span>
           </Link>
       </li>
-      <li className="nav-item" onClick={() => handleClick("/admin/ViewTag")}>
+      <li className={`nav-item  ${activeLink === "/admin/ViewTag" ? 'active' : ''}`} onClick={() => handleClick("/admin/ViewTag")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-upload"></i>
             <span> View Tag</span>
@@ -206,13 +214,13 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Cast & Crew</div>
       </div>
-      <li className="nav-item" onClick={() => handleClick("/admin/AddCastCrew")}>
+      <li className={`nav-item  ${activeLink === "/admin/AddCastCrew" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddCastCrew")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
             <span> Add Cast & Crew</span>
           </Link>
       </li>
-      <li className="nav-item" onClick={() => handleClick("#")}>
+      <li className={`nav-item  ${activeLink === "" ? 'active' : ''}`} onClick={() => handleClick("#")}>
           <Link className="nav-link text-white" to="#">
               <i className="fas fa-upload"></i>
             <span> View Cast & Crew</span>
@@ -221,13 +229,13 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Language</div>
       </div>
-      <li className="nav-item" onClick={() => handleClick("/admin/AddLanguage")}>
+      <li className={`nav-item  ${activeLink === "/admin/AddLanguage" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddLanguage")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
             <span> Add Langugae</span>
           </Link>
       </li>
-      <li className="nav-item" onClick={() => handleClick("/admin/ViewLanguage")}>
+      <li className={`nav-item  ${activeLink === "/admin/ViewLanguage" ? 'active' : ''}`} onClick={() => handleClick("/admin/ViewLanguage")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-upload"></i>
             <span> View Langugae</span>
@@ -237,13 +245,13 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Certificate</div>
       </div>
-      <li className="nav-item" onClick={() => handleClick("/admin/AddCertificate")}>
+      <li className={`nav-item  ${activeLink === "/admin/AddCertificate" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddCertificate")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
             <span> Add Certificate</span>
           </Link>
       </li>
-      <li className="nav-item" onClick={() => handleClick("/admin/ViewCertificate")}>
+      <li className={`nav-item  ${activeLink === "/admin/ViewCertificate" ? 'active' : ''}`} onClick={() => handleClick("/admin/ViewCertificate")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-upload"></i>
             <span> View Certificate</span>
@@ -253,19 +261,19 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Payments</div>
       </div>
-      <li className="nav-item" onClick={() => handleClick("/admin/Adminplan")}>
+      <li className={`nav-item  ${activeLink === "/admin/Adminplan" ? 'active' : ''}`} onClick={() => handleClick("/admin/Adminplan")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
             <span>PlanDetails</span>
           </Link>
       </li>
-      <li className="nav-item" onClick={() => handleClick("/admin/PlanDetailsList")}>
+      <li className={`nav-item  ${activeLink === "/admin/PlanDetailsList" ? 'active' : ''}`} onClick={() => handleClick("/admin/PlanDetailsList")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
             <span>List Plans</span>
           </Link>
       </li>
-      <li className="nav-item" onClick={() => handleClick("/admin/SubscriptionPayments")}>
+      <li className={`nav-item  ${activeLink === "/admin/SubscriptionPayments" ? 'active' : ''}`} onClick={() => handleClick("/admin/SubscriptionPayments")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
             <span> Subscription Payments</span>
@@ -274,13 +282,13 @@ const Sidebar = () => {
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Settings</div>
       </div>
-      <li className="nav-item" onClick={() => handleClick("/admin/Setting")}>
+      <li className={`nav-item  ${activeLink === "/admin/Setting" ? 'active' : ''}`} onClick={() => handleClick("/admin/Setting")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
             <span> Settings</span>
           </Link>
       </li>
-      <li className="nav-item" onClick={() => handleClick("/admin/About_us")}>
+      <li className={`nav-item  ${activeLink === "/admin/About_us" ? 'active' : ''}`} onClick={() => handleClick("/admin/About_us")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
             <span> About-Us</span>

@@ -125,9 +125,6 @@ const Dashboard = () => {
 
 
   return (
-    <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
-
- <Sidebar />
     <div className="container-fluid">
     <div className="marquee-container">
       <div className="marquee-content">
@@ -268,7 +265,7 @@ const Dashboard = () => {
     
     </div>
     </div>
-    </div>
+   
   
     
   );
