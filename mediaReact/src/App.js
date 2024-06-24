@@ -167,8 +167,8 @@ const App = () => {
         }
       > */}
           <Route path='admin' element={<Login />}  >
-              <Route element={<AdminLayout /> }   >
-
+             <Route element={<PrivateRoutes />}> 
+             <Route element={<AdminLayout /> }   >
              <Route path='ViewCategory' element={<ViewCategory />}/>
             <Route path='AddLanguage' element={<AddLanguage/>} />
             <Route path='ViewLanguage' element={<ViewLanguage/>} />
@@ -220,7 +220,7 @@ const App = () => {
             <Route path='Mobile_setting' element= {<Mobile_setting/>} />
             </Route>
             </Route>
-          {/* </Route> */}
+          </Route>
           <Route path='licence' element={<Licence/>} />
         </Routes>
       {/* </Router> */}
