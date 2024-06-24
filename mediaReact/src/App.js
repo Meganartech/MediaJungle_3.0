@@ -73,6 +73,8 @@ import ContactUs from './user/Screens/ContactUs';
 import WatchPage from './user/Screens/WatchPage';
 import VideoScreen from './user/VideoScreen';
 import AdminLayout from './admin/AdminLayout';
+import Viewcastandcrew from './admin/Viewcastandcrew';
+import Editcastandcrew from './admin/Editcastandcrew';
 
 const App = () => {
   const location = useLocation();
@@ -110,6 +112,9 @@ const App = () => {
   
   }, []);
 
+  const isAuthenticated = isLogged && isuserLogged; // Combine both conditions
+
+
   const handleLogin = () => {
   
     const val=localStorage.getItem('mySessionData')
@@ -121,6 +126,10 @@ const App = () => {
     console.log("inside the app.js Logged 2:", isuserLogged);
     console.log("inside the app.js Logged :", isLogged);// Log the state after it's updated
   };
+
+
+ 
+
  
   return (
 
@@ -145,12 +154,22 @@ const App = () => {
           <Route path='Contactus' element={<ContactUs />}/>
           <Route path='watchpage/:id' element={<WatchPage />} />
           <Route path='videoScreen/:id' element={<VideoScreen/>} /> 
-           <Route path='singlemovie/:id' element={<SingleMovie />} />
+           {/* <Route path='singlemovie/:id' element={<SingleMovie />} /> */}
     
              
-           <Route path='admin' element={<Login />}  >
-           <Route element={<AdminLayout />} >
-             <Route path='ViewCategory' element={<ViewCategory/>} />
+           {/* <Route path="/admin" element={<Login />} />
+      <Route
+        path="/admin/*"
+        element={
+          <PrivateRoute >
+            <AdminLayout />
+          </PrivateRoute>
+        }
+      > */}
+          <Route path='admin' element={<Login />}  >
+             <Route element={<PrivateRoutes />}> 
+             <Route element={<AdminLayout /> }   >
+             <Route path='ViewCategory' element={<ViewCategory />}/>
             <Route path='AddLanguage' element={<AddLanguage/>} />
             <Route path='ViewLanguage' element={<ViewLanguage/>} />
             <Route path='EditCategory' element={<EditCategory/>} />
@@ -180,6 +199,8 @@ const App = () => {
             <Route path='addAudio' element= {<AddAudio/>} />
             <Route path='addCategory'element= {<AddCategory/>} />
             <Route path='addCastCrew' element= {<AddCastCrew/>} />
+            <Route path='Viewcastandcrew' element={<Viewcastandcrew />} />
+            <Route path='Editcastandcrew' element={<Editcastandcrew />} />
             <Route path='subscriptionPayments' element= {<SubscriptionPayments/>} />
             <Route path='Adminplan' element= {<Adminplan/>} />
             <Route path='PlanDetailsList' element={<PlanDetailsList/>}/>
@@ -197,8 +218,8 @@ const App = () => {
             <Route path='Contact_setting' element= {<Contact_setting/>} />
             <Route path='SEO_setting' element= {<SEO_setting/>} />
             <Route path='Mobile_setting' element= {<Mobile_setting/>} />
-           
-             </Route>
+            </Route>
+            </Route>
           </Route>
           <Route path='licence' element={<Licence/>} />
         </Routes>

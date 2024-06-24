@@ -52,6 +52,11 @@ public class Othersettings {
 		this.playstore = playstore;
 	}
 
+	public Othersettings() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	
 	
 	

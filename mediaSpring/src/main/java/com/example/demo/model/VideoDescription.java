@@ -1,21 +1,28 @@
 package com.example.demo.model;
 
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+
 
 import com.example.demo.userregister.UserRegister;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
+
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 
 
 
@@ -27,6 +34,7 @@ public class VideoDescription {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
+	
 	private String moviename ;
 	private String description ;
 	private String tags ;
@@ -37,22 +45,40 @@ public class VideoDescription {
 	private String year; 
 	private String name; 
 	private boolean paid;
-	@Lob
-	@Column(name="thumbnail" ,length=1000000)
-	private byte[] thumbnail;
+	
 	
 	@ManyToMany(mappedBy = "favoriteVideos", cascade = CascadeType.REMOVE)
 	@JsonBackReference
 	private List<UserRegister> users;
 	
+
+	
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	  @JoinTable(
+	      name = "video_castandcrew",
+	      joinColumns = @JoinColumn(name = "video_id"),
+	      inverseJoinColumns = @JoinColumn(name = "castandcrew_id")
+	  )
+		@JsonManagedReference
+	  private List<CastandCrew> castandcrewlist;
+	
+	@Lob
+	@Column(name="thumbnail" ,length=1000000)
+	private byte[] thumbnail;
+	
+	
+	  
 	public VideoDescription() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
+	
+
+
 	public VideoDescription(long id, String moviename, String description, String tags, String category,
 			String certificate, String language, String duration, String year, String name, boolean paid,
-			byte[] thumbnail, List<UserRegister> users) {
+			byte[] thumbnail, List<UserRegister> users, List<CastandCrew> castandcrewlist) {
 		super();
 		this.id = id;
 		this.moviename = moviename;
@@ -67,7 +93,11 @@ public class VideoDescription {
 		this.paid = paid;
 		this.thumbnail = thumbnail;
 		this.users = users;
+		this.castandcrewlist = castandcrewlist;
 	}
+
+
+
 
 	public long getId() {
 		return id;
@@ -173,6 +203,14 @@ public class VideoDescription {
 		this.users = users;
 	}
 
+	public List<CastandCrew> getCastandcrewlist() {
+		return castandcrewlist;
+	}
+
+	public void setCastandcrewlist(List<CastandCrew> castandcrewlist) {
+		this.castandcrewlist = castandcrewlist;
+	}
+
 	@Override
 	public String toString() {
 		return "VideoDescription [id=" + id + ", moviename=" + moviename + ", description=" + description + ", tags="
@@ -180,8 +218,6 @@ public class VideoDescription {
 				+ ", duration=" + duration + ", year=" + year + ", name=" + name + ",paid=" + paid + ",thumbnail="
 				+ Arrays.toString(thumbnail) + "]";
 	}
-	
-	
 	
 
 }

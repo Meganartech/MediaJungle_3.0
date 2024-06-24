@@ -105,6 +105,9 @@ const Register = () => {
                         icon: 'success',
                         title: 'Registered successfully',
                         confirmButtonColor: '#FFC107'
+                    // }).then(() => {
+                    //     // Redirect to login page
+                    //     window.location.href = '/UserLogin';
                     });
                 } else {
                     Swal.fire({
@@ -121,6 +124,7 @@ const Register = () => {
                     text: 'An error occurred while registering. Please try again.'
                 });
             }
+            data.username=''
         }
     };
     
