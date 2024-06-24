@@ -14,8 +14,8 @@ const AdminLayout = () => {
         <Sidebar 
         activeLink={activeLink}
         setActiveLink={setActiveLink}/> 
-              <Outlet />
-            </div>
+          <Outlet />
+      </div>
         
      
   );

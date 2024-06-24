@@ -2,10 +2,7 @@
 // ---------------------------------------------------------------------
 // import React, { useState } from 'react';
 import axios from 'axios';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
 import { Link } from 'react-router-dom';
-import Employee from './Employee';
 import API_URL from '../Config';
 import "../css/Sidebar.css";
 
@@ -30,9 +27,45 @@ const AddVideo = () => {
   const [thumbnail, setThumbnail] = useState(null);
   const [selected, setSelected] = useState(false);
   const [getall,setgetall] = useState(''); 
+  const [Getall,setGetall] = useState('');
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState('free');
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [castandcrewlist, setcastandcrewlist] = useState([]);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleCheckboxChange = (option) => (e) => {
+    const isChecked = e.target.checked;
+    const id = (option.id); // Convert ID to number
+  
+    if (isChecked) {
+      setcastandcrewlist((prevList) => [...prevList, id]);
+    } else {
+      setcastandcrewlist((prevList) => prevList.filter((item) => item !== id));
+    }
+  };
+
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllcastandcrew`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetall(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllPlans`)
@@ -253,71 +286,165 @@ const hasPaymentPlan = () => {
   //   //   setDescription('');
   //   // })
   // }
+
+  
+  // const save = async (e) => {
+  //   e.preventDefault();
+  
+  //   try {
+  //     // First fetch request to check the count
+  //     const response = await fetch('http://localhost:8080/api/v2/count', {
+  //       method: 'GET',
+  //     });
+  
+  //     console.log(response);
+  
+  //     if (response.ok) {
+  //       try {
+  //         // Initialize formData
+  //         const formData = new FormData();
+  
+  //         // Define Addvideo object with the necessary data
+  //         const Addvideo = {
+  //           Movie_name: Movie_name,
+  //           tags: TagId,
+  //           description: Description,
+  //           category: categoryId,
+  //           certificate: certificateId,
+  //           Language: LanguageId,
+  //           Duration: Duration,
+  //           Year: Year,
+  //           thumbnail: thumbnail,
+  //           video: file,
+  //           paid: selectedOption === 'paid' ? 1 : 0,
+  //         };
+  
+  //         // Append cast and crew list to formData
+  //         castandcrewlist.forEach((id) => {
+  //           formData.append('castandcrewlist', id);
+  //         });
+  
+  //         // Append Addvideo properties to formData
+  //         for (const key in Addvideo) {
+  //           formData.append(key, Addvideo[key]);
+  //         }
+  
+  //         console.log("Addvideo:");
+  //         console.log(Addvideo);
+  
+  //         // Make the POST request to upload description
+  //         const uploadResponse = await axios.post(`${API_URL}/api/uploaddescriprion`, formData, {
+  //           headers: {
+  //             'Content-Type': 'multipart/form-data',
+  //           },
+  //           onUploadProgress: (progressEvent) => {
+  //             const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+  //             setUploadProgress(progress);
+  //           },
+  //         });
+  
+  //         console.log(uploadResponse.data);
+  //         console.log("Video updated successfully");
+  //       } catch (error) {
+  //         console.error('Error uploading video:', error);
+  //         // Handle error, e.g., show an error message to the user
+  //       }
+  //     } else {
+  //       alert("Limit reached");
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching count:', error);
+  //   }
+  // };
+
+
   const save = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/v2/count', {
-           method: 'GET',
-         });
-         console.log(response)
-         if (response.ok) {
-          try {
-            const formData = new FormData();
-            const audioData = {
-                
-              thumbnail: thumbnail,
-            };
-            console.log("audioData")
-            console.log(audioData)
-            const Addvideo = { Movie_name: Movie_name, tags: TagId, description: Description,category: categoryId,certificate: certificateId,Language: LanguageId,Duration:Duration,Year:Year,thumbnail:thumbnail,video:file,paid:selectedOption === 'paid' ? 1 : 0};
-            console.log(Addvideo);
-        
+        const response = await fetch('http://localhost:8080/api/v2/count', {
+            method: 'GET',
+        });
+        console.log(response);
+        if (response.ok) {
+            try {
+                const formData = new FormData();
+                formData.append('moviename', Movie_name);
+                formData.append('description', Description);
+                formData.append('tags', TagId);
+                formData.append('category', categoryId);
+                formData.append('certificate', certificateId);
+                formData.append('language', LanguageId);
+                formData.append('duration', Duration);
+                formData.append('year', Year);
+                formData.append('thumbnail', thumbnail);
+                formData.append('video', file);
+                formData.append('paid', selectedOption === 'paid' ? 1 : 0);
 
-        
-            for (const key in Addvideo) {
-              formData.append(key, Addvideo[key]);
-            }
-        
-            const response = await axios.post(`${API_URL}/api/uploaddescriprion`, formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-                onUploadProgress: (progressEvent) => {
-                  const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-                  setUploadProgress(progress);
-                }
-              });
-                console.log(response.data);
-              console.log("video updated successfully");
+                // Correctly append each item in castandcrewlist
+                castandcrewlist.forEach((id) => {
+                  formData.append('castandcrewlist', id);
+                });
+
+                const uploadResponse = await axios.post(`${API_URL}/api/uploaddescription`, formData, {
+                    onUploadProgress: (progressEvent) => {
+                        const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                        setUploadProgress(progress);
+                    }
+                });
+
+                console.log(uploadResponse.data);
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Video updated successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
             } catch (error) {
-              console.error('Error uploading audio:', error);
-              // Handle error, e.g., show an error message to the user
+                console.error('Error uploading video:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Error uploading video',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             }
-        
-         }
-         else{
-          alert("limite reached");
-     
-         }
-       } catch (error) {
-         console.error('Error ', error);
-       }
-  
-    console.log("audioData")
-    const Addvideo = { Movie_name: Movie_name, tags: TagId, description: Description,category: categoryId,certificate: certificateId,Language: LanguageId,Duration:Duration,Year:Year,thumbnail:thumbnail,video:file, paid:selectedOption === 'paid' ? 1 : 0,};
+        } else {
+            Swal.fire({
+                title: 'Limit Reached',
+                text: 'The upload limit has been reached',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+        }
+    } catch (error) {
+        console.error('Error ', error);
+        Swal.fire({
+            title: 'Error!',
+            text: 'An error occurred',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    console.log("audioData");
+    const Addvideo = { 
+        Movie_name, 
+        tags: TagId, 
+        description: Description, 
+        category: categoryId, 
+        certificate: certificateId, 
+        language: LanguageId, 
+        duration: Duration, 
+        year: Year, 
+        thumbnail, 
+        video: file, 
+        paid: selectedOption === 'paid' ? 1 : 0,
+        castandcrewlist: castandcrewlist // Add the selectedItems to the object
+    };
+
     console.log(Addvideo);
+};
 
-
-
-
-       
-    // Employee.setVideo(Addvideo).then(res => {
-    //   // handleUpload();
-    //   setMovie_name('');
-    //   setTags('');
-    //   setDescription('');
-    // })
-  }
 
   return (
 
@@ -451,20 +578,7 @@ const hasPaymentPlan = () => {
                       value={Duration}
                     />
                     </div>
-                    <div className='col-lg-6'>
-                      <label >Cast&Crew</label>
-                    <input
-                      type="text"
-                      name="Tags"
-                      // className={`form-control ${errors.confirmPassword ? 'error' : ''}`}
-                      className="form-control"
-                      onChange={changeCast_Crew}
-                      value={Cast_Crew}
-                    />
-                    </div>
-                    </div>
                     <br></br>
-                    <div className='temp'>
                     <div className='col-lg-6'>
                       <label >Description</label>
                     <input
@@ -476,39 +590,50 @@ const hasPaymentPlan = () => {
                       value={Description}
                     />
                     </div>
-                    {/* <div className='col-lg-6'>
-                      <label >Name</label>
-                    <input
-                      type="text"
-                      name="confirmPassword"
-                      // className={`form-control ${errors.confirmPassword ? 'error' : ''}`}
-                      className="form-control"
-                      onChange={""}
-                      value={"categoryName"}
-                    />
-                    </div>*/}
-                    </div> 
-                    
-                    {/* <br></br>
-                    <input
-                      type="text"
-                      name="confirmPassword"
-                      // className={`form-control ${errors.confirmPassword ? 'error' : ''}`}
-                      className="form-control"
-                      onChange={''}
-                      value={'categoryName'}
-                    /> */}
-                    <br></br>
-                    {/* <input
-                      type="text"
-                      name="confirmPassword"
-                      // className={`form-control ${errors.confirmPassword ? 'error' : ''}`}
-                      className="form-control"
-                      onChange={''}
-                      value={'categoryName'}
-                    /> */} 
+                    </div>
 
 <br />
+<div className='temp'>
+  <div className="col-lg-6">
+    <label>Cast & Crew</label>
+    <div className="dropdown-container">
+      <div className="dropdown">
+        <button
+          type="button"
+          className="btn btn-secondary dropdown-toggle form-control"
+          onClick={toggleDropdown}
+        >
+          {castandcrewlist.length > 0 ? 'Selected' : 'Select Cast & Crew'}
+        </button>
+        {isOpen && (
+          <div className="dropdown-menu show">
+            {Getall.map(option => (
+              <div key={option.id} className="dropdown-item">
+                <input
+                  type="checkbox"
+                  value={option.name}
+                  checked={castandcrewlist.includes(option.id)}
+                  onChange={handleCheckboxChange(option)}
+                />
+                <label className="ml-2">{option.name}</label>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {castandcrewlist.length > 0 && (
+        <div className="selected-items">
+          <label>Selected:</label>
+          {castandcrewlist.map(id => (
+            <div key={id}>
+              {Getall.find(option => option.id === id)?.name} {/* Display name based on ID */}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</div>
                   <h5 className='modal-title modal-header' style={{ fontFamily: 'Poppins' }}>
                       Choose Pricing Option
                   </h5>
@@ -594,8 +719,8 @@ const hasPaymentPlan = () => {
              
           
           </div>
-        </div>
-      </div>
+       </div></div>
+  
  
     
   );

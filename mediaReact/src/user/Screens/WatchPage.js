@@ -7,6 +7,9 @@ import { FaCloudDownloadAlt, FaHeart, FaPlay } from 'react-icons/fa';
 import API_URL from '../../Config';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Titles from '../Components/Titles';
+import { FaUserFriends } from 'react-icons/fa'
+import * as base64 from 'byte-base64';
 
 const WatchPage = () => {
     const id = localStorage.getItem('items');
@@ -22,6 +25,7 @@ const WatchPage = () => {
   const [error, setError] = useState(null);
   const [ expiryDate , setexpiryDate] = useState('');
   const [currentDate,setcurrentdate] = useState('');
+  const [thumbnails, setThumbnails] = useState({});
 
 
 
@@ -81,6 +85,48 @@ const WatchPage = () => {
   }, [id]);
 
 
+  // useEffect(() => {
+  //   const fetchThumbnailcast = async () => {
+  //     try {
+  //       const response = await axios.get(`${API_URL}/api/v2/GetAllcastthumbnail`);
+  //       if (response.data) {
+  //         setThumbnailcast(response.data);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching thumbnail:', error);
+  //       setError(error.message);
+  //     }
+  //   };
+  //   fetchThumbnailcast();
+  // },[])
+
+  useEffect(() => {
+    const fetchThumbnails = async () => {
+      const newThumbnails = {};
+      for (let item of getall.castandcrewlist) {
+        try {
+          const response = await axios.get(`${API_URL}/api/v2/GetThumbnailsforcast/${item.id}`);
+          if (response.data) {
+            newThumbnails[item.id] = response.data;
+          }
+        } catch (error) {
+          console.error('Error fetching thumbnail:', error);
+          setError(error.message);
+        }
+      }
+      setThumbnails(newThumbnails);
+      console.log(newThumbnails)
+    };
+
+    if (getall.castandcrewlist) {
+      fetchThumbnails();
+    }
+  }, [getall.castandcrewlist]);
+
+
+  
+
+
   const handleEdit = (id, name) => {
     // Your handleEdit logic here
     console.log(`Editing movie: ${id} - ${name}`);
@@ -100,6 +146,17 @@ const handleSubscribe = () => {
   navigate('/PlanDetails')
 }
 
+const byteArrayToBase64 = (byteArray) => {
+  // Create a binary string from the byte array
+  let binary = '';
+  const len = byteArray.length;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(byteArray[i]);
+  }
+  // Encode the binary string to base64
+  return window.btoa(binary);
+};
+
 
 
   
@@ -111,11 +168,11 @@ const handleSubscribe = () => {
             <div className="flex-btn flex-wrap mb-6 gap-2 bg-main rounded border border-gray-800 p-6">
                 <Link 
                 to={`/`} 
-                className='md:text-xl text-sm flex gap-3 items-center font-bold text-dryGray'>
+                className='md:text-xl text-sm flex gap-3 items-center font-bold text-dryGray' style={{color:"#FBC740"}}>
                     <BiArrowBack /> {getall.moviename}
                 </Link>
                 <div className='flex-btn sm:w-auto w-full gap-5'>
-                <p className='md:text-xl text-sm flex gap-3 items-center font-bold text-dryGray'>
+                <p className='md:text-xl text-sm flex gap-3 items-center font-bold text-dryGray' style={{color:"#FBC740"}}>
                    {getall.year} {getall.category}
                     </p>
                     <button className='hover:text-subMain'>
@@ -165,7 +222,46 @@ const handleSubscribe = () => {
     </div>
 }
         </div>
+        <p className='md:text-xl text-sm flex gap-3 items-center font-bold text-dryGray' style={{ marginTop:'30px',color:"#FBC740" ,fontSize:'30px'}}>
+          Movie Description
+        </p>
+
+        <p className='md:text-xl text-sm flex gap-3 items-center font-bold text-dryGray' style={{ margin:'30px 0 10px 40px' ,fontSize:'20px'}}>
+        {getall.description}
+        </p>
         </div>
+
+        
+        <div>
+          
+      <Titles title="Cast And Crew" Icon={FaUserFriends} />
+      <div>
+      {Object.keys(thumbnails).length > 0 ? (
+        <div className="flex flex-wrap gap-4" style={{ marginTop: '20px' }}>
+          {Object.keys(thumbnails).map((id) => {
+            const castMember = getall.castandcrewlist.find(item => item.id.toString() === id);
+            return (
+              <div key={id} className="flex flex-col items-center gap-2">
+                <img
+                  src={`data:image/jpeg;base64,${thumbnails[id]}`}
+                  className="h-24 w-24 rounded-full object-cover"
+                  alt={`Thumbnail ${id}`}
+                />
+                <span style={{color:'#FBC740'}}>{castMember?.name}</span>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p>Loading cast and crew...</p>
+      )}
+      {error && <p>Error: {error}</p>}
+    </div>
+
+    
+  
+</div>
+    
     </Layout>
     )
   

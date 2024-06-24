@@ -220,7 +220,7 @@ const Sidebar = ({ activeLink, setActiveLink }) => {
             <span> Add Cast & Crew</span>
           </Link>
       </li>
-      <li className={`nav-item  ${activeLink === "" ? 'active' : ''}`} onClick={() => handleClick("#")}>
+      <li className={`nav-item  ${activeLink === "/admin/Viewcastandcrew" ? 'active' : ''}`} onClick={() => handleClick("/admin/Viewcastandcrew")}>
           <Link className="nav-link text-white" to="#">
               <i className="fas fa-upload"></i>
             <span> View Cast & Crew</span>

@@ -4,6 +4,8 @@ import Sidebar from './sidebar';
 import { Link } from 'react-router-dom';
 import Employee from './Employee';
 import API_URL from '../Config';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 
 import React, { useState, useEffect } from 'react';
@@ -24,7 +26,104 @@ const EditVideo = (receivedData) => {
   const [thumbnail, setThumbnail] = useState(null);
   const [updatedata, setUpdatedata] = useState([]);
   const [paid, setpaid] =useState('');
+  const [selectedOption, setSelectedOption] = useState('free');
+  const [getall,setgetall] = useState('');
   const id=localStorage.getItem('items');
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [castandcrewlist, setcastandcrewlist] = useState([]);
+  const [Getall,setGetall] = useState('');
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+
+  const handleCheckboxChange = (option) => {
+    setcastandcrewlist(prevList => {
+      if (prevList.some(person => person.id === option.id)) {
+        return prevList.filter(person => person.id !== option.id);
+      } else {
+        return [...prevList, option];
+      }
+    });
+  };
+
+
+// // Function to handle checkbox change
+// const handleCheckboxChange = (option) => (event) => {
+//   const checked = event.target.checked;
+//   if (checked) {
+//     setcastandcrewlist([...castandcrewlist, option.id]);
+//   } else {
+//     setcastandcrewlist(castandcrewlist.filter(id => id !== option.id));
+//   }
+// };
+
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllcastandcrew`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetall(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllPlans`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setgetall(data);
+        console.log(data)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  const handleRadioChange = (e) => {
+    setSelectedOption(e.target.value);
+};
+
+const handlePaidRadioHover = () => {
+  if (!hasPaymentPlan()) {
+    Swal.fire({
+      title: 'Error!',
+      text: 'You first need to add a payment plan to enable this option.',
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonText: 'Go to Add plan page',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate('/admin/Adminplan');
+      } else if (result.isDismissed) {
+        console.log('Cancel was clicked');
+      }
+    });
+  }
+};
+
+
+const hasPaymentPlan = () => {
+     return getall.length > 0;
+    // return false;
+};
 
   // const fetchData = async () => {
     useEffect(() => {
@@ -98,6 +197,7 @@ const EditVideo = (receivedData) => {
             }
             
             const data = await response.json();
+            console.log(data)
             setUpdatedata(data);
             setMovie_name(data.moviename);
             setCategoryId(data.category);
@@ -107,7 +207,10 @@ const EditVideo = (receivedData) => {
             setLanguageId(data.language)
             setTagId(data.tags);
             setYear(data.year);
-            setpaid(data.paid)
+            setSelectedOption(data.paid ? 'paid' : 'free');
+            setcastandcrewlist(data.castandcrewlist); 
+            console.log("castandcrew",castandcrewlist)
+            
         // Log the movie name here
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -200,56 +303,62 @@ const EditVideo = (receivedData) => {
   
   
 
-  const save = async (e) => {
-    e.preventDefault();
+  
+const save = async (e) => {
+  e.preventDefault();
 
-
-
-
-    try {
+  try {
     const formData = new FormData();
-    // const audioData = {
-        
-    //   thumbnail: thumbnail,
-    // };
-    // console.log("audioData")
-    // console.log(audioData)
-    const Addvideo = { Movie_name: Movie_name, tags: TagId, description: Description,category: categoryId,certificate: certificateId,Language: LanguageId,Duration:Duration,Year:Year,paid:paid,id:updatedata.id};
-    console.log(Addvideo);
 
+    const Addvideo = { Movie_name: Movie_name, tags: TagId, description: Description,category: categoryId,certificate: certificateId,Language: LanguageId,Duration:Duration,Year:Year,paid: selectedOption === 'paid' ? 1 : 0,id:updatedata.id};
+    console.log(Addvideo);
 
     for (const key in Addvideo) {
       formData.append(key, Addvideo[key]);
     }
 
+    // Append each id in castandcrewlist as a separate formData entry
+    castandcrewlist.forEach((person) => {
+      formData.append('castandcrewlist', person.id);
+    });
+
     const response = await axios.post(`${API_URL}/api/updatedescriprion`, formData, {
-        headers: {
-          'Content-Type': 'form-data',
-        },
-        onUploadProgress: (progressEvent) => {
-          const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-          setUploadProgress(progress);
-        }
-      });
-        console.log(response.data);
-      console.log("updated successfully");
-    } catch (error) {
-      console.error('Error uploading audio:', error);
-      // Handle error, e.g., show an error message to the user
-    }
-   
-    // Employee.setVideo(Addvideo).then(res => {
-    //   // handleUpload();
-    //   setMovie_name('');
-    //   setTags('');
-    //   setDescription('');
-    // })
+      headers: {
+        'Content-Type': 'multipart/form-data',  // Automatically set by axios, but explicitly setting here
+      },
+      onUploadProgress: (progressEvent) => {
+        const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+        setUploadProgress(progress);
+      }
+    });
+
+    console.log(response.data);
+    console.log("Updated successfully");
+    Swal.fire({
+      title: 'Success',
+      text: 'The video description has been updated successfully!',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    });
+  } catch (error) {
+    console.error('Error uploading data:', error);
+    Swal.fire({
+      title: 'Error',
+      text: 'There was an error updating the video description.',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
+    // Handle error, e.g., show an error message to the user
   }
 
-  const handleRadioClick = () => {
-    setpaid(!paid); // Toggle the value of 'selected'
-  };
-
+  // Employee.setVideo(Addvideo).then(res => {
+  //   // handleUpload();
+  //   setMovie_name('');
+  //   setTags('');
+  //   setDescription('');
+  // })
+};
+  
 
 
 
@@ -387,20 +496,6 @@ const EditVideo = (receivedData) => {
                     />
                     </div>
                     <div className='col-lg-6'>
-                      <label >Cast&Crew</label>
-                    <input
-                      type="text"
-                      name="Tags"
-                      // className={`form-control ${errors.confirmPassword ? 'error' : ''}`}
-                      className="form-control"
-                      onChange={changeCast_Crew}
-                      value={Cast_Crew}
-                    />
-                    </div>
-                    </div>
-                    <br></br>
-                    <div className='row'>
-                    <div className='col-lg-6'>
                       <label >Description</label>
                     <input
                       type="text"
@@ -411,24 +506,152 @@ const EditVideo = (receivedData) => {
                       value={Description}
                     />
                     </div>
+                    </div>
+                    <br></br>
+                    <div className='row'>
+                    {/* <div className='col-lg-6'>
+                      <label >Cast&Crew</label>
+                    <input
+                      type="text"
+                      name="Tags"
+                      // className={`form-control ${errors.confirmPassword ? 'error' : ''}`}
+                      className="form-control"
+                      onChange={changeCast_Crew}
+                      value={Cast_Crew}
+                    />
+                    </div> */}
 
-                    <div className='col-lg-6'>
-                      <label>
-                          Paid:
-                          <div 
-                              className={`radio-button${paid ? ' selected' : ''}`} // Apply 'selected' class if radio button is selected
-                              onClick={handleRadioClick} // Handle click event
-                          >
-                              {/* Display custom radio button */}
-                              <div className="radio-circle">
-                                  <input
-                                      type="radio"
-                                      checked={paid}  // Use checked={paid} instead of checked={selected}
-                                  />
-                              </div>
-                          </div>
-                      </label>
+<br />
+
+{/* <div className='temp'>
+  <div className="col-lg-6">
+    <label>Cast & Crew</label>
+    <div className="dropdown-container">
+      <div className="dropdown">
+        <button
+          type="button"
+          className="btn btn-secondary dropdown-toggle form-control"
+          onClick={toggleDropdown}
+        >
+          {castandcrewlist.length > 0 ? 'Selected' : 'Select Cast & Crew'}
+        </button>
+        {isOpen && (
+          <div className="dropdown-menu show">
+            {Getall.map(option => (
+              <div key={option.id} className="dropdown-item">
+                <input
+                  type="checkbox"
+                  value={option.name}
+                  checked={castandcrewlist.includes(option.id)}
+                  onChange={handleCheckboxChange(option)}
+                />
+                <label className="ml-2">{option.name}</label>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {castandcrewlist.length > 0 && (
+        <div className="selected-items">
+          <label>Selected:</label>
+          {castandcrewlist.map(person => (
+            <div key={person.id}>
+              {person.name}
+            </div>
+          ))}
+        </div>
+      )}
+  
+    </div>
+  </div>
+</div> */}
+
+
+<div className='temp'>
+      <div className="col-lg-6">
+        <label>Cast & Crew</label>
+        <div className="dropdown-container">
+          <div className="dropdown">
+            <button
+              type="button"
+              className="btn btn-secondary dropdown-toggle form-control"
+              onClick={toggleDropdown}
+            >
+              {castandcrewlist.length > 0 ? 'Selected' : 'Select Cast & Crew'}
+            </button>
+            {isOpen && (
+              <div className="dropdown-menu show">
+                {Getall.map(option => (
+                  <div key={option.id} className="dropdown-item">
+                    <input
+                      type="checkbox"
+                      value={option.name}
+                      checked={castandcrewlist.some(person => person.id === option.id)}
+                      onChange={() => handleCheckboxChange(option)}
+                    />
+                    <label className="ml-2">{option.name}</label>
                   </div>
+                ))}
+              </div>
+            )}
+          </div>
+          {castandcrewlist.length > 0 && (
+            <div className="selected-items">
+              <label>Selected:</label>
+              {castandcrewlist.map(person => (
+                <div key={person.id}>
+                  {person.name}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+
+<h5 className='modal-title modal-header' style={{ fontFamily: 'Poppins' }}>
+                      Choose Pricing Option
+                  </h5>
+                  <div className='temp'>
+    <div className='col-lg-1'>
+        <label>
+            <input
+                type="radio"
+                value="free"
+                checked={selectedOption === 'free'}
+                onChange={handleRadioChange}
+            />
+            Free
+        </label>
+    </div>
+    <div className='col-lg-1'>
+        <label>
+        <div
+          className={`radio-button${selectedOption === 'paid' ? ' selected' : ''}`}
+          onMouseEnter={handlePaidRadioHover}
+          onClick={() => {
+              if (hasPaymentPlan()) {
+                  setSelectedOption('paid');
+              }
+          }}
+      >
+            <input
+                type="radio"
+                value="paid"
+                checked={selectedOption === 'paid'}
+                disabled={!hasPaymentPlan()}
+                onChange={() => {
+                    if (hasPaymentPlan()) {
+                        setSelectedOption('paid');
+                    }
+                }}
+               
+            />
+            Paid
+            </div>
+        </label>
+    </div>
+</div>
 
 
                     {/* <div className='col-lg-6'>

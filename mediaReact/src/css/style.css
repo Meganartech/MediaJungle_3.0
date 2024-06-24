@@ -2431,3 +2431,27 @@ margin-top: 12rem;
 }
 }
 
+
+
+/* Add this to your CSS file or a style block */
+.dropdown-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.dropdown {
+  flex-grow: 1;
+  position: relative; /* Ensure dropdown menu is positioned relative to .dropdown */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+}
+
+.selected-items {
+  margin-left: 20px;
+  margin-top: 10px;
+}
