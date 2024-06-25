@@ -28,6 +28,7 @@ const Banner = () => {
             }
             const data = await response.json();
             setAll(data);
+            console.log(data)
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -42,6 +43,7 @@ const Banner = () => {
             const data = await response.json();
             if (data && Array.isArray(data)) {
                 setVImage(data);
+                console.log("thumbnail",data)
             } else {
                 console.error('Invalid or empty data received:', data);
             }
