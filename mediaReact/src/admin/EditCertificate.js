@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from './sidebar';
+import API_URL from '../Config';
 
 const EditCertificate = () => {
   const id = localStorage.getItem('items');
@@ -20,7 +21,7 @@ const EditCertificate = () => {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/v2/GetCertificateById/${id}`)
+    fetch(`${API_URL}/api/v2/GetCertificateById/${id}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -39,7 +40,7 @@ const EditCertificate = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const certificateId = id;
-    fetch(`http://localhost:8080/api/v2/editCertificate/${certificateId}`, {
+    fetch(`${API_URL}/api/v2/editCertificate/${certificateId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

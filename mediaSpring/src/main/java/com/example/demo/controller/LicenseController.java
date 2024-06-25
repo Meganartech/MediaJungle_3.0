@@ -2,20 +2,15 @@ package com.example.demo.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,8 +66,8 @@ public class LicenseController {
 		@Autowired
 		private AddVideoDescriptionRepository videodescription;
 	 
-	 @Value("${upload.audio.directory}")
-	    private String UploadDirectory;
+	 @Value("${upload.licence.directory}")
+		private String LicenceDirectory;
 	
 	
 	 
@@ -107,7 +102,8 @@ public class LicenseController {
 	    			 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    			 try {
 	    			DocumentBuilder builder = factory.newDocumentBuilder();
-					Document document = builder.parse(new File("Audio/product_info.xml"));
+	    			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("product_info.xml");
+					 Document document = builder.parse(inputStream);
 					 Element rootElement=document.getDocumentElement();
 					 NodeList personList = rootElement.getElementsByTagName("data");
 					 Element person4 = (Element) personList.item(0);
@@ -242,7 +238,7 @@ public class LicenseController {
 		    	 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				  try {
 						 DocumentBuilder builder = factory.newDocumentBuilder();
-							Document document = builder.parse(new File("Audio/"+localFile));
+							 Document document = builder.parse(new File(LicenceDirectory+localFile));
 							 Element rootElement=document.getDocumentElement();
 							 NodeList personList = rootElement.getElementsByTagName("data");
 //							File file = new File("Audio/"+localFile);
@@ -434,7 +430,7 @@ public class LicenseController {
 //		            Path filePath = Paths.get("Audio/" + File.getOriginalFilename());
 //		            Files.setLastModifiedTime(filePath, newModifiedTime);
 
-		            Document document = builder.parse(new File("Audio/" + File.getOriginalFilename()));
+		            Document document = builder.parse(new File(LicenceDirectory+ File.getOriginalFilename()));
 		            
 		            Element rootElement = document.getDocumentElement();
 		            System.out.println("Root Element = " + rootElement.getNodeName());
@@ -488,17 +484,24 @@ public class LicenseController {
 			        String uniqueFileName =File.getOriginalFilename();
 			        System.out.println("audioFile.getOriginalFilename()");
 			        System.out.println(File.getOriginalFilename());
+			        Path uploadPath = Paths.get(LicenceDirectory);
+			        if (!Files.exists(uploadPath)) {
+			        	System.out.println("---------------------Folder created--------------------------------");
+			            Files.createDirectories(uploadPath);
+			        }
 			        this.file=File.getOriginalFilename();
 			        logger.info(file);
 			        
 			        // Define the file path where the audio file will be stored
-			        String filePath = Paths.get(UploadDirectory).resolve(uniqueFileName).toString();
+			        String filePath = Paths.get(LicenceDirectory).resolve(uniqueFileName).toString();
 //			        String modifiedPath = filePath.replace("Audio\\", "");
 //			        System.out.println(modifiedPath);
 	
 	
 			        // Save the file to the server
 			        Files.copy(File.getInputStream(), Path.of(filePath), StandardCopyOption.REPLACE_EXISTING);
+			        System.out.println("--------------------------------File uploaded------------------------------------------");
+		            
 	
 			        return "modifiedPath";   
 			        
@@ -536,7 +539,7 @@ public class LicenseController {
 		    			license.getFilename();
 		    		System.out.println("file are same  :"+(file.equals(license.getFilename())));
 		    			
-		    			 String filePath = "Audio/"+license.getFilename();
+		    			 String filePath =LicenceDirectory+license.getFilename();
 		    		        File file1 = new File(filePath);
 		    		        if (file1.exists()&& !(file.equals(license.getFilename()))) {
 		    		            // Attempt to delete the file

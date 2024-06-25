@@ -56,7 +56,7 @@ const AddCertificate = () => {
   //     const formData = new FormData();
   //     formData.append('file', file);
   
-  //     const response = await fetch('http://localhost:8080/api/v2/AddCertificate', {
+  //     const response = await fetch(`${API_URL}/api/v2/AddCertificate`, {
   //       method: 'POST',
   //       body: formData,
   //     });
