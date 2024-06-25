@@ -3,6 +3,7 @@ import Navbar from './navbar';
 import Sidebar from './sidebar';
 import { useLocation, Link } from 'react-router-dom';
 import "../css/Sidebar.css";
+import API_URL from '../Config';
 
 function EditUserdetails() {
   const location = useLocation();
@@ -91,7 +92,7 @@ function EditUserdetails() {
     e.preventDefault();
     const userId = user.id;
     if (validateForm()) {
-      fetch(`http://localhost:8080/api/v2/UpdateUser/${userId}`, {  // Use backticks (`) for string interpolation
+      fetch(`${API_URL}/api/v2/UpdateUser/${userId}`, {  // Use backticks (`) for string interpolation
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

@@ -4,6 +4,7 @@ import { Autoplay } from 'swiper/modules';
 import FlexMovieItems from '../FlexMovieItems';
 import { FaHeart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../../../Config';
 
 const Banner = () => {
     const [all, setAll] = useState(null);
@@ -22,7 +23,7 @@ const Banner = () => {
 
     const fetchAllMovies = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/videogetall');
+            const response = await fetch(`${API_URL}/api/videogetall`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -36,7 +37,7 @@ const Banner = () => {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/GetvideoThumbnail');
+            const response = await fetch(`${API_URL}/api/GetvideoThumbnail`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }

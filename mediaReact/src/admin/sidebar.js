@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './navbar';
 import "../css/Sidebar.css";
+import API_URL from '../Config';
+
 const Sidebar = ({ activeLink, setActiveLink }) => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -12,7 +14,7 @@ const Sidebar = ({ activeLink, setActiveLink }) => {
   useEffect(() => {
    
 
-    fetch('http://localhost:8080/api/v2/GetAllUser')
+    fetch(`${API_URL}/api/v2/GetAllUser`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -67,7 +69,7 @@ const Sidebar = ({ activeLink, setActiveLink }) => {
     
     if((link==="/admin/About_us" || link==="/admin/Dashboard")&& isEmpty)
     {
-      
+      // console.log("!isEmpty"+isEmpty+"isvalid"+isvalid+"!isEmpty"+!isEmpty)
       navigate(link);
     }
     else if ((link==="/admin/About_us" || link==="/admin/Dashboard")&& !isEmpty && !isvalid) 

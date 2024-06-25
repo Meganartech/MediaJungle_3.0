@@ -69,7 +69,7 @@ const AddLanguage = () => {
 
   //   // console.log(categoryName_u);
   //   // Send the category name to the server using a POST request
-  //   fetch('http://localhost:8080/api/v2/AddNewCategories', {
+  //   fetch(`${API_URL}/api/v2/AddNewCategories`, {
   //     method: 'POST',
   //     headers: {
   //       'Content-Type': 'application/json',

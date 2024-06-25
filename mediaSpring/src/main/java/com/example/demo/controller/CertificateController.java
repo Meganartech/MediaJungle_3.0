@@ -24,7 +24,7 @@ import com.example.demo.model.AddCertificate;
 import com.example.demo.model.AddLanguage;
 import com.example.demo.repository.CertificateRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin()
 @RestController
 @RequestMapping("/api/v2/")
 public class CertificateController {

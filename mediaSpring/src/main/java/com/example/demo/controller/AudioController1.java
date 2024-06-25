@@ -50,7 +50,7 @@ import com.example.demo.service.AudioService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@CrossOrigin(origins = {"http://localhost:3000","http://localhost:3001"})
+@CrossOrigin()
 @RestController
 @RequestMapping("/api/v2/")
 public class AudioController1 {

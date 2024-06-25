@@ -19,7 +19,7 @@ import com.example.demo.model.Paymentsettings;
 import com.example.demo.model.PlanDetails;
 import com.example.demo.repository.PaymentsettingRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin()
 @RestController
 @RequestMapping("/api/v2/")
 public class PaymentSettingController {
