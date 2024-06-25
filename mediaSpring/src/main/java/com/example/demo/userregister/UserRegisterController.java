@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.compresser.ImageUtils;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin()
 @RestController
 @RequestMapping("/api/v2/")
 public class UserRegisterController {

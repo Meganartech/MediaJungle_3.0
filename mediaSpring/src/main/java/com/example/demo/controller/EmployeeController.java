@@ -37,7 +37,7 @@ import com.example.demo.repository.SocialsettingRepository;
 import com.example.demo.repository.siteSettingRepository;
 import com.example.demo.repository.videoSettingRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin()
 @RestController
 @RequestMapping("/api/v2/")
 

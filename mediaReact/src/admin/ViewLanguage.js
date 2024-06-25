@@ -22,7 +22,7 @@ const ViewLanguage = () => {
 
   // useEffect(() => {
   //   // Fetch category data from the backend
-  //   fetch('http://localhost:8080/api/v2/GetAllCategories')
+  //   fetch(`${API_URL}/api/v2/GetAllCategories`)
   //     .then(response => response.json())
   //     .then(data => setCategories(data))
   //     .catch(error => console.log(error));

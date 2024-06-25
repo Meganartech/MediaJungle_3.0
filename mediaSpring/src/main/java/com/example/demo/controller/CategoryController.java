@@ -22,7 +22,7 @@ import com.example.demo.model.AddUser;
 import com.example.demo.model.UserListWithStatus;
 import com.example.demo.repository.AddNewCategoriesRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin()
 @RestController
 @RequestMapping("/api/v2/")
 public class CategoryController {
