@@ -3,7 +3,6 @@ import { Link, NavLink } from 'react-router-dom'
 import {FaHeart, FaSearch} from 'react-icons/fa'
 import {CgUser} from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom';
-import API_URL from '../../../Config';
 
 const NavBar = () => {
     const hover = 'hover:text-subMain transitions text-white'
@@ -30,7 +29,7 @@ const NavBar = () => {
       
       if (confirmLogout) {
         // Send logout request to the server
-        const response = await fetch(`${API_URL}/api/v2/logout`, {
+        const response = await fetch("http://localhost:8080/api/v2/logout", {
           method: "POST",
           headers: {
             "Authorization": token, // Pass the token in the Authorization header

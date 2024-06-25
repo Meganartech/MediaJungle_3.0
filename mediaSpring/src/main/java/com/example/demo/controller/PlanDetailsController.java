@@ -24,7 +24,7 @@ import com.example.demo.repository.PlanDescriptionRepository;
 import com.example.demo.repository.PlanDetailsRepository;
 import com.example.demo.userregister.UserRegister;
 
-@CrossOrigin()
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/")
 public class PlanDetailsController {

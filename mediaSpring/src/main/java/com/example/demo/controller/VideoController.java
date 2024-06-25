@@ -51,7 +51,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RequestMapping("/api")
 @RestController
-@CrossOrigin()
+@CrossOrigin("http://localhost:3000")
 public class VideoController {
 
 	@Value("${project.video}")
@@ -401,16 +401,13 @@ public class VideoController {
 			        try {
 			            List<VideoDescription> videoDetails = videodescriptionRepository.findAll();
 			            System.out.println("All video passed");
-			            
-			            
 			            if (!videoDetails.isEmpty()) {
-			            	System.out.println("videoDetails availables");
 			                return new ResponseEntity<>(videoDetails, HttpStatus.OK);
 			            } else {
 			                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			            }
 			        } catch (Exception e) {
-			            return new ResponseEntity<>(HttpStatus.BAD_REQUEST );
+			            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			        }
 			    }
 			 

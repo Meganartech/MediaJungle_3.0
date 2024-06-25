@@ -2,7 +2,6 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 import { useLocation } from 'react-router-dom';
 import '../css/style.css';
-import API_URL from '../Config';
 
 function video() {
   // const [videoUrl, setVideoUrl] = useState('');
@@ -37,7 +36,7 @@ function video() {
 {/* 
 <ReactPlayer
         controls={true}
-        url={`${API_URL}/api/play/${id}`} // Use backticks for string interpolation
+        url={`http://localhost:8080/api/play/${id}`} // Use backticks for string interpolation
         config={{
           file: {
             attributes: {

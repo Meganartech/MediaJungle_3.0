@@ -8,7 +8,6 @@ import { Movies } from '../../Data/MovieData';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '../../../index.css';
-import API_URL from '../../../Config';
 
 const NextArrow = (props) => {
   const { className, onClick } = props;
@@ -45,7 +44,7 @@ const PopularMovies = () => {
      
   
     // fetch category data from the backend
-    fetch(`${API_URL}/api/videogetall`)
+    fetch('http://localhost:8080/api/videogetall')
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -60,7 +59,7 @@ const PopularMovies = () => {
       console.error('Error fetching data:', error);
     });
 
-      // fetch(`${API_URL}/api/GetvideoThumbnail`)
+      // fetch('http://localhost:8080/api/GetvideoThumbnail')
       // .then(response => {
       //   if (!response.ok) {
       //     throw new Error('Network response was not ok');
@@ -92,7 +91,7 @@ const PopularMovies = () => {
     // ------------------------------------------------------------------------------------
     try {
       // Fetch image data
-      const response = await fetch(`${API_URL}/api/GetvideoThumbnail`);
+      const response = await fetch('http://localhost:8080/api/GetvideoThumbnail');
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

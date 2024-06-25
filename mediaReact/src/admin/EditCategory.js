@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from './sidebar';
-import API_URL from '../Config';
+
 const EditCategory = () => {
   const id = localStorage.getItem('items');
   const [updatedcategory, setUpdatedcategory] = useState({ categories: '' });
 
   useEffect(() => {
-    fetch(`${API_URL}/api/v2/GetCategoryById/${id}`)
+    fetch(`http://localhost:8080/api/v2/GetCategoryById/${id}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -34,7 +34,7 @@ const EditCategory = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const categoryId = id;
-    fetch(`${API_URL}/api/v2/editCategory/${categoryId}`, {
+    fetch(`http://localhost:8080/api/v2/editCategory/${categoryId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

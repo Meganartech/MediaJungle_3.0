@@ -3,7 +3,6 @@ import Navbar from './navbar';
 import Sidebar from './sidebar';
 import { useLocation , Link} from 'react-router-dom';
 import "../css/Sidebar.css";
-import API_URL from '../Config';
 
 const EditLanguage = () => {
 
@@ -24,7 +23,7 @@ const EditLanguage = () => {
   };
 
   useEffect(() => {
-    fetch(`${API_URL}/api/v2/GetLanguageById/${id}`)
+    fetch(`http://localhost:8080/api/v2/GetLanguageById/${id}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -44,7 +43,7 @@ const EditLanguage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const languageId = id;
-      fetch(`${API_URL}/api/v2/editLanguage/${languageId}`, {  // Use backticks (`) for string interpolation
+      fetch(`http://localhost:8080/api/v2/editLanguage/${languageId}`, {  // Use backticks (`) for string interpolation
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

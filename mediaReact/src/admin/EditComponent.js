@@ -3,7 +3,6 @@ import Navbar from './navbar';
 import Sidebar from './sidebar';
 import { useLocation, Link } from 'react-router-dom';
 import "../css/Sidebar.css";
-import API_URL from '../Config';
 
 function EditComponent() {
   const id=localStorage.getItem('items');
@@ -92,7 +91,7 @@ function EditComponent() {
   useEffect(() => {
     const fetchUserData = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/v2/GetUserId/${profileID}`);
+            const response = await fetch(`http://localhost:8080/api/v2/GetUserId/${profileID}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -121,7 +120,7 @@ function EditComponent() {
     e.preventDefault();
     const userId = id; // Assuming id is defined somewhere
     if (validateForm()) {
-      fetch(`${API_URL}/api/v2/UpdateUser/${userId}`, {
+      fetch(`http://localhost:8080/api/v2/UpdateUser/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

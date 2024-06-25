@@ -27,7 +27,7 @@ import com.example.demo.model.CastandCrew;
 import com.example.demo.model.VideoDescription;
 import com.example.demo.repository.CastandcrewRepository;
 
-@CrossOrigin()
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/")
 public class CastandcrewController {

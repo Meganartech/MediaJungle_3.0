@@ -20,7 +20,7 @@ import com.example.demo.model.AddLanguage;
 import com.example.demo.model.Tag;
 import com.example.demo.repository.AddLanguageRepository;
 
-@CrossOrigin()
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/")
 public class LanguageController {

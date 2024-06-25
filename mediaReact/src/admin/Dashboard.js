@@ -16,7 +16,7 @@ const Dashboard = () => {
   useEffect(() => {
    
 
-    fetch(`${API_URL}/api/v2/GetAllUser`)
+    fetch('http://localhost:8080/api/v2/GetAllUser')
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');

@@ -293,7 +293,7 @@ const hasPaymentPlan = () => {
   
   //   try {
   //     // First fetch request to check the count
-  //     const response = await fetch(`${API_URL}/api/v2/count`, {
+  //     const response = await fetch('http://localhost:8080/api/v2/count', {
   //       method: 'GET',
   //     });
   
@@ -361,7 +361,7 @@ const hasPaymentPlan = () => {
   const save = async (e) => {
     e.preventDefault();
     try {
-        const response = await fetch(`${API_URL}/api/v2/count`, {
+        const response = await fetch('http://localhost:8080/api/v2/count', {
             method: 'GET',
         });
         console.log(response);

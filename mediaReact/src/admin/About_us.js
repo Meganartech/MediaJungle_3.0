@@ -19,7 +19,7 @@ const About_us = () => {
   useEffect(() => {
 
 
-    fetch(`${API_URL}/api/v2/GetAllUser`)
+    fetch('http://localhost:8080/api/v2/GetAllUser')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -59,7 +59,7 @@ const About_us = () => {
         formData.append(key, audioData[key]);
       }
 
-      const response = await fetch(`${API_URL}/api/v2/uploadfile`, {
+      const response = await fetch('http://localhost:8080/api/v2/uploadfile', {
         method: 'POST',
         body: formData,
         // headers: { // Uncomment these headers if needed

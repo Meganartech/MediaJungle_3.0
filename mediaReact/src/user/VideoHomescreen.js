@@ -5,7 +5,6 @@ import Usersidebar from './usersidebar'
 import { useNavigate } from 'react-router-dom';
 import Video from './video';
 import Footer from './Footer'
-import API_URL from '../Config';
 // import '../css/style.css';
 
 function VideoHomescreen() {
@@ -27,7 +26,7 @@ function VideoHomescreen() {
      
   
       // fetch category data from the backend
-      fetch(`${API_URL}/api/videogetall`)
+      fetch('http://localhost:8080/api/videogetall')
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -55,7 +54,7 @@ function VideoHomescreen() {
       // ------------------------------------------------------------------------------------
       try {
         // Fetch image data
-        const response = await fetch(`${API_URL}/api/GetvideoThumbnail`);
+        const response = await fetch('http://localhost:8080/api/GetvideoThumbnail');
   
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -88,7 +87,7 @@ function VideoHomescreen() {
   
     // const fetchAudios = async () => {
     //   try {
-    //     const response = await axios.get(`${API_URL}/api/v2/audio/list`);
+    //     const response = await axios.get('http://localhost:8080/api/v2/audio/list');
     //     setAudios(response.data);
     //   } catch (error) {
     //     console.error('Error:', error);

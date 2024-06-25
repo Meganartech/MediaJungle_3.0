@@ -26,7 +26,7 @@ import com.example.demo.model.UserListWithStatus;
 import com.example.demo.repository.AddUserRepository;
 import com.example.demo.repository.licenseRepository;
 
-@CrossOrigin()
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/")
 public class AddUserController {
