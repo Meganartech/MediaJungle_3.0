@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
@@ -14,45 +13,54 @@ const AddLanguage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
-    // Create form data object
-    // const formData = new FormData();
-    // formData.append('categories', categoryName);
 
-    // console.log(formData);
-    const data = {
-      language: languageName
-    };
-    console.log(data)
-    // Send the category name to the server using a POST request
-    fetch(`${API_URL}/api/v2/AddLanguage`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(data),
-})
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    
-      .then(response => response.text())
-      
-      .then(data => {
-        console.log(data)
-        if (data === 'success') {
-          setSuccessMessage('Category inserted successfully!');
-          setlanguageName('');
-        } else {
-          setErrorMessage('Error occurred while inserting category.');
-        }
-      })
-      .catch(error => {
-        setErrorMessage('Error occurred while inserting category.');
-        console.error('Error:', error);
-      });
-      
+  const data = {
+    language: languageName
   };
+  console.log(data);
+
+  // Send the language name to the server using a POST request
+  fetch(`${API_URL}/api/v2/AddLanguage`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log(data);
+    if (data === 'success') {
+      setlanguageName('');
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Language inserted successfully!',
+      });
+    } else {
+      setErrorMessage('Error occurred while inserting language.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error occurred while inserting language.',
+      });
+    }
+  })
+  .catch(error => {
+    setErrorMessage('Error occurred while inserting language.');
+    console.error('Error:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred while inserting the language.',
+    });
+  });
+};
+
   
   //   //.....................................User Function............................................
   //   const userid =sessionStorage.getItem('id');

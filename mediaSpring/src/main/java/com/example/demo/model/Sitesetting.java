@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,12 +24,28 @@ public class Sitesetting {
     @Column(name = "tagName")
     private String tagName;
     
-    @Column(name = "icon")
-    private String icon;
+	@Lob
+	@Column(name="icon" ,length=1000000)
+    private byte[] icon;
     
-    @Column(name = "logo")
-    private String logo; 
-   
+	@Lob
+	@Column(name="logo" ,length=1000000)
+    private byte[] logo;
+
+	public Sitesetting() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Sitesetting(long id, String sitename, String appurl, String tagName, byte[] icon, byte[] logo) {
+		super();
+		this.id = id;
+		this.sitename = sitename;
+		this.appurl = appurl;
+		this.tagName = tagName;
+		this.icon = icon;
+		this.logo = logo;
+	}
 
 	public long getId() {
 		return id;
@@ -46,28 +63,12 @@ public class Sitesetting {
 		this.sitename = sitename;
 	}
 
-	public String getLogo() {
-		return logo;
-	}
-
-	public void setLogo(String logo) {
-		this.logo = logo;
-	}
-
 	public String getAppurl() {
 		return appurl;
 	}
 
 	public void setAppurl(String appurl) {
 		this.appurl = appurl;
-	}
-
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
 	}
 
 	public String getTagName() {
@@ -78,9 +79,25 @@ public class Sitesetting {
 		this.tagName = tagName;
 	}
 
-	public Sitesetting() {
+	public byte[] getIcon() {
+		return icon;
+	}
 
-    }
+	public void setIcon(byte[] icon) {
+		this.icon = icon;
+	}
+
+	public byte[] getLogo() {
+		return logo;
+	}
+
+	public void setLogo(byte[] logo) {
+		this.logo = logo;
+	} 
+	
+	
+
+
 
     
    

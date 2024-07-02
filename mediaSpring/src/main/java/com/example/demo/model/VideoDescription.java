@@ -19,7 +19,7 @@ import jakarta.persistence.Id;
 
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
-
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -50,22 +50,27 @@ public class VideoDescription {
 	@ManyToMany(mappedBy = "favoriteVideos", cascade = CascadeType.REMOVE)
 	@JsonBackReference
 	private List<UserRegister> users;
-	
 
 	
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	  @JoinTable(
-	      name = "video_castandcrew",
-	      joinColumns = @JoinColumn(name = "video_id"),
-	      inverseJoinColumns = @JoinColumn(name = "castandcrew_id")
-	  )
-		@JsonManagedReference
-	  private List<CastandCrew> castandcrewlist;
+	
+	
+	@OneToMany(mappedBy = "videoDescription", cascade = CascadeType.ALL)
+	@JsonBackReference
+	private List<VideoCastAndCrew> videoCastAndCrews;
+	
+//	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+//	  @JoinTable(
+//	      name = "video_castandcrew",
+//	      joinColumns = @JoinColumn(name = "video_id"),
+//	      inverseJoinColumns = @JoinColumn(name = "castandcrew_id")
+//	  )
+//	@JsonManagedReference
+//	  private List<CastandCrew> castandcrewlist;
+//	
 	
 	@Lob
 	@Column(name="thumbnail" ,length=1000000)
 	private byte[] thumbnail;
-	
 	
 	  
 	public VideoDescription() {
@@ -76,25 +81,41 @@ public class VideoDescription {
 	
 
 
-	public VideoDescription(long id, String moviename, String description, String tags, String category,
-			String certificate, String language, String duration, String year, String name, boolean paid,
-			byte[] thumbnail, List<UserRegister> users, List<CastandCrew> castandcrewlist) {
-		super();
-		this.id = id;
-		this.moviename = moviename;
-		this.description = description;
-		this.tags = tags;
-		this.category = category;
-		this.certificate = certificate;
-		this.language = language;
-		this.duration = duration;
-		this.year = year;
-		this.name = name;
-		this.paid = paid;
-		this.thumbnail = thumbnail;
-		this.users = users;
-		this.castandcrewlist = castandcrewlist;
-	}
+
+
+
+
+
+
+
+
+	public VideoDescription(long id, String moviename, String description, String tags, String category, String certificate,
+		String language, String duration, String year, String name, boolean paid, List<UserRegister> users,
+		byte[] thumbnail, List<VideoCastAndCrew> videoCastAndCrews) {
+	super();
+	this.id = id;
+	this.moviename = moviename;
+	this.description = description;
+	this.tags = tags;
+	this.category = category;
+	this.certificate = certificate;
+	this.language = language;
+	this.duration = duration;
+	this.year = year;
+	this.name = name;
+	this.paid = paid;
+	this.users = users;
+	this.thumbnail = thumbnail;
+	this.videoCastAndCrews = videoCastAndCrews;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -203,13 +224,43 @@ public class VideoDescription {
 		this.users = users;
 	}
 
-	public List<CastandCrew> getCastandcrewlist() {
-		return castandcrewlist;
+
+	
+
+
+
+
+
+
+	public List<VideoCastAndCrew> getVideoCastAndCrews() {
+		return videoCastAndCrews;
 	}
 
-	public void setCastandcrewlist(List<CastandCrew> castandcrewlist) {
-		this.castandcrewlist = castandcrewlist;
+
+
+
+
+
+
+
+
+
+
+
+	public void setVideoCastAndCrews(List<VideoCastAndCrew> videoCastAndCrews) {
+		this.videoCastAndCrews = videoCastAndCrews;
 	}
+
+
+
+
+
+
+
+
+
+
+
 
 	@Override
 	public String toString() {
@@ -219,5 +270,15 @@ public class VideoDescription {
 				+ Arrays.toString(thumbnail) + "]";
 	}
 	
+	
 
 }
+
+//@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+//@JoinTable(
+//    name = "video_castandcrew",
+//    joinColumns = @JoinColumn(name = "video_id"),
+//    inverseJoinColumns = @JoinColumn(name = "castandcrew_id")
+//)
+//	@JsonManagedReference
+//private List castandcrewlist;

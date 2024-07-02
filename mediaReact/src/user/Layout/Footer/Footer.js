@@ -1,6 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import API_URL from '../../../Config';
 function Footer() {
+  const [ getall,setGetAll] = useState('');
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetsiteSettings`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetAll(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
   const Links = [
     {
       title: 'Company',
@@ -132,12 +152,16 @@ function Footer() {
           </div>
         ))}
         <div className="pb-3.5 sm:pb-0 col-span-1 md:col-span-2 1g:col-span-3">
+        {getall.length > 0 && getall[0].logo ? (
           <Link to="/">
             <img
-              src=" /images/logo.png"
+              src={`data:image/png;base64,${getall[0].logo}`}
               alt="logo"
               className="w-2/4 object-contain h-12" />
           </Link>
+           ) : (
+            <div></div>
+          )}
           <p className="leading-7 text-sm text-border mt-3">
             <span>
               196 Andrew Road, Suite, <br /> New York, NY 10007

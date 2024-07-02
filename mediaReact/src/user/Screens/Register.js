@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import Layout from '../Layout/Layout'
 import { Input } from '../Components/UsedInputs'
 import { Link } from 'react-router-dom'
@@ -17,6 +17,24 @@ const Register = () => {
         mobnum:''
       });
       const [errors, setErrors] = useState({});
+      const [getall,setGetAll] = useState('');
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetsiteSettings`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetAll(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
     
       const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -135,11 +153,15 @@ const Register = () => {
     <Layout className='container mx-auto overflow-y-auto' >
         <div className='px-2 my-24 flex-colo '>
             <div className='w-full 2xl:w-2/5 gap-8 flex-colo p-8 sm:p-14 md:w-3/5 bg-dry rounded-lg border border-border'>
+            {getall.length > 0 && getall[0].logo ? (
                 <img
-                    src='/images/logo.png'
+                    src={`data:image/png;base64,${getall[0].logo}`}
                     alt='logo'
                     className='w-full h-12 object-contain'
                 />
+                ) : (
+                    <div></div>
+                  )}
                 <Input
                     label="User Name"
                     placeholder="New10Media Website"

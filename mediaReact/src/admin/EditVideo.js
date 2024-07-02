@@ -1,13 +1,8 @@
 import axios from 'axios';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
 import { Link } from 'react-router-dom';
-import Employee from './Employee';
 import API_URL from '../Config';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
-
-
 import React, { useState, useEffect } from 'react';
 
 const EditVideo = (receivedData) => {
@@ -208,8 +203,7 @@ const hasPaymentPlan = () => {
             setTagId(data.tags);
             setYear(data.year);
             setSelectedOption(data.paid ? 'paid' : 'free');
-            setcastandcrewlist(data.castandcrewlist); 
-            console.log("castandcrew",castandcrewlist)
+
             
         // Log the movie name here
         } catch (error) {
@@ -567,7 +561,7 @@ const save = async (e) => {
 </div> */}
 
 
-<div className='temp'>
+{/* <div className='temp'>
       <div className="col-lg-6">
         <label>Cast & Crew</label>
         <div className="dropdown-container">
@@ -607,7 +601,7 @@ const save = async (e) => {
           )}
         </div>
       </div>
-    </div>
+    </div> */}
 
 <h5 className='modal-title modal-header' style={{ fontFamily: 'Poppins' }}>
                       Choose Pricing Option

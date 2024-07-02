@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Layout from '../Layout/Layout';
 import { Input } from '../Components/UsedInputs';
 import { Link } from 'react-router-dom';
@@ -8,6 +8,25 @@ import API_URL from '../../Config';
 const UserLogin = () => {
   const [user, setUser] = useState({ email: '', password: '' });
   const [errorMessage, setErrorMessage] = useState('');
+  const [getall,setGetAll] = useState('');
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetsiteSettings`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetAll(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
     const handleChange = (e) => {
       setUser({ ...user, [e.target.name]: e.target.value });
     };
@@ -59,11 +78,15 @@ const UserLogin = () => {
     <Layout>
       <div className='container mx-auto px-2 my-24 flex-colo'>
         <div className='w-full 2xl:w-2/5 gap-8 flex-colo p-8 sm:p-14 md:w-3/5 bg-dry rounded-lg border border-border'>
+        {getall.length > 0 && getall[0].logo ? (
           <img
-            src='/images/logo.png'
+            src={`data:image/png;base64,${getall[0].logo}`}
             alt='logo'
             className='mx-auto h-16 object-contain mb-6' // Adjust the height value for the logo
           />
+          ) : (
+            <div></div>
+          )}
           <Input
             label="Email"
             placeholder="newtonmedia@gmail.com"

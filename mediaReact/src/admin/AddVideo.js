@@ -30,9 +30,26 @@ const AddVideo = () => {
   const [Getall,setGetall] = useState('');
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState('free');
+  const [imageUrl, setImageUrl] = useState(null); // To display image preview
 
   const [isOpen, setIsOpen] = useState(false);
   const [castandcrewlist, setcastandcrewlist] = useState([]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    // thumbnail(file);
+
+    // Display image preview
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImageUrl(null);
+    }
+  };
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -358,13 +375,102 @@ const hasPaymentPlan = () => {
   // };
 
 
-  const save = async (e) => {
+//   const save = async (e) => {
+//     e.preventDefault();
+//     try {
+//         const response = await fetch(`${API_URL}/api/v2/count`, {
+//             method: 'GET',
+//         });
+//         console.log(response);
+//         if (response.ok) {
+//             try {
+//                 const formData = new FormData();
+//                 formData.append('moviename', Movie_name);
+//                 formData.append('description', Description);
+//                 formData.append('tags', TagId);
+//                 formData.append('category', categoryId);
+//                 formData.append('certificate', certificateId);
+//                 formData.append('language', LanguageId);
+//                 formData.append('duration', Duration);
+//                 formData.append('year', Year);
+//                 formData.append('thumbnail', thumbnail);
+//                 formData.append('video', file);
+//                 formData.append('paid', selectedOption === 'paid' ? 1 : 0);
+
+//                 // Correctly append each item in castandcrewlist
+//                 castandcrewlist.forEach((id) => {
+//                   formData.append('castandcrewlist', id);
+//                 });
+
+//                 const uploadResponse = await axios.post(`${API_URL}/api/uploaddescription`, formData, {
+//                     onUploadProgress: (progressEvent) => {
+//                         const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+//                         setUploadProgress(progress);
+//                     }
+//                 });
+
+//                 console.log(uploadResponse.data);
+//                 Swal.fire({
+//                     title: 'Success!',
+//                     text: 'Video updated successfully',
+//                     icon: 'success',
+//                     confirmButtonText: 'OK'
+//                 });
+//             } catch (error) {
+//                 console.error('Error uploading video:', error);
+//                 Swal.fire({
+//                     title: 'Error!',
+//                     text: 'Error uploading video',
+//                     icon: 'error',
+//                     confirmButtonText: 'OK'
+//                 });
+//             }
+//         } else {
+//             Swal.fire({
+//                 title: 'Limit Reached',
+//                 text: 'The upload limit has been reached',
+//                 icon: 'warning',
+//                 confirmButtonText: 'OK'
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error ', error);
+//         Swal.fire({
+//             title: 'Error!',
+//             text: 'An error occurred',
+//             icon: 'error',
+//             confirmButtonText: 'OK'
+//         });
+//     }
+
+//     console.log("audioData");
+//     const Addvideo = { 
+//         Movie_name, 
+//         tags: TagId, 
+//         description: Description, 
+//         category: categoryId, 
+//         certificate: certificateId, 
+//         language: LanguageId, 
+//         duration: Duration, 
+//         year: Year, 
+//         thumbnail, 
+//         video: file, 
+//         paid: selectedOption === 'paid' ? 1 : 0,
+//         castandcrewlist: castandcrewlist // Add the selectedItems to the object
+//     };
+
+//     console.log(Addvideo);
+// };
+
+
+const save = async (e) => {
     e.preventDefault();
+    
     try {
         const response = await fetch(`${API_URL}/api/v2/count`, {
             method: 'GET',
         });
-        console.log(response);
+
         if (response.ok) {
             try {
                 const formData = new FormData();
@@ -378,13 +484,9 @@ const hasPaymentPlan = () => {
                 formData.append('year', Year);
                 formData.append('thumbnail', thumbnail);
                 formData.append('video', file);
-                formData.append('paid', selectedOption === 'paid' ? 1 : 0);
+                formData.append('paid', selectedOption === 'paid');
 
-                // Correctly append each item in castandcrewlist
-                castandcrewlist.forEach((id) => {
-                  formData.append('castandcrewlist', id);
-                });
-
+                // Upload video description
                 const uploadResponse = await axios.post(`${API_URL}/api/uploaddescription`, formData, {
                     onUploadProgress: (progressEvent) => {
                         const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
@@ -392,13 +494,33 @@ const hasPaymentPlan = () => {
                     }
                 });
 
-                console.log(uploadResponse.data);
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Video updated successfully',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
+                const videoId = uploadResponse.data.id; // Assuming the response contains the video ID
+
+                // Prepare data for the second API call
+                const castAndCrewData = new FormData();
+                castAndCrewData.append('videoId', videoId);
+                castandcrewlist.forEach((id) => {
+                    castAndCrewData.append('castAndCrewIds', id);
                 });
+
+                // Save cast and crew
+                const saveResponse = await axios.post(`${API_URL}/api/v2/save`, castAndCrewData);
+
+                if (saveResponse.status === 201) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Video and cast/crew data saved successfully',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Error saving cast and crew data',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
             } catch (error) {
                 console.error('Error uploading video:', error);
                 Swal.fire({
@@ -417,7 +539,7 @@ const hasPaymentPlan = () => {
             });
         }
     } catch (error) {
-        console.error('Error ', error);
+        console.error('Error:', error);
         Swal.fire({
             title: 'Error!',
             text: 'An error occurred',
@@ -425,24 +547,6 @@ const hasPaymentPlan = () => {
             confirmButtonText: 'OK'
         });
     }
-
-    console.log("audioData");
-    const Addvideo = { 
-        Movie_name, 
-        tags: TagId, 
-        description: Description, 
-        category: categoryId, 
-        certificate: certificateId, 
-        language: LanguageId, 
-        duration: Duration, 
-        year: Year, 
-        thumbnail, 
-        video: file, 
-        paid: selectedOption === 'paid' ? 1 : 0,
-        castandcrewlist: castandcrewlist // Add the selectedItems to the object
-    };
-
-    console.log(Addvideo);
 };
 
 
@@ -677,18 +781,23 @@ const hasPaymentPlan = () => {
         </label>
     </div>
 </div>
-                
+
 
 
                         <div className='col-lg-12'>
                     <label >Thumbnail</label>
-                    <br></br>
+                    {imageUrl && (
+          <div className="col-md-12 mt-4 text-center">
+            <img src={imageUrl} alt="Preview" className="img-fluid" style={{ width:'100px' , height:'100px' }} />
+          </div>
+        )}
+        <br />
                     <input
           type='file'
           className='form-control'
           placeholder='Choose Thumbnail'
           name='thumbnail'
-          onChange={(e) => setThumbnail(e.target.files[0])}
+          onChange={handleImageChange}
         />
         </div><br/>
         <div className='col-lg-12'>

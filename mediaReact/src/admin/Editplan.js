@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import API_URL from '../Config';
 
 const Editplan = () => {
@@ -32,9 +32,11 @@ const Editplan = () => {
         }));
       };
 
+
+
       const handleSubmit = (e) => {
         e.preventDefault();
-        const planId = id;
+        const planId = id; // Assuming id is defined elsewhere
         fetch(`${API_URL}/api/v2/editPlans/${planId}`, {
           method: 'PATCH',
           headers: {
@@ -42,19 +44,33 @@ const Editplan = () => {
           },
           body: JSON.stringify(updatedplan),
         })
-          .then((response) => {
-            if (response.ok) {
-              console.log('Plan updated successfully');
-              window.alert('Plan details successfully updated');
-            } else {
-              console.log('Error updating plan');
-            }
-          })
-          .catch((error) => {
-            console.log('Error updating plan:', error);
+        .then((response) => {
+          if (response.ok) {
+            console.log('Plan updated successfully');
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Plan details successfully updated',
+            });
+          } else {
+            console.log('Error updating plan');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Error updating plan',
+            });
+          }
+        })
+        .catch((error) => {
+          console.log('Error updating plan:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while updating the plan',
           });
+        });
       };
-
+      
   return (
    
       <div className="container-fluid">

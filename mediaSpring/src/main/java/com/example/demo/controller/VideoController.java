@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -109,35 +110,64 @@ public class VideoController {
 //    }
 	
 	
-	 @PostMapping("/uploaddescription")
-	    public ResponseEntity<VideoDescription> uploadVideoDescription(
-	            @RequestParam("moviename") String moviename,
-	            @RequestParam("description") String description,
-	            @RequestParam("tags") String tags,
-	            @RequestParam("category") String category,
-	            @RequestParam("certificate") String certificate,
-	            @RequestParam("language") String language,
-	            @RequestParam("duration") String duration,
-	            @RequestParam("year") String year,
-	            @RequestParam("thumbnail") MultipartFile thumbnail,
-	            @RequestParam("video") MultipartFile video,
-	            @RequestParam(value = "paid", required = false, defaultValue = "false") boolean paid,
-	            @RequestParam("castandcrewlist") List<Long> castandcrewlist) {
+//	 @PostMapping("/uploaddescription")
+//	    public ResponseEntity<VideoDescription> uploadVideoDescription(
+//	            @RequestParam("moviename") String moviename,
+//	            @RequestParam("description") String description,
+//	            @RequestParam("tags") String tags,
+//	            @RequestParam("category") String category,
+//	            @RequestParam("certificate") String certificate,
+//	            @RequestParam("language") String language,
+//	            @RequestParam("duration") String duration,
+//	            @RequestParam("year") String year,
+//	            @RequestParam("thumbnail") MultipartFile thumbnail,
+//	            @RequestParam("video") MultipartFile video,
+//	            @RequestParam(value = "paid", required = false, defaultValue = "false") boolean paid,
+//	            @RequestParam("castandcrewlist") List<Long> castandcrewlist) {
+//
+//	        try {
+//	        	
+//	        	FileModel upload= fileSevice.uploadVideo(path, video);
+//	        	String name=upload.getVideoFileName();
+//	            VideoDescription savedDescription = videoService.saveVideoDescriptio(
+//	                    moviename, description, tags, category, certificate, language,
+//	                    duration, year, thumbnail,name, paid, castandcrewlist);
+//
+//	            return ResponseEntity.ok().body(savedDescription);
+//	        } catch (IOException e) {
+//	            e.printStackTrace();
+//	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//	        }
+//	    }
+	
+	@PostMapping("/uploaddescription")
+    public ResponseEntity<VideoDescription> uploadVideoDescription(
+            @RequestParam("moviename") String moviename,
+            @RequestParam("description") String description,
+            @RequestParam("tags") String tags,
+            @RequestParam("category") String category,
+            @RequestParam("certificate") String certificate,
+            @RequestParam("language") String language,
+            @RequestParam("duration") String duration,
+            @RequestParam("year") String year,
+            @RequestParam("thumbnail") MultipartFile thumbnail,
+            @RequestParam("video") MultipartFile video,
+            @RequestParam(value = "paid", required = false, defaultValue = "false") boolean paid){
 
-	        try {
-	        	
-	        	FileModel upload= fileSevice.uploadVideo(path, video);
-	        	String name=upload.getVideoFileName();
-	            VideoDescription savedDescription = videoService.saveVideoDescriptio(
-	                    moviename, description, tags, category, certificate, language,
-	                    duration, year, thumbnail,name, paid, castandcrewlist);
+        try {
+        	
+        	FileModel upload= fileSevice.uploadVideo(path, video);
+        	String name=upload.getVideoFileName();
+            VideoDescription savedDescription = videoService.saveVideoDescriptio(
+                    moviename, description, tags, category, certificate, language,
+                    duration, year, thumbnail,name, paid);
 
-	            return ResponseEntity.ok().body(savedDescription);
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-	        }
-	    }
+            return ResponseEntity.ok().body(savedDescription);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 	
 	
 //	@PostMapping("/uploaddescription")
@@ -203,11 +233,10 @@ public class VideoController {
     		                                    @RequestParam("Duration") String duration,
     		                                    @RequestParam("Year") String year,
     		                                    @RequestParam(value = "paid", required = false) boolean paid,
-    		                    	            @RequestParam("castandcrewlist") List<Long> castandcrewlist,
     		                                    @RequestParam("id") long id)
                                                 {
         try {
-        	VideoDescription updatedesctiption = videoService.saveVideoDescriptio(moviename, description, tags, category, certificate, language, duration, year,paid,castandcrewlist ,id);
+        	VideoDescription updatedesctiption = videoService.saveVideoDescriptio(moviename, description, tags, category, certificate, language, duration, year,paid,id);
 //        	System.out.println(videodescriptionRepository.findAll());
             return ResponseEntity.ok().body(updatedesctiption);
         } catch (IOException e) {
@@ -428,7 +457,7 @@ public class VideoController {
 			                .body(getVideo.stream().map(VideoDescription::getThumbnail).collect(Collectors.toList()));
 			    }
 			 
-			 @GetMapping("/video/{id}")
+			 @DeleteMapping("/video/{id}")
 			    public ResponseEntity<String> deleteAudioById(@PathVariable Long id) {
 				 System.out.println(id);
 			        try {

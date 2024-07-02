@@ -88,17 +88,18 @@ const handleSub = async (e) => {
  const handleSubmit = async (e) => {
   e.preventDefault();
 
+  // Check if payment plan exists
   if (!hasPaymentPlan()) {
     Swal.fire({
       title: 'Error!',
-      text: 'You first need to add a key and screte key to enable this option.',
+      text: 'You first need to add a key and secret key to enable this option.',
       icon: 'error',
       showCancelButton: true,
       confirmButtonText: 'Go to Payment setting page',
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate('/admin/Payment_setting');
+        navigate('/admin/Payment_setting'); // Navigate to payment setting page
       } else if (result.isDismissed) {
         console.log('Cancel was clicked');
       }
@@ -119,6 +120,7 @@ const handleSub = async (e) => {
       formData.append(key, planData[key]);
     }
 
+    // Send the form data to the server using axios
     const response = await axios.post(`${API_URL}/api/v2/PlanDetails`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -126,13 +128,24 @@ const handleSub = async (e) => {
     });
 
     console.log(response.data);
-    setplanid(response.data.id);
-    setplan(response.data.planname);
-    console.log("Plan details uploaded successfully");
-    // Handle success, e.g., show a success message to the user
+    // Assuming response.data contains the updated plan details with an ID
+    setplanid(response.data.id); // Update plan ID state
+    setplan(response.data.planname); // Update plan name state
+
+    // Display success message to the user
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: 'Plan details uploaded successfully',
+    });
   } catch (error) {
     console.error('Error uploading plan details:', error);
-    // Handle error, e.g., show an error message to the user
+    // Display error message to the user
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Failed to upload plan details. Please try again later.',
+    });
   }
 
   // Reset form fields after submission
@@ -140,7 +153,6 @@ const handleSub = async (e) => {
   setamount('');
   setvalidity('');
 };
-
 
   return (
 

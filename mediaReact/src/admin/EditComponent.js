@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2'
 import { useLocation, Link } from 'react-router-dom';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
@@ -117,32 +116,49 @@ function EditComponent() {
 
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const userId = id; // Assuming id is defined somewhere
-    if (validateForm()) {
-      fetch(`${API_URL}/api/v2/UpdateUser/${userId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedUser), // Make sure updatedUser is defined
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const userId = id; // Assuming id is defined somewhere
+  if (validateForm()) {
+    fetch(`${API_URL}/api/v2/UpdateUser/${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedUser), // Make sure updatedUser is defined
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log('User updated successfully');
+          Swal.fire({
+            title: 'Success!',
+            text: 'User details successfully updated',
+            icon: 'success',
+            confirmButtonText: 'OK',
+          });
+          // Assuming you're using React hooks, update state here
+          // Example: setUpdatedUser(data);
+        } else {
+          console.log('Error updating user');
+          Swal.fire({
+            title: 'Error!',
+            text: 'Error updating user',
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+        }
       })
-        .then((response) => {
-          if (response.ok) {
-            console.log('User updated successfully');
-            window.alert('User details successfully updated');
-            // Assuming you're using React hooks, update state here
-            // Example: setUpdatedUser(data);
-          } else {
-            console.log('Error updating user');
-          }
-        })
-        .catch((error) => {
-          console.log('Error updating user:', error);
+      .catch((error) => {
+        console.log('Error updating user:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'An error occurred while updating user. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'OK',
         });
-    }
-  };
+      });
+  }
+};
   
   
 

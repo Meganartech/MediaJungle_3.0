@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.demo.model.AddUser;
 import com.example.demo.model.License;
@@ -39,9 +40,22 @@ public class AddUserController {
 	
 	@PostMapping("/AddUser")
 	public String AddUser(@RequestBody AddUser data) {
-		adduserrepository.save(data);
-		return "success";
-	}
+		try {
+            // Example: Encrypting password before saving (if AddUser has a password field)
+             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+             String hashedPassword = passwordEncoder.encode(data.getPassword());
+             data.setPassword(hashedPassword);
+
+			adduserrepository.save(data);
+			return "success";
+        } catch (Exception e) {
+            return "failure";
+        }
+    }
+		
+//		adduserrepository.save(data);
+//		return "success";
+//	}
 	
 //	@GetMapping("/GetAllUser")
 //	public ResponseEntity<UserListWithStatus> getAllUser() {

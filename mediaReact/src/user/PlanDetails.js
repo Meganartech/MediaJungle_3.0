@@ -6,6 +6,24 @@ import Swal from 'sweetalert2'
 const PlanDetails = () => {
 
   const [getall,setgetall] = useState('');
+  const [GetAll,setGetAll] = useState('');
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetsiteSettings`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetAll(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllPlans`)
@@ -129,11 +147,15 @@ return (
     {getall && getall.length > 0 && getall.map((plan, index) => (
       <div key={index} className='w-full mb-8 flex'>
         <div className='flex flex-col justify-between p-8 sm:p-14 bg-dry rounded-lg border border-border w-full'>
+        {GetAll.length > 0 && GetAll[0].logo ? (
           <img
-            src='/images/logo.png'
+            src={`data:image/png;base64,${GetAll[0].logo}`}
             alt='logo'
-            className='w-full h-12 object-contain'
+            className='w-full h-12 object-contain'  
           />
+          ) : (
+            <div></div>
+          )}
           <br />
           <form className='flex flex-col flex-grow justify-between' style={{ fontFamily: 'Arial, sans-serif', maxWidth: '400px', margin: 'auto', height: '100%' }}>
             <h2 className='text-3xl mb-10 font-semibold text-center text-white'>{plan.planname}(&#8377;{plan.amount})</h2>

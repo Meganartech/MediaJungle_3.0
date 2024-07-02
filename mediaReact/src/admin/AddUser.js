@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-// import { useHistory } from 'react-router-dom';
-// import '../App.css';
-import Sidebar from './sidebar';
-import Navbar from './navbar';
+import Swal from 'sweetalert2';
 import API_URL from '../Config';
 
 import { Link } from 'react-router-dom';
@@ -117,40 +114,54 @@ const AddUser = () => {
           country: data.country,
           password: data.password
         };
-
+  
         console.log('Sending data:', sendData);
-
+  
         const response = await axios.post(
           `${API_URL}/api/v2/AddUser`,
           sendData
         );
-
+  
         console.log('API Response:', response);
-
+  
         if (response.status === 200) {
-          {
-            setData({
-              username: '',
-              mobnum: '',
-              address: '',
-              pincode: '',
-              email: '',
-              compname: '',
-              country: '',
-              password: '',
-              confirm_Password: ''
-            });
-          }
+          Swal.fire({
+            title: 'Success!',
+            text: 'User registered successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+          setData({
+            username: '',
+            mobnum: '',
+            address: '',
+            pincode: '',
+            email: '',
+            compname: '',
+            country: '',
+            password: '',
+            confirm_Password: ''
+          });
         } else {
-          console.log('Invalid User');
+          Swal.fire({
+            title: 'Error!',
+            text: 'Invalid User',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
         }
       } catch (error) {
         console.error('Error:', error);
-        console.log('An error occurred while registering. Please try again.');
+        Swal.fire({
+          title: 'Error!',
+          text: 'An error occurred while registering. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       }
     }
   };
-
+  
   
   return (
     <div className="container-fluid">

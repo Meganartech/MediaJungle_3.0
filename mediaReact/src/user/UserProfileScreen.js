@@ -13,6 +13,7 @@ const UserProfileScreen = () => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [getall,setGetAll] = useState('');
 
     useEffect(() => {
         if (!jwtToken) {
@@ -29,6 +30,7 @@ const UserProfileScreen = () => {
           })
           .then(data => {
             setUser(data);
+            console.log(data);
             setLoading(false);
           })
           .catch(error => {
@@ -36,6 +38,23 @@ const UserProfileScreen = () => {
             setLoading(false);
           });
     }, [jwtToken, userId]);
+
+    useEffect(() => {
+        fetch(`${API_URL}/api/v2/GetsiteSettings`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            setGetAll(data);
+            console.log(data);
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+      }, []);
 
     // If loading, display loading message
     if (loading) {
@@ -51,11 +70,15 @@ const UserProfileScreen = () => {
         <Layout className='container mx-auto min-h-screen overflow-y-auto'>
             <div className='px-10 my-24 flex justify-center'>
                 <div >
+                {getall.length > 0 && getall[0].logo ? (
                     <img
-                        src='/images/logo.png'
+                        src={`data:image/png;base64,${getall[0].logo}`}
                         alt='logo'
                         className='w-full h-12 object-contain mb-8'
                     />
+                    ) : (
+                        <div></div>
+                      )}
                     {/* Conditionally render user information if logged in */}
                     {jwtToken && user && (
                         <>
@@ -67,9 +90,13 @@ const UserProfileScreen = () => {
                                 <label className="block text-yellow-600 text-lg font-medium mb-2">Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-lg font-medium text-gray-500">{user.email}</span></label>
                                 
                             </div>
-                            <div className="mb-6">
+                            {/* <div className="mb-6">
                                 <label className="block text-yellow-600 text-lg font-medium mb-2">Password:&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-lg font-medium text-gray-500">{user.password}</span></label>
                                 
+                            </div> */}
+                            <div className="mb-6">
+                                <label className="block text-yellow-600 text-lg font-medium mb-2">Plan:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-lg font-medium text-gray-500">
+                                {user.paymentId ? `${user.paymentId.subscriptionTitle} (Active until ${user.paymentId.expiryDate})` : "Free"}</span></label>
                             </div>
                         </>
                     )}

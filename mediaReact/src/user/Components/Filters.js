@@ -12,13 +12,6 @@ const YearData = [
   { title: "2010 2030" },
 ];
 
-const TimesData = [
-  { title: "Sort By Hours" },
-  { title: "1 - 5 Hours" },
-  { title: "5 - 10 Hours" },
-  { title: "10 - 15 Hours" },
-  { title: "15 20 Hours" },
-];
 const RatesData = [
   { title: "Sort By Rates" },
   { title: "1 star" },
@@ -31,8 +24,8 @@ const RatesData = [
 const Filters = () => {
   const [category, setCategory] = useState({ title: "Category" });
   const [year, setYear] = useState(YearData[0]);
-  const [times, setTimes] = useState(TimesData[0]);
   const [rates, setRates] = useState(RatesData[0]);
+
   const Filter = [
     {
       value: category,
@@ -45,16 +38,12 @@ const Filters = () => {
       items: YearData,
     },
     {
-      value: times,
-      onChange: setTimes,
-      items: TimesData,
-    },
-    {
       value: rates,
       onChange: setRates,
       items: RatesData,
     },
   ];
+
   return (
     <div className="my-6 bg-dry border text-dryGray border-gray-800 grid md:grid-cols-4 grid-cols-2 lg:gap-12 gap-2 rounded p-6">
       {Filter.map((item, index) => (
@@ -77,8 +66,8 @@ const Filters = () => {
                   <Listbox.Option
                     key={i}
                     className={({ active }) =>
-                      `relative cursor-default select-non py-2 pl-10 pr-4 } ${
-                        active ? "bg-subMain text-white" : "text-main"
+                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                        active ? "bg-subMain text-white" : "text-black"
                       }`
                     }
                     value={iterm}
@@ -86,7 +75,7 @@ const Filters = () => {
                     {({ selected }) => (
                       <>
                         <span
-                          className={`block truncated ${
+                          className={`block truncate ${
                             selected ? "font-semibold" : "font-normal"
                           }`}
                         >
