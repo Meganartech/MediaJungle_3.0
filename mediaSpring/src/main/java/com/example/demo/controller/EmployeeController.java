@@ -152,8 +152,17 @@ public class EmployeeController {
 	
 //	--------------------working
 	@PostMapping("/Contactsettings")
-	public Contactsettings createEmployee(@RequestBody Contactsettings data) {
-		return contactsetting.save(data);
+	public ResponseEntity<Contactsettings> contactsetting(@RequestParam("contact_email") String contact_email,
+			@RequestParam("contact_mobile") String contact_mobile,
+			@RequestParam("contact_address") String contact_address,
+			@RequestParam("copyright_content") String copyright_content) {
+		Contactsettings contact = new Contactsettings();
+		contact.setContact_email(contact_email);
+		contact.setContact_mobile(contact_mobile);
+		contact.setContact_address(contact_address);
+		contact.setCopyright_content(copyright_content);
+		Contactsettings detail = contactsetting.save(contact);
+		return ResponseEntity.ok(detail);
 	}
 	
 	@GetMapping("/GetcontactSettings")
@@ -161,6 +170,47 @@ public class EmployeeController {
 		List<Contactsettings> contactsettingss = contactsetting.findAll();
 		return new ResponseEntity<>(contactsettingss, HttpStatus.OK);
 	}
+	
+	@PatchMapping("/editcontactsetting/{id}")
+	public ResponseEntity<String> editcontact(@PathVariable Long id, 
+	        @RequestParam(required = false) String contact_email,
+	        @RequestParam(required = false) String contact_mobile,
+	        @RequestParam(required = false) String contact_address,
+	        @RequestParam(required = false) String copyright_content){
+		try {
+            // Retrieve existing setting data from the repository
+            Contactsettings existingSetting = contactsetting.findById(id)
+                    .orElseThrow(() -> new RuntimeException("contact not found"));
+
+            // Apply partial updates to the existing setting data
+            if (contact_email != null) {
+                existingSetting.setContact_email(contact_email);
+            }
+            if (contact_address != null) {
+                existingSetting.setContact_address(contact_address);
+            }
+            if (contact_mobile != null) {
+                existingSetting.setContact_mobile(contact_mobile);
+            }
+            if (copyright_content != null) {
+                existingSetting.setCopyright_content(copyright_content);
+            }
+           
+
+            contactsetting.save(existingSetting);
+
+            return new ResponseEntity<>("contact updated successfully", HttpStatus.OK);
+        } catch (RuntimeException e) {
+            // Log the error for debugging
+            System.err.println("Runtime exception: " + e.getMessage());
+            return new ResponseEntity<>("contact not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // Log the error for debugging
+            System.err.println("Exception: " + e.getMessage());
+            return new ResponseEntity<>("Error when updating contact", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 	
 	

@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+
 @Entity
 @Table(name="contact_setting")
 public class Contactsettings {
@@ -43,6 +44,7 @@ public class Contactsettings {
 		this.contact_email = contact_email;
 	}
 
+
 	public String getContact_mobile() {
 		return contact_mobile;
 	}
@@ -76,6 +78,12 @@ public class Contactsettings {
 		this.contact_address = contact_address;
 		this.copyright_content = copyright_content;
 	}
+
+	public Contactsettings() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
     
     
 }

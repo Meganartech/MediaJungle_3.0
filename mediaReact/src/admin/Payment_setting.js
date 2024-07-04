@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
 import axios from 'axios';
 import Setting_sidebar from './Setting_sidebar';
-import Employee from './Employee';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
 import Swal from 'sweetalert2'
@@ -17,6 +14,7 @@ const Payment_setting = () => {
   const [secretKeyPlaceholder, setSecretKeyPlaceholder] = useState('Razorpay Secret Key');
   const [getall, setGetAll] = useState([]);
   const [id, setId] = useState('');
+  const [error,setErrors] = useState('');
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/getrazorpay`)
@@ -41,28 +39,51 @@ const Payment_setting = () => {
       });
   }, []);
 
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+  
+    // Validate razorpay_key
+    if (!razorpay_key.trim()) {
+      newErrors.razorpay_key = 'Razorpay Key is required';
+      isValid = false;
+    }
+    // Validate razorpay_secret_key
+    if (!razorpay_secret_key.trim()) {
+      newErrors.razorpay_secret_key = 'Razorpay Secret Key is required';
+      isValid = false;
+    }
+  
+    // Update state with errors
+    setErrors(newErrors);
+    return isValid;
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    if (!validateForm()) {
+      return;
+    }
+  
     try {
       const razerpayData = {
         razorpay_key: razorpay_key,
         razorpay_secret_key: razorpay_secret_key,
       };
-
+  
       const response = await axios.post(`${API_URL}/api/v2/AddrazorpayId`, razerpayData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
       console.log(response.data);
       setId(response.data.id);
       setButtonText('EDIT');
       setKeyPlaceholder(response.data.razorpay_key);
       setSecretKeyPlaceholder(response.data.razorpay_secret_key);
-      console.log("Added successfully");
-
+  
       // Show success message
       Swal.fire({
         title: 'Success!',
@@ -72,7 +93,7 @@ const Payment_setting = () => {
       });
     } catch (error) {
       console.error('Error uploading:', error);
-
+  
       // Show error message
       Swal.fire({
         title: 'Error!',
@@ -82,9 +103,14 @@ const Payment_setting = () => {
       });
     }
   };
+  
 
   const handleSub = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       const updatedData = {
@@ -181,6 +207,7 @@ const Payment_setting = () => {
                               value={razorpay_key}
                               onChange={changeRazorpayKeyHandler}
                             />
+                            {error.razorpay_key && <div className="error-message error">{error.razorpay_key}</div>}
                           </div>
                         </div>
                         <div className="col-md-6">
@@ -195,6 +222,7 @@ const Payment_setting = () => {
                               value={razorpay_secret_key}
                               onChange={changeRazorpaySecretKeyHandler}
                             />
+                            {error.razorpay_secret_key && <div className="error-message error">{error.razorpay_secret_key}</div>}
                           </div>
                         </div>
                         <div className='col-lg-12'>

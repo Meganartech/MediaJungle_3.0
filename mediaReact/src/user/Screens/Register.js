@@ -6,6 +6,7 @@ import { FiLogIn } from 'react-icons/fi'
 import axios from 'axios';
 import API_URL from '../../Config';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
 
@@ -18,6 +19,7 @@ const Register = () => {
       });
       const [errors, setErrors] = useState({});
       const [getall,setGetAll] = useState('');
+      const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetsiteSettings`)
@@ -123,9 +125,11 @@ const Register = () => {
                         icon: 'success',
                         title: 'Registered successfully',
                         confirmButtonColor: '#FFC107'
-                    // }).then(() => {
-                    //     // Redirect to login page
-                    //     window.location.href = '/UserLogin';
+                     })
+                     .then((result) => {
+                        if (result.isConfirmed) {
+                            navigate('/UserLogin');
+                        }
                     });
                 } else {
                     Swal.fire({
