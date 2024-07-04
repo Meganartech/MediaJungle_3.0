@@ -4,13 +4,23 @@ import Navbar from './navbar';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
 
-const Sidebar = ({ activeLink, setActiveLink }) => {
+const Sidebar = ({ activeLink, setActiveLink}) => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isvalid, setIsvalid] = useState();
   const [isEmpty, setIsEmpty] = useState();
   const navigate = useNavigate();
   const location = useLocation();
+  const [openDropdown, setOpenDropdown] = useState('');
+
+  const handleClic = (link) => {
+    setActiveLink(link);
+    setOpenDropdown(''); // Close the dropdown when a link is clicked
+  };
+
+  const toggleDropdow = (dropdown) => {
+    setOpenDropdown(openDropdown === dropdown ? '' : dropdown);
+  };
   useEffect(() => {
    
 
@@ -87,40 +97,52 @@ const Sidebar = ({ activeLink, setActiveLink }) => {
   const name=sessionStorage.getItem('username');
   const b=3;
   // alert(name);
+
+
+
   return (
     <div>
 
- <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-      <a className="navbar-brand ps-3" href="./Dashboard.js" style={{margin:'0px', padding:'0px'}}>Admin Panel</a>
-      <button className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!" onClick={toggleSidebar}>
-        <i className="fas fa-bars"></i>
+<nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+  <a className="navbar-brand ps-3" href="./Dashboard.js" style={{margin:'0px', padding:'0px'}}>Admin Panel</a>
+  <button className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!" onClick={toggleSidebar}>
+    <i className="fas fa-bars"></i>
+  </button>
+  <form className="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+    <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search..."
+              aria-label="Search"
+              aria-describedby="basic-addon2"
+            />
+      <button className="btn btn-outline-secondary" type="button">
+        <i className="fas fa-search"></i>
       </button>
-      <form className="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        <div className="input-group">
-          &nbsp;
-        </div>
-      </form>
-      <ul className="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-        <li className={`nav-item dropdown ${dropdownOpen ? 'show' : ''}`}>
-          <a className="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" onClick={toggleDropdown} aria-expanded={dropdownOpen}>
-            <i className="fas fa-user fa-fw"></i>
+    </div>
+  </form>
+  <ul className="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+    <li className={`nav-item dropdown ${dropdownOpen ? 'show' : ''}`}>
+      <a className="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" onClick={toggleDropdown} aria-expanded={dropdownOpen}>
+        <i className="fas fa-user fa-fw"></i>
+      </a>
+      <ul className={`dropdown-menu dropdown-menu-end ${dropdownOpen ? 'show' : ''}`} aria-labelledby="navbarDropdown">
+        <li>
+          <a className="dropdown-item" href="change-password.php">
+            Change Password
           </a>
-          <ul className={`dropdown-menu dropdown-menu-end ${dropdownOpen ? 'show' : ''}`} aria-labelledby="navbarDropdown">
-            <li>
-              <a className="dropdown-item" href="change-password.php">
-                Change Password
-              </a>
-            </li>
-            <li>
-              <button className="dropdown-item" onClick={handleLogout} style={{ cursor: 'pointer' }}>
-                Logout
-              </button>
-            </li>
-          </ul>
+        </li>
+        <li>
+          <button className="dropdown-item" onClick={handleLogout} style={{ cursor: 'pointer' }}>
+            Logout
+          </button>
         </li>
       </ul>
-    </nav>
-      
+    </li>
+  </ul>
+</nav>
+
 
       <ul className={`navbar-nav sidebar sidebar-dark accordion ${isActive ? 'active' : ''}`} id="content-wrapper">
      
@@ -128,18 +150,13 @@ const Sidebar = ({ activeLink, setActiveLink }) => {
         <div className="sidebar-brand-text mx-3">Menu </div>
       </div>
       <li className={`nav-item  ${activeLink === "/admin/Dashboard" ? 'active' : ''}`} onClick={() => handleClick("/admin/Dashboard")}>
-      {/* <Link className="nav-link text-white" onClick={() => handleClick("/admin/Dashboard")}>
+        <Link className="nav-link text-white" >
           <i className="fas fa-tachometer-alt"></i>
-          
-        <span> Dashboard</span>
-      </Link> */}
-      <Link className="nav-link text-white" >
-    <i className="fas fa-tachometer-alt"></i>
-    <span > Dashboard</span>
-</Link>
-  </li> 
+            <span > Dashboard</span>
+        </Link>
+      </li> 
     <li className={`nav-item  ${activeLink === "/admin/AddUser" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddUser")}>
-      <Link className="nav-link text-blue">
+      <Link className="nav-link text-white">
           <i className="fas fa-tachometer-alt"></i>
         <span>Add Subadmin</span>
       </Link>
@@ -161,10 +178,10 @@ const Sidebar = ({ activeLink, setActiveLink }) => {
           </Link>
       </li>  
       <li className={`nav-item  ${activeLink === "/admin/AddVideo" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddVideo")}>
-          <Link className="nav-link text-white" >
+            <Link className="nav-link text-white" >
               <i className="fas fa-upload"></i>
             <span> Add Video</span>
-          </Link>
+            </Link>
       </li>
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Audio</div>
@@ -278,7 +295,7 @@ const Sidebar = ({ activeLink, setActiveLink }) => {
       <li className={`nav-item  ${activeLink === "/admin/SubscriptionPayments" ? 'active' : ''}`} onClick={() => handleClick("/admin/SubscriptionPayments")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-photo-video"></i>
-            <span> Subscription Payments</span>
+            <span>Registered User</span>
           </Link>
       </li>
       <div className="sb-sidenav-menu-heading bg-primary text-white text-center">

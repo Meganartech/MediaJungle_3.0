@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import API_URL from '../Config';
+
 const EditCategory = () => {
   const id = localStorage.getItem('items');
   const [updatedcategory, setUpdatedcategory] = useState({ categories: '' });
@@ -31,28 +32,46 @@ const EditCategory = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const categoryId = id;
-    fetch(`${API_URL}/api/v2/editCategory/${categoryId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedcategory),
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log('Category updated successfully');
-          window.alert('category details successfully updated');
-        } else {
-          console.log('Error updating category');
-        }
-      })
-      .catch((error) => {
-        console.log('Error updating category:', error);
+
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const categoryId = id;
+
+  fetch(`${API_URL}/api/v2/editCategory/${categoryId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedcategory),
+  })
+  .then((response) => {
+    if (response.ok) {
+      console.log('Category updated successfully');
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Category details successfully updated',
       });
-  };
+    } else {
+      console.log('Error updating category');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error updating category',
+      });
+    }
+  })
+  .catch((error) => {
+    console.log('Error updating category:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred while updating the category',
+    });
+  });
+};
+
 
   if (!updatedcategory) {
     return <div>Loading...</div>;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 // import '../csstemp/addVideo.css';
 import { Link } from 'react-router-dom';
 import "../css/Sidebar.css";
@@ -12,69 +11,53 @@ const AddCertificate = () => {
   const [certificateName, setCertificateName] = useState(null);
   const [SuccessMessage , setSuccessMessage] = useState(null);
   const [error, setError] = useState(null);
-  // const name=sessionStorage.getItem('username');
 
  
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      // const formData = new FormData();
-      // formData.append('file', file);
-
-      const data ={
-        certificate : certificateName
+      const data = {
+        certificate: certificateName
       };
-      console.log(data)
-
-      // Use axios for the file upload
-      const response = await axios.post(`${API_URL}/api/v2/AddCertificate`, data,{
+      console.log(data);
+  
+      const response = await axios.post(`${API_URL}/api/v2/AddCertificate`, data, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-
+  
       console.log(response.data);
-      if (response.data) {
-        setSuccessMessage('certificate inserted successfully!');
+      if (response.data === 'success') {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Certificate inserted successfully!',
+        });
       } else {
         setError('Error occurred while inserting certificate.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error occurred while inserting certificate.',
+        });
       }
-      setCertificateName(null);
-      setError(null);
+      setCertificateName('');
+      setError('');
     } catch (error) {
-      console.error(error);
+      console.error('File upload failed:', error);
       setError('File upload failed');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'File upload failed. Please try again later.',
+      });
     }
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
   
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('file', file);
-  
-  //     const response = await fetch(`${API_URL}/api/v2/AddCertificate`, {
-  //       method: 'POST',
-  //       body: formData,
-  //     });
-  
-  //     if (!response.ok) {
-  //       // Check for error response
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-  
-  //     const data = await response.json();
-  //     console.log(data);
-  //     setFile(null);
-  //     setError(null);
-  //   } catch (error) {
-  //     console.error(error);
-  //     setError('File upload failed');
-  //   }
-  // };
   
 
 
@@ -89,8 +72,6 @@ const AddCertificate = () => {
           </ol>
       <div className='temp justify-content-center'>
         <div className='col-lg-12'>
-          {/* {name==="admin"
-          ? */}
      
             <div className='card-body'>
               {error && (

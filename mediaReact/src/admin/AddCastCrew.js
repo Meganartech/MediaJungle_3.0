@@ -10,6 +10,23 @@ import API_URL from '../Config';
 const AddCastCrew = () => {
   const [name, setName] = useState('');
   const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null); // To display image preview
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+
+    // Display image preview
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImageUrl(null);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +53,7 @@ const AddCastCrew = () => {
 
       setName('');
       setImage(null);
+      setImageUrl(null); 
     } catch (error) {
       console.error('Error uploading cast and crew:', error);
 
@@ -73,6 +91,12 @@ const AddCastCrew = () => {
               </div>
             </div>
           </div>
+             {/* Display image preview */}
+         {imageUrl && (
+          <div className="col-md-12 mt-4 text-center">
+            <img src={imageUrl} alt="Preview" className="img-fluid" style={{ width:'100px' , height:'100px' }} />
+          </div>
+        )}
           <div className="temp">
             <div className="col-md-12">
               <div className="form-group">
@@ -80,7 +104,7 @@ const AddCastCrew = () => {
                 <input
                   type="file"
                   name="image"
-                  onChange={(e) => setImage(e.target.files[0])}
+                  onChange={handleImageChange} 
                   className="form-control"
                 />
               </div>
@@ -92,6 +116,8 @@ const AddCastCrew = () => {
             </div>
           </div>
         </form>
+
+      
       </div>
     </div>
   );

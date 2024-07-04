@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,26 +26,39 @@ public class CastandCrew {
 	
 	@Lob
 	@Column(name="thumbnail" ,length=1000000)
-	@JsonIgnore
 	private byte[] image;
 	
 	private String name;
 	
-	@ManyToMany(mappedBy = "castandcrewlist")
-	@JsonBackReference
-	private List<VideoDescription> videos;
+	 @OneToMany(mappedBy = "castAndCrew")
+	 @JsonBackReference
+	 private List<VideoCastAndCrew> videoCastAndCrews;
+	
+//	@ManyToMany(mappedBy = "castandcrewlist")
+//	@JsonBackReference
+//	private List<VideoDescription> videos;
+	
+
 
 	public CastandCrew() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public CastandCrew(long id, byte[] image, String name, List<VideoDescription> videos) {
-		super();
-		this.id = id;
-		this.image = image;
-		this.name = name;
-		this.videos = videos;
-	}
+	
+
+
+
+	public CastandCrew(long id, byte[] image, String name, List<VideoCastAndCrew> videoCastAndCrews) {
+	super();
+	this.id = id;
+	this.image = image;
+	this.name = name;
+	this.videoCastAndCrews = videoCastAndCrews;
+}
+
+
+
+
 	public long getId() {
 		return id;
 	}
@@ -67,14 +82,25 @@ public class CastandCrew {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<VideoDescription> getVideos() {
-		return videos;
+
+
+
+
+	public List<VideoCastAndCrew> getVideoCastAndCrews() {
+		return videoCastAndCrews;
 	}
-	public void setVideos(List<VideoDescription> videos) {
-		this.videos = videos;
+
+
+
+
+	public void setVideoCastAndCrews(List<VideoCastAndCrew> videoCastAndCrews) {
+		this.videoCastAndCrews = videoCastAndCrews;
 	}
 
 
 
 
+	
+	
+	
 }

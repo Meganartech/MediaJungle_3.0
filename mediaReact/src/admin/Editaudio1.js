@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
 import { useLocation,Link} from 'react-router-dom';
+import Swal from 'sweetalert2';
 import axios from 'axios';
 import AudioPlayer from 'react-audio-player';
 import API_URL from '../Config';
@@ -197,47 +196,59 @@ fetchAudio(); // Replace 'yourDefaultFileName' with the desired default file nam
   };
 
   // Inside the handleupdate function
-const handleupdate = async (e) => {
-  const formData = new FormData();
-
-  // Appending thumbnail and audioFile to formData
-  if (updatedget.thumbnail) {
-    formData.append("thumbnail", updatedget.thumbnail);
-  }
-  if (updatedget.audioFile) {
-    formData.append("audioFile", updatedget.audioFile);
-  }
-
-  // Appending category ID to formData
-  if (updatedget.category.id) { // This condition might be incorrect
-    formData.append("category", updatedget.category.id); // Make sure this is the correct category ID
-  }
-
-  e.preventDefault();
-  try {
-    const response = await fetch(
-      `${API_URL}/api/v2/updateaudio/update/${audioId}`,
-      {
+  const handleupdate = async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData();
+  
+    // Appending thumbnail and audioFile to formData
+    if (updatedget.thumbnail) {
+      formData.append("thumbnail", updatedget.thumbnail);
+    }
+    if (updatedget.audioFile) {
+      formData.append("audioFile", updatedget.audioFile);
+    }
+  
+    // Appending category ID to formData
+    if (updatedget.category && updatedget.category.id) {
+      formData.append("category", updatedget.category.id); // Ensure this is the correct category ID
+    }
+  
+    try {
+      const response = await fetch(`${API_URL}/api/v2/updateaudio/update/${audioId}`, {
         method: "PATCH",
         body: formData,
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        // Handle successful response
+        console.log("Update successful");
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Audio updated successfully!',
+        });
+      } else {
+        // Handle error response
+        console.error("Update failed", data);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: `Update failed: ${data.message || 'Unknown error'}`,
+        });
       }
-    );
-
-    await response.json();
-
-    if (response.ok) {
-      // Handle successful response
-      console.log("Update successful");
-    } else {
-      // Handle error response
-      console.error("Update failed");
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error("Error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while updating the audio.',
+      });
     }
-  } catch (error) {
-    // Handle network errors or other exceptions
-    console.error("Error:", error);
-  }
-};
-
+  };
 
   return (
 

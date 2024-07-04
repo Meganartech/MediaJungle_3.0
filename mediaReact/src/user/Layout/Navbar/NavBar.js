@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom'
 import {FaHeart, FaSearch} from 'react-icons/fa'
 import {CgUser} from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../../../Config';
+import Swal from 'sweetalert2';
 
 const NavBar = () => {
     const hover = 'hover:text-subMain transitions text-white'
@@ -11,7 +12,25 @@ const NavBar = () => {
     const navigate = useNavigate();
 
     const [showDropdown, setShowDropdown] = useState(false);
+    const [getall,setGetAll] = useState('');
    const token=sessionStorage.getItem("token")
+
+   useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetsiteSettings`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetAll(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
    const handleprofile = async()=>{
     navigate('/UserProfileScreen');
@@ -25,15 +44,24 @@ const NavBar = () => {
         return;
       }
   
-      // Display a confirmation dialog
-      const confirmLogout = window.confirm("Are you sure you want to logout?");
-      
-      if (confirmLogout) {
-        // Send logout request to the server
+      // Display a confirmation dialog using Swal
+      const confirmLogout = await Swal.fire({
+        title: "Are you sure?",
+        text: "You are about to logout.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#FBC740",
+        cancelButtonColor: "#FBC740",
+        confirmButtonText: "Yes, logout",
+        cancelButtonText: "Cancel",
+      });
+  
+      if (confirmLogout.isConfirmed) {
+        // Send logout request to the serve
         const response = await fetch(`${API_URL}/api/v2/logout`, {
           method: "POST",
           headers: {
-            "Authorization": token, // Pass the token in the Authorization header
+            Authorization: token, // Pass the token in the Authorization header
             "Content-Type": "application/json", // Add any other necessary headers
           },
           // Add any necessary body data here
@@ -46,21 +74,30 @@ const NavBar = () => {
           // Redirect to login page
           window.location.href = "/UserLogin";
           localStorage.setItem('login', false);
-          console.log("logged out")
+          console.log("Logged out successfully");
           return;
         } else {
           // Handle unsuccessful logout (e.g., server error)
           console.error("Logout failed. Server responded with status:", response.status);
-          // Show error message
-          alert("Logout failed. Please try again later.");
+          // Show error message using Swal
+          Swal.fire({
+            icon: 'error',
+            title: 'Logout failed',
+            text: 'Please try again later.',
+          });
         }
       }
     } catch (error) {
       console.error("An error occurred during logout:", error);
-      // Show error message
-      alert("An error occurred while logging out. Please try again later.");
+      // Show error message using Swal
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while logging out. Please try again later.',
+      });
     }
   };
+  
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -70,11 +107,16 @@ const NavBar = () => {
         <>
             <div className='bg-main shadow-md sticky top-0 z-20' >
                 <div className='container mx-auto py-6 px-2 lg:grid gap-10 grid-cols-7 justify-between items-center'style={{height: "93px", zIndex:"20",position: "sticky",marginTop: "-1px"}}>
-                    <div className='col-span-1 lg:block hidden'>
-                        <Link to="/">
-                            <img src="/images/logo.png" alt='logo' className='w-full object-contain' />
-                        </Link>
-                    </div>
+                <div className='col-span-1 lg:block hidden'>
+                {getall.length > 0 && getall[0].logo ? (
+                      <Link to="/">
+                        <img src={`data:image/png;base64,${getall[0].logo}`} alt='logo' className='w-full object-contain'/>
+                      </Link>
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
+
                     {/* Search Form */}
                     <div className='col-span-3'>
                         <form className='w-full text-sm bg-dryGray rounded flex-btn gap-4'>

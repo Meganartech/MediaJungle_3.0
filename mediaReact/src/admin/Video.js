@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 // import '../csstemp/VideoStyle.css';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import ReactPlayer from 'react-player';
-import EditVideo from './EditVideo';
 import API_URL from '../Config';
 // import '../csstemp/VideoStyle.css';
 import "../css/Sidebar.css";
+
 const Video = () => {
   // ------------------------------ Admin Functions  -----------------------------------------
   const [videos, setVideos] = useState([]);
@@ -43,42 +41,71 @@ const Video = () => {
   
   
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/api/videogetall`);
-      setUsers(response.data);
-    } catch (error) {
-      console.log('Error fetching users:', error);
-    }
-  };
+  // const fetchUsers = async () => {
+  //   try {
+  //     const response = await axios.get(`${API_URL}/api/videogetall`);
+  //     setUsers(response.data);
+  //   } catch (error) {
+  //     console.log('Error fetching users:', error);
+  //   }
+  // };
   const handleDelete = async (audioId) => {
-    const  audId=audioId
-    console.log(audId)
-    try {
-      const response = await fetch(`${API_URL}/api/video/${audId}`);
+    const audId = audioId;
+    console.log(audId);
   
-      if (response.ok) {
-        // fetchAudios();
-        // setDeleteStatus('Audio deleted successfully');
-      // setGetall((prevGetAll) => {
-      //   const updatedGetAll = [...prevGetAll];
-      //   updatedGetAll.splice(index, 1);
-      //   return updatedGetAll;
-      // });
-      fetchUsers();
-        console.log('deleteStatus');
-       
-      } else {
-        // setDeleteStatus('Error deleting audio');
-        console.log('deleteStatus');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`${API_URL}/api/video/${audId}`, {
+            method: 'DELETE'
+          });
+  
+          if (response.ok) {
+            // fetchAudios();
+            // setDeleteStatus('Audio deleted successfully');
+            // setGetall((prevGetAll) => {
+            //   const updatedGetAll = [...prevGetAll];
+            //   updatedGetAll.splice(index, 1);
+            //   return updatedGetAll;
+            // });
+            // fetchUsers();
+            console.log('deleteStatus');
+            Swal.fire(
+              'Deleted!',
+              'The video has been deleted.',
+              'success'
+            );
+          } else {
+            // setDeleteStatus('Error deleting audio');
+            console.log('deleteStatus');
+            Swal.fire(
+              'Error!',
+              'There was a problem deleting the video.',
+              'error'
+            );
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          // setDeleteStatus('Error deleting audio');
+          console.log("deleteStatus");
+          Swal.fire(
+            'Error!',
+            'There was a problem deleting the video.',
+            'error'
+          );
+        }
       }
-    } catch (error) {
-      console.error('Error:', error);
-      // setDeleteStatus('Error deleting audio');
-      console.log("deleteStatus");
-    }
-    
+    });
   };
+
   const handlEdit = async (audioId) => {
     localStorage.setItem('items', audioId);
     navigate('/admin/EditVideo');

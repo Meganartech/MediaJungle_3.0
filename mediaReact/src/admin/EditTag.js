@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import { useLocation , Link} from 'react-router-dom';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
@@ -40,38 +39,48 @@ const EditTag = () => {
       });
   }, [id]);
 
-  // useEffect(() => {
-  //   console.log('Location State:', location.state); // Check the location state object
-  //   if (location.state && location.state.tag) {
-  //     setTagName(location.state.tag.tag_name);
-  //   }
-  // }, [location.state]);
+ 
   
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const tagId = id;
-      fetch(`${API_URL}/api/v2/editTag/${tagId}`, {  // Use backticks (`) for string interpolation
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(UpdatedTag),
-      })
-        .then((response) => {
-          if (response.ok) {
-            console.log('Tag updated successfully');
-            window.alert('Tag details successfully updated');
-          } else {
-            console.log('Error updating Tag');
-          }
-        })
-        .catch((error) => {
-          console.log('Error updating tag:', error);
-        });
-    
-  };
-  
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const tagId = id;
+
+  fetch(`${API_URL}/api/v2/editTag/${tagId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(UpdatedTag),
+  })
+  .then((response) => {
+    if (response.ok) {
+      console.log('Tag updated successfully');
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Tag details successfully updated',
+      });
+    } else {
+      console.log('Error updating Tag');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error updating tag',
+      });
+    }
+  })
+  .catch((error) => {
+    console.log('Error updating tag:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred while updating the tag',
+    });
+  });
+};
+
   // ...
   
   

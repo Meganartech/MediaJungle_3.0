@@ -9,11 +9,14 @@ const AdminLayout = () => {
       localStorage.setItem('activeLink', activeLink);
   }, [activeLink]);
 
+  
+
   return (
       <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
         <Sidebar 
         activeLink={activeLink}
-        setActiveLink={setActiveLink}/> 
+        setActiveLink={setActiveLink}
+        /> 
           <Outlet />
       </div>
         

@@ -1,6 +1,5 @@
 import React, { useState ,useEffect} from 'react';
-import { Navbar } from 'react-bootstrap';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import "../css/Sidebar.css";
@@ -29,10 +28,23 @@ const ViewCertificate= () => {
   }, []);
 
 
-  const handleDeleteCertificate = (certificateId) => {
-    fetch(`${API_URL}/api/v2/DeleteCertificate/${certificateId}`, {
-      method: 'DELETE',
-    })
+
+
+const handleDeleteCertificate = (certificateId) => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You are about to delete this certificate. This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'No, cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch(`${API_URL}/api/v2/DeleteCertificate/${certificateId}`, {
+        method: 'DELETE',
+      })
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -41,18 +53,36 @@ const ViewCertificate= () => {
         return response.status === 204 ? null : response.json();
       })
       .then(data => {
-        if (data) {
-          console.log('Certificate deleted successfully', data);
+        if (!data) {
+          console.log('Certificate deleted successfully');
+          // Remove the deleted certificate from the local state
+          setCertificate(prevCertificates => prevCertificates.filter(certificate => certificate.id !== certificateId));
+          Swal.fire(
+            'Deleted!',
+            'Your certificate has been deleted.',
+            'success'
+          );
         } else {
-          console.log('Certificate deleted successfully (no content)');
+          console.error('Error deleting certificate:', data.error); // Log error message from server
+          Swal.fire(
+            'Error!',
+            `Failed to delete certificate: ${data.error}`,
+            'error'
+          );
         }
-        // Remove the deleted category from the local state
-        setCertificate(prevCertificate => prevCertificate.filter(certificate => certificate.id !== certificateId));
       })
       .catch(error => {
         console.error('Error deleting certificate:', error);
+        Swal.fire(
+          'Error!',
+          'There was a problem deleting your certificate. Please try again later.',
+          'error'
+        );
       });
-  };
+    }
+  });
+};
+
 
   const handlEdit = async (certificateId) => {
     localStorage.setItem('items', certificateId);

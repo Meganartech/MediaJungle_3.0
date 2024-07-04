@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.compresser.ImageUtils;
 import com.example.demo.model.AddLanguage;
+import com.example.demo.model.CastandCrew;
 import com.example.demo.model.Companysiteurl;
 import com.example.demo.model.Contactsettings;
 import com.example.demo.model.Emailsettings;
@@ -197,16 +201,82 @@ public class EmployeeController {
 	
 //	--------------------working
 	@PostMapping("/SiteSetting")
-	public Sitesetting createEmployee(@RequestBody Sitesetting data) {
-		return siteSetting.save(data);
+	public ResponseEntity<Sitesetting> addsitesetting(@RequestParam("sitename") String sitename,
+			@RequestParam("appurl") String appurl,
+			@RequestParam("tagName") String tagName,
+			@RequestParam("icon") MultipartFile icon,
+			@RequestParam("logo") MultipartFile logo) throws IOException {
+			Sitesetting setting = new Sitesetting();
+			byte[] thumbnailBytes =ImageUtils.compressImage(icon.getBytes());
+			byte[] thumbnailByte =ImageUtils.compressImage(logo.getBytes());
+			setting.setSitename(sitename);
+			setting.setAppurl(appurl);
+			setting.setTagName(tagName);
+			setting.setIcon(thumbnailBytes);
+			setting.setLogo(thumbnailByte);
+			Sitesetting details = siteSetting.save(setting);
+			return ResponseEntity.ok(details);
 	}
 	
 	@GetMapping("/GetsiteSettings")
 	public ResponseEntity<List<Sitesetting>> getsitesettings(){
 		List<Sitesetting> sitesettingss = siteSetting.findAll();
+		 for (Sitesetting cast : sitesettingss) {
+	            byte[] logo = ImageUtils.decompressImage(cast.getLogo());
+	            cast.setLogo(logo);
+	            byte[] icon = ImageUtils.decompressImage(cast.getIcon());
+	            cast.setIcon(icon);
+	        }
 		return new ResponseEntity<>(sitesettingss, HttpStatus.OK);
 	}
 	
+	 @PatchMapping("/editsettings/{id}")
+	    public ResponseEntity<String> editSetting(
+	        @PathVariable Long id, 
+	        @RequestParam(required = false) String sitename,
+	        @RequestParam(required = false) String appurl,
+	        @RequestParam(required = false) String tagName,
+	        @RequestParam(required = false) MultipartFile icon,
+	        @RequestParam(required = false) MultipartFile logo) {
+
+	        try {
+	            // Retrieve existing setting data from the repository
+	            Sitesetting existingSetting = siteSetting.findById(id)
+	                    .orElseThrow(() -> new RuntimeException("Setting not found"));
+
+	            // Apply partial updates to the existing setting data
+	            if (sitename != null) {
+	                existingSetting.setSitename(sitename);
+	            }
+	            if (appurl != null) {
+	                existingSetting.setAppurl(appurl);
+	            }
+	            if (tagName != null) {
+	                existingSetting.setTagName(tagName);
+	            }
+	            if (icon != null && !icon.isEmpty()) {
+	                byte[] thumbnailBytes = ImageUtils.compressImage(icon.getBytes());
+	                existingSetting.setIcon(thumbnailBytes);
+	            }
+	            if (logo != null && !logo.isEmpty()) {
+	                byte[] thumbnailBytes = ImageUtils.compressImage(logo.getBytes());
+	                existingSetting.setLogo(thumbnailBytes);
+	            }
+
+	            siteSetting.save(existingSetting);
+
+	            return new ResponseEntity<>("Settings updated successfully", HttpStatus.OK);
+	        } catch (RuntimeException e) {
+	            // Log the error for debugging
+	            System.err.println("Runtime exception: " + e.getMessage());
+	            return new ResponseEntity<>("Setting not found", HttpStatus.NOT_FOUND);
+	        } catch (Exception e) {
+	            // Log the error for debugging
+	            System.err.println("Exception: " + e.getMessage());
+	            return new ResponseEntity<>("Error when updating settings", HttpStatus.INTERNAL_SERVER_ERROR);
+	        }
+	    }
+
 //	--------------------working
 	@PostMapping("/videoSetting")
 	public Videosettings createEmployee(@RequestBody Videosettings data) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../Config';
@@ -39,31 +39,56 @@ const Profile = () => {
 
 
     const handleDeleteUser = (userId) => {
-    const confirmDelete = window.confirm('Do you really want to delete this user?');
-    if (confirmDelete) {
-      // Perform the actual deletion logic here
-      console.log(`Deleting user with ID: ${userId}`);
-
-      // Make an API call to delete the user
-      fetch(`${API_URL}/api/v2/DeleteUser/${userId}`, {
-        method: 'DELETE',
-      })
-        .then((response) => {
-          if (response.ok) {
-            console.log('User deleted successfully');
-
-            // Remove the deleted user from the local state
-            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-          } else {
-            console.log('Error deleting user');
-          }
-        })
-        .catch((error) => {
-          console.log('Error deleting user:', error);
-        });
-    }
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you really want to delete this user?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, keep it',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Perform the actual deletion logic here
+          console.log(`Deleting user with ID: ${userId}`);
+    
+          // Make an API call to delete the user
+          fetch(`${API_URL}/api/v2/DeleteUser/${userId}`, {
+            method: 'DELETE',
+          })
+            .then((response) => {
+              if (response.ok) {
+                console.log('User deleted successfully');
+                Swal.fire({
+                  title: 'Deleted!',
+                  text: 'User has been deleted.',
+                  icon: 'success',
+                  confirmButtonText: 'OK',
+                });
+    
+                // Remove the deleted user from the local state
+                setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+              } else {
+                console.log('Error deleting user');
+                Swal.fire({
+                  title: 'Error!',
+                  text: 'Error deleting user',
+                  icon: 'error',
+                  confirmButtonText: 'OK',
+                });
+              }
+            })
+            .catch((error) => {
+              console.log('Error deleting user:', error);
+              Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while deleting user. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+              });
+            });
+        }
+      });
     };
-
     const handlEdit = async (userId) => {
       localStorage.setItem('items',userId);
       navigate('/admin/EditComponent');
@@ -191,7 +216,7 @@ const Profile = () => {
                     <th>Email</th>
                     <th>Company Name</th>
                     <th>Country</th>
-                    <th>Password</th>
+                    {/* <th>Password</th> */}
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -206,7 +231,7 @@ const Profile = () => {
                       <td>{user.email}</td>
                       <td>{user.compname}</td>
                       <td>{user.country}</td>
-                      <td>{user.password}</td>
+                      {/* <td>{user.password}</td> */}
                       <td>
                         {/* <Link
                           to={{

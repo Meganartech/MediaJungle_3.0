@@ -5,6 +5,7 @@ import Dashboard from "./admin/Dashboard";
 import "./App.css";
 import "./css/sb-admin-2.css";
 import "./css/style.css";
+// import './index.css';
 
 
 import AddUser from "./admin/AddUser";
@@ -84,6 +85,7 @@ const App = () => {
   const log=localStorage.getItem('login'); 
   const storedData = localStorage.getItem('mySessionData')
   localStorage.setItem('mySessionData', false);
+  
   useEffect(() => {
 
     const fetchData = async () => {       

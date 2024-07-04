@@ -1,32 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
 
 const ViewLanguage = () => {
-  //.......................................Admin functiuons.....................................
-  const userid = parseInt(sessionStorage.getItem('id'), 10); // Get user ID from session storage
-  const name = sessionStorage.getItem('username');
-  const navigate = useNavigate();
-  let Id;
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [categoryIdToDelete, setCategoryIdToDelete] = useState('');
-  const [language, setlanguage] = useState([]);
-  const userid_u =sessionStorage.getItem('id');
-  const [showConfirmation_u, setShowConfirmation_u] = useState(false);
-  const [categoryIdToDelete_u, setCategoryIdToDelete_u] = useState('');
-  const [categories_u, setCategories_u] = useState([]);
 
-  // useEffect(() => {
-  //   // Fetch category data from the backend
-  //   fetch(`${API_URL}/api/v2/GetAllCategories`)
-  //     .then(response => response.json())
-  //     .then(data => setCategories(data))
-  //     .catch(error => console.log(error));
-  // }, []);
+  const navigate = useNavigate();
+  const [language, setlanguage] = useState([]);
+
 
   useEffect(() => {
     // fetch category data from the backend
@@ -45,36 +28,63 @@ const ViewLanguage = () => {
       });
   }, []);
 
-  // const handleDeleteCategory = (categoryId) => {
-  //   setShowConfirmation(true);
-  //   setCategoryIdToDelete(categoryId);
-  // };
 
-  const handleDeleteLanguage = (languageId) => {
-    fetch(`${API_URL}/api/v2/DeleteLanguage/${languageId}`, {
-      method: 'DELETE',
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      // If the response status is OK, don't attempt to parse JSON from an empty response
-      return response.status === 204 ? null : response.json();
-    })
-    .then(data => {
-      if (!data) {
-        console.log('Language deleted successfully');
-        // Remove the deleted language from the local state
-        setlanguage(prevLanguages => prevLanguages.filter(language => language.id !== languageId));
-      } else {
-        console.error('Error deleting language:', data.error); // Log error message from server
-      }
-    })
-    .catch(error => {
-      console.error('Error deleting language:', error);
-    });
-  };
-  
+
+
+
+const handleDeleteLanguage = (languageId) => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You are about to delete this language. This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'No, cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch(`${API_URL}/api/v2/DeleteLanguage/${languageId}`, {
+        method: 'DELETE',
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        // If the response status is OK, don't attempt to parse JSON from an empty response
+        return response.status === 204 ? null : response.json();
+      })
+      .then(data => {
+        if (!data) {
+          console.log('Language deleted successfully');
+          // Remove the deleted language from the local state
+          setlanguage(prevLanguages => prevLanguages.filter(language => language.id !== languageId));
+          Swal.fire(
+            'Deleted!',
+            'Your language has been deleted.',
+            'success'
+          );
+        } else {
+          console.error('Error deleting language:', data.error); // Log error message from server
+          Swal.fire(
+            'Error!',
+            `Failed to delete language: ${data.error}`,
+            'error'
+          );
+        }
+      })
+      .catch(error => {
+        console.error('Error deleting language:', error);
+        Swal.fire(
+          'Error!',
+          'There was a problem deleting your language. Please try again later.',
+          'error'
+        );
+      });
+    }
+  });
+};
+
 
   const handlEdit = async (languageId) => {
     localStorage.setItem('items', languageId);

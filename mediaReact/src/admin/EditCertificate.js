@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import API_URL from '../Config';
 
 const EditCertificate = () => {
@@ -37,9 +37,10 @@ const EditCertificate = () => {
       });
   }, [id]);
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const certificateId = id;
+    const certificateId = id; // Assuming id is defined elsewhere
     fetch(`${API_URL}/api/v2/editCertificate/${certificateId}`, {
       method: 'PATCH',
       headers: {
@@ -47,18 +48,33 @@ const EditCertificate = () => {
       },
       body: JSON.stringify(updatedcertificate),
     })
-      .then((response) => {
-        if (response.ok) {
-          console.log('Certificate updated successfully');
-          window.alert('Certificate details successfully updated');
-        } else {
-          console.log('Error updating certificate');
-        }
-      })
-      .catch((error) => {
-        console.log('Error updating certificate:', error);
+    .then((response) => {
+      if (response.ok) {
+        console.log('Certificate updated successfully');
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Certificate details successfully updated',
+        });
+      } else {
+        console.log('Error updating certificate');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error updating certificate',
+        });
+      }
+    })
+    .catch((error) => {
+      console.log('Error updating certificate:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while updating the certificate',
       });
+    });
   };
+  
 
   if (!updatedcertificate) {
     return <div>Loading...</div>;

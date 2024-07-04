@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import { useLocation , Link} from 'react-router-dom';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
@@ -41,29 +40,46 @@ const EditLanguage = () => {
   }, [id]);
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const languageId = id;
-      fetch(`${API_URL}/api/v2/editLanguage/${languageId}`, {  // Use backticks (`) for string interpolation
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedlanguage),
-      })
-        .then((response) => {
-          if (response.ok) {
-            console.log('Language updated successfully');
-            window.alert('Language details successfully updated');
-          } else {
-            console.log('Error updating language');
-          }
-        })
-        .catch((error) => {
-          console.log('Error updating language:', error);
-        });
-    
-  };
+
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const languageId = id;
+
+  fetch(`${API_URL}/api/v2/editLanguage/${languageId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedlanguage),
+  })
+  .then((response) => {
+    if (response.ok) {
+      console.log('Language updated successfully');
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Language details successfully updated',
+      });
+    } else {
+      console.log('Error updating language');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error updating language',
+      });
+    }
+  })
+  .catch((error) => {
+    console.log('Error updating language:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred while updating the language',
+    });
+  });
+};
+
   
 
   return (

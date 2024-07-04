@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import "../css/Sidebar.css";
@@ -26,10 +26,23 @@ const ViewTag = () => {
       });
   }, []);
 
-  const handleDeleteTag = (tagId) => {
-    fetch(`${API_URL}/api/v2/DeleteTag/${tagId}`, {
-      method: 'DELETE',
-    })
+
+
+const handleDeleteTag = (tagId) => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'No, keep it'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch(`${API_URL}/api/v2/DeleteTag/${tagId}`, {
+        method: 'DELETE',
+      })
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -43,13 +56,26 @@ const ViewTag = () => {
         } else {
           console.log('Tag deleted successfully (no content)');
         }
-        // Remove the deleted category from the local state
+        // Remove the deleted tag from the local state
         setTag(prevTag => prevTag.filter(tag => tag.id !== tagId));
+        Swal.fire(
+          'Deleted!',
+          'Your tag has been deleted.',
+          'success'
+        );
       })
       .catch(error => {
-        console.error('Error deleting Tag:', error);
+        console.error('Error deleting tag:', error);
+        Swal.fire(
+          'Error!',
+          'There was a problem deleting your tag. Please try again later.',
+          'error'
+        );
       });
-  };
+    }
+  });
+};
+
 
   const handlEdit = async (tagId) => {
     localStorage.setItem('items', tagId);

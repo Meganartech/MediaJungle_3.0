@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
+import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
@@ -15,44 +14,54 @@ const AddCategory = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Create form data object
-    // const formData = new FormData();
-    // formData.append('categories', categoryName);
-
-    // console.log(formData);
+  
+    // Create the data object
     const data = {
       categories: categoryName
     };
-    console.log(data)
+  
+    console.log(data);
+  
     // Send the category name to the server using a POST request
     fetch(`${API_URL}/api/v2/AddNewCategories`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(data),
-})
-
-    
-      .then(response => response.text())
-      
-      .then(data => {
-        console.log(data)
-        if (data === 'success') {
-          setSuccessMessage('Category inserted successfully!');
-          setCategoryName('');
-        } else {
-          setErrorMessage('Error occurred while inserting category.');
-        }
-      })
-      .catch(error => {
-        setErrorMessage('Error occurred while inserting category.');
-        console.error('Error:', error);
-      });
-      
-  };
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.text())
+    .then(data => {
+      console.log(data);
+      if (data === 'success') {
+        setCategoryName('');
   
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Category inserted successfully!',
+        });
+      } else {
+        setErrorMessage('Error occurred while inserting category.');
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error occurred while inserting category.',
+        });
+      }
+    })
+    .catch(error => {
+      setErrorMessage('Error occurred while inserting category.');
+      console.error('Error:', error);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error occurred while inserting category.',
+      });
+    });
+  };
   //   //.....................................User Function............................................
   //   const userid =sessionStorage.getItem('id');
   // const [categoryName_u, setCategoryName_u] = useState('');

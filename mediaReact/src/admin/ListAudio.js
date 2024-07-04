@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
+import Swal from 'sweetalert2';
 
 const ListAudio = () => {
 
@@ -27,26 +28,54 @@ const ListAudio = () => {
   }, []);
 
   const handleDelete = (audioId) => {
-    fetch(`${API_URL}/api/v2/audio/${audioId}`,{
-      method:'DELETE',
-    })
-    .then(response => {
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.status === 200 ? {} : response.json();
-})
-.then(data => {
-  if (data) {
-    console.log('audio deleted successfully', data);
-  } else {
-    console.log('audio deleted successfully (no content)');
-  }
-  setGetall(prevCategories => prevCategories.filter(audio => audio.id !== audioId));
-})
-
-    .catch(error => {
-      console.error('Error deleting category:', error);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, keep it'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`${API_URL}/api/v2/audio/${audioId}`, {
+          method: 'DELETE',
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.status === 200 ? {} : response.json();
+        })
+        .then(data => {
+          if (data) {
+            console.log('Audio deleted successfully', data);
+          } else {
+            console.log('Audio deleted successfully (no content)');
+          }
+          setGetall(prevCategories => prevCategories.filter(audio => audio.id !== audioId));
+          Swal.fire(
+            'Deleted!',
+            'Your audio has been deleted.',
+            'success'
+          );
+        })
+        .catch(error => {
+          console.error('Error deleting audio:', error);
+          Swal.fire(
+            'Error!',
+            'There was a problem deleting your audio. Please try again later.',
+            'error'
+          );
+        });
+      } else {
+        Swal.fire(
+          'Cancelled',
+          'Your audio is safe :)',
+          'error'
+        );
+      }
     });
   };
 

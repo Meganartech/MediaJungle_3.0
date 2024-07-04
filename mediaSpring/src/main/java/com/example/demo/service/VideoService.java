@@ -117,7 +117,7 @@ Videos video = this.videoRepository.findById(id).orElseThrow(()-> new ResourceNo
 	
 	
 	public VideoDescription saveVideoDescriptio(String moviename, String description, String tags, String category,
-			String certificate, String language, String duration, String year,MultipartFile thumbnail,String name,boolean paid,List<Long> castandcrewlist) throws IOException {
+			String certificate, String language, String duration, String year,MultipartFile thumbnail,String name,boolean paid) throws IOException {
         // Save the audio file to the server and get the file path
 //        String audioFilePath = fileService.saveAudioFile(audioFile);
         byte[] thumbnailBytes =ImageUtils.compressImage(thumbnail.getBytes());
@@ -140,17 +140,17 @@ Videos video = this.videoRepository.findById(id).orElseThrow(()-> new ResourceNo
 //        newaudio.setFileName(audioFilePath);
 //        newaudio.setThumbnail(thumbnailBytes);
      // Fetch CastandCrew entities based on IDs
-     			List<CastandCrew> castandCrewList = castandcrewlist.stream()
-     			.map(castandCrewId -> castandcrewrepository.findById(castandCrewId).orElse(null))
-     			.filter(castandCrew -> castandCrew != null)
-     			.collect(Collectors.toList());
-     			
-     			newaudio.setCastandcrewlist(castandCrewList);
+//     			List<CastandCrew> castandCrewList = castandcrewlist.stream()
+//     			.map(castandCrewId -> castandcrewrepository.findById(castandCrewId).orElse(null))
+//     			.filter(castandCrew -> castandCrew != null)
+//     			.collect(Collectors.toList());
+//     			
+//     			newaudio.setCastandcrewlist(castandCrewList);
         // Save the AddAudio entity to the database
         return videodescription.save(newaudio);
     }
 	public VideoDescription saveVideoDescriptio(String moviename, String description, String tags, String category,
-			String certificate, String language, String duration, String year,boolean paid,List<Long> castandcrewlist,long id
+			String certificate, String language, String duration, String year,boolean paid,long id
 			) throws IOException {
         Optional< VideoDescription> optionalAudio = videodescription.findById(id);
        
@@ -166,11 +166,11 @@ Videos video = this.videoRepository.findById(id).orElseThrow(()-> new ResourceNo
        	existingAudio.setTags(tags);
        	existingAudio.setPaid(paid);
        	
-       	List<CastandCrew> castandCrewList = castandcrewlist.stream()
-     			.map(castandCrewId -> castandcrewrepository.findById(castandCrewId).orElse(null))
-     			.filter(castandCrew -> castandCrew != null)
-     			.collect(Collectors.toList());
-       	existingAudio.setCastandcrewlist(castandCrewList);
+//       	List<CastandCrew> castandCrewList = castandcrewlist.stream()
+//     			.map(castandCrewId -> castandcrewrepository.findById(castandCrewId).orElse(null))
+//     			.filter(castandCrew -> castandCrew != null)
+//     			.collect(Collectors.toList());
+//       	existingAudio.setCastandcrewlist(castandCrewList);
        	
 //          // Update audio details if needed
 //           if (categoryId != null) {
@@ -284,39 +284,39 @@ Videos video = this.videoRepository.findById(id).orElseThrow(()-> new ResourceNo
 //
 //	
     
-    public VideoDescription saveVideoDescription(String moviename, String description, String tags,
-            String category, String certificate, String language,
-            String duration, String year, MultipartFile thumbnail,String name,
-            boolean paid, List<Long> castandcrewlist) throws IOException {
-
-			VideoDescription videoDescription = new VideoDescription();
-			videoDescription.setMoviename(moviename);
-			videoDescription.setDescription(description);
-			videoDescription.setTags(tags);
-			videoDescription.setCategory(category);
-			videoDescription.setCertificate(certificate);
-			videoDescription.setLanguage(language);
-			videoDescription.setDuration(duration);
-			videoDescription.setYear(year);
-			videoDescription.setPaid(paid);
-			videoDescription.setName(name);
-
-			// Process thumbnail bytes
-			if (!thumbnail.isEmpty()) {
-			byte[] thumbnailBytes = thumbnail.getBytes();
-			videoDescription.setThumbnail(thumbnailBytes);
-			}
-			
-			// Fetch CastandCrew entities based on IDs
-			List<CastandCrew> castandCrewList = castandcrewlist.stream()
-			.map(castandCrewId -> castandcrewrepository.findById(castandCrewId).orElse(null))
-			.filter(castandCrew -> castandCrew != null)
-			.collect(Collectors.toList());
-			
-			videoDescription.setCastandcrewlist(castandCrewList);
-			// Save the VideoDescription entity
-			return videodescription.save(videoDescription);
-	}
-			    
+//    public VideoDescription saveVideoDescription(String moviename, String description, String tags,
+//            String category, String certificate, String language,
+//            String duration, String year, MultipartFile thumbnail,String name,
+//            boolean paid, List<Long> castandcrewlist) throws IOException {
+//
+//			VideoDescription videoDescription = new VideoDescription();
+//			videoDescription.setMoviename(moviename);
+//			videoDescription.setDescription(description);
+//			videoDescription.setTags(tags);
+//			videoDescription.setCategory(category);
+//			videoDescription.setCertificate(certificate);
+//			videoDescription.setLanguage(language);
+//			videoDescription.setDuration(duration);
+//			videoDescription.setYear(year);
+//			videoDescription.setPaid(paid);
+//			videoDescription.setName(name);
+//
+//			// Process thumbnail bytes
+//			if (!thumbnail.isEmpty()) {
+//			byte[] thumbnailBytes = thumbnail.getBytes();
+//			videoDescription.setThumbnail(thumbnailBytes);
+//			}
+//			
+//			// Fetch CastandCrew entities based on IDs
+//			List<CastandCrew> castandCrewList = castandcrewlist.stream()
+//			.map(castandCrewId -> castandcrewrepository.findById(castandCrewId).orElse(null))
+//			.filter(castandCrew -> castandCrew != null)
+//			.collect(Collectors.toList());
+//			
+//			videoDescription.setCastandcrewlist(castandCrewList);
+//			// Save the VideoDescription entity
+//			return videodescription.save(videoDescription);
+//	}
+//			    
 }
 

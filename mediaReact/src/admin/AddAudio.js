@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from './navbar';
-import Sidebar from './sidebar';
 // import '../csstemp/addAudio.css';
 import API_URL from '../Config';
 import { Link } from 'react-router-dom';
@@ -22,8 +20,25 @@ const AddAudio = () => {
   const [selected, setSelected] = useState(false); 
   const [getall, setgetall] = useState('')
   const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = useState(null); // To display image preview
 
   const [selectedOption, setSelectedOption] = useState('free');
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    // thumbnail(file);
+
+    // Display image preview
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImageUrl(null);
+    }
+  };
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllPlans`)
@@ -269,12 +284,18 @@ const AddAudio = () => {
                   <h5 className='modal-title modal-header' id='exampleModalLongTitle' style={{fontFamily:'Poppins'}}>
                     Add Thumbnail
                   </h5>
+                  {imageUrl && (
+                    <div className="col-md-12 mt-4 text-center">
+                      <img src={imageUrl} alt="Preview" className="img-fluid" style={{ width:'100px' , height:'100px' }} />
+                    </div>
+                  )}
+
                   <input
                     type='file'
                     className='form-control'
                     placeholder='Choose Thumbnail'
                     name='thumbnail'
-                    onChange={(e) => setThumbnail(e.target.files[0])}
+                    onChange={handleImageChange}
                   />
                   {errors.thumbnail && <div className="error-message">{errors.thumbnail}</div>}
                   <br />
