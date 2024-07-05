@@ -14,11 +14,12 @@ const AddUser = () => {
     mobnum: '',
     address: '',
     pincode: '',
+    confirm_Password: '',
     email: '',
     compname: '',
     country: '',
     password: '',
-    confirm_Password: ''
+   
   });
   const [errors, setErrors] = useState({});
 
@@ -108,11 +109,13 @@ const AddUser = () => {
           username: data.username,
           mobnum: data.mobnum,
           address: data.address,
+          confirmPassword:data.confirm_Password,
           pincode: data.pincode,
           email: data.email,
           compname: data.compname,
           country: data.country,
-          password: data.password
+          password: data.password,
+          
         };
   
         console.log('Sending data:', sendData);
@@ -142,6 +145,7 @@ const AddUser = () => {
             password: '',
             confirm_Password: ''
           });
+          console.log(data)
         } else {
           Swal.fire({
             title: 'Error!',
@@ -281,16 +285,16 @@ const AddUser = () => {
             <div className="form-group">
               <label className="custom-label">
                 Confirm Password
-                {errors.confirmPassword && <span className="error-icon">!</span>}
+                {errors.confirm_Password && <span className="error-icon">!</span>}
               </label>
               <input
                 type="password"
-                name="confirm_Password"
-                className={`form-control ${errors.confirmPassword ? 'error' : ''}`}
+                name="confirmPassword"
+                className={`form-control ${errors.confirm_Password ? 'error' : ''}`}
                 onChange={handleChange}
                 value={data.confirm_Password}
               />
-              {errors.confirmPassword && <div className="error-message error">{errors.confirmPassword}</div>}
+              {errors.confirm_Password && <div className="error-message error">{errors.confirm_Password}</div>}
             </div>
           </div>
         </div>

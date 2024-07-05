@@ -36,7 +36,7 @@ public class AddUser {
 	@Column(name="password")
 	private String password;
 	
-	@Column(name="confirmPassword")
+	@Column(name="confirmPass")
 	private String confirmPassword;
 	
 	@Column(name="address")

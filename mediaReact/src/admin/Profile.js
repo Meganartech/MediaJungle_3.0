@@ -23,6 +23,7 @@ const Profile = () => {
       try {
         const response = await axios.get(`${API_URL}/api/v2/GetAllUser`);
         setUsers(response.data.userList);
+        console.log(response.data.userList)
       } catch (error) {
         console.log('Error fetching users:', error);
       }

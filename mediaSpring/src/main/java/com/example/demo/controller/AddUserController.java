@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -26,6 +27,7 @@ import com.example.demo.model.License;
 import com.example.demo.model.UserListWithStatus;
 import com.example.demo.repository.AddUserRepository;
 import com.example.demo.repository.licenseRepository;
+import com.example.demo.userregister.UserRegister;
 
 @CrossOrigin()
 @RestController
@@ -52,6 +54,36 @@ public class AddUserController {
             return "failure";
         }
     }
+	
+	@PostMapping("/login/admin")
+	public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
+	    try {
+	        String username = loginRequest.get("username");
+	        String password = loginRequest.get("password");
+	        
+	        Optional<AddUser> userOptional = adduserrepository.findByUsername(username);
+	        
+	        if (userOptional.isEmpty()) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        }
+	        
+	        AddUser user = userOptional.get();
+	        
+	        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	        
+	        if (!passwordEncoder.matches(password, user.getPassword())) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+	        }
+	        
+	        // Here you can generate a JWT token or session management logic
+	        // Example: String token = jwtTokenUtil.generateToken(user);
+	        
+	        return ResponseEntity.ok("Login successful");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during login");
+	    }
+	}
+
 		
 //		adduserrepository.save(data);
 //		return "success";
