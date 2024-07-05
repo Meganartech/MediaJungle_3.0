@@ -10,7 +10,8 @@ import "../App.css"
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
 
 const AddVideo = () => {
   const [file, setFile] = useState(null);
@@ -34,6 +35,20 @@ const AddVideo = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [castandcrewlist, setcastandcrewlist] = useState([]);
+  const dropdownRef = useRef(null);
+
+  const handleClickOutside = event => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -698,46 +713,46 @@ const save = async (e) => {
 
 <br />
 <div className='temp'>
-  <div className="col-lg-6">
-    <label>Cast & Crew</label>
-    <div className="dropdown-container">
-      <div className="dropdown">
-        <button
-          type="button"
-          className="btn btn-secondary dropdown-toggle form-control"
-          onClick={toggleDropdown}
-        >
-          {castandcrewlist.length > 0 ? 'Selected' : 'Select Cast & Crew'}
-        </button>
-        {isOpen && (
-          <div className="dropdown-menu show">
-            {Getall.map(option => (
-              <div key={option.id} className="dropdown-item">
-                <input
-                  type="checkbox"
-                  value={option.name}
-                  checked={castandcrewlist.includes(option.id)}
-                  onChange={handleCheckboxChange(option)}
-                />
-                <label className="ml-2">{option.name}</label>
+      <div className="col-lg-6">
+        <label>Cast & Crew</label>
+        <div className="dropdown-container" ref={dropdownRef}>
+          <div className="dropdown">
+            <button
+              type="button"
+              className="btn btn-secondary dropdown-toggle form-control"
+              onClick={toggleDropdown}
+            >
+              {castandcrewlist.length > 0 ? 'Selected' : 'Select Cast & Crew'}
+            </button>
+            {isOpen && (
+              <div className="dropdown-menu show">
+                {Getall.map(option => (
+                  <div key={option.id} className="dropdown-item">
+                    <input
+                      type="checkbox"
+                      value={option.name}
+                      checked={castandcrewlist.includes(option.id)}
+                      onChange={handleCheckboxChange(option)}
+                    />
+                    <label className="ml-2">{option.name}</label>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        )}
-      </div>
-      {castandcrewlist.length > 0 && (
-        <div className="selected-items">
-          <label>Selected:</label>
-          {castandcrewlist.map(id => (
-            <div key={id}>
-              {Getall.find(option => option.id === id)?.name} {/* Display name based on ID */}
+          {castandcrewlist.length > 0 && (
+            <div className="selected-items">
+              <label>Selected:</label>
+              {castandcrewlist.map(id => (
+                <div key={id}>
+                  {Getall.find(option => option.id === id)?.name} {/* Display name based on ID */}
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
-      )}
+      </div>
     </div>
-  </div>
-</div>
                   <h5 className='modal-title modal-header' style={{ fontFamily: 'Poppins' }}>
                       Choose Pricing Option
                   </h5>

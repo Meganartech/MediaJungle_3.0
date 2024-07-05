@@ -26,7 +26,7 @@ const AddAudio = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    // thumbnail(file);
+    setThumbnail(file);
 
     // Display image preview
     if (file) {
