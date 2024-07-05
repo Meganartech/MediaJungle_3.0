@@ -24,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.compresser.ImageUtils;
 
+import jakarta.transaction.Transactional;
+
 @CrossOrigin()
 @RestController
 @RequestMapping("/api/v2/")
@@ -90,6 +92,7 @@ public class UserRegisterController {
   
  
     @PostMapping("/login")
+    @Transactional
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         
         String email = loginRequest.get("email");
