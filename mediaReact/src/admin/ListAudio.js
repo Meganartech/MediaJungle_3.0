@@ -10,7 +10,7 @@ const ListAudio = () => {
   const [getall, setGetall] = useState(null);
   const name = sessionStorage.getItem('username');
   const navigate = useNavigate();
-
+  const token = sessionStorage.getItem('tokenn')
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAll`)
       .then(response => {
@@ -41,6 +41,9 @@ const ListAudio = () => {
       if (result.isConfirmed) {
         fetch(`${API_URL}/api/v2/audio/${audioId}`, {
           method: 'DELETE',
+          headers: {
+            Authorization: token,
+        }
         })
         .then(response => {
           if (!response.ok) {

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 
 import { Link } from 'react-router-dom';
-import Sidebar from './sidebar';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
 
@@ -44,6 +43,7 @@ const Dashboard = () => {
   }, []);
   //..............................Admin Functions..........................................
   const name=sessionStorage.getItem('username');
+
   useEffect(() => {
     const fetchData = async () => {
       const storedData = localStorage.getItem('mySessionData')

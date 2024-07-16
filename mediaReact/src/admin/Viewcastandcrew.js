@@ -8,6 +8,7 @@ const Viewcastandcrew = () => {
   const [getall, setGetall] = useState([]);
   const [image,setimage] = useState([]);
   const navigate = useNavigate();
+  const token = sessionStorage.getItem('tokenn')
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllcastandcrew`)
@@ -39,6 +40,9 @@ const Viewcastandcrew = () => {
       if (result.isConfirmed) {
         fetch(`${API_URL}/api/v2/Deletecastandcrew/${castId}`, {
           method: 'DELETE',
+          headers:{
+            Authorization:token
+          }
         })
           .then(response => {
             if (!response.ok) {

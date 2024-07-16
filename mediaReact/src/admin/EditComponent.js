@@ -10,6 +10,7 @@ function EditComponent() {
   console.log(profileID)
   const [updatedUser, setUpdatedUser] = useState('');
   const [errors, setErrors] = useState({});
+  const token = sessionStorage.getItem('tokenn')
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -260,7 +261,7 @@ const handleSubmit = (e) => {
                         {errors.country && <div className="error">{errors.country}</div>}
                       </td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                       <th>Password</th>
                       <td>
                         <input
@@ -272,7 +273,7 @@ const handleSubmit = (e) => {
                         />
                         {errors.password && <div className="error">{errors.password}</div>}
                       </td>
-                    </tr>
+                    </tr> */}
                     <tr>
   <th>Address</th>
   <td>

@@ -19,6 +19,7 @@ const Video = () => {
   const navigate = useNavigate();
   const [dataToSend, setDataToSend] = useState('');
   const [paid, setpaid] = useState('');
+  const token= sessionStorage.getItem('tokenn')
 
 
 
@@ -65,7 +66,10 @@ const Video = () => {
       if (result.isConfirmed) {
         try {
           const response = await fetch(`${API_URL}/api/video/${audId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers:{
+              Authorization:token,
+            }
           });
   
           if (response.ok) {

@@ -149,57 +149,30 @@ Videos video = this.videoRepository.findById(id).orElseThrow(()-> new ResourceNo
         // Save the AddAudio entity to the database
         return videodescription.save(newaudio);
     }
-	public VideoDescription saveVideoDescriptio(String moviename, String description, String tags, String category,
-			String certificate, String language, String duration, String year,boolean paid,long id
-			) throws IOException {
-        Optional< VideoDescription> optionalAudio = videodescription.findById(id);
-       
+	public VideoDescription saveVideoDescription(String moviename, String description, String tags, String category,
+	        String certificate, String language, String duration, String year, boolean paid, long id) throws IOException {
+	    Optional<VideoDescription> optionalVideo = videodescription.findById(id);
 
-       if (optionalAudio.isPresent()) {
-       	VideoDescription existingAudio = optionalAudio.get();
-       	existingAudio.setMoviename(moviename);
-       	existingAudio.setCategory(category);
-       	existingAudio.setDescription(description);
-       	existingAudio.setDuration(duration);
-       	existingAudio.setLanguage(language);
-       	existingAudio.setCertificate(certificate);
-       	existingAudio.setTags(tags);
-       	existingAudio.setPaid(paid);
-       	
-//       	List<CastandCrew> castandCrewList = castandcrewlist.stream()
-//     			.map(castandCrewId -> castandcrewrepository.findById(castandCrewId).orElse(null))
-//     			.filter(castandCrew -> castandCrew != null)
-//     			.collect(Collectors.toList());
-//       	existingAudio.setCastandcrewlist(castandCrewList);
-       	
-//          // Update audio details if needed
-//           if (categoryId != null) {
-//               Optional<AddNewCategories> categoryOptional = addnewcategoriesrepository.findById(categoryId);
-//               AddNewCategories category = categoryOptional.orElseThrow(() -> new EntityNotFoundException("Category with ID " + categoryId + " not found"));
-//               existingAudio.setCategory(category);
-//           }
-//           // Update the audio file if a new file is provided
-//           if (audioFile != null && !audioFile.isEmpty()) {
-//               String existingFilename = existingAudio.getFileName();
-//               String audioFilePath = fileService.updateAudioFile(existingFilename, audioFile);
-//               existingAudio.setFileName(audioFilePath);
-//           }
-//
-//           // Update the thumbnail if a new file is provided
-//           if (thumbnail != null && !thumbnail.isEmpty()) {
-//               byte[] thumbnailBytes = ImageUtils.compressImage(thumbnail.getBytes());
-//               existingAudio.setThumbnail(thumbnailBytes);
-//           }
+	    if (optionalVideo.isPresent()) {
+	        VideoDescription existingVideo = optionalVideo.get();
+	        existingVideo.setMoviename(moviename);
+	        existingVideo.setDescription(description);
+	        existingVideo.setTags(tags);
+	        existingVideo.setCategory(category);
+	        existingVideo.setCertificate(certificate);
+	        existingVideo.setLanguage(language);
+	        existingVideo.setDuration(duration);
+	        existingVideo.setYear(year);
+	        existingVideo.setPaid(paid);
 
-           // Save the updated audio entity within a transaction
-           videodescription.save(existingAudio);
-          System.out.println("video deatail saved successfully");
+	        // Save the updated video entity
+	        videodescription.save(existingVideo);
 
-           return null;
-       } else {
-           throw new EntityNotFoundException("Audio with ID not found");
-       }
-   }
+	        return existingVideo;
+	    } else {
+	        throw new EntityNotFoundException("Video with ID not found");
+	    }
+	}
 	
 	
 	

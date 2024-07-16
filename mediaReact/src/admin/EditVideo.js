@@ -28,6 +28,7 @@ const EditVideo = (receivedData) => {
   const [isOpen, setIsOpen] = useState(false);
   const [castandcrewlist, setcastandcrewlist] = useState([]);
   const [Getall,setGetall] = useState('');
+  const token = sessionStorage.getItem('tokenn')
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -298,61 +299,51 @@ const hasPaymentPlan = () => {
   
 
   
-const save = async (e) => {
-  e.preventDefault();
+  const save = async (e) => {
+    e.preventDefault();
 
-  try {
-    const formData = new FormData();
+    try {
+        const formData = new FormData();
+        formData.append('Movie_name', Movie_name);
+        formData.append('description', Description);
+        formData.append('tags', TagId);
+        formData.append('category', categoryId);
+        formData.append('certificate', certificateId);
+        formData.append('Language', LanguageId);
+        formData.append('Duration', Duration);
+        formData.append('Year', Year);
+        formData.append('paid', selectedOption === 'paid' ? 'true' : 'false');
+        formData.append('id', updatedata.id);
 
-    const Addvideo = { Movie_name: Movie_name, tags: TagId, description: Description,category: categoryId,certificate: certificateId,Language: LanguageId,Duration:Duration,Year:Year,paid: selectedOption === 'paid' ? 1 : 0,id:updatedata.id};
-    console.log(Addvideo);
+        const response = await axios.post(`${API_URL}/api/updatedescriprion`, formData, {
+            headers: {
+                Authorization: token,
+                'Content-Type': 'multipart/form-data'
+            },
+            onUploadProgress: (progressEvent) => {
+                const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                setUploadProgress(progress);
+            }
+        });
 
-    for (const key in Addvideo) {
-      formData.append(key, Addvideo[key]);
+        console.log(response.data);
+        Swal.fire({
+            title: 'Success',
+            text: 'The video description has been updated successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    } catch (error) {
+        console.error('Error updating video description:', error);
+        Swal.fire({
+            title: 'Error',
+            text: 'There was an error updating the video description.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
     }
-
-    // Append each id in castandcrewlist as a separate formData entry
-    castandcrewlist.forEach((person) => {
-      formData.append('castandcrewlist', person.id);
-    });
-
-    const response = await axios.post(`${API_URL}/api/updatedescriprion`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',  // Automatically set by axios, but explicitly setting here
-      },
-      onUploadProgress: (progressEvent) => {
-        const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-        setUploadProgress(progress);
-      }
-    });
-
-    console.log(response.data);
-    console.log("Updated successfully");
-    Swal.fire({
-      title: 'Success',
-      text: 'The video description has been updated successfully!',
-      icon: 'success',
-      confirmButtonText: 'OK'
-    });
-  } catch (error) {
-    console.error('Error uploading data:', error);
-    Swal.fire({
-      title: 'Error',
-      text: 'There was an error updating the video description.',
-      icon: 'error',
-      confirmButtonText: 'OK'
-    });
-    // Handle error, e.g., show an error message to the user
-  }
-
-  // Employee.setVideo(Addvideo).then(res => {
-  //   // handleUpload();
-  //   setMovie_name('');
-  //   setTags('');
-  //   setDescription('');
-  // })
 };
-  
+
 
 
 

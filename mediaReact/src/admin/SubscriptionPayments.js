@@ -47,7 +47,7 @@ const SubscriptionPayments = () => {
         <div className='container2'>
           <ol className="breadcrumb mb-4">
             <li className="breadcrumb-item text-white">
-              <Link to="/Dashboard">SubscriptionPayments</Link>
+              <Link to="/Dashboard">Registered User</Link>
             </li>
             <li className="breadcrumb-item active">userdetails</li>
           </ol>

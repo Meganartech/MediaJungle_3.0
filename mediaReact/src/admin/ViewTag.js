@@ -8,6 +8,7 @@ import API_URL from '../Config';
 const ViewTag = () => {
      const navigate = useNavigate();
   const [Tag, setTag] = useState([]);
+  const token = sessionStorage.getItem('tokenn')
 
   useEffect(() => {
     // fetch category data from the backend
@@ -42,6 +43,9 @@ const handleDeleteTag = (tagId) => {
     if (result.isConfirmed) {
       fetch(`${API_URL}/api/v2/DeleteTag/${tagId}`, {
         method: 'DELETE',
+        headers:{
+          Authorization: token,
+        }
       })
       .then(response => {
         if (!response.ok) {

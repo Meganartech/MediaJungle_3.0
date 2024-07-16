@@ -147,12 +147,12 @@ return (
     {getall && getall.length > 0 && getall.map((plan, index) => (
       <div key={index} className='w-full mb-8 flex'>
         <div className='flex flex-col justify-between p-8 sm:p-14 bg-dry rounded-lg border border-border w-full'>
-        {GetAll.length > 0 && GetAll[0].logo ? (
-          <img
-            src={`data:image/png;base64,${GetAll[0].logo}`}
-            alt='logo'
-            className='w-full h-12 object-contain'  
-          />
+          {plan.logo ? (
+            <img
+              src={`data:image/png;base64,${plan.logo}`}
+              alt='logo'
+              className='w-full h-12 object-contain'  
+            />
           ) : (
             <div></div>
           )}
@@ -167,8 +167,10 @@ return (
                       <span className="inline-block mr-4">
                         {desc.active === 'yes' ? (
                           <i className="fa-solid fa-check text-yellow-600 text-lg"></i>
-                        ) : (
+                        ) : desc.active === 'no' ? (
                           <i className="fa-solid fa-times text-red-600 text-lg"></i>
+                        ) : (
+                          null
                         )}
                       </span>
                       <span className='text-lg font-medium text-gray-500'>{desc.description}</span>
@@ -196,6 +198,7 @@ return (
     ))}
   </div>
 </Layout>
+
 
   )
 }

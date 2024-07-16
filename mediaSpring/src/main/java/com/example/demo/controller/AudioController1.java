@@ -10,8 +10,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -32,6 +36,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,10 +48,16 @@ import org.xml.sax.SAXException;
 
 import com.example.demo.compresser.ImageUtils;
 import com.example.demo.fileservice.AudioFileService;
+import com.example.demo.model.AddUser;
 import com.example.demo.model.Addaudio1;
+import com.example.demo.notification.service.NotificationService;
 import com.example.demo.repository.AddAudioRepository;
 import com.example.demo.repository.AddNewCategoriesRepository;
+import com.example.demo.repository.AddUserRepository;
 import com.example.demo.service.AudioService;
+import com.example.demo.userregister.JwtUtil;
+import com.example.demo.userregister.UserRegister;
+import com.example.demo.userregister.UserRegisterRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -61,7 +72,8 @@ public class AudioController1 {
 	@Autowired
     private AddAudioRepository audiorepository;
 	
-
+    @Autowired
+    private NotificationService notificationservice;
 	
 	@Autowired
     private AddNewCategoriesRepository addnewcategoriesrepository;
@@ -69,28 +81,77 @@ public class AudioController1 {
 	@Autowired
     private AudioFileService fileService;
 	
+	@Autowired
+	private JwtUtil jwtUtil; // Autowire JwtUtil
+	
+	@Autowired
+	private AddUserRepository adduserrepository;
+	
+	 @Autowired
+	    private UserRegisterRepository userregisterrepository;
+
+	
 	 private final String audioStorageDirectory = "Audio/";
 	 private static final String filename="Audio/data.xml";
 
 	 
 	 
 
-	@PostMapping("/uploadaudio")
-    public ResponseEntity<Addaudio1> uploadAudio(@RequestParam("category") Long categoryId,
-    		                                    @RequestParam("audioFile") MultipartFile audioFile,
-    		                                    @RequestParam("thumbnail") MultipartFile thumbnail,
-    		                                    @RequestParam(value = "paid", required = false) boolean paid)
-                                                {
-        try {
-            // Save audio with file using the service
-            Addaudio1 savedAudio = audioservice.saveAudioWithFile(audioFile,thumbnail,categoryId,paid);
-            
-            return ResponseEntity.ok().body(savedAudio);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-    }
+	 @PostMapping("/uploadaudio")
+	 public ResponseEntity<Addaudio1> uploadAudio(@RequestParam("category") Long categoryId,
+	                                              @RequestParam("audioFile") MultipartFile audioFile,
+	                                              @RequestParam("thumbnail") MultipartFile thumbnail,
+	                                              @RequestParam(value = "paid", required = false) boolean paid,
+	                                              @RequestHeader("Authorization") String token) {
+	     try {
+	         if (!jwtUtil.validateToken(token)) {
+	             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	         }
+
+	         String email = jwtUtil.getUsernameFromToken(token);
+	         System.out.println("email: " + email);
+	         Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	         if (opUser.isPresent()) {
+	             AddUser user = opUser.get();
+	             String username = user.getUsername();
+
+	             // Save audio with file using the service
+	             Addaudio1 savedAudio = audioservice.saveAudioWithFile(audioFile, thumbnail, categoryId, paid);
+	             Long audioId = savedAudio.getId();
+	             String songName = savedAudio.getSongname();
+	             String heading = "New Audio Added!";
+
+	             // Create notification with optional file (thumbnail)
+	             Long notifyId = notificationservice.createNotification(username, email, heading, Optional.ofNullable(thumbnail));
+	             if (notifyId != null) {
+	                 Set<String> notiUserSet = new HashSet<>();
+	                 // Fetch all admins from AddUser table
+	                 List<AddUser> adminUsers = adduserrepository.findAll();
+	                 for (AddUser admin : adminUsers) {
+	                     notiUserSet.add(admin.getEmail());
+	                 }
+	                 notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+
+	                 // Fetch all regular users from UserRegister table
+	                 //List<UserRegister> regularUsers = userregisterrepository.findAll();
+	                 //for (UserRegister regularUser : regularUsers) {
+	                //     notiUserSet.add(regularUser.getEmail());
+	                // }
+	                // notificationservice.CommoncreateNotificationUser(notifyId, new ArrayList<>(notiUserSet));
+	             }
+
+	             return ResponseEntity.ok().body(savedAudio);
+	         } else {
+	             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	         }
+	     } catch (IOException e) {
+	         e.printStackTrace();
+	         return ResponseEntity.badRequest().build();
+	     }
+	 }
+
+
 	
 //	-------------------------------------------licensefile--------------------------------------------
 //	@PostMapping("/uploadfile")
@@ -382,31 +443,88 @@ public class AudioController1 {
 
 
     @DeleteMapping("/audio/{id}")
-    public ResponseEntity<String> deleteAudioById(@PathVariable Long id,String fileName) {
+    public ResponseEntity<Map<String, String>> deleteAudioById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
         try {
-            // Call the service method to delete audio by ID
-            boolean deleted = audioservice.deleteAudioById(id);
-//            boolean audiodeleted = audioservice.deleteAudioFile(fileName);
+            // Validate JWT token
+            if (!jwtUtil.validateToken(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid token"));
+            }
 
-            if (deleted) {
-                return ResponseEntity.ok().body("Audio deleted successfully");
+            // Extract username from token
+            String email = jwtUtil.getUsernameFromToken(token);
+            System.out.println("email: " + email);
+            Optional<AddUser> optionalUser = adduserrepository.findByUsername(email);
+
+            if (optionalUser.isPresent()) {
+                AddUser user = optionalUser.get();
+                String username = user.getUsername();
+
+                // Fetch audio details before deletion
+                Optional<Addaudio1> optionalAudio = audiorepository.findById(id);
+                if (optionalAudio.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Audio not found"));
+                }
+                Addaudio1 audio = optionalAudio.get();
+                byte[] image = audio.getThumbnail();
+
+                // Delete audio by ID
+                boolean deleted = audioservice.deleteAudioById(id);
+                if (!deleted) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Audio deletion failed"));
+                }
+
+                // Create notification if audio is deleted
+                String heading = "Audio Deleted!";
+                Long notifyId = notificationservice.createNotification(username, email, heading, image);
+                if (notifyId != null) {
+                    Set<String> notiUserSet = new HashSet<>();
+                    // Fetch all admins from AddUser table
+                    List<AddUser> adminUsers = adduserrepository.findAll();
+                    for (AddUser admin : adminUsers) {
+                        notiUserSet.add(admin.getEmail());
+                    }
+                    notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+                }
+
+                return ResponseEntity.ok(Map.of("message", "Audio deleted successfully"));
             } else {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "User not authorized"));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "An error occurred"));
         }
     }
+
+
     
     @PatchMapping("/updateaudio/update/{audioId}")
-    public ResponseEntity<Addaudio1> updateAudio(		
+    public ResponseEntity<?> updateAudio(		
         @PathVariable Long audioId,
         @RequestParam(value = "audioFile", required = false) MultipartFile audioFile,
         @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
-        @RequestParam(value = "category", required = false) Long categoryId)
+        @RequestParam(value = "category", required = false) Long categoryId,
+        @RequestHeader("Authorization") String token)
      {
-        try {
+    	  try {
+		        // Validate JWT token
+		        if (!jwtUtil.validateToken(token)) {
+		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+		        }
+
+		        // Extract email from token
+		        String email = jwtUtil.getUsernameFromToken(token);
+		        System.out.println("email: " + email);
+
+		        // Fetch user details from repository
+		        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+		        if (!opUser.isPresent()) {
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		        }
+
+		        AddUser user = opUser.get();
+		        String username = user.getUsername();
+
             // Check if the audioId is valid
             if (!audioservice.existsById(audioId)) {
             	
@@ -418,6 +536,19 @@ public class AudioController1 {
             Addaudio1 updatedAudio = audioservice.updateAudioWithFile(audioId, audioFile, thumbnail, categoryId);
             System.out.println("updated successfully");
             updatedAudio.getAudioFile();
+            byte[] image = updatedAudio.getThumbnail();
+            // Create notification for the user who updated the setting
+ 	        String heading = "Audio details Updated!";
+ 	        Long notifyId = notificationservice.createNotification(username, email, heading, image);
+             if (notifyId != null) {
+                 Set<String> notiUserSet = new HashSet<>();
+                 // Fetch all admins from AddUser table
+                 List<AddUser> adminUsers = adduserrepository.findAll();
+                 for (AddUser admin : adminUsers) {
+                     notiUserSet.add(admin.getEmail());
+                 }
+                 notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+             }
             return ResponseEntity.ok().body(updatedAudio);
            
         } catch (IOException e) {

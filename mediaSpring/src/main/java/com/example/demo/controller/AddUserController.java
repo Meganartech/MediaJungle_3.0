@@ -1,10 +1,14 @@
 package com.example.demo.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,8 +30,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.example.demo.model.AddUser;
 import com.example.demo.model.License;
 import com.example.demo.model.UserListWithStatus;
+import com.example.demo.notification.service.NotificationService;
 import com.example.demo.repository.AddUserRepository;
 import com.example.demo.repository.licenseRepository;
+import com.example.demo.userregister.JwtUtil;
+import com.example.demo.userregister.TokenBlacklist;
 import com.example.demo.userregister.UserRegister;
 
 @CrossOrigin()
@@ -39,14 +47,75 @@ public class AddUserController {
 	
     @Autowired
     private licenseRepository licenseRepository;
+    
+    @Autowired
+    private JwtUtil jwtUtil; // Autowire JwtUtil
+    
+    @Autowired
+    private TokenBlacklist tokenBlacklist;
+    
+    @Autowired
+    private NotificationService notificationservice;
 	
-	@PostMapping("/AddUser")
+//	@PostMapping("/AddUser")
+//	public ResponseEntity<String> AddUser(@RequestHeader("Authorization") String token,@RequestBody AddUser data) {
+//		 try {
+//		        if (!jwtUtil.validateToken(token)) {
+//		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+//		        }
+//
+//		        String email = jwtUtil.getUsernameFromToken(token);
+//		        System.out.println("email: " + email);
+//		        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+//
+//		        if (opUser.isPresent()) {
+//		            AddUser user = opUser.get();
+//		            String username = user.getUsername();
+//                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//                    String hashedPassword = passwordEncoder.encode(data.getPassword());
+//                    data.setPassword(hashedPassword);
+//                    BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
+//                    String hashedPass = passwordEncoder.encode(data.getConfirmPassword());
+//                    data.setConfirmPassword(hashedPass);
+//
+//			        AddUser adduser = adduserrepository.save(data);
+//			        // Assuming you need to create a notification for a new category
+//		            Long adduserId = adduser.getId();
+//		            String userName = adduser.getUsername(); // Adjust as needed
+//		            String heading = "New SubAdmin Added!";
+//
+//		            // Create notification
+//		            Long notifyId = notificationservice.createNotification(username, email, heading);
+//		            if (notifyId != null) {
+//		                Set<String> notiUserSet = new HashSet<>();
+//		                // Fetch all admins from AddUser table
+//		                List<AddUser> adminUsers = adduserrepository.findAll();
+//		                for (AddUser admin : adminUsers) {
+//		                    notiUserSet.add(admin.getEmail());
+//		                }
+//		                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+//		            }
+//
+//		            return ResponseEntity.status(HttpStatus.CREATED).body("success");
+//		        } else {
+//		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+//		        }
+//		    } catch (Exception e) {
+//		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+//		    }
+//		}
+	
+    @PostMapping("/AddUser")
 	public String AddUser(@RequestBody AddUser data) {
 		try {
             // Example: Encrypting password before saving (if AddUser has a password field)
              BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
              String hashedPassword = passwordEncoder.encode(data.getPassword());
              data.setPassword(hashedPassword);
+             BCryptPasswordEncoder passwordEnc = new BCryptPasswordEncoder();
+             String hashedPass = passwordEncoder.encode(data.getConfirmPassword());
+             data.setConfirmPassword(hashedPass);
+             
 
 			adduserrepository.save(data);
 			return "success";
@@ -54,35 +123,85 @@ public class AddUserController {
             return "failure";
         }
     }
+
+	
+	
+//	@PostMapping("/login/admin")
+//	public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
+//	    try {
+//	        String username = loginRequest.get("username");
+//	        String password = loginRequest.get("password");
+//	        Optional<AddUser> userOptional = adduserrepository.findByUsername(username);
+//	        if (userOptional.isEmpty()) {
+//	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+//	        }
+//	        AddUser user = userOptional.get();
+//	        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//	        if (!passwordEncoder.matches(password, user.getPassword())) {
+//	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+//	        }
+//	        // Here you can generate a JWT token or session management logic
+//	        // Example: String token = jwtTokenUtil.generateToken(user);
+//	        
+//	        return ResponseEntity.ok("Login successful");
+//	    } catch (Exception e) {
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during login");
+//	    }
+//	}
+	
 	
 	@PostMapping("/login/admin")
-	public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
+	public ResponseEntity<?> loginadmin(@RequestBody Map<String, String> loginRequest) {
 	    try {
 	        String username = loginRequest.get("username");
 	        String password = loginRequest.get("password");
-	        
 	        Optional<AddUser> userOptional = adduserrepository.findByUsername(username);
-	        
+
 	        if (userOptional.isEmpty()) {
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 	        }
-	        
+
 	        AddUser user = userOptional.get();
-	        
 	        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-	        
+
 	        if (!passwordEncoder.matches(password, user.getPassword())) {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
 	        }
-	        
-	        // Here you can generate a JWT token or session management logic
-	        // Example: String token = jwtTokenUtil.generateToken(user);
-	        
-	        return ResponseEntity.ok("Login successful");
+
+	        String jwtToken = jwtUtil.generateToken(username); // Use jwtUtil
+	        Map<String, Object> responseBody = new HashMap<>();
+	        responseBody.put("Token", jwtToken);
+	        responseBody.put("message", "Login successful");
+	        responseBody.put("UserName", user.getUsername());
+	        responseBody.put("Email", user.getEmail());
+	        responseBody.put("AdminId", user.getId());
+
+	        // Logging user information
+	        System.out.println("Username: " + user.getUsername());
+	        System.out.println("JWT Token: " + jwtToken);
+	        System.out.println("User ID: " + user.getId());
+	        System.out.println("Email: " + user.getEmail());
+
+	        // Successful login
+	        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	    } catch (Exception e) {
+	        // Log the exception for further investigation if needed
+	        e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during login");
 	    }
 	}
+	
+	@PostMapping("/logout/admin")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        // Extract the token from the Authorization header
+        // Check if the token is valid (e.g., not expired)
+        // Blacklist the token to invalidate it
+        tokenBlacklist.blacklistToken(token);
+        System.out.println("Logged out successfully");
+        // Respond with a success message
+        return ResponseEntity.ok().body("Logged out successfully");
+    }
+
 
 		
 //		adduserrepository.save(data);

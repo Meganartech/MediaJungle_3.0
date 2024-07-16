@@ -10,6 +10,7 @@ const ViewCategory = () => {
   
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+  const token = sessionStorage.getItem('tokenn')
 
 
 
@@ -46,6 +47,9 @@ const handleDeleteCategory = (categoryId) => {
     if (result.isConfirmed) {
       fetch(`${API_URL}/api/v2/DeleteCategory/${categoryId}`, {
         method: 'DELETE',
+        headers: {
+          Authorization: token,
+      }
       })
       .then(response => {
         if (!response.ok) {

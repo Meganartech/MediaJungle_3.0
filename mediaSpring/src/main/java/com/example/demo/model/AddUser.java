@@ -18,7 +18,7 @@ public class AddUser {
 	@Column(name="username")
 	private String Username;
 	
-	@Column(name="email")
+	@Column(unique = true)
 	private String email;
 	
 	@Column(name="mobnum")
@@ -36,7 +36,7 @@ public class AddUser {
 	@Column(name="password")
 	private String password;
 	
-	@Column(name="confirmPass")
+	@Column(name="confirm_Password")
 	private String confirmPassword;
 	
 	@Column(name="address")

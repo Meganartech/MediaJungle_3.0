@@ -24,6 +24,8 @@ const AddAudio = () => {
 
   const [selectedOption, setSelectedOption] = useState('free');
 
+  const token = sessionStorage.getItem("tokenn")
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setThumbnail(file);
@@ -117,8 +119,10 @@ const AddAudio = () => {
       formData.append('thumbnail', thumbnail);
       formData.append('paid', selectedOption === 'paid' ? 1 : 0); // Set paid based on selectedOption
 
+
       const response = await axios.post(`${API_URL}/api/v2/uploadaudio`, formData, {
         headers: {
+           Authorization: token, // Pass the token in the Authorization header
           'Content-Type': 'multipart/form-data',
         },
       });

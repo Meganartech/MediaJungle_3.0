@@ -5,10 +5,14 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +31,30 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.compresser.ImageUtils;
+import com.example.demo.model.AddCertificate;
+import com.example.demo.model.AddUser;
 import com.example.demo.model.Addaudio1;
 import com.example.demo.model.CastandCrew;
 import com.example.demo.model.FileModel;
 import com.example.demo.model.VideoDescription;
 import com.example.demo.model.Videos;
+import com.example.demo.notification.service.NotificationService;
+import com.example.demo.repository.AddUserRepository;
 import com.example.demo.repository.AddVideoDescriptionRepository;
 import com.example.demo.repository.VideoRepository;
 import com.example.demo.service.FileService;
 import com.example.demo.service.VideoService;
+import com.example.demo.userregister.JwtUtil;
+import com.example.demo.userregister.UserRegisterRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
 //import java.nio.file.Path;
@@ -72,6 +84,17 @@ public class VideoController {
 
 	@Autowired
 	private AddVideoDescriptionRepository videodescriptionRepository;
+	
+	@Autowired
+    private NotificationService notificationservice;
+	
+	@Autowired
+	private JwtUtil jwtUtil; // Autowire JwtUtil
+	
+	@Autowired
+	private AddUserRepository adduserrepository;
+	
+
 //	@PostMapping("/save")
 //	public ResponseEntity<?> saveVideo(@RequestBody Videos video) {
 //		try {
@@ -152,22 +175,52 @@ public class VideoController {
             @RequestParam("year") String year,
             @RequestParam("thumbnail") MultipartFile thumbnail,
             @RequestParam("video") MultipartFile video,
-            @RequestParam(value = "paid", required = false, defaultValue = "false") boolean paid){
+            @RequestParam(value = "paid", required = false, defaultValue = "false") boolean paid,
+            @RequestHeader("Authorization") String token){
 
         try {
+        	 if (!jwtUtil.validateToken(token)) {
+	             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	         }
+
+	         String email = jwtUtil.getUsernameFromToken(token);
+	         System.out.println("email: " + email);
+	         Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	         if (opUser.isPresent()) {
+	             AddUser user = opUser.get();
+	             String username = user.getUsername();
         	
         	FileModel upload= fileSevice.uploadVideo(path, video);
         	String name=upload.getVideoFileName();
             VideoDescription savedDescription = videoService.saveVideoDescriptio(
                     moviename, description, tags, category, certificate, language,
                     duration, year, thumbnail,name, paid);
+            Long videoId = savedDescription.getId();
+            String movieName = savedDescription.getMoviename();
+            String heading = movieName +" New Video Added!";
+            
+         // Create notification with optional file (thumbnail)
+            Long notifyId = notificationservice.createNotification(username, email, heading, Optional.ofNullable(thumbnail));
+            if (notifyId != null) {
+                Set<String> notiUserSet = new HashSet<>();
+                // Fetch all admins from AddUser table
+                List<AddUser> adminUsers = adduserrepository.findAll();
+                for (AddUser admin : adminUsers) {
+                    notiUserSet.add(admin.getEmail());
+                }
+                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+            }
 
             return ResponseEntity.ok().body(savedDescription);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+	         } else {
+	             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	         }
+	     } catch (IOException e) {
+	         e.printStackTrace();
+	         return ResponseEntity.badRequest().build();
+	     }
+	 }
 	
 	
 //	@PostMapping("/uploaddescription")
@@ -224,26 +277,61 @@ public class VideoController {
 //    }
 	
 	@PostMapping("/updatedescriprion")
-    public ResponseEntity<VideoDescription> updatedescription(@RequestParam("Movie_name") String moviename,
-    		                                    @RequestParam("description") String description,
-    		                                    @RequestParam("tags") String tags,
-    		                                    @RequestParam("category") String category,
-    		                                    @RequestParam("certificate") String certificate,
-    		                                    @RequestParam("Language") String language,
-    		                                    @RequestParam("Duration") String duration,
-    		                                    @RequestParam("Year") String year,
-    		                                    @RequestParam(value = "paid", required = false) boolean paid,
-    		                                    @RequestParam("id") long id)
-                                                {
-        try {
-        	VideoDescription updatedesctiption = videoService.saveVideoDescriptio(moviename, description, tags, category, certificate, language, duration, year,paid,id);
-//        	System.out.println(videodescriptionRepository.findAll());
-            return ResponseEntity.ok().body(updatedesctiption);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-    }
+	public ResponseEntity<VideoDescription> updatedescription(
+	        @RequestParam("Movie_name") String moviename,
+	        @RequestParam("description") String description,
+	        @RequestParam("tags") String tags,
+	        @RequestParam("category") String category,
+	        @RequestParam("certificate") String certificate,
+	        @RequestParam("Language") String language,
+	        @RequestParam("Duration") String duration,
+	        @RequestParam("Year") String year,
+	        @RequestParam(value = "paid", required = false) boolean paid,
+	        @RequestParam("id") long id,
+	        @RequestHeader("Authorization") String token) {
+	    try {
+	        // Validate JWT token
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	        }
+
+	        // Extract username from token
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	        if (opUser.isPresent()) {
+	            AddUser user = opUser.get();
+	            String username = user.getUsername();
+
+	            // Update video description
+	            VideoDescription updatedescription = videoService.saveVideoDescription(
+	                    moviename, description, tags, category, certificate, language, duration, year, paid, id);
+
+	            // Create notification with optional file (thumbnail)
+	            byte[] thumb = updatedescription.getThumbnail();
+	            String heading = moviename + " Video Updated!";
+	            Long notifyId = notificationservice.createNotification(username, email, heading, thumb);
+
+	            if (notifyId != null) {
+	                // Notify all admins
+	                Set<String> notiUserSet = adduserrepository.findAll().stream()
+	                        .map(AddUser::getEmail)
+	                        .collect(Collectors.toSet());
+	                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+	            }
+
+	            return ResponseEntity.ok().body(updatedescription);
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	        }
+	    } catch (EntityNotFoundException e) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	    } catch (IOException e) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	    }
+	}
 	
 	
 	
@@ -458,29 +546,60 @@ public class VideoController {
 			    }
 			 
 			 @DeleteMapping("/video/{id}")
-			    public ResponseEntity<String> deleteAudioById(@PathVariable Long id) {
-				 System.out.println(id);
-			        try {
-			            // Call the service method to delete audio by ID
-//			            boolean deleted = audioservice.deleteAudioById(id);
-//			        	int videoId = Long.parseInt(id);
-			        	boolean deleted = videoService.deletevideoById(id);
-			        	
-			        	
-			        	System.out.println(id);
-//			            boolean audiodeleted = audioservice.deleteAudioFile(fileName);
+			 public ResponseEntity<?> deleteVideoById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+			     try {
+			         // Validate JWT token
+			         if (!jwtUtil.validateToken(token)) {
+			             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid token"));
+			         }
 
-			            if (deleted) {
-			                return ResponseEntity.ok().body("Audio deleted successfully");
-			            } else {
-			            	System.out.println("Audio not deleted ");
-			                return ResponseEntity.notFound().build();
-			            }
-			        } catch (Exception e) {
-			            e.printStackTrace();
-			            return ResponseEntity.badRequest().build();
-			        }
-			    }
+			         // Extract username from token
+			         String email = jwtUtil.getUsernameFromToken(token);
+			         Optional<AddUser> optionalUser = adduserrepository.findByUsername(email);
+
+			         if (optionalUser.isPresent()) {
+			             AddUser user = optionalUser.get();
+			             String username = user.getUsername();
+
+			             // Check if video exists
+			             Optional<VideoDescription> optionalVideo = videodescriptionRepository.findById(id);
+			             if (optionalVideo.isEmpty()) {
+			                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Video not found"));
+			             }
+
+			             VideoDescription video = optionalVideo.get();
+			             String name = video.getMoviename();
+			             byte[] thumbnail = video.getThumbnail();
+
+			             // Delete video by ID
+			             boolean deleted = videoService.deletevideoById(id);
+
+			             // Create notification
+			             String heading = name + " Video Deleted!";
+			             Long notifyId = notificationservice.createNotification(username, email, heading, thumbnail);
+
+			             if (notifyId != null) {
+			                 // Notify all admins
+			                 Set<String> notiUserSet = adduserrepository.findAll().stream()
+			                         .map(AddUser::getEmail)
+			                         .collect(Collectors.toSet());
+			                 notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+			             }
+
+			             if (deleted) {
+			                 return ResponseEntity.ok().body("Video deleted successfully");
+			             } else {
+			                 return ResponseEntity.notFound().build();
+			             }
+			         } else {
+			             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+			         }
+			     } catch (Exception e) {
+			         e.printStackTrace();
+			         return ResponseEntity.badRequest().build();
+			     }
+			 }
+
 			 
 			 
 			 

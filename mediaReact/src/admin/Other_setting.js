@@ -14,6 +14,11 @@ const Other_setting = () => {
   const [PlayStorePlaceholder, setPlayStorePlaceholder] = useState('Play Store');
   const [getall, setGetAll] = useState([]);
   const [id, setId] = useState('');
+  const [errors, setErrors] = useState({
+    appstore: '',
+    playstore: '',
+  });
+  const token = sessionStorage.getItem('tokenn')
   
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetOthersettings`)
@@ -38,9 +43,33 @@ const Other_setting = () => {
       });
   }, []);
 
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+  
+    // Validate razorpay_key
+    if (!appstore.trim()) {
+      newErrors.appstore = 'appstore url is required';
+      isValid = false;
+    }
+    // Validate razorpay_secret_key
+    if (!playstore.trim()) {
+      newErrors.playstore = 'playstore url is required';
+      isValid = false;
+    }
+  
+    // Update state with errors
+    setErrors(newErrors);
+    return isValid;
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       const Data = {
@@ -50,6 +79,7 @@ const Other_setting = () => {
 
       const response = await axios.post(`${API_URL}/api/v2/OtherSettings`, Data, {
         headers: {
+          Authorization : token,
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -84,6 +114,10 @@ const Other_setting = () => {
   const handleSub = async (e) => {
     e.preventDefault();
 
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const updatedData = {
         playstore: playstore,
@@ -92,6 +126,7 @@ const Other_setting = () => {
 
       const response = await axios.patch(`${API_URL}/api/v2/editothersettings/${id}`, updatedData, {
         headers: {
+          Authorization : token,
           'Content-Type': 'application/json',
         },
       });
@@ -174,6 +209,7 @@ const Other_setting = () => {
             value={appstore}
             onChange={changeAppStoreHandler}   
             />
+            {errors.appstore && <div className="error-message error">{errors.appstore}</div>}
         </div>
         </div>
 
@@ -190,6 +226,7 @@ const Other_setting = () => {
             value={playstore}
             onChange={changePlayStoreHandler}
             />
+            {errors.playstore && <div className="error-message error">{errors.playstore}</div>}
         </div>
         </div>
 
