@@ -9,14 +9,14 @@
 		<version>3.2.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.VsmartEngine</groupId>
 	<artifactId>mediaSpring</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>mediaSpring</name>
-	<description>Media backend Spring Boot</description>
+	<name>MediaJungle</name>
+	<description>MediaJungle backend Spring Boot</description>
 	<properties>
-		<start-class>com.example.demo</start-class>
+		<start-class>com.VsmarEngine.MediaJungle</start-class>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
