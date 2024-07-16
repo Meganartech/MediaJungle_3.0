@@ -11,6 +11,8 @@ const AddCategory = () => {
   const [categoryName, setCategoryName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const token = sessionStorage.getItem("tokenn")
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,6 +28,7 @@ const AddCategory = () => {
     fetch(`${API_URL}/api/v2/AddNewCategories`, {
       method: 'POST',
       headers: {
+        Authorization: token, // Pass the token in the Authorization header
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),

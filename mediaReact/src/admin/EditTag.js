@@ -9,6 +9,7 @@ const EditTag = () => {
   const id=localStorage.getItem('items');
   const [UpdatedTag, setUpdatedTag] = useState({tag:''});
   const [errors, setErrors] = useState({});
+  const token = sessionStorage.getItem('tokenn')
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,6 +51,7 @@ const handleSubmit = (e) => {
   fetch(`${API_URL}/api/v2/editTag/${tagId}`, {
     method: 'PATCH',
     headers: {
+       Authorization: token,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(UpdatedTag),

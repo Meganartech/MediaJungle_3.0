@@ -8,6 +8,7 @@ import API_URL from '../Config';
 const ViewCertificate= () => {
   const [certificate, setCertificate] = useState([]);
   const navigate = useNavigate();
+  const token = sessionStorage.getItem('tokenn')
   let Id;
 
   useEffect(() => {
@@ -44,6 +45,9 @@ const handleDeleteCertificate = (certificateId) => {
     if (result.isConfirmed) {
       fetch(`${API_URL}/api/v2/DeleteCertificate/${certificateId}`, {
         method: 'DELETE',
+        headers:{
+          Authorization:token,
+        }
       })
       .then(response => {
         if (!response.ok) {

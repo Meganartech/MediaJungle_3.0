@@ -12,7 +12,7 @@ const AdminLayout = () => {
   
 
   return (
-      <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
+      <div id="content-wrapper" className="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
         <Sidebar 
         activeLink={activeLink}
         setActiveLink={setActiveLink}

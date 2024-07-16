@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +22,22 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.compresser.ImageUtils;
+import com.example.demo.model.AddNewCategories;
+import com.example.demo.model.AddUser;
 import com.example.demo.model.CastandCrew;
 import com.example.demo.model.VideoDescription;
+import com.example.demo.notification.service.NotificationService;
+import com.example.demo.repository.AddUserRepository;
 import com.example.demo.repository.CastandcrewRepository;
+import com.example.demo.userregister.JwtUtil;
+import com.example.demo.userregister.UserRegister;
 
 @CrossOrigin()
 @RestController
@@ -37,16 +47,67 @@ public class CastandcrewController {
 	@Autowired
 	private CastandcrewRepository castandcrewrepository;
 	
+	@Autowired
+    private NotificationService notificationservice;
+	
+	@Autowired
+	private JwtUtil jwtUtil; // Autowire JwtUtil
+	
+	@Autowired
+	private AddUserRepository adduserrepository;
+	
 	@PostMapping("/addcastandcrew")
-	public ResponseEntity<CastandCrew> addcast(@RequestParam("image") MultipartFile image,
-			@RequestParam("name") String name) throws IOException{
-		byte[] thumbnailBytes =ImageUtils.compressImage(image.getBytes());
-		CastandCrew cast = new CastandCrew();
-		cast.setName(name);
-		cast.setImage(thumbnailBytes);
-		CastandCrew details = castandcrewrepository.save(cast);
-		return ResponseEntity.ok(details);		
+	public ResponseEntity<?> addCast(@RequestParam("image") MultipartFile image,
+	                                 @RequestParam("name") String name,
+	                                 @RequestHeader("Authorization") String token) throws IOException {
+	    try {
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+	        }
+
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	        if (opUser.isPresent()) {
+	            AddUser user = opUser.get();
+	            String username = user.getUsername();
+
+	            byte[] thumbnailBytes = ImageUtils.compressImage(image.getBytes());
+
+	            CastandCrew cast = new CastandCrew();
+	            cast.setName(name);
+	            cast.setImage(thumbnailBytes);
+
+	            CastandCrew details = castandcrewrepository.save(cast);
+
+	            Long castId = details.getId();
+	            String Name = details.getName();
+	            String heading = Name +" New castandcrew Added!";
+	            // Create notification with optional file (thumbnail)
+	            Long notifyId = notificationservice.createNotification(username, email, heading, Optional.ofNullable(image));
+
+	            if (notifyId != null) {
+	                Set<String> notiUserSet = new HashSet<>();
+
+	                // Fetch all admins from AddUser table
+	                List<AddUser> adminUsers = adduserrepository.findAll();
+	                for (AddUser admin : adminUsers) {
+	                    notiUserSet.add(admin.getEmail());
+	                }
+	                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+	            }
+
+	            return ResponseEntity.ok(details);
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        }
+	    } catch (IOException e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing image");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+	    }
 	}
+
 	
 	
 	
@@ -117,22 +178,76 @@ public class CastandcrewController {
 	
 	
 	@DeleteMapping("/Deletecastandcrew/{Id}")
-    public ResponseEntity<Void> deletecast(@PathVariable Long Id) {
-        try {
+    public ResponseEntity<?> deletecast(@PathVariable Long Id,@RequestHeader("Authorization") String token) {
+		try {
+	        // Validate JWT token
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid token"));
+	        }
+
+	        // Extract username from token
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        System.out.println("email: " + email);
+	        Optional<AddUser> optionalUser = adduserrepository.findByUsername(email);
+
+	        if (optionalUser.isPresent()) {
+	            AddUser user = optionalUser.get();
+	            String username = user.getUsername();
+	            // Fetch category details before deletion
+	            Optional<CastandCrew> optionalCast = castandcrewrepository.findById(Id);
+	            if (optionalCast.isEmpty()) {
+	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Category not found"));
+	            }
+	            CastandCrew cast = optionalCast.get();
+	            String name = cast.getName();
+	            byte[] image = cast.getImage();
             // Assuming you have a method to delete a category by ID in your repository
         	castandcrewrepository.deleteById(Id);
+        	// Create notification if category is deleted
+            String heading = name + " Deleted in Castandcrew!";
+            Long notifyId = notificationservice.createNotification(username, email, heading,image);
+            if (notifyId != null) {
+                Set<String> notiUserSet = new HashSet<>();
+                // Fetch all admins from AddUser table
+                List<AddUser> adminUsers = adduserrepository.findAll();
+                for (AddUser admin : adminUsers) {
+                    notiUserSet.add(admin.getEmail());
+                }
+                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+            }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	        } else {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authorized"));
+	        }
+	    } catch (Exception e) {
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
 	
 	@PatchMapping("/updatecastandcrew/{id}")
 	public ResponseEntity<String> updateCast(
 	        @PathVariable Long id,
 	        @RequestParam(value = "image", required = false) MultipartFile image,
-	        @RequestParam(value = "name", required = false) String name) {
-	    try {
+	        @RequestParam(value = "name", required = false) String name,
+	        @RequestHeader("Authorization") String token) {
+		try {
+	        // Validate JWT token
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+	        }
+
+	        // Extract email from token
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        System.out.println("email: " + email);
+
+	        // Fetch user details from repository
+	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+	        if (!opUser.isPresent()) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        }
+
+	        AddUser user = opUser.get();
+	        String username = user.getUsername();
 	        // Retrieve existing cast and crew data from the repository
 	        CastandCrew existingCast = castandcrewrepository.findById(id)
 	                .orElseThrow(() -> new RuntimeException("not found"));
@@ -142,20 +257,39 @@ public class CastandcrewController {
 	            byte[] thumbnailBytes = ImageUtils.compressImage(image.getBytes());
 	            existingCast.setImage(thumbnailBytes);
 	        }
+	       String Name = existingCast.getName();
 
 	        // Update name if provided
 	        if (name != null && !name.isEmpty()) {
 	            existingCast.setName(name);
 	        }
+	        byte[] Image = existingCast.getImage();
 
 	        // Save the updated entity
-	        castandcrewrepository.save(existingCast);
+	        CastandCrew details = castandcrewrepository.save(existingCast);
+	        
+	        String heading =Name + " upadted in castandcrew";
+ 	        Long notifyId = notificationservice.createNotification(username, email, heading,Image);
+             if (notifyId != null) {
+                 Set<String> notiUserSet = new HashSet<>();
+                 // Fetch all admins from AddUser table
+                 List<AddUser> adminUsers = adduserrepository.findAll();
+                 for (AddUser admin : adminUsers) {
+                     notiUserSet.add(admin.getEmail());
+                 }
+                 notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+             }
 
 	        return ResponseEntity.ok("Cast and crew updated successfully.");
 	    } catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating cast and crew.");
 	    }
 	}
+	
+	
+
+
+
 
 
 

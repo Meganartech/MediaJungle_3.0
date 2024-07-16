@@ -56,12 +56,13 @@ public class UserRegisterController {
 			}
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		    String encodedPassword = passwordEncoder.encode(password);
+		    String encodedconfirmPassword = passwordEncoder.encode(confirmPassword);
 			
 			UserRegister newRegister = new UserRegister();
 			newRegister.setUsername(username);
 			newRegister.setEmail(email);
 			newRegister.setPassword(encodedPassword);
-			newRegister.setConfirmPassword(confirmPassword);
+			newRegister.setConfirmPassword(encodedconfirmPassword);
 			newRegister.setMobnum(mobnum);
 			
 			if (profile != null && !profile.isEmpty()) {

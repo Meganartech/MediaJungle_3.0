@@ -9,6 +9,7 @@ const ViewLanguage = () => {
 
   const navigate = useNavigate();
   const [language, setlanguage] = useState([]);
+  const token = sessionStorage.getItem('tokenn')
 
 
   useEffect(() => {
@@ -46,6 +47,9 @@ const handleDeleteLanguage = (languageId) => {
     if (result.isConfirmed) {
       fetch(`${API_URL}/api/v2/DeleteLanguage/${languageId}`, {
         method: 'DELETE',
+        headers:{
+          Authorization:token
+        }
       })
       .then(response => {
         if (!response.ok) {

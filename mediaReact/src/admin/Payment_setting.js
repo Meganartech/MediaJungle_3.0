@@ -15,6 +15,7 @@ const Payment_setting = () => {
   const [getall, setGetAll] = useState([]);
   const [id, setId] = useState('');
   const [error,setErrors] = useState('');
+  const token = sessionStorage.getItem('tokenn')
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/getrazorpay`)
@@ -74,6 +75,7 @@ const Payment_setting = () => {
   
       const response = await axios.post(`${API_URL}/api/v2/AddrazorpayId`, razerpayData, {
         headers: {
+          Authorization : token,
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -120,6 +122,7 @@ const Payment_setting = () => {
 
       const response = await axios.patch(`${API_URL}/api/v2/Editrazorpay/${id}`, updatedData, {
         headers: {
+          Authorization : token,
           'Content-Type': 'application/json',
         },
       });

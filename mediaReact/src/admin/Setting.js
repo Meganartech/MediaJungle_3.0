@@ -18,6 +18,8 @@ const Setting = () => {
   const [GetAll, setGetAll] = useState('');
   const [buttonText, setButtonText] = useState('ADD');
   const [id, setId] = useState(null);
+  const token = sessionStorage.getItem('tokenn')
+  const [error,setErrors] = useState('');
 
   const [sitenamePlaceholder, setsitenamePlaceholder] = useState('SiteName');
   const [appurlPlaceholder, setappurlPlaceholder] = useState('App URL');
@@ -49,8 +51,46 @@ const Setting = () => {
       });
   }, []);
 
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+
+    if (!sitename.trim()) {
+      newErrors.sitename = 'sitename is required';
+      isValid = false;
+    }
+
+    if (!appurl.trim()) {
+      newErrors.appurl = 'appurl is required';
+      isValid = false;
+    }
+
+    if (!tagname.trim()) {
+      newErrors.tagname = 'tagname is required';
+      isValid = false;
+    }
+
+    if (!icon) {
+      newErrors.icon = 'icon is required';
+      isValid = false;
+    }
+
+    if (!logo) {
+      newErrors.logo = 'logo is required';
+      isValid = false;
+    }
+  
+    // Update state with errors
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       const Data = new FormData();
@@ -62,6 +102,7 @@ const Setting = () => {
 
       const response = await axios.post(`${API_URL}/api/v2/SiteSetting`, Data, {
         headers: {
+          Authorization : token,
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -98,6 +139,10 @@ const Setting = () => {
   const handleSub = async (e) => {
     e.preventDefault();
 
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const updatedData = new FormData();
       updatedData.append('sitename', sitename);
@@ -108,6 +153,7 @@ const Setting = () => {
 
       const response = await axios.patch(`${API_URL}/api/v2/editsettings/${id}`, updatedData, {
         headers: {
+          Authorization : token,
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -191,6 +237,7 @@ const Setting = () => {
                             value={sitename}
                             onChange={(e) => setsitename(e.target.value)}
                           />
+                          {error.sitename && <div className="error-message error">{error.sitename}</div>}
                         </div>
                       </div>
                       <div className="col-md-6">
@@ -203,6 +250,7 @@ const Setting = () => {
                             value={appurl}
                             onChange={(e) => setappurl(e.target.value)}
                           />
+                          {error.appurl && <div className="error-message error">{error.appurl}</div>}
                         </div>
                       </div>
                       <div className="col-md-6">
@@ -210,6 +258,7 @@ const Setting = () => {
                           <label className="custom-label">Logo</label>
                           {logoUrl && <img src={logoUrl} alt="Logo Preview" style={{ width: '100px', height: '100px', marginTop: '10px' }} />}
                           <input type="file" name="logo" onChange={changeLogoHandler} /> 
+                          {error.logo && <div className="error-message error">{error.logo}</div>}
                         </div>
                       </div>
                       
@@ -218,6 +267,7 @@ const Setting = () => {
                           <label className="custom-label">Icon</label>
                           {iconUrl && <img src={iconUrl} alt="Icon Preview" style={{ width: '100px', height: '100px', marginTop: '10px' }} />}
                           <input type="file" name="icon" onChange={changeIconHandler} />
+                          {error.icon && <div className="error-message error">{error.icon}</div>}
                         </div>
                       </div>
 
@@ -231,6 +281,7 @@ const Setting = () => {
                             value={tagname}
                             onChange={(e) => settagname(e.target.value)}
                           />
+                          {error.tagname && <div className="error-message error">{error.tagname}</div>}
                         </div>
                       </div>
                      

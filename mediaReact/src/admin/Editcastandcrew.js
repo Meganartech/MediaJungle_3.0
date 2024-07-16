@@ -10,6 +10,7 @@ const Editcastandcrew = () => {
     const [name, setname] = useState('');
     const [image, setimage] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
+    const token = sessionStorage.getItem('tokenn')
 
     useEffect(() => {
         fetch(`${API_URL}/api/v2/getcast/${id}`)
@@ -77,6 +78,7 @@ const Editcastandcrew = () => {
             }
             const response = await axios.patch(`${API_URL}/api/v2/updatecastandcrew/${id}`, formData, {
                 headers: {
+                    Authorization:token,
                     'Content-Type': 'multipart/form-data'
                 }
             });

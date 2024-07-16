@@ -103,11 +103,13 @@ const AdminSignin = () => {
               username: data.username,
               mobnum: data.mobnum,
               address: data.address,
+              confirmPassword:data.confirm_Password,
               pincode: data.pincode,
               email: data.email,
               compname: data.compname,
               country: data.country,
               password: data.password
+
             };
     
             console.log('Sending data:', sendData);
@@ -264,7 +266,7 @@ const AdminSignin = () => {
               onChange={handleChange}
               value={data.confirm_Password}
             />
-            {errors.confirmPassword && <div className="error-message error">{errors.confirmPassword}</div>}
+            {errors.confirm_Password && <div className="error-message error">{errors.confirm_Password}</div>}
           </div>
         </div>
       </div>

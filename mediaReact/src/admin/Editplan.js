@@ -6,6 +6,7 @@ import API_URL from '../Config';
 const Editplan = () => {
     const id = localStorage.getItem('items');
     const [updatedplan , setupdatedplan] = useState('');
+    const token = sessionStorage.getItem('tokenn')
 
     useEffect(() => {
         fetch(`${API_URL}/api/v2/GetPlanById/${id}`)
@@ -40,6 +41,7 @@ const Editplan = () => {
         fetch(`${API_URL}/api/v2/editPlans/${planId}`, {
           method: 'PATCH',
           headers: {
+            Authorization:token,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(updatedplan),

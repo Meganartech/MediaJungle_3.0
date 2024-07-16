@@ -7,6 +7,7 @@ const EditCertificate = () => {
   const id = localStorage.getItem('items');
   const [updatedcertificate, setUpdatedcertificate] = useState({ certificate: '' });
   const [errors, setErrors] = useState({});
+  const token = sessionStorage.getItem('tokenn')
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,6 +45,7 @@ const EditCertificate = () => {
     fetch(`${API_URL}/api/v2/editCertificate/${certificateId}`, {
       method: 'PATCH',
       headers: {
+        Authorization:token,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(updatedcertificate),

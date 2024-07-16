@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom'
-import {FaHeart, FaSearch} from 'react-icons/fa'
+import {FaHeart, FaSearch,FaBell} from 'react-icons/fa'
 import {CgUser} from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../../../Config';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const NavBar = () => {
     const hover = 'hover:text-subMain transitions text-white'
     const Hover =({isActive}) =>(isActive ? 'text-subMain':hover);
     const navigate = useNavigate();
+    const[count,setcount]=useState(0);
+    const [isopen,setisopen]=useState(false);
 
     const [showDropdown, setShowDropdown] = useState(false);
     const [getall,setGetAll] = useState('');
@@ -103,6 +106,46 @@ const NavBar = () => {
     setShowDropdown(!showDropdown);
   };
 
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v2/unreadCount`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+  
+      if (response.status === 200) {
+        const data = response.data;
+        setcount(data);
+        console.log("count",data)
+      }
+    } catch (error) {
+      console.error("Error fetching unread count:", error);
+    }
+  };
+
+  const handlemarkallasRead = async () => {
+    try {
+        const markread = await axios.post(`${API_URL}/api/v2/markAllAsReaduser`, {}, {
+            headers: {
+                Authorization: token,
+            },
+        });
+        
+        if (markread.status === 200) {
+            fetchUnreadCount();
+        }
+    } catch (error) {
+        console.error("Error marking all notifications as read:", error);
+    }
+};
+
+useEffect(() => { 
+  // Fetch initially
+  fetchUnreadCount();
+  // Cleanup for interval
+}, [count]); 
+
     return (
         <>
             <div className='bg-main shadow-md sticky top-0 z-20' >
@@ -147,6 +190,7 @@ const NavBar = () => {
                             <div className="flex items-center gap-2" onClick={toggleDropdown}>
                                 <CgUser className='w-8 h-8' /> 
                             </div>
+                            
                             {showDropdown && (
                                 <div className="absolute right-0 mt-2 bg-yellow-600 rounded shadow-lg">
                                   <button className="block w-full py-2 px-4 text-left text-white" onClick={handleprofile}>profile</button>
@@ -159,7 +203,10 @@ const NavBar = () => {
                                  
                             )}
                             
-                            </div>
+                         
+                      </div>
+                     
+                 
                         ) : (
                             <>
                             <NavLink to='/UserLogin' className={Hover}>
@@ -169,22 +216,20 @@ const NavBar = () => {
                             </>
                         )}
 
-
-
-
-
-
                         
-
-
-
-
-                        {/* <NavLink to='/favorites' className={`${Hover} relative`}>
-                            <FaHeart className='w-6 h-6' />
-                            <div className='w-5 h-5 flex-colo rounded-full text-xs bg-subMain text-white absolute -top-5 -right-1'>
-                                3
+                            <div className="relative cursor-pointer mr-2" onClick={toggleDropdown}>
+                                <div className="relative">
+                                {count > 0 && (
+                                    <span className="absolute -top-2 -right-3 bg-yellow-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                       {count}
+                                    </span>
+                                    )}
+                                    <a onClick={() => { setisopen(!isopen); }} href="#">
+                                    <FaBell className='w-6 h-6 text-white hover:text-yellow-600 transition duration-300 ease-in-out' /> {/* Adjusted size */}
+                                    </a>
+                                </div>
                             </div>
-                        </NavLink> */}
+                        
                     </div>
                 </div>
             </div>

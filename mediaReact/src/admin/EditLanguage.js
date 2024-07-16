@@ -9,6 +9,7 @@ const EditLanguage = () => {
   const id=localStorage.getItem('items');
   const [updatedlanguage, setUpdatedlanguage] = useState({language:''});
   const [errors, setErrors] = useState({});
+  const token = sessionStorage.getItem('tokenn')
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,6 +50,7 @@ const handleSubmit = (e) => {
   fetch(`${API_URL}/api/v2/editLanguage/${languageId}`, {
     method: 'PATCH',
     headers: {
+      Authorization:token,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(updatedlanguage),

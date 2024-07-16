@@ -12,10 +12,6 @@ const Editaudio1 = () => {
     const category = id && id.category && id.category.categories;
     const fileName = audioId.fileName;
 
-//   const audioId = JSON.parse(localStorage.getItem('items'));
-// const fileName = audioId.fileName;
-
-//     console.log("fileName",fileName)
     
 
   const [updatedget, setUpdatedget] = useState(audioId);
@@ -28,6 +24,7 @@ const Editaudio1 = () => {
   const [categoryId, setCategoryId] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [audio,setaudio]=useState('')
+  const token = sessionStorage.getItem('tokenn')
 
   
   
@@ -218,6 +215,9 @@ fetchAudio(); // Replace 'yourDefaultFileName' with the desired default file nam
       const response = await fetch(`${API_URL}/api/v2/updateaudio/update/${audioId}`, {
         method: "PATCH",
         body: formData,
+        headers: {
+          Authorization: token,
+      }
       });
   
       const data = await response.json();

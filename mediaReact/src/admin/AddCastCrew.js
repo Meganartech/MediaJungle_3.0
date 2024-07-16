@@ -11,6 +11,7 @@ const AddCastCrew = () => {
   const [name, setName] = useState('');
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null); // To display image preview
+  const token = sessionStorage.getItem("tokenn")
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -37,6 +38,7 @@ const AddCastCrew = () => {
       formData.append('image', image);
       const response = await axios.post(`${API_URL}/api/v2/addcastandcrew`, formData, {
         headers: {
+          Authorization: token, // Pass the token in the Authorization header
           'Content-Type': 'multipart/form-data',
         },
       });

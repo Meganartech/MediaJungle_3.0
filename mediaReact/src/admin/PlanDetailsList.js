@@ -9,6 +9,7 @@ const PlanDetailsList = () => {
 
     const [getall,setgetall] = useState('');
     const navigate = useNavigate();
+    const token = sessionStorage.getItem('tokenn')
 
   
 
@@ -47,6 +48,9 @@ const PlanDetailsList = () => {
         // User confirmed deletion, proceed with fetch DELETE request
         fetch(`${API_URL}/api/v2/DeletePlan/${planId}`, {
           method: 'DELETE',
+          headers:{
+            Authorization:token
+          }
         })
         .then(response => {
           if (!response.ok) {

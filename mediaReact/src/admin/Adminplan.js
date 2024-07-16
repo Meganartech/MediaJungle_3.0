@@ -17,6 +17,7 @@ const Adminplan = () => {
   const [planid , setplanid] = useState('')
   const [plan,setplan] =useState('')
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("tokenn")
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/getrazorpay`)
@@ -53,36 +54,6 @@ const Adminplan = () => {
 useEffect(() => {
 fetchData();
 }, []);
-
-const handleSub = async (e) => {
-  e.preventDefault();
-
-  try {
-    const formData = new FormData();
-    const planDescription = {
-      description: description,
-      planId: planid,
-    };
-    console.log(planDescription)
-    for (const key in planDescription) {
-      formData.append(key, planDescription[key]);
-    }
-    const response = await axios.post(`${API_URL}/api/v2/AddPlanDescription`, planDescription,{
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    console.log(response.data);
-    console.log("plandescription updated successfully");
-    setdescription('')
-    fetchData();
-    // Handle success, e.g., show a success message to the user
-  } catch (error) {
-    console.error('Error uploading plandescription:', error);
-    // Handle error, e.g., show an error message to the user
-  }
-  
- }
 
 
  const handleSubmit = async (e) => {
@@ -123,6 +94,7 @@ const handleSub = async (e) => {
     // Send the form data to the server using axios
     const response = await axios.post(`${API_URL}/api/v2/PlanDetails`, formData, {
       headers: {
+        Authorization : token,
         'Content-Type': 'multipart/form-data',
       },
     });

@@ -22,6 +22,7 @@ const AddUser = () => {
    
   });
   const [errors, setErrors] = useState({});
+  const token = sessionStorage.getItem("tokenn")
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -167,6 +168,7 @@ const AddUser = () => {
   };
   
   
+  
   return (
     <div className="container-fluid">
     
@@ -289,7 +291,7 @@ const AddUser = () => {
               </label>
               <input
                 type="password"
-                name="confirmPassword"
+                name="confirm_Password"
                 className={`form-control ${errors.confirm_Password ? 'error' : ''}`}
                 onChange={handleChange}
                 value={data.confirm_Password}

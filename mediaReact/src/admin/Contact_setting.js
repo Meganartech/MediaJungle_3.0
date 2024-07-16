@@ -6,6 +6,7 @@ import API_URL from '../Config';
 import Swal from 'sweetalert2';
 import "../css/Sidebar.css";
 
+
 const ContactSetting = () => {
   const [email, setEmail] = useState('');
   const [mobilenumber, setMobileNumber] = useState('');
@@ -23,6 +24,7 @@ const ContactSetting = () => {
     address: '',
     copyright: '',
   });
+  const token = sessionStorage.getItem('tokenn')
 
   useEffect(() => {
     fetchContactSettings();
@@ -98,6 +100,7 @@ const ContactSetting = () => {
 
       const response = await axios.post(`${API_URL}/api/v2/Contactsettings`, contactData, {
         headers: {
+          Authorization : token,
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -144,6 +147,7 @@ const ContactSetting = () => {
 
       const response = await axios.patch(`${API_URL}/api/v2/editcontactsetting/${id}`, updatedData, {
         headers: {
+          Authorization : token,
           'Content-Type': 'multipart/form-data',
         },
       });

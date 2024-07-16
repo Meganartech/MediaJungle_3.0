@@ -15,7 +15,7 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  
+
 
 
   useEffect(() => {
@@ -63,47 +63,103 @@ const Login = () => {
 
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
 
-    try {
-        const sendData = {
-            username: user.username,
-            password: user.password
-        };
+//     try {
+//         const sendData = {
+//             username: user.username,
+//             password: user.password
+//         };
 
-        const response = await fetch(`${API_URL}/api/v2/login/admin`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(sendData),
-        });
+//         const response = await fetch(`${API_URL}/api/v2/login/admin`, {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify(sendData),
+//         });
 
-        if (response.ok) {
-            sessionStorage.setItem('username', user.username);
-            sessionStorage.setItem('name', true);
+//         if (response.ok) {
+//             sessionStorage.setItem('username', user.username);
+//             sessionStorage.setItem('name', true);
 
-            // Navigate to the dashboard after successful login
-            navigate('/admin/Dashboard');
-        } else {
-            // Handle invalid username or password
-            Swal.fire({
-                icon: 'error',
-                title: 'Login Failed',
-                text: 'Invalid username or password',
-            });
-        }
-    } catch (error) {
-        console.error('Error during login:', error);
-        // Show a generic error message using SweetAlert
-        Swal.fire({
-            icon: 'error',
-            title: 'Login Error',
-            text: 'An error occurred during login. Please try again later.',
-        });
+//             // Navigate to the dashboard after successful login
+//             navigate('/admin/Dashboard');
+//         } else {
+//             // Handle invalid username or password
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Login Failed',
+//                 text: 'Invalid username or password',
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error during login:', error);
+//         // Show a generic error message using SweetAlert
+//         Swal.fire({
+//             icon: 'error',
+//             title: 'Login Error',
+//             text: 'An error occurred during login. Please try again later.',
+//         });
+//     }
+// };
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const sendData = {
+      username: user.username,
+      password: user.password
+    };
+
+    const response = await fetch(`${API_URL}/api/v2/login/admin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(sendData),
+    });
+
+    if (response.ok) {
+      // Await the JSON response
+      const data = await response.json(); // Retrieve JSON data
+      const jwtToken = data.Token; // Use the correct key based on your API response
+      const name = data.UserName; // Use the correct key based on your API response
+      const userId = data.AdminId; // Use the correct key based on your API response
+
+      // Store token in session storage
+      sessionStorage.setItem("username", name);
+      sessionStorage.setItem('tokenn', jwtToken);
+      sessionStorage.setItem('adminId', userId);
+      sessionStorage.setItem('name', true);
+
+
+      console.log(name,jwtToken,userId)
+
+      // Navigate to the dashboard after successful login
+      navigate('/admin/Dashboard');
+    } else {
+      // Handle invalid username or password
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: 'Invalid username or password',
+      });
     }
+  } catch (error) {
+    console.error('Error during login:', error);
+    // Show a generic error message using SweetAlert
+    Swal.fire({
+      icon: 'error',
+      title: 'Login Error',
+      text: 'An error occurred during login. Please try again later.',
+    });
+  }
 };
+
 
 
   const Submit = (e) => {

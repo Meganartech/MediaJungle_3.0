@@ -32,6 +32,7 @@ const AddVideo = () => {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState('free');
   const [imageUrl, setImageUrl] = useState(null); // To display image preview
+  const token = sessionStorage.getItem("tokenn")
 
   const [isOpen, setIsOpen] = useState(false);
   const [castandcrewlist, setcastandcrewlist] = useState([]);
@@ -503,6 +504,10 @@ const save = async (e) => {
 
                 // Upload video description
                 const uploadResponse = await axios.post(`${API_URL}/api/uploaddescription`, formData, {
+                  headers: {
+                    Authorization: token, // Pass the token in the Authorization header
+                   'Content-Type': 'multipart/form-data',
+                 },
                     onUploadProgress: (progressEvent) => {
                         const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
                         setUploadProgress(progress);

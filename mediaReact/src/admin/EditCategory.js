@@ -6,6 +6,7 @@ import API_URL from '../Config';
 const EditCategory = () => {
   const id = localStorage.getItem('items');
   const [updatedcategory, setUpdatedcategory] = useState({ categories: '' });
+  const token = sessionStorage.getItem('tokenn')
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetCategoryById/${id}`)
@@ -41,6 +42,7 @@ const handleSubmit = (e) => {
   fetch(`${API_URL}/api/v2/editCategory/${categoryId}`, {
     method: 'PATCH',
     headers: {
+      Authorization: token,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(updatedcategory),

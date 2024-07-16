@@ -11,7 +11,7 @@ const AddCertificate = () => {
   const [certificateName, setCertificateName] = useState(null);
   const [SuccessMessage , setSuccessMessage] = useState(null);
   const [error, setError] = useState(null);
-
+  const token = sessionStorage.getItem("tokenn")
  
 
   
@@ -26,6 +26,7 @@ const AddCertificate = () => {
   
       const response = await axios.post(`${API_URL}/api/v2/AddCertificate`, data, {
         headers: {
+          Authorization: token, // Pass the token in the Authorization header
           'Content-Type': 'application/json',
         },
       });

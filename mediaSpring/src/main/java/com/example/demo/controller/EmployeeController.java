@@ -1,7 +1,11 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.compresser.ImageUtils;
 import com.example.demo.model.AddLanguage;
+import com.example.demo.model.AddUser;
 import com.example.demo.model.CastandCrew;
 import com.example.demo.model.Companysiteurl;
 import com.example.demo.model.Contactsettings;
@@ -30,6 +36,8 @@ import com.example.demo.model.Seosettings;
 import com.example.demo.model.Sitesetting;
 import com.example.demo.model.Socialsettings;
 import com.example.demo.model.Videosettings;
+import com.example.demo.notification.service.NotificationService;
+import com.example.demo.repository.AddUserRepository;
 import com.example.demo.repository.CompanysiteurlRepository;
 import com.example.demo.repository.ContactsettingsRepository;
 import com.example.demo.repository.EmailsettingRepository;
@@ -40,6 +48,7 @@ import com.example.demo.repository.SeosettingsRepository;
 import com.example.demo.repository.SocialsettingRepository;
 import com.example.demo.repository.siteSettingRepository;
 import com.example.demo.repository.videoSettingRepository;
+import com.example.demo.userregister.JwtUtil;
 
 @CrossOrigin()
 @RestController
@@ -67,6 +76,14 @@ public class EmployeeController {
 	private ContactsettingsRepository contactsetting;
 	@Autowired
 	private SeosettingsRepository seosetting;
+	@Autowired
+    private NotificationService notificationservice;
+	
+	@Autowired
+	private JwtUtil jwtUtil; // Autowire JwtUtil
+	
+	@Autowired
+	private AddUserRepository adduserrepository;
 	
 //	@GetMapping("/employees")
 //	public List<sample> getAllEmployees() {
@@ -81,14 +98,47 @@ public class EmployeeController {
 //		return othersetting.save(data);
 //	}
 	@PostMapping("/OtherSettings")
-	public ResponseEntity<Othersettings> addothersetting(@RequestParam("appstore") String appstore,
+	public ResponseEntity<?> addothersetting(@RequestHeader("Authorization") String token,@RequestParam("appstore") String appstore,
 			@RequestParam("playstore") String playstore){
-		Othersettings other = new Othersettings() ;
-		other.setAppstore(appstore);
-		other.setPlaystore(playstore);
-		Othersettings details = othersetting.save(other);
-		return ResponseEntity.ok(details);	
-	}
+		try {
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+	        }
+
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        System.out.println("email: " + email);
+	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	        if (opUser.isPresent()) {
+	            AddUser user = opUser.get();
+	            String username = user.getUsername();
+		        Othersettings other = new Othersettings() ;
+		        other.setAppstore(appstore);
+		        other.setPlaystore(playstore);
+		        Othersettings details = othersetting.save(other);
+		        // Assuming you need to create a notification for a new category
+	            Long Id = details.getId();
+	            String heading = "Othersetting Added!";
+
+	            // Create notification
+	            Long notifyId = notificationservice.createNotification(username, email, heading);
+	            if (notifyId != null) {
+	                Set<String> notiUserSet = new HashSet<>();
+	                // Fetch all admins from AddUser table
+	                List<AddUser> adminUsers = adduserrepository.findAll();
+	                for (AddUser admin : adminUsers) {
+	                    notiUserSet.add(admin.getEmail());
+	                }
+	                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+	            }
+	                return ResponseEntity.ok(details);
+		        } else {
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		        }
+		    } catch (Exception e) {
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+		    }
+		}
 	
 	@GetMapping("/GetOthersettings")
 	public ResponseEntity<List<Othersettings>> getOthersettings() {
@@ -97,33 +147,66 @@ public class EmployeeController {
 	}
 	
 	@PatchMapping("/editothersettings/{id}")
-	public ResponseEntity<String> editothersetting(@PathVariable Long id , @RequestBody Othersettings updatedothersetting){
-		
-		try {
-            // Retrieve existing plan data from the repository
-			Othersettings existingsetting = othersetting.findById(id)
-                    .orElseThrow(() -> new RuntimeException("not found"));
+	public ResponseEntity<String> editothersetting(@PathVariable Long id, @RequestBody Othersettings updatedothersetting,
+	        @RequestHeader("Authorization") String token) {
+	    try {
+	        // Validate JWT token
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+	        }
 
-            // Apply partial updates to the existing plan data
-            if (updatedothersetting.getAppstore() != null) {
-                existingsetting.setAppstore(updatedothersetting.getAppstore());
-            }
-            if (updatedothersetting.getPlaystore()!= null) {
-            	existingsetting.setPlaystore(updatedothersetting.getPlaystore());
-            }
-            
-            othersetting.save(existingsetting);
+	        // Extract email from token
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        System.out.println("email: " + email);
 
-            return new ResponseEntity<>(" updated successfully", HttpStatus.OK);
+	        // Fetch user details from repository
+	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+	        if (!opUser.isPresent()) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        }
+
+	        AddUser user = opUser.get();
+	        String username = user.getUsername();
+
+	        // Retrieve existing Othersettings from the repository
+	        Othersettings existingsetting = othersetting.findById(id)
+	                .orElseThrow(() -> new RuntimeException("Setting not found"));
+
+	        // Apply partial updates to the existing Othersettings
+	        if (updatedothersetting.getAppstore() != null) {
+	            existingsetting.setAppstore(updatedothersetting.getAppstore());
+	        }
+	        if (updatedothersetting.getPlaystore() != null) {
+	            existingsetting.setPlaystore(updatedothersetting.getPlaystore());
+	        }
+
+	        // Save updated Othersettings
+	        Othersettings details = othersetting.save(existingsetting);
+
+	        // Create notification for the user who updated the setting
+	        String heading = "Othersetting Updated!";
+	        Long notifyId = notificationservice.createNotification(username, email, heading);
+            if (notifyId != null) {
+                Set<String> notiUserSet = new HashSet<>();
+                // Fetch all admins from AddUser table
+                List<AddUser> adminUsers = adduserrepository.findAll();
+                for (AddUser admin : adminUsers) {
+                    notiUserSet.add(admin.getEmail());
+                }
+                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+            }
+         // Return success response
+            return ResponseEntity.ok("Updated successfully");
+
         } catch (RuntimeException e) {
-            
-            return new ResponseEntity<>("not found", HttpStatus.NOT_FOUND);
+            // Handle not found exception
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Setting not found");
+
         } catch (Exception e) {
-            
-            return new ResponseEntity<>("Error when updating", HttpStatus.INTERNAL_SERVER_ERROR);
+            // Handle other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error when updating");
         }
-    
-	}
+    }
 
 
 //	--------------------working
@@ -152,18 +235,51 @@ public class EmployeeController {
 	
 //	--------------------working
 	@PostMapping("/Contactsettings")
-	public ResponseEntity<Contactsettings> contactsetting(@RequestParam("contact_email") String contact_email,
+	public ResponseEntity<?> contactsetting(@RequestHeader("Authorization") String token,@RequestParam("contact_email") String contact_email,
 			@RequestParam("contact_mobile") String contact_mobile,
 			@RequestParam("contact_address") String contact_address,
 			@RequestParam("copyright_content") String copyright_content) {
-		Contactsettings contact = new Contactsettings();
-		contact.setContact_email(contact_email);
-		contact.setContact_mobile(contact_mobile);
-		contact.setContact_address(contact_address);
-		contact.setCopyright_content(copyright_content);
-		Contactsettings detail = contactsetting.save(contact);
-		return ResponseEntity.ok(detail);
-	}
+		try {
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+	        }
+
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        System.out.println("email: " + email);
+	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	        if (opUser.isPresent()) {
+	            AddUser user = opUser.get();
+	            String username = user.getUsername();        
+		        Contactsettings contact = new Contactsettings();
+		        contact.setContact_email(contact_email);
+		        contact.setContact_mobile(contact_mobile);
+		        contact.setContact_address(contact_address);
+		        contact.setCopyright_content(copyright_content);
+		        Contactsettings detail = contactsetting.save(contact);
+		        Long Id = detail.getId();
+	            String heading = "Contact Added!";
+
+	            // Create notification
+	            Long notifyId = notificationservice.createNotification(username, email, heading);
+	            if (notifyId != null) {
+	                Set<String> notiUserSet = new HashSet<>();
+	                // Fetch all admins from AddUser table
+	                List<AddUser> adminUsers = adduserrepository.findAll();
+	                for (AddUser admin : adminUsers) {
+	                    notiUserSet.add(admin.getEmail());
+	                }
+	                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+	            }
+	                return ResponseEntity.ok(detail);
+		        } else {
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		        }
+		    } catch (Exception e) {
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+		    }
+		}
+
 	
 	@GetMapping("/GetcontactSettings")
 	public ResponseEntity<List<Contactsettings>> getcontactsettings(){
@@ -171,60 +287,95 @@ public class EmployeeController {
 		return new ResponseEntity<>(contactsettingss, HttpStatus.OK);
 	}
 	
-	@PatchMapping("/editcontactsetting/{id}")
-	public ResponseEntity<String> editcontact(@PathVariable Long id, 
-	        @RequestParam(required = false) String contact_email,
-	        @RequestParam(required = false) String contact_mobile,
-	        @RequestParam(required = false) String contact_address,
-	        @RequestParam(required = false) String copyright_content){
-		try {
-            // Retrieve existing setting data from the repository
-            Contactsettings existingSetting = contactsetting.findById(id)
-                    .orElseThrow(() -> new RuntimeException("contact not found"));
 
-            // Apply partial updates to the existing setting data
-            if (contact_email != null) {
-                existingSetting.setContact_email(contact_email);
-            }
-            if (contact_address != null) {
-                existingSetting.setContact_address(contact_address);
-            }
-            if (contact_mobile != null) {
-                existingSetting.setContact_mobile(contact_mobile);
-            }
-            if (copyright_content != null) {
-                existingSetting.setCopyright_content(copyright_content);
-            }
-           
+@PatchMapping("/editcontactsetting/{id}")
+public ResponseEntity<String> editcontact(@PathVariable Long id, 
+        @RequestParam(required = false) String contact_email,
+        @RequestParam(required = false) String contact_mobile,
+        @RequestParam(required = false) String contact_address,
+        @RequestParam(required = false) String copyright_content,
+        @RequestHeader("Authorization") String token) {
+    try {
+        // Validate JWT token
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
 
-            contactsetting.save(existingSetting);
+        // Extract email from token
+        String email = jwtUtil.getUsernameFromToken(token);
+        System.out.println("email: " + email);
 
-            return new ResponseEntity<>("contact updated successfully", HttpStatus.OK);
+        // Fetch user details from repository
+        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+        if (!opUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        AddUser user = opUser.get();
+        String username = user.getUsername();
+
+        // Retrieve existing Contactsettings from the repository
+        Contactsettings existingSetting = contactsetting.findById(id)
+                .orElseThrow(() -> new RuntimeException("Contact setting not found"));
+
+        // Apply partial updates to the existing Contactsettings
+        if (contact_email != null) {
+            existingSetting.setContact_email(contact_email);
+        }
+        if (contact_mobile != null) {
+            existingSetting.setContact_mobile(contact_mobile);
+        }
+        if (contact_address != null) {
+            existingSetting.setContact_address(contact_address);
+        }
+        if (copyright_content != null) {
+            existingSetting.setCopyright_content(copyright_content);
+        }
+
+        // Save updated Contactsettings
+        Contactsettings details = contactsetting.save(existingSetting);
+
+        // Create notification for the user who updated the setting
+        String heading = "Contact Setting Updated!";
+        Long notifyId = notificationservice.createNotification(username, email, heading);
+            if (notifyId != null) {
+                Set<String> notiUserSet = new HashSet<>();
+                // Fetch all admins from AddUser table
+                List<AddUser> adminUsers = adduserrepository.findAll();
+                for (AddUser admin : adminUsers) {
+                    notiUserSet.add(admin.getEmail());
+                }
+                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+            }
+
+         // Return success response
+            return ResponseEntity.ok("Contact updated successfully");
+
         } catch (RuntimeException e) {
             // Log the error for debugging
             System.err.println("Runtime exception: " + e.getMessage());
-            return new ResponseEntity<>("contact not found", HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contact setting not found");
+
         } catch (Exception e) {
             // Log the error for debugging
             System.err.println("Exception: " + e.getMessage());
-            return new ResponseEntity<>("Error when updating contact", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error when updating contact");
         }
     }
-
 
 	
 	
 //	--------------------working
-	@PostMapping("/Paymentsettings")
-	public Paymentsettings createEmployee(@RequestBody Paymentsettings data) {
-		return paymentsetting.save(data);
-	}
-	
-	@GetMapping("/GetpaymentSettings")
-	public ResponseEntity<List<Paymentsettings>> getpaymentsettings(){
-		List<Paymentsettings> paymentsettingss = paymentsetting.findAll();
-		return new ResponseEntity<>(paymentsettingss, HttpStatus.OK);
-	}
+//	@PostMapping("/Paymentsettings")
+//	public Paymentsettings createEmployee(@RequestBody Paymentsettings data) {
+//		return paymentsetting.save(data);
+//	}
+//	
+//	@GetMapping("/GetpaymentSettings")
+//	public ResponseEntity<List<Paymentsettings>> getpaymentsettings(){
+//		List<Paymentsettings> paymentsettingss = paymentsetting.findAll();
+//		return new ResponseEntity<>(paymentsettingss, HttpStatus.OK);
+//	}
 	
 //	--------------------working
 	@PostMapping("/Emailsettings")
@@ -251,11 +402,24 @@ public class EmployeeController {
 	
 //	--------------------working
 	@PostMapping("/SiteSetting")
-	public ResponseEntity<Sitesetting> addsitesetting(@RequestParam("sitename") String sitename,
+	public ResponseEntity<?> addsitesetting(@RequestParam("sitename") String sitename,
 			@RequestParam("appurl") String appurl,
 			@RequestParam("tagName") String tagName,
 			@RequestParam("icon") MultipartFile icon,
-			@RequestParam("logo") MultipartFile logo) throws IOException {
+			@RequestParam("logo") MultipartFile logo,
+			@RequestHeader("Authorization") String token) throws IOException {
+		try {
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+	        }
+
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        System.out.println("email: " + email);
+	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	        if (opUser.isPresent()) {
+	            AddUser user = opUser.get();
+	            String username = user.getUsername(); 
 			Sitesetting setting = new Sitesetting();
 			byte[] thumbnailBytes =ImageUtils.compressImage(icon.getBytes());
 			byte[] thumbnailByte =ImageUtils.compressImage(logo.getBytes());
@@ -265,7 +429,27 @@ public class EmployeeController {
 			setting.setIcon(thumbnailBytes);
 			setting.setLogo(thumbnailByte);
 			Sitesetting details = siteSetting.save(setting);
-			return ResponseEntity.ok(details);
+			Long Id = details.getId();
+	        String heading = "Sitesetting details  Added!";
+
+	        // Create notification
+	        Long notifyId = notificationservice.createNotification(username, email, heading);
+	        if (notifyId != null) {
+	            Set<String> notiUserSet = new HashSet<>();
+	            // Fetch all admins from AddUser table
+	            List<AddUser> adminUsers = adduserrepository.findAll();
+	            for (AddUser admin : adminUsers) {
+	                notiUserSet.add(admin.getEmail());
+	            }
+	            notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+	        }
+	        return ResponseEntity.ok(details);
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        }
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+	    }
 	}
 	
 	@GetMapping("/GetsiteSettings")
@@ -287,9 +471,27 @@ public class EmployeeController {
 	        @RequestParam(required = false) String appurl,
 	        @RequestParam(required = false) String tagName,
 	        @RequestParam(required = false) MultipartFile icon,
-	        @RequestParam(required = false) MultipartFile logo) {
+	        @RequestParam(required = false) MultipartFile logo,
+	        @RequestHeader("Authorization") String token) {
 
-	        try {
+		 try {
+		        // Validate JWT token
+		        if (!jwtUtil.validateToken(token)) {
+		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+		        }
+
+		        // Extract email from token
+		        String email = jwtUtil.getUsernameFromToken(token);
+		        System.out.println("email: " + email);
+
+		        // Fetch user details from repository
+		        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+		        if (!opUser.isPresent()) {
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		        }
+
+		        AddUser user = opUser.get();
+		        String username = user.getUsername();
 	            // Retrieve existing setting data from the repository
 	            Sitesetting existingSetting = siteSetting.findById(id)
 	                    .orElseThrow(() -> new RuntimeException("Setting not found"));
@@ -313,7 +515,19 @@ public class EmployeeController {
 	                existingSetting.setLogo(thumbnailBytes);
 	            }
 
-	            siteSetting.save(existingSetting);
+	             Sitesetting details = siteSetting.save(existingSetting);
+	          // Create notification for the user who updated the setting
+	  	        String heading = "Sitesetting details Updated!";
+	  	        Long notifyId = notificationservice.createNotification(username, email, heading);
+	              if (notifyId != null) {
+	                  Set<String> notiUserSet = new HashSet<>();
+	                  // Fetch all admins from AddUser table
+	                  List<AddUser> adminUsers = adduserrepository.findAll();
+	                  for (AddUser admin : adminUsers) {
+	                      notiUserSet.add(admin.getEmail());
+	                  }
+	                  notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+	              }
 
 	            return new ResponseEntity<>("Settings updated successfully", HttpStatus.OK);
 	        } catch (RuntimeException e) {

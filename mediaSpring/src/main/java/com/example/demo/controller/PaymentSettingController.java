@@ -1,6 +1,10 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,13 +15,18 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.AddUser;
 import com.example.demo.model.Paymentsettings;
 import com.example.demo.model.PlanDetails;
+import com.example.demo.notification.service.NotificationService;
+import com.example.demo.repository.AddUserRepository;
 import com.example.demo.repository.PaymentsettingRepository;
+import com.example.demo.userregister.JwtUtil;
 
 @CrossOrigin()
 @RestController
@@ -27,15 +36,57 @@ public class PaymentSettingController {
 	@Autowired
 	private PaymentsettingRepository paymentsettingrepository;
 	
+	@Autowired
+    private NotificationService notificationservice;
+	
+	@Autowired
+	private JwtUtil jwtUtil; // Autowire JwtUtil
+	
+	@Autowired
+	private AddUserRepository adduserrepository;
+	
 	@PostMapping("/AddrazorpayId")
-	public ResponseEntity<Paymentsettings> Addpaymentsetting (@RequestParam("razorpay_key") String razorpay_key,
-			@RequestParam("razorpay_secret_key")String razorpay_secret_key){
+	public ResponseEntity<?>  Addpaymentsetting (@RequestParam("razorpay_key") String razorpay_key,
+			@RequestParam("razorpay_secret_key")String razorpay_secret_key,
+			@RequestHeader("Authorization") String token){
+		try {
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+	        }
+
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        System.out.println("email: " + email);
+	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	        if (opUser.isPresent()) {
+	            AddUser user = opUser.get();
+	            String username = user.getUsername();       
 		Paymentsettings setting = new Paymentsettings();
 		setting.setRazorpay_key(razorpay_key);
 		setting.setRazorpay_secret_key(razorpay_secret_key);
 		Paymentsettings details = paymentsettingrepository.save(setting);
-		return ResponseEntity.ok(details);
-	} 
+		Long Id = details.getId();
+        String heading = "Payment details  Added!";
+
+        // Create notification
+        Long notifyId = notificationservice.createNotification(username, email, heading);
+        if (notifyId != null) {
+            Set<String> notiUserSet = new HashSet<>();
+            // Fetch all admins from AddUser table
+            List<AddUser> adminUsers = adduserrepository.findAll();
+            for (AddUser admin : adminUsers) {
+                notiUserSet.add(admin.getEmail());
+            }
+            notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+        }
+        return ResponseEntity.ok(details);
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        }
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+	    }
+	}
 	
  	@GetMapping("/getrazorpay")
 	public ResponseEntity<List<Paymentsettings>> getAllrazorpay() {
@@ -44,8 +95,26 @@ public class PaymentSettingController {
     }
 	
 	@PatchMapping("/Editrazorpay/{id}")
-	public ResponseEntity<String> editrazorpay(@PathVariable Long id , @RequestBody Paymentsettings updatedrazorpay){
-		try {
+	public ResponseEntity<String> editrazorpay(@PathVariable Long id , @RequestBody Paymentsettings updatedrazorpay,
+			@RequestHeader("Authorization") String token){
+		  try {
+		        // Validate JWT token
+		        if (!jwtUtil.validateToken(token)) {
+		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+		        }
+
+		        // Extract email from token
+		        String email = jwtUtil.getUsernameFromToken(token);
+		        System.out.println("email: " + email);
+
+		        // Fetch user details from repository
+		        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+		        if (!opUser.isPresent()) {
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		        }
+
+		        AddUser user = opUser.get();
+		        String username = user.getUsername();
             // Retrieve existing plan data from the repository
 			Paymentsettings existingplan = paymentsettingrepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("not found"));
@@ -59,7 +128,19 @@ public class PaymentSettingController {
             	existingplan.setRazorpay_secret_key(updatedrazorpay.getRazorpay_secret_key());
             }
             
-            paymentsettingrepository.save(existingplan);
+             Paymentsettings details = paymentsettingrepository.save(existingplan);
+          // Create notification for the user who updated the setting
+ 	        String heading = "Payment details Updated!";
+ 	        Long notifyId = notificationservice.createNotification(username, email, heading);
+             if (notifyId != null) {
+                 Set<String> notiUserSet = new HashSet<>();
+                 // Fetch all admins from AddUser table
+                 List<AddUser> adminUsers = adduserrepository.findAll();
+                 for (AddUser admin : adminUsers) {
+                     notiUserSet.add(admin.getEmail());
+                 }
+                 notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+             }
 
             return new ResponseEntity<>(" updated successfully", HttpStatus.OK);
         } catch (RuntimeException e) {
