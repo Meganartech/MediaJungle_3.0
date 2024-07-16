@@ -37,7 +37,7 @@ public class CastandcrewController {
 	@Autowired
 	private CastandcrewRepository castandcrewrepository;
 	
-	@PostMapping("/addcastandcrew")
+
 	public ResponseEntity<CastandCrew> addcast(@RequestParam("image") MultipartFile image,
 			@RequestParam("name") String name) throws IOException{
 		byte[] thumbnailBytes =ImageUtils.compressImage(image.getBytes());
@@ -50,7 +50,7 @@ public class CastandcrewController {
 	
 	
 	
-	@GetMapping("/GetAllcastandcrew")
+
     public ResponseEntity<List<CastandCrew>> getAllPCastandcrew() {
         List<CastandCrew> getcast = castandcrewrepository.findAll();
         for (CastandCrew cast : getcast) {
@@ -60,7 +60,7 @@ public class CastandcrewController {
         return new ResponseEntity<>(getcast, HttpStatus.OK);
     }
 	
-	@GetMapping("/getcast/{id}")
+
     public ResponseEntity<CastandCrew> getcast(@PathVariable Long id) {
         try {
             Optional<CastandCrew> castDetail = castandcrewrepository.findById(id);
@@ -75,7 +75,7 @@ public class CastandcrewController {
         }
     }
 	
-	@GetMapping("/GetAllcastthumbnail")
+
     public ResponseEntity<List<byte[]>> getcastthumbnail() {
         List<CastandCrew> getcastthumbnail = castandcrewrepository.findAll();
         
@@ -90,7 +90,7 @@ public class CastandcrewController {
     }
 	
 	
-    @GetMapping("/GetThumbnailsforcast/{id}")
+
     public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
         try {
             Optional<CastandCrew> castOptional = castandcrewrepository.findById(id);
@@ -116,7 +116,7 @@ public class CastandcrewController {
     }
 	
 	
-	@DeleteMapping("/Deletecastandcrew/{Id}")
+
     public ResponseEntity<Void> deletecast(@PathVariable Long Id) {
         try {
             // Assuming you have a method to delete a category by ID in your repository
@@ -127,7 +127,7 @@ public class CastandcrewController {
         }
     }
 	
-	@PatchMapping("/updatecastandcrew/{id}")
+
 	public ResponseEntity<String> updateCast(
 	        @PathVariable Long id,
 	        @RequestParam(value = "image", required = false) MultipartFile image,

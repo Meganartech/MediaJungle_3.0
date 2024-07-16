@@ -75,7 +75,6 @@ public class AudioController1 {
 	 
 	 
 
-	@PostMapping("/uploadaudio")
     public ResponseEntity<Addaudio1> uploadAudio(@RequestParam("category") Long categoryId,
     		                                    @RequestParam("audioFile") MultipartFile audioFile,
     		                                    @RequestParam("thumbnail") MultipartFile thumbnail,
@@ -141,7 +140,7 @@ public class AudioController1 {
 //        }
 //    }
 	
-	@GetMapping("/{filename}/file")
+
 	public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
 	    if (filename != null) {
 	        Path filePath = Paths.get(audioStorageDirectory, filename);
@@ -242,7 +241,7 @@ public class AudioController1 {
 	
 
  
-	@GetMapping("/audio/{id}")
+
 	public ResponseEntity<Addaudio1> getAudioById(@PathVariable Long id) {
 	    try {
 	        // Retrieve audio details by ID using the service
@@ -260,7 +259,7 @@ public class AudioController1 {
 	}
 	
 	
-	@GetMapping("/audio/{id}/file")
+
 	public ResponseEntity<Resource> getAudioFile(@PathVariable String id) throws IOException {
 	    Path audioFolder = Paths.get(audioStorageDirectory);
 	    Path audioFilePath = audioFolder.resolve(id); // Assumes ID directly corresponds to filename
@@ -282,7 +281,7 @@ public class AudioController1 {
 
    
 
-    @GetMapping("/audio/list")
+
     public ResponseEntity<List<String>> listAudioFiles() throws IOException {
         Path audioFolder = Paths.get(audioStorageDirectory);
 
@@ -306,7 +305,7 @@ public class AudioController1 {
     
 
     
-    @GetMapping("/GetAll")
+
 	public ResponseEntity<List<Addaudio1>> getAllUser() {
 	    List<Addaudio1> getUser = audiorepository.findAll();
 	    return new ResponseEntity<>(getUser, HttpStatus.OK);
@@ -314,7 +313,7 @@ public class AudioController1 {
     
 
     
-    @GetMapping("/GetDetail/{id}")
+
     public ResponseEntity<Addaudio1> getAudioDetail(@PathVariable Long id) {
         try {
             Optional<Addaudio1> audioDetail = audiorepository.findById(id);
@@ -330,7 +329,7 @@ public class AudioController1 {
         }
     }
     
-    @GetMapping("/{id}/filename")
+
     public ResponseEntity<String> getAudioFilename(@PathVariable Long id) {
         try {
             String filename = audioservice.getAudioFilename(id);
@@ -341,7 +340,7 @@ public class AudioController1 {
         }
     }
         
-    @GetMapping("/GetAllThumbnail")
+
     public ResponseEntity<List<byte[]>> getAllThumbnail() {
         List<Addaudio1> getAudio = audiorepository.findAll();
         
@@ -355,7 +354,7 @@ public class AudioController1 {
                 .body(getAudio.stream().map(Addaudio1::getThumbnail).collect(Collectors.toList()));
     }
     
-    @GetMapping("/GetThumbnailsById/{id}")
+
     public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
         try {
             Optional<Addaudio1> audioOptional = audiorepository.findById(id);
@@ -381,7 +380,7 @@ public class AudioController1 {
     }
 
 
-    @DeleteMapping("/audio/{id}")
+
     public ResponseEntity<String> deleteAudioById(@PathVariable Long id,String fileName) {
         try {
             // Call the service method to delete audio by ID
@@ -399,7 +398,7 @@ public class AudioController1 {
         }
     }
     
-    @PatchMapping("/updateaudio/update/{audioId}")
+
     public ResponseEntity<Addaudio1> updateAudio(		
         @PathVariable Long audioId,
         @RequestParam(value = "audioFile", required = false) MultipartFile audioFile,

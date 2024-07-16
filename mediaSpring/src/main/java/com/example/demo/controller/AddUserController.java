@@ -11,6 +11,8 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,14 +22,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.demo.model.AddUser;
 import com.example.demo.model.License;
 import com.example.demo.model.UserListWithStatus;
 import com.example.demo.repository.AddUserRepository;
 import com.example.demo.repository.licenseRepository;
-import com.example.demo.userregister.UserRegister;
 
 @CrossOrigin()
 @RestController
@@ -40,8 +40,8 @@ public class AddUserController {
     @Autowired
     private licenseRepository licenseRepository;
 	
-	@PostMapping("/AddUser")
-	public String AddUser(@RequestBody AddUser data) {
+    
+	public ResponseEntity<?> AddUser(@RequestBody AddUser data) {
 		try {
             // Example: Encrypting password before saving (if AddUser has a password field)
              BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -49,18 +49,18 @@ public class AddUserController {
              data.setPassword(hashedPassword);
 
 			adduserrepository.save(data);
-			return "success";
+			return ResponseEntity.ok("success");
         } catch (Exception e) {
-            return "failure";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed");
         }
     }
 	
-	@PostMapping("/login/admin")
+	
 	public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
 	    try {
 	        String username = loginRequest.get("username");
 	        String password = loginRequest.get("password");
-	        
+	        System.out.println(username+" "+password);
 	        Optional<AddUser> userOptional = adduserrepository.findByUsername(username);
 	        
 	        if (userOptional.isEmpty()) {
@@ -227,7 +227,7 @@ public class AddUserController {
 
 	 
 	 
-	 @GetMapping("/GetUserId/{userId}")
+
 	 public ResponseEntity<UserListWithStatus> getUser(@PathVariable Long userId) {
 	     // Assuming adduserrepository is your repository for AddUser entity
 	     Optional<AddUser> userOptional = adduserrepository.findById(userId);
@@ -248,7 +248,7 @@ public class AddUserController {
 	
 	
 	
-	@DeleteMapping("/DeleteUser/{UserId}")
+
     public ResponseEntity<Void> deleteUser(@PathVariable Long UserId) {
         try {
             // Assuming you have a method to delete a category by ID in your repository
@@ -259,7 +259,7 @@ public class AddUserController {
         }
     }
 	
-	@PatchMapping("/UpdateUser/{userId}")
+
 	public ResponseEntity<String> updateUserDetails(@PathVariable Long userId, @RequestBody AddUser updatedUserData) {
 	    try {
 	        // Retrieve existing user data from the repository
