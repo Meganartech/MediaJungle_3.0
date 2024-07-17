@@ -34,6 +34,8 @@ public class NotificationDetails {
 	
 	private String link;
 	
+	private String detail;
+	
     @Lob
     @Column(length=1000000)
     private byte[] notimage;
@@ -46,7 +48,7 @@ public class NotificationDetails {
 	}
 
 	public NotificationDetails(Long notifyId, Long notifyTypeId, String heading, String description,
-			LocalDate createdDate, String createdBy, String username, String link, byte[] notimage, Boolean isActive) {
+			LocalDate createdDate, String createdBy, String username, String link, String detail,byte[] notimage, Boolean isActive) {
 		super();
 		this.notifyId = notifyId;
 		this.notifyTypeId = notifyTypeId;
@@ -56,6 +58,7 @@ public class NotificationDetails {
 		CreatedBy = createdBy;
 		this.username = username;
 		this.link = link;
+		this.detail = detail;
 		this.notimage = notimage;
 		this.isActive = isActive;
 	}
@@ -139,5 +142,14 @@ public class NotificationDetails {
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+	
 
 }

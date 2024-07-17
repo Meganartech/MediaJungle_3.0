@@ -76,6 +76,7 @@ import VideoScreen from './user/VideoScreen';
 import AdminLayout from './admin/AdminLayout';
 import Viewcastandcrew from './admin/Viewcastandcrew';
 import Editcastandcrew from './admin/Editcastandcrew';
+import Userforgetpassword from './user/Screens/Userforgetpassword';
 
 const App = () => {
   const location = useLocation();
@@ -156,6 +157,7 @@ const App = () => {
           <Route path='Contactus' element={<ContactUs />}/>
           <Route path='watchpage/:id' element={<WatchPage />} />
           <Route path='videoScreen/:id' element={<VideoScreen/>} /> 
+          <Route path='userforgetpassword' element={<Userforgetpassword />} />
            {/* <Route path='singlemovie/:id' element={<SingleMovie />} /> */}
     
              

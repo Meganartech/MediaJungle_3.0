@@ -52,7 +52,9 @@ import com.VsmartEngine.MediaJungle.repository.VideoRepository;
 import com.VsmartEngine.MediaJungle.service.FileService;
 import com.VsmartEngine.MediaJungle.service.VideoService;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
+import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
+
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -93,6 +95,9 @@ public class VideoController {
 	
 	@Autowired
 	private AddUserRepository adduserrepository;
+	
+	@Autowired
+    private UserRegisterRepository userregisterrepository;
 	
 
 //	@PostMapping("/save")
@@ -199,9 +204,12 @@ public class VideoController {
             Long videoId = savedDescription.getId();
             String movieName = savedDescription.getMoviename();
             String heading = movieName +" New Video Added!";
+            String Description = savedDescription.getDescription();
+            String link = "/MoviesPage";
+            String detail = "Sit back, watch, and enjoy this movie.";
             
          // Create notification with optional file (thumbnail)
-            Long notifyId = notificationservice.createNotification(username, email, heading, Optional.ofNullable(thumbnail));
+            Long notifyId = notificationservice.createNotification(username, email, heading, Description,link,detail,Optional.ofNullable(thumbnail));
             if (notifyId != null) {
                 Set<String> notiUserSet = new HashSet<>();
                 // Fetch all admins from AddUser table
@@ -210,6 +218,12 @@ public class VideoController {
                     notiUserSet.add(admin.getEmail());
                 }
                 notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+                List<UserRegister> Users = userregisterrepository.findAll();
+                for (UserRegister userss : Users) {
+                    notiUserSet.add(userss.getEmail());
+                }
+                notificationservice.CommoncreateNotificationUser(notifyId, new ArrayList<>(notiUserSet));
+                
             }
 
             return ResponseEntity.ok().body(savedDescription);
@@ -221,6 +235,7 @@ public class VideoController {
 	         return ResponseEntity.badRequest().build();
 	     }
 	 }
+
 	
 	
 //	@PostMapping("/uploaddescription")

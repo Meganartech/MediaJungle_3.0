@@ -1,6 +1,7 @@
 package com.VsmartEngine.MediaJungle.userregister;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
+import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 
 import jakarta.transaction.Transactional;
 
@@ -34,15 +36,14 @@ public class UserRegisterController {
     @Autowired
     private UserRegisterRepository userregisterrepository;
     
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-
-    
     @Autowired
     private JwtUtil jwtUtil; // Autowire JwtUtil
 
     @Autowired
     private TokenBlacklist tokenBlacklist;
+    
+	@Autowired
+    private NotificationService notificationservice;
         
     @PostMapping("/userregister")
 	public ResponseEntity<UserRegister> register(@RequestParam("username") String username,
@@ -95,7 +96,6 @@ public class UserRegisterController {
     @PostMapping("/login")
     @Transactional
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
-        
         String email = loginRequest.get("email");
         String password = loginRequest.get("password");
         
@@ -107,7 +107,7 @@ public class UserRegisterController {
         }
 
         UserRegister user = userOptional.get();
-
+        
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if (!passwordEncoder.matches(password, user.getPassword())) {
             // Incorrect password
@@ -115,28 +115,45 @@ public class UserRegisterController {
         }
 
         // Generate JWT token
-        String jwtToken = jwtUtil.generateToken(email); // Use jwtUtil
+        String jwtToken = jwtUtil.generateToken(email);
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("token", jwtToken);
         responseBody.put("message", "Login successful");
-        String name=user.getUsername();
-      String Email=user.getEmail();
-      String pword=user.getPassword();
-      long userId = user.getId();
         responseBody.put("name", user.getUsername());
         responseBody.put("email", user.getEmail());
-        responseBody.put("password", user.getPassword()); // Consider removing password from the response for security reasons
         responseBody.put("userId", user.getId());
         
-        System.out.println(name);
-      System.out.println(jwtToken);
-      System.out.println(userId);
-      System.out.println(Email);
-      System.out.println(pword);
-        
+        // Check if the user has an expiry date for subscription
+        if (user.getPaymentId() != null && user.getPaymentId().getExpiryDate() != null) {
+            LocalDate expdate = user.getPaymentId().getExpiryDate();
+            LocalDate today = LocalDate.now();
+            String plan = user.getPaymentId().getSubscriptionTitle();
+            
+            if (expdate.minusDays(1).equals(today)) {
+                // Create notification and associate with user
+                String heading = user.getUsername() + ", your " + plan + " subscription validity expires on " + expdate;
+                try {
+                    Long notifyId = notificationservice.createNotification(user.getUsername(), user.getEmail(), heading);
+                    if (notifyId != null) {
+                        notificationservice.notificationuser(notifyId, user.getId());
+                    } else {
+                        // Handle notification creation failure
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\": \"Failed to create notification\"}");
+                    }
+                } catch (Exception e) {
+                    // Handle any exceptions during notification creation
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\": \"Error creating notification\"}");
+                }
+            }
+        }
+
         // Successful login
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
+
+
+
+
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
@@ -165,34 +182,53 @@ public class UserRegisterController {
 
     @PostMapping("/forgetPassword")
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> loginRequest) {
-        // Finding the user by email
-    	
-    	String email = loginRequest.get("email");
-        String password = loginRequest.get("password");
-        String confirmpassword = loginRequest.get("confirmPassword");
-        Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
+        try {
+            // Finding the user by email
+            String email = loginRequest.get("email");
+            String password = loginRequest.get("password");
+            String confirmPassword = loginRequest.get("confirmPassword");
+            Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
 
-        // If the user doesn't exist, return 404 Not Found
-        if (!userOptional.isPresent()) {
-            System.out.println("User not found: " + email);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            // If the user doesn't exist, return 404 Not Found
+            if (!userOptional.isPresent()) {
+                System.out.println("User not found: " + email);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+
+            UserRegister user = userOptional.get();
+
+            // If passwords do not match, return 400 Bad Request
+            if (!password.equals(confirmPassword)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
+            }
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = passwordEncoder.encode(password);
+
+            // Update the user password
+            user.setPassword(encodedPassword);
+            user.setConfirmPassword(encodedPassword); // You don't need a separate field for confirmPassword in the database
+
+            // Save the updated user
+            UserRegister savedUser = userregisterrepository.save(user);
+            Long userId = savedUser.getId();
+            String name = savedUser.getUsername();
+            String heading = name + " successfully changed your password";
+
+            // Create notification and associate with user
+            Long notifyId = notificationservice.createNotification(name, email, heading);
+            
+            if (notifyId != null) {
+                notificationservice.notificationuser(notifyId, userId);
+            }
+
+            return ResponseEntity.ok("Password reset successfully");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
-
-        UserRegister user = userOptional.get();
-
-        // If passwords do not match, return 400 Bad Request
-        if (!password.equals(confirmpassword)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
-        }
-
-        // Assuming you have a method to hash the password
-        user.setPassword(password);
-        user.setConfirmPassword(confirmpassword);
-        // Do not set confirmPassword in the entity, it's used only for validation
-
-        userregisterrepository.save(user);
-
-        return ResponseEntity.ok("Password reset successfully");
     }
 
 }
+

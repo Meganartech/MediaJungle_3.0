@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import API_URL from '../../../Config';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import UserNotification from '../../Screens/UserNotification';
+
 
 const NavBar = () => {
     const hover = 'hover:text-subMain transitions text-white'
@@ -108,7 +110,7 @@ const NavBar = () => {
 
   const fetchUnreadCount = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/v2/unreadCount`, {
+      const response = await axios.get(`${API_URL}/api/v2/unreadCountuser`, {
         headers: {
           Authorization: token,
         },
@@ -217,7 +219,7 @@ useEffect(() => {
                         )}
 
                         
-                            <div className="relative cursor-pointer mr-2" onClick={toggleDropdown}>
+                            <div className="relative cursor-pointer mr-2"  onClick={() => { setisopen(!isopen); }}>
                                 <div className="relative">
                                 {count > 0 && (
                                     <span className="absolute -top-2 -right-3 bg-yellow-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -232,6 +234,9 @@ useEffect(() => {
                         
                     </div>
                 </div>
+                {isopen && <div>
+                  <UserNotification setisopen={setisopen} isopen={isopen} setcount={setcount} handlemarkallasRead={handlemarkallasRead}/>
+                  </div>}
             </div>
         </>
     )
