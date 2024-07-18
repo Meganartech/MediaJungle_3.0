@@ -8,18 +8,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.AddUser;
-import com.VsmartEngine.MediaJungle.notification.NotificationAdmin;
 import com.VsmartEngine.MediaJungle.notification.NotificationDetails;
-import com.VsmartEngine.MediaJungle.notification.NotificationUser;
 import com.VsmartEngine.MediaJungle.notification.repository.NotificationAdminRepository;
 import com.VsmartEngine.MediaJungle.notification.repository.NotificationDetailsRepository;
 import com.VsmartEngine.MediaJungle.notification.repository.NotificationUserRepository;
@@ -29,11 +24,7 @@ import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
-@CrossOrigin()
-@RestController
-@RequestMapping("/api/v2/")
+@Controller
 public class NotificationController {
 	
 	@Autowired
@@ -58,7 +49,6 @@ public class NotificationController {
 	 private NotificationService notificationservice;
 
 	 
-	 @GetMapping("/notifications")
 	 public ResponseEntity<?>GetAllNotification(@RequestHeader("Authorization") String token){
 			try {
 
@@ -102,7 +92,6 @@ public class NotificationController {
 		}
 	 
 	 
-	 @GetMapping("/usernotifications")
 	 public ResponseEntity<?>GetuserNotification(@RequestHeader("Authorization") String token){
 			try {
 
@@ -148,7 +137,6 @@ public class NotificationController {
 	 
 
 	 
-	 @PostMapping("/markAllAsRead")
 	    public ResponseEntity<?> markAllAsRead(@RequestHeader("Authorization") String token) {
 	        try {
 	            if (!jwtUtil.validateToken(token)) {
@@ -169,7 +157,7 @@ public class NotificationController {
 	    }
 	 
 	 
-	 @PostMapping("/markAllAsReaduser")
+
 	    public ResponseEntity<?> markAllAsReaduser(@RequestHeader("Authorization") String token) {
 	        try {
 	            if (!jwtUtil.validateToken(token)) {
@@ -190,8 +178,7 @@ public class NotificationController {
 	    }
 
 
-		
-		@GetMapping("/unreadCount")
+
 		public ResponseEntity<?> UreadCount(@RequestHeader("Authorization") String token) {
 			try {
 		         if (!jwtUtil.validateToken(token)) {
@@ -214,7 +201,7 @@ public class NotificationController {
 
 	}
 		
-		@GetMapping("/unreadCountuser")
+
 		public ResponseEntity<?> UreadCountuser(@RequestHeader("Authorization") String token) {
 			try {
 

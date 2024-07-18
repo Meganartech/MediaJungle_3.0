@@ -10,18 +10,11 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
@@ -29,9 +22,8 @@ import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.repository.TagRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 
-@CrossOrigin()
-@RestController
-@RequestMapping("/api/v2/")
+
+@Controller
 public class TagController {
 	
 	@Autowired
@@ -45,8 +37,8 @@ public class TagController {
 	
 	@Autowired
 	private AddUserRepository adduserrepository;
+
 	
-	@PostMapping("/AddTag")
 	public ResponseEntity<String> posttag(@RequestHeader("Authorization") String token,@RequestBody Tag data) {
 		try {
 	        if (!jwtUtil.validateToken(token)) {
@@ -86,13 +78,13 @@ public class TagController {
 	    }
 	}
 	
-	@GetMapping("/GetAllTag")
+
 	public ResponseEntity<List<Tag>> getAllTag() {
 	    List<Tag> tag = tagrepository.findAll();
 	    return new ResponseEntity<>(tag, HttpStatus.OK);
 	}
 	
-	@GetMapping("/GetTagById/{tagId}")
+
 	public ResponseEntity<Tag> getTagById(@PathVariable Long tagId) {
 	    Optional<Tag> tagOptional = tagrepository.findById(tagId);
 	    if (tagOptional.isPresent()) {
@@ -104,7 +96,7 @@ public class TagController {
 	}
 	
 		
-	@DeleteMapping("/DeleteTag/{tagId}")
+
     public ResponseEntity<?> deleteTag(@PathVariable Long tagId,@RequestHeader("Authorization") String token) {
 		 try {
 		        // Validate JWT token
@@ -151,7 +143,7 @@ public class TagController {
 }
 
 	
-	@PatchMapping("/editTag/{tagId}")
+
 	public ResponseEntity<String> editTag(@PathVariable Long tagId, @RequestBody Tag editTag,@RequestHeader("Authorization") String token) {
 		try {
 	        // Validate JWT token

@@ -10,28 +10,20 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
-import com.VsmartEngine.MediaJungle.model.AddLanguage;
 import com.VsmartEngine.MediaJungle.model.AddUser;
-import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.Companysiteurl;
 import com.VsmartEngine.MediaJungle.model.Contactsettings;
 import com.VsmartEngine.MediaJungle.model.Emailsettings;
 import com.VsmartEngine.MediaJungle.model.Mobilesettings;
 import com.VsmartEngine.MediaJungle.model.Othersettings;
-import com.VsmartEngine.MediaJungle.model.Paymentsettings;
 import com.VsmartEngine.MediaJungle.model.Seosettings;
 import com.VsmartEngine.MediaJungle.model.Sitesetting;
 import com.VsmartEngine.MediaJungle.model.Socialsettings;
@@ -50,10 +42,8 @@ import com.VsmartEngine.MediaJungle.repository.siteSettingRepository;
 import com.VsmartEngine.MediaJungle.repository.videoSettingRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 
-@CrossOrigin()
-@RestController
-@RequestMapping("/api/v2/")
 
+@Controller
 public class EmployeeController {
 
 	@Autowired
@@ -97,7 +87,7 @@ public class EmployeeController {
 //	public Othersettings createEmployee(@RequestBody Othersettings data) {
 //		return othersetting.save(data);
 //	}
-	@PostMapping("/OtherSettings")
+
 	public ResponseEntity<?> addothersetting(@RequestHeader("Authorization") String token,@RequestParam("appstore") String appstore,
 			@RequestParam("playstore") String playstore){
 		try {
@@ -140,13 +130,13 @@ public class EmployeeController {
 		    }
 		}
 	
-	@GetMapping("/GetOthersettings")
+
 	public ResponseEntity<List<Othersettings>> getOthersettings() {
 	    List<Othersettings> othersettingss = othersetting.findAll();
 	    return new ResponseEntity<>(othersettingss, HttpStatus.OK);
 	}
 	
-	@PatchMapping("/editothersettings/{id}")
+
 	public ResponseEntity<String> editothersetting(@PathVariable Long id, @RequestBody Othersettings updatedothersetting,
 	        @RequestHeader("Authorization") String token) {
 	    try {
@@ -210,31 +200,34 @@ public class EmployeeController {
 
 
 //	--------------------working
-	@PostMapping("/Companysiteurl")
-	public Companysiteurl createEmployee(@RequestBody Companysiteurl data) {
-		return companysiteurl.save(data);
+
+	public ResponseEntity<?> addCompanysiteurl(@RequestBody Companysiteurl data) {
+	   companysiteurl.save(data);
+	   return ResponseEntity.ok("Success");
+	   
 	}
 	
-	@GetMapping("/GetCompanysiteurl")
+
 	public ResponseEntity<List<Companysiteurl>> getcompanysiteurl(){
 		List<Companysiteurl> companysiteurll = companysiteurl.findAll();
 		return new ResponseEntity<>(companysiteurll, HttpStatus.OK);
 	}
 	
 //	--------------------working
-	@PostMapping("/seoSettings")
-	public Seosettings createEmployee(@RequestBody Seosettings data) {
-		return seosetting.save(data);
+
+	public ResponseEntity<?>  addSeosettings(@RequestBody Seosettings data) {
+	 seosetting.save(data);
+	 return ResponseEntity.ok("Success");
 	}
 	
-	@GetMapping("/GetseoSettings")
+
 	public ResponseEntity<List<Seosettings>> getseoSettings(){
 		List<Seosettings> seosettingss = seosetting.findAll();
 		return new ResponseEntity<>(seosettingss, HttpStatus.OK);
 	}
 	
 //	--------------------working
-	@PostMapping("/Contactsettings")
+
 	public ResponseEntity<?> contactsetting(@RequestHeader("Authorization") String token,@RequestParam("contact_email") String contact_email,
 			@RequestParam("contact_mobile") String contact_mobile,
 			@RequestParam("contact_address") String contact_address,
@@ -281,14 +274,14 @@ public class EmployeeController {
 		}
 
 	
-	@GetMapping("/GetcontactSettings")
+
 	public ResponseEntity<List<Contactsettings>> getcontactsettings(){
 		List<Contactsettings> contactsettingss = contactsetting.findAll();
 		return new ResponseEntity<>(contactsettingss, HttpStatus.OK);
 	}
 	
 
-@PatchMapping("/editcontactsetting/{id}")
+
 public ResponseEntity<String> editcontact(@PathVariable Long id, 
         @RequestParam(required = false) String contact_email,
         @RequestParam(required = false) String contact_mobile,
@@ -378,30 +371,35 @@ public ResponseEntity<String> editcontact(@PathVariable Long id,
 //	}
 	
 //	--------------------working
-	@PostMapping("/Emailsettings")
-	public Emailsettings createEmployee(@RequestBody Emailsettings data) {
-		return emailsetting.save(data);
+
+	public ResponseEntity<?> addEmailsettings(@RequestBody Emailsettings data) {
+
+		emailsetting.save(data);
+		return ResponseEntity.ok("Success");
 	}
 	
-	@GetMapping("/GetemailSettings")
+
 	public ResponseEntity<List<Emailsettings>> getemailsettings(){
 		List<Emailsettings> emailsettingss = emailsetting.findAll();
 		return new ResponseEntity<>(emailsettingss, HttpStatus.OK);
 	}
 //	--------------------working
-	@PostMapping("/Mobilesettings")
-	public Mobilesettings createEmployee(@RequestBody Mobilesettings data) {
-		return mobilesetting.save(data);
+
+	public ResponseEntity<?> addMobilesettings(@RequestBody Mobilesettings data) {
+
+		mobilesetting.save(data);
+		return ResponseEntity.ok("Success");
 	}
+
 	
-	@GetMapping("/GetmobileSettings")
+
 	public ResponseEntity<List<Mobilesettings>> getmobilesettings(){
 		List<Mobilesettings> mobilesettingss = mobilesetting.findAll();
 		return new ResponseEntity<>(mobilesettingss, HttpStatus.OK);
 	}
 	
 //	--------------------working
-	@PostMapping("/SiteSetting")
+
 	public ResponseEntity<?> addsitesetting(@RequestParam("sitename") String sitename,
 			@RequestParam("appurl") String appurl,
 			@RequestParam("tagName") String tagName,
@@ -452,7 +450,7 @@ public ResponseEntity<String> editcontact(@PathVariable Long id,
 	    }
 	}
 	
-	@GetMapping("/GetsiteSettings")
+
 	public ResponseEntity<List<Sitesetting>> getsitesettings(){
 		List<Sitesetting> sitesettingss = siteSetting.findAll();
 		 for (Sitesetting cast : sitesettingss) {
@@ -464,7 +462,7 @@ public ResponseEntity<String> editcontact(@PathVariable Long id,
 		return new ResponseEntity<>(sitesettingss, HttpStatus.OK);
 	}
 	
-	 @PatchMapping("/editsettings/{id}")
+
 	    public ResponseEntity<String> editSetting(
 	        @PathVariable Long id, 
 	        @RequestParam(required = false) String sitename,
@@ -542,23 +540,28 @@ public ResponseEntity<String> editcontact(@PathVariable Long id,
 	    }
 
 //	--------------------working
-	@PostMapping("/videoSetting")
-	public Videosettings createEmployee(@RequestBody Videosettings data) {
-		return videosetting.save(data);
+
+public ResponseEntity<?> addVideosettings(@RequestBody Videosettings data) {
+
+		videosetting.save(data);
+		return ResponseEntity.ok("Success");
 	}
 	
-	@GetMapping("/GetvideoSettings")
+
 	public ResponseEntity<List<Videosettings>> getvideosettings(){
 		List<Videosettings> videosettingss = videosetting.findAll();
 		return new ResponseEntity<>(videosettingss, HttpStatus.OK);
 	}
 //	--------------------working
-	@PostMapping("/Socialsettings")
-	public Socialsettings createEmployee(@RequestBody Socialsettings data) {
-		return socialsetting.save(data);
-	}
+
+public ResponseEntity<?> addSocialsettings(@RequestBody Socialsettings data) {
+
+		socialsetting.save(data);
+		return ResponseEntity.ok("Success");
 	
-	@GetMapping("/GetsocialSettings")
+}
+	
+
 	public ResponseEntity<List<Socialsettings>> getsocialsettings(){
 		List<Socialsettings> socialsettingss = socialsetting.findAll();
 		return new ResponseEntity<>(socialsettingss, HttpStatus.OK);

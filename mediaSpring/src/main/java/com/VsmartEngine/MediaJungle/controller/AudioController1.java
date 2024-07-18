@@ -1,6 +1,5 @@
 package com.VsmartEngine.MediaJungle.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.DirectoryStream;
@@ -10,17 +9,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -30,21 +24,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.fileservice.AudioFileService;
@@ -56,14 +40,12 @@ import com.VsmartEngine.MediaJungle.repository.AddNewCategoriesRepository;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.service.AudioService;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
-import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@CrossOrigin()
-@RestController
-@RequestMapping("/api/v2/")
+
+@Controller
 public class AudioController1 {
 
 	@Autowired
@@ -97,7 +79,7 @@ public class AudioController1 {
 	 
 	 
 
-	 @PostMapping("/uploadaudio")
+
 	 public ResponseEntity<Addaudio1> uploadAudio(@RequestParam("category") Long categoryId,
 	                                              @RequestParam("audioFile") MultipartFile audioFile,
 	                                              @RequestParam("thumbnail") MultipartFile thumbnail,
@@ -202,7 +184,7 @@ public class AudioController1 {
 //        }
 //    }
 	
-	@GetMapping("/{filename}/file")
+
 	public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
 	    if (filename != null) {
 	        Path filePath = Paths.get(audioStorageDirectory, filename);
@@ -303,7 +285,7 @@ public class AudioController1 {
 	
 
  
-	@GetMapping("/audio/{id}")
+
 	public ResponseEntity<Addaudio1> getAudioById(@PathVariable Long id) {
 	    try {
 	        // Retrieve audio details by ID using the service
@@ -321,7 +303,7 @@ public class AudioController1 {
 	}
 	
 	
-	@GetMapping("/audio/{id}/file")
+
 	public ResponseEntity<Resource> getAudioFile(@PathVariable String id) throws IOException {
 	    Path audioFolder = Paths.get(audioStorageDirectory);
 	    Path audioFilePath = audioFolder.resolve(id); // Assumes ID directly corresponds to filename
@@ -343,7 +325,7 @@ public class AudioController1 {
 
    
 
-    @GetMapping("/audio/list")
+
     public ResponseEntity<List<String>> listAudioFiles() throws IOException {
         Path audioFolder = Paths.get(audioStorageDirectory);
 
@@ -367,7 +349,7 @@ public class AudioController1 {
     
 
     
-    @GetMapping("/GetAll")
+
 	public ResponseEntity<List<Addaudio1>> getAllUser() {
 	    List<Addaudio1> getUser = audiorepository.findAll();
 	    return new ResponseEntity<>(getUser, HttpStatus.OK);
@@ -375,7 +357,7 @@ public class AudioController1 {
     
 
     
-    @GetMapping("/GetDetail/{id}")
+
     public ResponseEntity<Addaudio1> getAudioDetail(@PathVariable Long id) {
         try {
             Optional<Addaudio1> audioDetail = audiorepository.findById(id);
@@ -391,7 +373,7 @@ public class AudioController1 {
         }
     }
     
-    @GetMapping("/{id}/filename")
+
     public ResponseEntity<String> getAudioFilename(@PathVariable Long id) {
         try {
             String filename = audioservice.getAudioFilename(id);
@@ -402,7 +384,7 @@ public class AudioController1 {
         }
     }
         
-    @GetMapping("/GetAllThumbnail")
+
     public ResponseEntity<List<byte[]>> getAllThumbnail() {
         List<Addaudio1> getAudio = audiorepository.findAll();
         
@@ -416,7 +398,7 @@ public class AudioController1 {
                 .body(getAudio.stream().map(Addaudio1::getThumbnail).collect(Collectors.toList()));
     }
     
-    @GetMapping("/GetThumbnailsById/{id}")
+
     public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
         try {
             Optional<Addaudio1> audioOptional = audiorepository.findById(id);
@@ -442,7 +424,7 @@ public class AudioController1 {
     }
 
 
-    @DeleteMapping("/audiodelete/{id}")
+
     public ResponseEntity<Map<String, String>> deleteAudioById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
         try {
             // Validate JWT token
@@ -498,7 +480,7 @@ public class AudioController1 {
 
 
     
-    @PatchMapping("/updateaudio/update/{audioId}")
+
     public ResponseEntity<?> updateAudio(		
         @PathVariable Long audioId,
         @RequestParam(value = "audioFile", required = false) MultipartFile audioFile,
