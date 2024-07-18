@@ -51,11 +51,8 @@ public class NotificationService {
 	
 	@Transactional
     public void markAllAsReaduser(Long userId) {
-		notificationadmin.markAllAsRead(userId);
+		notificationuser.markAllAsReaduser(userId);
     }
-	
-	
-	
 	
 //Create Notification with Multipart
 	
@@ -80,6 +77,31 @@ public class NotificationService {
         NotificationDetails savedNotiDetails= notificationdetails.save(Details);
         return (savedNotiDetails.getNotifyId());
     }
+    
+    
+ public Long  createNotification(String username, String createdBy,String heading ,String description,String Link,String detail,Optional<MultipartFile> file) {
+        
+        NotificationDetails Details= new NotificationDetails();
+        Details.setHeading(heading);
+        Details.setLink(Link);
+        if (file.isPresent()) { // Check if file is present (for approach 2)
+            try {
+                Details.setNotimage(ImageUtils.compressImage(file.get().getBytes()));; 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        Details.setUsername(username);
+        Details.setCreatedBy(createdBy);
+        Details.setCreatedDate(LocalDate.now());
+        Details.setIsActive(true);
+        Details.setDescription(description);
+        Details.setDetail(detail);
+        NotificationDetails savedNotiDetails= notificationdetails.save(Details);
+        return (savedNotiDetails.getNotifyId());
+    }
+    
     
     
   //Create Notification with byte image
@@ -199,11 +221,39 @@ public Boolean CommoncreateNotificationUser(Long notificationId, List<String> us
 return true;	
 }
 
-
-
+public Boolean notificationuser(Long notificationId, Long userId) {
+    // Find the user by their ID
+    Optional<UserRegister> userOptional = userregisterrepository.findById(userId);
     
-    
+    // Check if the user exists
+    if (userOptional.isPresent()) {
+        // Get the user
+        UserRegister user = userOptional.get();
 
-    
+        // Create a new NotificationUser
+        NotificationUser notificationUser = new NotificationUser();
+        notificationUser.setUserid(user.getId());
+        notificationUser.setNotificationId(notificationId);
+        notificationUser.setIs_read(false); // Default to not read
+        notificationUser.setIs_Active(true); // Default to active
 
+        // Save the notificationUser entity
+        notificationuser.save(notificationUser);
+
+        return true;
+    } else {
+        // If user does not exist, return false or handle accordingly
+        return false;
+    }
 }
+	
+}
+
+
+
+    
+    
+
+    
+
+

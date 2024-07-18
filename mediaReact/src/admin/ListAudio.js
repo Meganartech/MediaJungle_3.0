@@ -39,7 +39,7 @@ const ListAudio = () => {
       cancelButtonText: 'No, keep it'
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${API_URL}/api/v2/audio/${audioId}`, {
+        fetch(`${API_URL}/api/v2/audiodelete/${audioId}`, {
           method: 'DELETE',
           headers: {
             Authorization: token,

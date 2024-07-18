@@ -14,7 +14,6 @@ const Notification = ({ setisopen, isopen, setcount, handlemarkallasRead }) => {
             Authorization: token,
           },
         });
-
         if (response.status === 200) {
           const data = response.data;
           setnotifications(data);

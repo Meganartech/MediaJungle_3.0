@@ -442,7 +442,7 @@ public class AudioController1 {
     }
 
 
-    @DeleteMapping("/audio/{id}")
+    @DeleteMapping("/audiodelete/{id}")
     public ResponseEntity<Map<String, String>> deleteAudioById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
         try {
             // Validate JWT token
