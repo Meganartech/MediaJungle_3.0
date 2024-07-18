@@ -1,7 +1,6 @@
 package com.VsmartEngine.MediaJungle.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -11,30 +10,20 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AddUser;
-import com.VsmartEngine.MediaJungle.model.Addaudio1;
-import com.VsmartEngine.MediaJungle.model.Paymentsettings;
-import com.VsmartEngine.MediaJungle.model.UserListWithStatus;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 import com.VsmartEngine.MediaJungle.repository.AddNewCategoriesRepository;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 
-@CrossOrigin()
-@RestController
-@RequestMapping("/api/v2/")
+
+@Controller
 public class CategoryController {
 	
 	@Autowired
@@ -51,7 +40,7 @@ public class CategoryController {
 	
 
 	
-	@PostMapping("/AddNewCategories")
+
 	public ResponseEntity<String> createCategory(@RequestHeader("Authorization") String token, @RequestBody AddNewCategories data) {
 	    try {
 	        if (!jwtUtil.validateToken(token)) {
@@ -97,13 +86,13 @@ public class CategoryController {
 
 
 	
-	@GetMapping("/GetAllCategories")
+
 	public ResponseEntity<List<AddNewCategories>> getAllCategories() {
 	    List<AddNewCategories> categories = addnewcategoriesrepository.findAll();
 	    return new ResponseEntity<>(categories, HttpStatus.OK);
 	}
 	
-	@GetMapping("/GetCategoryById/{categoryId}")
+
 	public ResponseEntity<AddNewCategories> getCategoryById(@PathVariable Long categoryId) {
 	    Optional<AddNewCategories> categoryOptional = addnewcategoriesrepository.findById(categoryId);
 	    if (categoryOptional.isPresent()) {
@@ -114,7 +103,7 @@ public class CategoryController {
 	    }
 	}
 	
-	@DeleteMapping("/DeleteCategory/{categoryId}")
+
 	public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId, @RequestHeader("Authorization") String token) {
 	    try {
 	        // Validate JWT token
@@ -164,7 +153,7 @@ public class CategoryController {
 	}
 
 	
-	@PatchMapping("/editCategory/{categoryId}")
+
 	public ResponseEntity<String> editCategories(@PathVariable Long categoryId, @RequestBody AddNewCategories editCategory,@RequestHeader("Authorization") String token) {
 		try {
 	        // Validate JWT token

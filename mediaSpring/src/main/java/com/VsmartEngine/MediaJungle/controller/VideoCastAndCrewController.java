@@ -7,16 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
-import com.VsmartEngine.MediaJungle.model.AddLanguage;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.VideoCastAndCrew;
 import com.VsmartEngine.MediaJungle.model.VideoDescription;
@@ -24,9 +19,8 @@ import com.VsmartEngine.MediaJungle.repository.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 import com.VsmartEngine.MediaJungle.repository.VideoCastandCrewRepository;
 
-@RequestMapping("/api/v2")
-@RestController
-@CrossOrigin()
+
+@Controller
 public class VideoCastAndCrewController {
 	
 	@Autowired
@@ -39,7 +33,7 @@ public class VideoCastAndCrewController {
 	private CastandcrewRepository castandcrewrepository;
 	
 
-	@PostMapping("/save")
+
     public ResponseEntity<?> saveVideoCastAndCrew(
             @RequestParam("videoId") long videoId,
             @RequestParam("castAndCrewIds") List<Long> castAndCrewIds) {
@@ -74,7 +68,7 @@ public class VideoCastAndCrewController {
         }
     }
     
-	@GetMapping("/Getvideocast")
+
     public ResponseEntity<List<VideoCastAndCrew>> getAllPCastvideo() {
         List<VideoCastAndCrew> getcast = videocastandcrewrepository.findAll();
 
@@ -94,7 +88,7 @@ public class VideoCastAndCrewController {
         return new ResponseEntity<>(getcast, HttpStatus.OK);
     }
 	
-	@GetMapping("/GetcastvideoById/{Id}")
+
     public ResponseEntity<VideoCastAndCrew> getcastvideoById(@PathVariable Long Id) {
         Optional<VideoCastAndCrew> langOptional = videocastandcrewrepository.findById(Id);
         if (langOptional.isPresent()) {
@@ -115,7 +109,7 @@ public class VideoCastAndCrewController {
         }
     }
 	
-	 @GetMapping("/get/{videoId}")
+    
 	    public ResponseEntity<List<VideoCastAndCrew>> getCastVideo(@PathVariable Long videoId) {
 	        List<VideoCastAndCrew> castAndCrewList = videocastandcrewrepository.findByVideoDescriptionId(videoId);
 	        if (castAndCrewList.isEmpty()) {

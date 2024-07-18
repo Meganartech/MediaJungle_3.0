@@ -47,7 +47,7 @@ public class PaymentController {
     private PaymentsettingRepository paymentsettingrepository;
         
 
-    @PostMapping("/payment")
+
     public String Payment(@RequestBody Map<String, String> requestData) {
         try {
             Long amount = Long.parseLong(requestData.get("amount"));
@@ -112,7 +112,7 @@ public class PaymentController {
     
    
 
-    @PostMapping("/buy")
+
     public ResponseEntity<String> updatePaymentId(@RequestBody Map<String, String> requestData) {
         try {
             String orderId = requestData.get("orderId");

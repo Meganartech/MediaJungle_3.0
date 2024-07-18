@@ -10,29 +10,20 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.VsmartEngine.MediaJungle.model.AddLanguage;
-import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AddUser;
-import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 import com.VsmartEngine.MediaJungle.repository.AddLanguageRepository;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 
-@CrossOrigin()
-@RestController
-@RequestMapping("/api/v2/")
+
+@Controller
 public class LanguageController {
 	
 	@Autowired
@@ -48,7 +39,7 @@ public class LanguageController {
 	private AddUserRepository adduserrepository;
 	
 	
-	@PostMapping("/AddLanguage")
+
 	public ResponseEntity<String> createEmployee(@RequestHeader("Authorization") String token,@RequestBody AddLanguage data) {
 		try {
 	        if (!jwtUtil.validateToken(token)) {
@@ -89,13 +80,13 @@ public class LanguageController {
 		}
 	
 	
-	@GetMapping("/GetAllLanguage")
+
 	public ResponseEntity<List<AddLanguage>> getAllLanguage() {
 	    List<AddLanguage> categories = addlanguagerepository.findAll();
 	    return new ResponseEntity<>(categories, HttpStatus.OK);
 	}
 	
-	@GetMapping("/GetLanguageById/{languageId}")
+
 	public ResponseEntity<AddLanguage> getTagById(@PathVariable Long languageId) {
 	    Optional<AddLanguage> langOptional = addlanguagerepository.findById(languageId);
 	    if (langOptional.isPresent()) {
@@ -107,7 +98,7 @@ public class LanguageController {
 	    
 	}
 	
-	@DeleteMapping("/DeleteLanguage/{categoryId}")
+
     public ResponseEntity<?> deleteLanguage(@PathVariable Long categoryId,@RequestHeader("Authorization") String token) {
 		 try {
 		        // Validate JWT token
@@ -152,7 +143,7 @@ public class LanguageController {
     }
 }
 	
-	@PatchMapping("/editLanguage/{languageId}")
+
 	public ResponseEntity<String> editLanguage(@PathVariable Long languageId,@RequestBody AddLanguage editlanguage,@RequestHeader("Authorization") String token) {
 		try {
 	        // Validate JWT token

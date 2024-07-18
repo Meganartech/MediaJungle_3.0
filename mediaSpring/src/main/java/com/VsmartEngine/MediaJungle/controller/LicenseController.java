@@ -27,12 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -51,9 +49,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 
 
-@CrossOrigin
-@RestController
-@RequestMapping("/api/v2/")
+
+@Controller
 public class LicenseController {
 	
 	
@@ -79,8 +76,8 @@ public class LicenseController {
 	 
 	 private  Logger logger = LoggerFactory.getLogger(LicenseController.class);
 
-		@GetMapping("/GetAllUser")
-		public ResponseEntity<UserListWithStatus> getAllUser() {
+
+		public ResponseEntity<UserWithStatus> getAllUser() {
 		    List<AddUser> getUser = adduserrepository.findAll();
 		    Iterable<License> licenseIterable = licenseRepository.findAll();
 	    	List<License> licenseList = StreamSupport.stream(licenseIterable.spliterator(), false)
@@ -160,13 +157,13 @@ public class LicenseController {
 		    
 		   
 //		    logger.info(" total no of course  ======="+count.toString());
-		    UserListWithStatus userListWithStatus = new UserListWithStatus(getUser, isEmpty, valid,type, dataList);
+		    UserWithStatus userListWithStatus = new UserWithStatus(getUser, isEmpty, valid,type, dataList);
 		   
 		    return new ResponseEntity<>(userListWithStatus,HttpStatus.OK);
 		}
 		
 		
-		@GetMapping("/count")
+
 		public ResponseEntity<Integer> count() {
 			
 			Iterable<License> licenseIterable = licenseRepository.findAll();
@@ -404,7 +401,7 @@ public class LicenseController {
 		 //            return ResponseEntity.badRequest().build();
 		 //        }
 		 //    }
-	 @PostMapping("/uploadfile")
+
 		    public ResponseEntity<License> upload(@RequestParam("audioFile") MultipartFile File, @RequestParam("lastModifiedDate") String lastModifiedDate) {
 		        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		        

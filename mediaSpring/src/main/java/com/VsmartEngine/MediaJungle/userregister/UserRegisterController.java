@@ -45,7 +45,7 @@ public class UserRegisterController {
 	@Autowired
     private NotificationService notificationservice;
         
-    @PostMapping("/userregister")
+
 	public ResponseEntity<UserRegister> register(@RequestParam("username") String username,
 			            @RequestParam("email") String email,
 			            @RequestParam("password") String password,
@@ -76,13 +76,13 @@ public class UserRegisterController {
 			}
 
     
-    @GetMapping("/GetAllUsers")
+
     public ResponseEntity<List<UserRegister>> getAllUser() {
         List<UserRegister> getUser = userregisterrepository.findAll();
         return new ResponseEntity<>(getUser, HttpStatus.OK);
     }
      
-    @GetMapping("/GetUserById/{id}")
+
     public ResponseEntity<UserRegister> getUserById(@PathVariable Long id) {
         Optional<UserRegister> userOptional = userregisterrepository.findById(id);
         if (userOptional.isPresent()) {
@@ -93,8 +93,7 @@ public class UserRegisterController {
     }
   
  
-    @PostMapping("/login")
-    @Transactional
+
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         String email = loginRequest.get("email");
         String password = loginRequest.get("password");
@@ -155,7 +154,6 @@ public class UserRegisterController {
 
 
 
-    @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
         // Extract the token from the Authorization header
         // Check if the token is valid (e.g., not expired)
@@ -180,7 +178,7 @@ public class UserRegisterController {
 //        }
 //    }
 
-    @PostMapping("/forgetPassword")
+
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> loginRequest) {
         try {
             // Finding the user by email

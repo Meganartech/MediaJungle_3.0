@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.VsmartEngine.MediaJungle.model.AddUser;
 
-public class UserListWithStatus {
+public class UserWithStatus {
 
 	private List<AddUser> userList;
     private boolean isEmpty;
@@ -25,7 +25,13 @@ public class UserListWithStatus {
         return userList;
     }
 
-    public UserListWithStatus(List<AddUser> userList, boolean isEmpty, boolean valid, boolean type,
+
+
+	public boolean getType() {
+		return type;
+	}
+    
+    public UserWithStatus(List<AddUser> userList, boolean isEmpty, boolean valid, boolean type,
 		List<Map<String, Object>> dataList) {
 	super();
 	this.userList = userList;
@@ -35,11 +41,7 @@ public class UserListWithStatus {
 	this.dataList = dataList;
 }
 
-	public boolean getType() {
-		return type;
-	}
-    
-    public List<Map<String, Object>> getDataList() {
+	public List<Map<String, Object>> getDataList() {
         return dataList;
     }
 

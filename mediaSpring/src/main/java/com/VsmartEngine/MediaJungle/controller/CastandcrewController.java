@@ -15,33 +15,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
-import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
-import com.VsmartEngine.MediaJungle.model.VideoDescription;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
-import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 
-@CrossOrigin()
-@RestController
-@RequestMapping("/api/v2/")
+
+@Controller
 public class CastandcrewController {
 	
 	@Autowired
@@ -56,7 +45,7 @@ public class CastandcrewController {
 	@Autowired
 	private AddUserRepository adduserrepository;
 	
-	@PostMapping("/addcastandcrew")
+
 	public ResponseEntity<?> addCast(@RequestParam("image") MultipartFile image,
 	                                 @RequestParam("name") String name,
 	                                 @RequestHeader("Authorization") String token) throws IOException {
@@ -111,7 +100,7 @@ public class CastandcrewController {
 	
 	
 	
-	@GetMapping("/GetAllcastandcrew")
+
     public ResponseEntity<List<CastandCrew>> getAllPCastandcrew() {
         List<CastandCrew> getcast = castandcrewrepository.findAll();
         for (CastandCrew cast : getcast) {
@@ -121,7 +110,7 @@ public class CastandcrewController {
         return new ResponseEntity<>(getcast, HttpStatus.OK);
     }
 	
-	@GetMapping("/getcast/{id}")
+
     public ResponseEntity<CastandCrew> getcast(@PathVariable Long id) {
         try {
             Optional<CastandCrew> castDetail = castandcrewrepository.findById(id);
@@ -136,7 +125,7 @@ public class CastandcrewController {
         }
     }
 	
-	@GetMapping("/GetAllcastthumbnail")
+
     public ResponseEntity<List<byte[]>> getcastthumbnail() {
         List<CastandCrew> getcastthumbnail = castandcrewrepository.findAll();
         
@@ -151,7 +140,7 @@ public class CastandcrewController {
     }
 	
 	
-    @GetMapping("/GetThumbnailsforcast/{id}")
+
     public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
         try {
             Optional<CastandCrew> castOptional = castandcrewrepository.findById(id);
@@ -177,7 +166,7 @@ public class CastandcrewController {
     }
 	
 	
-	@DeleteMapping("/Deletecastandcrew/{Id}")
+
     public ResponseEntity<?> deletecast(@PathVariable Long Id,@RequestHeader("Authorization") String token) {
 		try {
 	        // Validate JWT token
@@ -223,8 +212,8 @@ public class CastandcrewController {
 	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
-	
-	@PatchMapping("/updatecastandcrew/{id}")
+
+    
 	public ResponseEntity<String> updateCast(
 	        @PathVariable Long id,
 	        @RequestParam(value = "image", required = false) MultipartFile image,

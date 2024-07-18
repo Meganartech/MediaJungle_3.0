@@ -9,28 +9,21 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
-import com.VsmartEngine.MediaJungle.model.PlanDetails;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.repository.PaymentsettingRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 
-@CrossOrigin()
-@RestController
-@RequestMapping("/api/v2/")
+
+@Controller
 public class PaymentSettingController {
 	
 	@Autowired
@@ -45,7 +38,7 @@ public class PaymentSettingController {
 	@Autowired
 	private AddUserRepository adduserrepository;
 	
-	@PostMapping("/AddrazorpayId")
+
 	public ResponseEntity<?>  Addpaymentsetting (@RequestParam("razorpay_key") String razorpay_key,
 			@RequestParam("razorpay_secret_key")String razorpay_secret_key,
 			@RequestHeader("Authorization") String token){
@@ -88,13 +81,13 @@ public class PaymentSettingController {
 	    }
 	}
 	
- 	@GetMapping("/getrazorpay")
+
 	public ResponseEntity<List<Paymentsettings>> getAllrazorpay() {
         List<Paymentsettings> getPlan = paymentsettingrepository.findAll();
         return new ResponseEntity<>(getPlan, HttpStatus.OK);
     }
 	
-	@PatchMapping("/Editrazorpay/{id}")
+
 	public ResponseEntity<String> editrazorpay(@PathVariable Long id , @RequestBody Paymentsettings updatedrazorpay,
 			@RequestHeader("Authorization") String token){
 		  try {
