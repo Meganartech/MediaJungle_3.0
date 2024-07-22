@@ -29,7 +29,7 @@ const Video = () => {
     // Fetch videos from the backend API
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/videogetall`);
+        const response = await axios.get(`${API_URL}/api/v2/videogetall`);
         setUsers(response.data);  
       } catch (error) {
         console.log('Error fetching users:', error);

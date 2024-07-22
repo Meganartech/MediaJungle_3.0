@@ -277,7 +277,7 @@ const hasPaymentPlan = () => {
       const formData = new FormData();
       formData.append('video', file);
 
-      const response = await axios.post(`${API_URL}/api/postit`, formData, {
+      const response = await axios.post(`${API_URL}/api/v2/postit`, formData, {
 
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -315,7 +315,7 @@ const hasPaymentPlan = () => {
         formData.append('paid', selectedOption === 'paid' ? 'true' : 'false');
         formData.append('id', updatedata.id);
 
-        const response = await axios.post(`${API_URL}/api/updatedescriprion`, formData, {
+        const response = await axios.post(`${API_URL}/api/v2/updatedescriprioni`, formData, {
             headers: {
                 Authorization: token,
                 'Content-Type': 'multipart/form-data'

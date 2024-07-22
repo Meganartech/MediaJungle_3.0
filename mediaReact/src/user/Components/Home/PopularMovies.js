@@ -45,7 +45,7 @@ const PopularMovies = () => {
      
   
     // fetch category data from the backend
-    fetch(`${API_URL}/api/videogetall`)
+    fetch(`${API_URL}/api/v2/videogetall`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -92,7 +92,7 @@ const PopularMovies = () => {
     // ------------------------------------------------------------------------------------
     try {
       // Fetch image data
-      const response = await fetch(`${API_URL}/api/GetvideoThumbnail`);
+      const response = await fetch(`${API_URL}/api/v2/GetvideoThumbnail`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

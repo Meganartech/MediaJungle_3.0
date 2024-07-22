@@ -24,24 +24,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
-import com.VsmartEngine.MediaJungle.model.AddCertificate;
 import com.VsmartEngine.MediaJungle.model.AddUser;
-import com.VsmartEngine.MediaJungle.model.Addaudio1;
-import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.FileModel;
 import com.VsmartEngine.MediaJungle.model.VideoDescription;
 import com.VsmartEngine.MediaJungle.model.Videos;
@@ -55,7 +46,6 @@ import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 
-
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -64,9 +54,7 @@ import jakarta.servlet.http.HttpServletRequest;
 //import java.nio.file.Files;
 
 
-@RequestMapping("/api")
-@RestController
-@CrossOrigin()
+@Controller
 public class VideoController {
 
 	@Value("${project.video}")
@@ -168,7 +156,7 @@ public class VideoController {
 //	        }
 //	    }
 	
-	@PostMapping("/uploaddescription")
+
     public ResponseEntity<VideoDescription> uploadVideoDescription(
             @RequestParam("moviename") String moviename,
             @RequestParam("description") String description,
@@ -291,7 +279,7 @@ public class VideoController {
 //        }
 //    }
 	
-	@PostMapping("/updatedescriprion")
+
 	public ResponseEntity<VideoDescription> updatedescription(
 	        @RequestParam("Movie_name") String moviename,
 	        @RequestParam("description") String description,
@@ -351,7 +339,7 @@ public class VideoController {
 	
 	
 	//Update DataModel of Video .
-			@PostMapping("/postit")
+
 			public Videos uploadingVideo(@RequestParam("video") MultipartFile video) throws IOException
 			{
 //			try {
@@ -380,8 +368,8 @@ public class VideoController {
 //				StreamUtils.copy(resource, response.getOutputStream());
 //			}
 			
-			@GetMapping(value = "/play/{id}")
-			 private ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
+
+			 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
 		        try {
 
 		            Optional<VideoDescription> optionalLesson = videodescriptionRepository.findById(id);
@@ -502,7 +490,7 @@ public class VideoController {
 		
 	
 			//4.To get all video  .
-			@GetMapping(value = "/updatevideo")
+
 			public ResponseEntity<String> updateById() throws IOException {
 				videoService.updatevideoWithFile();
 //			    
@@ -528,7 +516,7 @@ public class VideoController {
 //		        }
 //		    }
 //			
-			 @GetMapping(value = "/videogetall")
+
 			    public ResponseEntity<List<VideoDescription>> videogetall() {
 			        try {
 			            List<VideoDescription> videoDetails = videodescriptionRepository.findAll();
@@ -546,7 +534,7 @@ public class VideoController {
 			        }
 			    }
 			 
-			 @GetMapping("/GetvideoThumbnail")
+			 
 			    public ResponseEntity<List<byte[]>> getAllThumbnail() {
 			        List<VideoDescription> getVideo = videodescriptionRepository.findAll();
 			       
@@ -560,7 +548,8 @@ public class VideoController {
 			                .body(getVideo.stream().map(VideoDescription::getThumbnail).collect(Collectors.toList()));
 			    }
 			 
-			 @DeleteMapping("/video/{id}")
+
+			    
 			 public ResponseEntity<?> deleteVideoById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
 			     try {
 			         // Validate JWT token
@@ -622,7 +611,7 @@ public class VideoController {
 			 
 			 
 			
-			 @GetMapping("/GetvideoDetail/{id}")
+
 			    public ResponseEntity<VideoDescription> getAudioDetail(@PathVariable Long id) {
 			        try {
 			            Optional<VideoDescription> audioDetail = videodescriptionRepository.findById(id);
@@ -653,16 +642,16 @@ public class VideoController {
 	
 	
 	
-	@PostMapping("/save")
-	public ResponseEntity<?> saveVideo(@RequestBody Videos video) {
-//		try {
-//			Videos saveVideos = service.createPost(video);
-//			return new ResponseEntity<Videos>(saveVideos, HttpStatus.OK);
-//		} catch (ResourceNotFound e) {
-//			ControllerException controllerException = new ControllerException();
-			return new ResponseEntity<Videos>(videoService.createPost(video),HttpStatus.OK);
-//		}
-	}
+//	@PostMapping("/save")
+//	public ResponseEntity<?> saveVideo(@RequestBody Videos video) {
+////		try {
+////			Videos saveVideos = service.createPost(video);
+////			return new ResponseEntity<Videos>(saveVideos, HttpStatus.OK);
+////		} catch (ResourceNotFound e) {
+////			ControllerException controllerException = new ControllerException();
+//			return new ResponseEntity<Videos>(videoService.createPost(video),HttpStatus.OK);
+////		}
+//	}
 
 	//1. get Video by id ;
 //	@GetMapping("/get/{id}")
@@ -761,8 +750,8 @@ public class VideoController {
 //		StreamUtils.copy(resourse,response.getOutputStream());
 //	}
 	
-	
-	@GetMapping("/GetThumbnailsById/{id}")
+
+			 
     public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
         try {
             Optional<VideoDescription> audioOptional = videodescriptionRepository.findById(id);
@@ -787,7 +776,7 @@ public class VideoController {
         }
     }
 
-	 @GetMapping("/GetAllThumbnaill")
+
 	    public ResponseEntity<List<byte[]>> getAllThumbnaill() {
 	        List<VideoDescription> getAudio = videodescriptionRepository.findAll();
 	        

@@ -257,7 +257,7 @@ const hasPaymentPlan = () => {
       const formData = new FormData();
       formData.append('video', file);
 
-      const response = await axios.post(`${API_URL}/api/postit`, formData, {
+      const response = await axios.post(`${API_URL}/api/v2/postit`, formData, {
 
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -503,7 +503,7 @@ const save = async (e) => {
                 formData.append('paid', selectedOption === 'paid');
 
                 // Upload video description
-                const uploadResponse = await axios.post(`${API_URL}/api/uploaddescription`, formData, {
+                const uploadResponse = await axios.post(`${API_URL}/api/v2/uploaddescription`, formData, {
                   headers: {
                     Authorization: token, // Pass the token in the Authorization header
                    'Content-Type': 'multipart/form-data',
