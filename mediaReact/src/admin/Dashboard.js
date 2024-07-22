@@ -71,7 +71,7 @@ const Dashboard = () => {
   const [GetUser,setGetUser] = useState(null)
 
   useEffect(() => {
-    fetch(`${API_URL}/api/videogetall`)
+    fetch(`${API_URL}/api/v2/videogetall`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

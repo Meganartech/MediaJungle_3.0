@@ -21,7 +21,7 @@ const AddAud = () => {
       const formData = new FormData();
       formData.append('video', file);
 
-      const response = await axios.post(`${API_URL}/api/postit`, formData, {
+      const response = await axios.post(`${API_URL}/api/v2/postit`, formData, {
         onUploadProgress: (progressEvent) => {
           const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
           setUploadProgress(progress);

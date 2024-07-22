@@ -28,7 +28,7 @@ const Userplayer = () => {
   return (
 <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
 <ReactPlayer
-  url={`${API_URL}/api/play/${id}`} // Example URL, replace it with your video URL
+  url={`${API_URL}/api/v2/play/${id}`} // Example URL, replace it with your video URL
   playing={true}
   controls={true}
   width="100%"

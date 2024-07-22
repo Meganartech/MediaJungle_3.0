@@ -31,7 +31,7 @@ const VideoPlayer = () => {
           
       <ReactPlayer
         controls={true}
-        url={`${API_URL}/api/play/${id}`}
+        url={`${API_URL}/api/v2/play/${id}`}
         config={{
           file: {
             attributes: {

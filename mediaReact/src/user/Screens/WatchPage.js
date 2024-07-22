@@ -31,7 +31,7 @@ const WatchPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/GetvideoDetail/${id}`);
+        const response = await axios.get(`${API_URL}/api/v2/GetvideoDetail/${id}`);
         setgetall(response.data);
         console.log(response.data);
       } catch (error) {
@@ -42,7 +42,7 @@ const WatchPage = () => {
 
     const fetchThumbnail = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/GetThumbnailsById/${id}`);
+        const response = await axios.get(`${API_URL}/api/v2/GetThumbnailsByid/${id}`);
         if (response.data) {
           setThumbnail(response.data);
         }
