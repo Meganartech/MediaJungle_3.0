@@ -77,6 +77,7 @@ import AdminLayout from './admin/AdminLayout';
 import Viewcastandcrew from './admin/Viewcastandcrew';
 import Editcastandcrew from './admin/Editcastandcrew';
 import Userforgetpassword from './user/Screens/Userforgetpassword';
+import PaymentHistory from './admin/PaymentHistory';
 
 const App = () => {
   const location = useLocation();
@@ -206,6 +207,7 @@ const App = () => {
             <Route path='Viewcastandcrew' element={<Viewcastandcrew />} />
             <Route path='Editcastandcrew' element={<Editcastandcrew />} />
             <Route path='subscriptionPayments' element= {<SubscriptionPayments/>} />
+            <Route path='paymentHistory/:userId' element={<PaymentHistory />} />
             <Route path='Adminplan' element= {<Adminplan/>} />
             <Route path='PlanDetailsList' element={<PlanDetailsList/>}/>
             <Route path='Editplan' element={<Editplan />} />
