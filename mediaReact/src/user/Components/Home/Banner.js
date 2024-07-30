@@ -23,7 +23,7 @@ const Banner = () => {
 
     const fetchAllMovies = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/v2`);
+            const response = await fetch(`${API_URL}/api/v2/videogetall`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

@@ -1,0 +1,12 @@
+2024-07-30 11:18:47 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: Payment with arguments: [{amount=2000, userId=13, planname=platinum}]
+2024-07-30 11:18:48 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: Payment with result: order_OejaZjCNArtmom
+2024-07-30 11:19:14 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: Payment with arguments: [{amount=2000, userId=13, planname=platinum}]
+2024-07-30 11:19:14 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: Payment with result: order_Oejb2ik5emQEv9
+2024-07-30 11:19:48 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: Payment with arguments: [{amount=2000, userId=13, planname=platinum}]
+2024-07-30 11:19:49 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: Payment with result: order_OejbeXgNGrcAfj
+2024-07-30 11:20:57 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: Payment with arguments: [{amount=200, userId=13, planname=midplan}]
+2024-07-30 11:20:57 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: Payment with result: order_OejcrR87gNrBqb
+2024-07-30 11:21:25 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: updatePaymentId with arguments: [{paymentId=pay_Oejd5dDvlm4ocu, orderId=order_OejcrR87gNrBqb, planname=midplan, userId=13, validity=100, signature=97802fb60e7c711410897ca5ae64ba3b84862f75451fc3e0b55aeb4a58d39fd2}]
+2024-07-30 11:21:26 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: updatePaymentId with result: <200 OK OK,Payment ID updated successfully for user ID: 13,[]>
+2024-07-30 11:22:19 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: Payment with arguments: [{amount=2000, userId=13, planname=platinum}]
+2024-07-30 11:22:19 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: Payment with result: You have already paid for the plan. Your subscription is valid until 2024-11-07
