@@ -74,7 +74,7 @@ const handlesubmit = async (amount, userId, planname, validity) => {
       description: "This is for testing",
       handler: async function (response) {
         // Send the payment ID and signature to the server
-        await sendPaymentIdToServer(response.razorpay_payment_id, order, response.status_code, planname, userId, amount, validity, response.razorpay_signature);
+        await sendPaymentIdToServer(response.razorpay_payment_id, order, response.status_code, planname, userId, validity, response.razorpay_signature);
         // Handle success response
         console.log("Payment successful:", response);
         Swal.fire('Success', 'Payment successful!', 'success');
@@ -106,7 +106,7 @@ const handlesubmit = async (amount, userId, planname, validity) => {
   }
 };
 
-const sendPaymentIdToServer = async (paymentId, order, status_code, planname, userId, amount, validity, signature) => {
+const sendPaymentIdToServer = async (paymentId, order, status_code, planname, userId, validity, signature) => {
   try {
     const response = await fetch(`${API_URL}/api/v2/buy`, {
       method: 'POST',
@@ -119,7 +119,6 @@ const sendPaymentIdToServer = async (paymentId, order, status_code, planname, us
         status_code: status_code,
         planname: planname,
         userId: userId,
-        amount: amount,
         validity: validity,
         signature: signature
       })

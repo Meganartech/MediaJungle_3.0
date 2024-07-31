@@ -115,12 +115,7 @@ public class AudioController1 {
 	                 }
 	                 notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
 
-	                 // Fetch all regular users from UserRegister table
-	                 //List<UserRegister> regularUsers = userregisterrepository.findAll();
-	                 //for (UserRegister regularUser : regularUsers) {
-	                //     notiUserSet.add(regularUser.getEmail());
-	                // }
-	                // notificationservice.CommoncreateNotificationUser(notifyId, new ArrayList<>(notiUserSet));
+	                 
 	             }
 
 	             return ResponseEntity.ok().body(savedAudio);
