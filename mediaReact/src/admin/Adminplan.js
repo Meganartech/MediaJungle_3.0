@@ -130,12 +130,13 @@ fetchData();
 
 
   <div className="container-fluid">
+          
     <div className="container2">
       <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item text-white">
-          <Link to="/Dashboard">Dashboard</Link>
+        <Link to="/admin/PlanDetailsList">Plans</Link>
         </li>
-        <li className="breadcrumb-item active">Plan Details</li>
+        <li className="breadcrumb-item active">Add Plan</li>
       </ol>
 
       <div className='card-body'>

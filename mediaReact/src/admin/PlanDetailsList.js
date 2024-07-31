@@ -11,7 +11,9 @@ const PlanDetailsList = () => {
     const navigate = useNavigate();
     const token = sessionStorage.getItem('tokenn')
 
-  
+    const handleClick = (link) => {
+      navigate(link);
+    }
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllPlans`)
@@ -107,20 +109,22 @@ const PlanDetailsList = () => {
   return (
     
       <div className="container-fluid">
-   
+    <div className='AddArea'>
+          <button className='btn btn-custom' onClick={() => handleClick("/admin/AdminPlan")}>Add Plan</button>
+        </div>  <br/>
      <div className='container2'>
         <ol className="breadcrumb mb-4">
-        <li className="breadcrumb-item text-white"><Link to="/Dashboard">Dashboard</Link>
+        <li className="breadcrumb-item text-white"><Link to="/admin/PlanDetailsList">Plans</Link>
         </li>
           <li className="breadcrumb-item active">List Plans</li>
         </ol>
-        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+        {/* <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
             
               <div className="card-1 mb-4" style={{ height: "auto" }}>
                 <div className="card-header">
                   <i className="fas fa-table me-1"></i>
                   Plan List
-                </div>
+                </div> */}
                 <div className="card-body profile-card-body">
                   <table id="datatablesSimple">
                     <thead>
@@ -161,8 +165,8 @@ const PlanDetailsList = () => {
 
     </div>
     </div>   
-    </div>
-    </div>
+    // </div>
+    // </div>
 
   )
 }

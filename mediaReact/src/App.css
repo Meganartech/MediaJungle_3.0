@@ -4797,12 +4797,16 @@ textarea.form-control-lg {
 
 .breadcrumb {
   display: flex;
+   width: 100%; 
   flex-wrap: wrap;
   padding: 0 0;
   margin-bottom: 1rem;
   list-style: none;
 }
-
+.breadcrumb-item {
+  flex: 1; /* Make the breadcrumb item take up the full width */
+  /* text-align: center; Center the text within the breadcrumb item */
+}
 .breadcrumb-item + .breadcrumb-item {
   padding-left: 0.5rem;
 }
@@ -11424,7 +11428,7 @@ body {
   z-index: 1039;
 }
 .sb-topnav .navbar-brand {
-  width: 225px;
+  width: 200px;
   margin: 0;
 }
 .sb-topnav.navbar-dark #sidebarToggle {
@@ -11758,12 +11762,12 @@ nav {
   width: 240px; /* Adjust the width to fit your sidebar */
   height: 100vh; /* Ensure the sidebar has sufficient height */
   overflow-y: auto;
-  background-image: url('/public/bg.jpg'); /* Path to your background image */
+  background-color: #2b2a52; /* Path to your background image */
   background-size: cover; /* Ensure the background image covers the entire sidebar */
   padding: 60px 0 20px 0; /* Adjust padding to your liking */
 }
 .sidebar .nav-link {
-  background-image: url('/public/bg.jpg');
+  background-color: #2b2a52; 
 
   /* Add other styling properties as needed */
 }
@@ -11996,17 +12000,15 @@ font-weight: 900;
   margin-right: 5px;
   font-weight: bold;
 }
+
 /* App.css or separate CSS file */
 
-.profile-card-body {
-  overflow-x: auto; /* Enable horizontal scrolling if needed */
-  width: fit-content; /* Adjust width to fit the table and buttons */
+.table-container {
+  width: 100%;
+ 
 }
-/* App.css or separate CSS file */
-/* App.css or separate CSS file */
 
-.profile-card-body {
-  overflow-x: auto; /* Enable horizontal scrolling if needed */
+. -card-body {
   width: 100%; /* Set the width to 100% */
   padding: 0; /* Remove padding to avoid extra width */
   box-sizing: border-box; /* Include padding and border in the total width */
@@ -12014,6 +12016,7 @@ font-weight: 900;
 
 .profile-card-body table {
   width: 100%; /* Set the table width to 100% */
+  border-collapse: collapse; /* Optional: to remove spacing between table cells */
 }
 
 .profile-card-body th,
@@ -12025,5 +12028,4 @@ font-weight: 900;
 .profile-card-body td:last-child {
   white-space: normal; /* Allow line wrapping in the last column */
 }
-
 

@@ -10,7 +10,9 @@ const ViewCertificate= () => {
   const navigate = useNavigate();
   const token = sessionStorage.getItem('tokenn')
   let Id;
-
+  const handleClick = (link) => {
+    navigate(link);
+  }
   useEffect(() => {
     // fetch category data from the backend
     fetch(`${API_URL}/api/v2/GetAllCertificate`)
@@ -96,11 +98,14 @@ const handleDeleteCertificate = (certificateId) => {
 return (
  
   <div className="container-fluid">
+     <div className='AddArea'>
+          <button className='btn btn-custom' onClick={() => handleClick("/admin/AddCertificate")}>Add Certificate</button>
+        </div><br/>
     <div className='container2'>
     <ol className="breadcrumb mb-4">
-    <li className="breadcrumb-item text-white"><Link to="admin/Dashboard">Dashboard</Link>
+    <li className="breadcrumb-item text-white">Certificates
     </li>
-      <li className="breadcrumb-item active">View Certificate</li>
+      {/* <li className="breadcrumb-item active">View Certificate</li> */}
     </ol>
     
       <div className="card-body">

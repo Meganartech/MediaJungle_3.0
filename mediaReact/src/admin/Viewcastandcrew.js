@@ -9,6 +9,9 @@ const Viewcastandcrew = () => {
   const [image,setimage] = useState([]);
   const navigate = useNavigate();
   const token = sessionStorage.getItem('tokenn')
+  const handleClick = (link) => {
+    navigate(link);
+  }
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllcastandcrew`)
@@ -94,20 +97,18 @@ const Viewcastandcrew = () => {
 
   return (
     <div className="container-fluid">
+        <div className='AddArea'>
+          <button className='btn btn-custom' onClick={() => handleClick("/admin/AddCastCrew")}>Add Cast and Crew</button>
+        </div><br/>
       <div className='container2'>
         <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item text-white">
-            <Link to="/Dashboard">Dashboard</Link>
+          Cast and Crews
           </li>
-          <li className="breadcrumb-item active">Cast and crew</li>
+          {/* <li className="breadcrumb-item active">Cast and crew</li> */}
         </ol>
-        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-
-          <div className="card-1 mb-4" style={{ height: "auto" }}>
-            <div className="card-header">
-              <i className="fas fa-table me-1"></i>
-              Cast And Crew List
-            </div>
+       
+         
             <div className="card-body profile-card-body">
               <table id="datatablesSimple">
                 <thead>
@@ -146,10 +147,8 @@ const Viewcastandcrew = () => {
               </table>
             </div>
           </div>
-
         </div>
-      </div>
-    </div>
+   
   )
 }
 

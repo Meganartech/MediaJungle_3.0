@@ -14,8 +14,13 @@ const Profile = () => {
   const userid = parseInt(sessionStorage.getItem('id'), 10); // Get user ID from session storage
   const name = sessionStorage.getItem('username');
   const navigate = useNavigate();
-  let Id;
+  const [isvalid, setIsvalid] = useState();
+  const [isEmpty, setIsEmpty] = useState();
 
+  let Id;
+  const handleClick = (link) => {
+    navigate(link);
+  }
   useEffect(() => {
 
     // Fetch user data from the backend
@@ -193,19 +198,22 @@ const Profile = () => {
   return (
 
       <div className="container-fluid"   >
-<div className='container2'>
+        <div className='AddArea'>
+          <button className='btn btn-custom' onClick={() => handleClick("/admin/AddUser")}>Add SubAdmin</button>
+        </div>  <br/>
         {/* <Sample /> */}
-       
-        <ol className="breadcrumb mb-4">
+        <div className='container2'>
+        <ol className="breadcrumb mb-4" style={{ width: '100%' }}>
           <li className="breadcrumb-item text-white">
-            <Link to="/Dashboard">Dashboard</Link>
+            Manage SubAdmin
           </li>
-          <li className="breadcrumb-item active">{"Manage SubAdmin"}</li>
+          {/* <li className="breadcrumb-item active">{"Manage SubAdmin"}</li> */}
         </ol>
       
           {/* {name === 'admin' 
           ? */}
             <div className="card-body profile-card-body">
+            <div class="table-container">
               <table id="datatablesSimple">
                 <thead>
                   <tr>
@@ -253,8 +261,9 @@ const Profile = () => {
                     </tr>
                   ))}
                 </tbody>
+              
               </table>
-         
+              </div>
           {/* : 
           <div className="card-body">
           <form onSubmit={handleSubmit} method='POST'>

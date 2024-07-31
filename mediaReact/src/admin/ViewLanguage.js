@@ -10,6 +10,9 @@ const ViewLanguage = () => {
   const navigate = useNavigate();
   const [language, setlanguage] = useState([]);
   const token = sessionStorage.getItem('tokenn')
+  const handleClick = (link) => {
+    navigate(link);
+  }
 
 
   useEffect(() => {
@@ -99,11 +102,14 @@ const handleDeleteLanguage = (languageId) => {
     
 
       <div className="container-fluid">
+         <div className='AddArea'>
+          <button className='btn btn-custom' onClick={() => handleClick("/admin/AddLanguage")}>Add Language</button>
+        </div><br/>
 <div className='container2'>
         <ol className="breadcrumb mb-4">
-        <li className="breadcrumb-item text-white"><Link to="/Dashboard">Dashboard</Link>
+        <li className="breadcrumb-item text-white">Languages
         </li>
-          <li className="breadcrumb-item active">View Languages</li>
+          {/* <li className="breadcrumb-item active">View Languages</li> */}
         </ol>
          
           <div className="card-body">

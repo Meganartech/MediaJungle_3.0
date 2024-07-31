@@ -4126,7 +4126,7 @@ input[type="button"].btn-block {
 }
 
 .navbar {
-  position: relative;
+  /* position: relative; */
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -4746,7 +4746,7 @@ input[type="button"].btn-block {
   padding: 1.5rem 1rem;
   margin-bottom: 1rem;
   list-style: none;
-  background-color:#19094A;
+  background-color: #2b2a52; ;
   border-radius: 0.35rem;
 }
 
@@ -11391,10 +11391,14 @@ h1 {
 /* addVideo.css */
 
 .container-fluid {
-
-padding-top: 20px;
+  background-image: url('../img/Frame.png');
+  background-repeat:no-repeat;
+  background-size:cover;
+padding-top: 30px;
 }
-
+.con-flu{
+  padding-top:120px;
+}
 .card {
 max-width: 65rem;
 /* margin: 0 auto; */
@@ -11548,12 +11552,6 @@ h1 {
 }
 
 
-/* addAudio.css */
-
-.container-fluid {
-
-padding-top: 20px;
-}
 
 .card {
 max-width: 600px;
@@ -11707,11 +11705,7 @@ h1 {
 }
 
 
-/* addVideo.css */
 
-.container-fluid {
-padding-top: 20px;
-}
 
 .card-1 {
 max-width: 60rem;
@@ -11784,13 +11778,6 @@ background-color: #138496;
 color: red;
 font-size: 14px;
 margin-top: 5px;
-}
-
-
-
-/* AddUser.css */
-.container-fluid {
-  padding: 20px;
 }
 
 .card {
