@@ -9,6 +9,9 @@ const ViewTag = () => {
      const navigate = useNavigate();
   const [Tag, setTag] = useState([]);
   const token = sessionStorage.getItem('tokenn')
+  const handleClick = (link) => {
+    navigate(link);
+  }
 
   useEffect(() => {
     // fetch category data from the backend
@@ -91,11 +94,14 @@ const handleDeleteTag = (tagId) => {
   return (
       
         <div className="container-fluid">
+            <div className='AddArea'>
+          <button className='btn btn-custom' onClick={() => handleClick("/admin/AddTag")}>Add Tag</button>
+        </div><br/>
         <div className='container2'>
           <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item text-white"><Link to="/Dashboard">Dashboard</Link>
+          <li className="breadcrumb-item text-white">Tags
           </li>
-            <li className="breadcrumb-item active">View Tags</li>
+            {/* <li className="breadcrumb-item active">View Tags</li> */}
           </ol>
          
        

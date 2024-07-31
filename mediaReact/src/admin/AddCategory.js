@@ -105,10 +105,10 @@ const AddCategory = () => {
 
   return (
     
-    <div className='container-fluid'>
+    <div className='container-fluid con-flu'>
       <div className='container2'>
           <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item text-white"><Link to="/Dashboard">Dashboard</Link>
+          <li className="breadcrumb-item text-white"><Link to="/admin/ViewCategory">Categories</Link>
           </li>
             <li className="breadcrumb-item active">Add Categories</li>
           </ol>

@@ -30,6 +30,9 @@ const ViewCategory = () => {
         console.error('Error fetching data:', error);
       });
   }, []);
+  const handleClick = (link) => {
+    navigate(link);
+  }
 
   
 
@@ -94,12 +97,14 @@ const handleDeleteCategory = (categoryId) => {
     
 
       <div className="container-fluid">
-   
+   <div className='AddArea'>
+          <button className='btn btn-custom' onClick={() => handleClick("/admin/AddCategory")}>Add Category</button>
+        </div><br/>
      <div className='container2'>
         <ol className="breadcrumb mb-4">
-        <li className="breadcrumb-item text-white"><Link to="/Dashboard">Dashboard</Link>
+        <li className="breadcrumb-item text-white">Categories
         </li>
-          <li className="breadcrumb-item active">View Categories</li>
+          {/* <li className="breadcrumb-item active">View Categories</li> */}
         </ol>
         {/* {
           name=="admin"

@@ -10,7 +10,11 @@ const ListAudio = () => {
   const [getall, setGetall] = useState(null);
   const name = sessionStorage.getItem('username');
   const navigate = useNavigate();
-  const token = sessionStorage.getItem('tokenn')
+  const token = sessionStorage.getItem('tokenn');
+  const handleClick = (link) => {
+    navigate(link);
+  }
+
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAll`)
       .then(response => {
@@ -89,23 +93,26 @@ const ListAudio = () => {
   
   return (
       <div className="container-fluid">
+          <div className='AddArea'>
+          <button className='btn btn-custom' onClick={() => handleClick("/admin/AddAudio")}>Add Audio</button>
+        </div><br/>
         <div className='container2'>
           <ol className="breadcrumb mb-4">
             <li className="breadcrumb-item text-white">
-              <Link to="/Dashboard">Dashboard</Link>
+            Audios
             </li>
-            <li className="breadcrumb-item active">Audios</li>
+            {/* <li className="breadcrumb-item active">Audios</li> */}
           </ol>
-
+{/* 
           <h1 className="mt-4 text-white">{name === "admin" ? "Admin-Audios" : "User-Audios"}</h1>
 
-          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}> */}
             
-              <div className="card-1 mb-4" style={{ height: "auto" }}>
-                <div className="card-header">
+              {/* <div className="card-1 mb-4" style={{ height: "auto" }}> */}
+                {/* <div className="card-header">
                   <i className="fas fa-table me-1"></i>
                   Audio List
-                </div>
+                </div> */}
                 <div className="card-body profile-card-body">
                   <table id="datatablesSimple">
                     <thead>
@@ -144,8 +151,8 @@ const ListAudio = () => {
               </div>
           
           </div>
-        </div>
-      </div>
+        // </div>
+      // </div>
   
   );
 };

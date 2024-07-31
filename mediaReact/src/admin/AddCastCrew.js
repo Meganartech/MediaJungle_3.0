@@ -69,13 +69,13 @@ const AddCastCrew = () => {
   };
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid con-flu">
       <div className='container2'>
         <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item text-white">
-            <Link to="/Dashboard">Dashboard</Link>
+            <Link to="/admin/Viewcastandcrew">Cast and Crews</Link>
           </li>
-          <li className="breadcrumb-item active">Add Cast & Crew</li>
+          <li className="breadcrumb-item active">Add Cast and Crew</li>
         </ol>
 
         <form onSubmit={handleSubmit} method="post" className="registration-form">

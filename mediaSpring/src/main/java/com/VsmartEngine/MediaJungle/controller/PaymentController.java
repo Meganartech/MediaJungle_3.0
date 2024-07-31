@@ -1,9 +1,9 @@
 package com.VsmartEngine.MediaJungle.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,23 +11,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
-import com.VsmartEngine.MediaJungle.model.SubScription;
 import com.VsmartEngine.MediaJungle.repository.PaymentRepository;
 import com.VsmartEngine.MediaJungle.repository.PaymentsettingRepository;
-import com.VsmartEngine.MediaJungle.repository.SubScriptionRepository;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
-import com.razorpay.Utils;
 
 @CrossOrigin()
 @RestController
@@ -46,7 +44,19 @@ public class PaymentController {
     @Autowired
     private PaymentsettingRepository paymentsettingrepository;
         
-
+    @GetMapping("/paymentHistory/{userId}")
+    public ResponseEntity<List<PaymentUser>> getPaymentHistory(@PathVariable Long userId) {
+        try {
+            List<PaymentUser> paymentHistory = paymentrepository.findUserByUserId(userId);
+            if (paymentHistory.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(paymentHistory, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     public String Payment(@RequestBody Map<String, String> requestData) {
         try {
