@@ -68,37 +68,47 @@ public class PaymentController {
             Optional<UserRegister> userOption = userregisterrepository.findById(userId);
 
             if (userOption.isPresent()) {
-                // Check if the user has already made a payment
+                UserRegister user = userOption.get();
+                
+                // Check if the user has an existing payment
                 if (optionPayment.isPresent()) {
                     PaymentUser paym = optionPayment.get();
-                    if (paym.getExpiryDate().isAfter(LocalDate.now())) {
-                        // Return message indicating already paid and not expired
-                        System.out.println("You have already paid for the plan");
+                    
+                    // Check if the existing payment is still valid
+                    if (paym.getExpiryDate().isAfter(LocalDate.now()) && paym.getPaymentId() != null && paym.getStatus().equals("paid")) {
                         return "You have already paid for the plan. Your subscription is valid until " + paym.getExpiryDate();
                     }
                 }
 
                 // Fetch Razorpay keys from the payment settings repository
-                Optional<Paymentsettings> paymentSettingOptional = paymentsettingrepository.findById(1L); // Assuming ID is 1, adjust as needed
+                Optional<Paymentsettings> paymentSettingOptional = paymentsettingrepository.findById(1L); // Adjust ID as needed
                 if (!paymentSettingOptional.isPresent()) {
                     return "Payment settings not found";
                 }
+
                 Paymentsettings paymentSetting = paymentSettingOptional.get();
                 String razorpayApiKey = paymentSetting.getRazorpay_key();
                 String razorpayApiSecret = paymentSetting.getRazorpay_secret_key();
-                // Proceed to create a new order
+
+                // Create a new Razorpay order
                 RazorpayClient client = new RazorpayClient(razorpayApiKey, razorpayApiSecret);
                 JSONObject orderRequest = new JSONObject();
                 orderRequest.put("amount", amount * 100); // Convert amount to paisa
                 orderRequest.put("currency", "INR");
                 orderRequest.put("notes", new JSONObject().put("user_id", userId));
                 Order order = client.orders.create(orderRequest);
-                System.out.println("orderRequest" + order);
+
                 String orderId = order.get("id").toString();
 
-                // Save payment details
-                PaymentUser payment = new PaymentUser();
-                payment.setUserId(userId);
+                // Save or update payment details
+                PaymentUser payment;
+                if (optionPayment.isPresent()) {
+                    payment = optionPayment.get();
+                } else {
+                    payment = new PaymentUser();
+                    payment.setUserId(userId);
+                }
+
                 payment.setOrderId(orderId);
                 payment.setSubscriptionTitle(planName);
                 payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription
@@ -119,7 +129,7 @@ public class PaymentController {
             return "Error creating order: " + e.getMessage();
         }
     }
-    
+
    
 
 
@@ -127,29 +137,43 @@ public class PaymentController {
         try {
             String orderId = requestData.get("orderId");
             String paymentId = requestData.get("paymentId");
-            String statuscode = requestData.get("status_code");
             String planname = requestData.get("planname");
-            String amount = requestData.get("amount");
-            double Amount = Double.parseDouble(amount);
             int validityDays = Integer.parseInt(requestData.get("validity"));
-            
-            String userIdString = requestData.get("userId");
-            long userid = Long.parseLong(userIdString);
-            
-            
+            long userid = Long.parseLong(requestData.get("userId"));
+
+            // Fetch Razorpay keys from the payment settings repository
+            Optional<Paymentsettings> paymentSettingOptional = paymentsettingrepository.findById(1L); // Adjust ID as needed
+            if (!paymentSettingOptional.isPresent()) {
+                return new ResponseEntity<>("Payment settings not found", HttpStatus.NOT_FOUND);
+            }
+            Paymentsettings paymentSetting = paymentSettingOptional.get();
+            String razorpayApiKey = paymentSetting.getRazorpay_key();
+            String razorpayApiSecret = paymentSetting.getRazorpay_secret_key();
+
+            RazorpayClient client = new RazorpayClient(razorpayApiKey, razorpayApiSecret);
+
+            // Fetch order details from Razorpay
+            Order detailedOrder = client.orders.fetch(orderId);
+            String amountPaidString = detailedOrder.get("amount_paid").toString();
+            int amountPaidIn = Integer.parseInt(amountPaidString) / 100;
+            String status = detailedOrder.get("status").toString();
+            System.out.println(detailedOrder);
+
             Optional<PaymentUser> paym = paymentrepository.findByUserId(userid);
             Optional<UserRegister> useroption = userregisterrepository.findById(userid);
-            
+
             if (useroption.isPresent()) {
                 UserRegister user = useroption.get();
-                PaymentUser p = paym.get();
-            
-                if (statuscode.equals("200")) { 
+                PaymentUser p = paym.orElseThrow(() -> new RuntimeException("PaymentUser not found"));
+
+                if (status.equals("paid")) { 
                     user.setPaymentId(p);
-                    // Save the updated user entity
                     userregisterrepository.save(user);
                 }
+            } else {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
             }
+
             LocalDate currentDate = LocalDate.now();
             LocalDate expiryDate = currentDate.plusDays(validityDays);
 
@@ -157,27 +181,25 @@ public class PaymentController {
             if (orderUserOptional.isPresent()) {
                 PaymentUser pay = orderUserOptional.get();
                 pay.setPaymentId(paymentId);
-                pay.setAmount(Amount);
+                pay.setAmount(amountPaidIn);
                 pay.setSubscriptionTitle(planname);
-                pay.setStatus(statuscode);
+                pay.setStatus(status);
                 pay.setExpiryDate(expiryDate);
                 paymentrepository.save(pay);
+
                 // Return a success response with the userId
-                return new ResponseEntity<>("Payment ID updated successfully for user ID: " ,HttpStatus.OK);
-          } 
-            else {
-                // Return a response indicating the order ID was not found
+                return new ResponseEntity<>("Payment ID updated successfully for user ID: " + userid, HttpStatus.OK);
+            } else {
                 return new ResponseEntity<>("Order ID not found", HttpStatus.NOT_FOUND);
             }
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<>("Invalid number format", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            // Handle exceptions and return an internal server error response
+            // Log the exception (use a logger in real applications)
+            e.printStackTrace();
             return new ResponseEntity<>("An error occurred while updating the payment ID", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
-
-
-    
 }
     
     
