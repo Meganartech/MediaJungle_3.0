@@ -196,9 +196,9 @@ const AddAudio = () => {
      <div className='container2'>
 
           <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item text-white"><Link to="/admin/ListAudio">Audios</Link>
+          <li className="breadcrumb-item"><Link to="/admin/ListAudio">Audios</Link>
           </li>
-            <li className="breadcrumb-item active">Add Audio</li>
+            <li className="breadcrumb-item active  text-white">Add Audio</li>
           </ol>
       <div className='temp justify-content-center'>
         <div className='col-lg-12'>

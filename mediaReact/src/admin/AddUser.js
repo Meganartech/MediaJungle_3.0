@@ -175,9 +175,9 @@ const AddUser = () => {
 <div className='container2'>
       
           <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item text-white"><Link to="/admin/Profile">Sub Admin</Link>
+          <li className="breadcrumb-item"><Link to="/admin/Profile">Sub Admin</Link>
           </li>
-            <li className="breadcrumb-item active">Add Sub Admin</li>
+            <li className="breadcrumb-item active  text-white">Add Sub Admin</li>
           </ol>
    
       <form onSubmit={submitForm} method="post" className="registration-form">

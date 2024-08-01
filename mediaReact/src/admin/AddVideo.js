@@ -578,9 +578,9 @@ const save = async (e) => {
         <div className='container2'>
           {/* <h1 className="mt-4 text-white">Add Video</h1> */}
           <ol className="breadcrumb mb-4">
-            <li className="breadcrumb-item text-white"><Link to="/admin/Video">Videos</Link>
+            <li className="breadcrumb-item"><Link to="/admin/Video">Videos</Link>
             </li>
-            <li className="breadcrumb-item active">Add Video</li>
+            <li className="breadcrumb-item active  text-white">Add Video</li>
           </ol>
           <div className='row'>
                

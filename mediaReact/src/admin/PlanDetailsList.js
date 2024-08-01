@@ -116,7 +116,7 @@ const PlanDetailsList = () => {
         <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item text-white"><Link to="/admin/PlanDetailsList">Plans</Link>
         </li>
-          <li className="breadcrumb-item active">List Plans</li>
+          {/* <li className="breadcrumb-item active">List Plans</li> */}
         </ol>
         {/* <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
             

@@ -166,19 +166,13 @@ const handleSubmit = (e) => {
   return (
   
     <div className="container-fluid">
-    
-      
-
-      <h1 className="mt-4 text-white">{updatedUser.username}'s Profile</h1>
+       <div className='container2'>
       <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item">
-          <Link to="/Dashboard">Dashboard</Link>
+          <Link to="/admin/Profile">Manage SubAdmin</Link>
         </li>
-        <li className="breadcrumb-item active">Edit</li>
+        <li className="breadcrumb-item active text-white">Edit Sub Admin</li>
       </ol>
-      <div className="row">
-        <div className="col-lg-8">
-          <div className="card mb-4">
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <table className="table">
@@ -288,14 +282,16 @@ const handleSubmit = (e) => {
 </tr>
                   </tbody>
                 </table>
+                <div className='buttoncontainer'>
                 <button type="submit" className="btn btn-info">
                   Update
                 </button>
+                </div>
               </form>
             </div>
           </div>
         </div>
-        {/*<div className="col-lg-4">
+        /*<div className="col-lg-4">
           <div className="row">
             <div className="col-xl-12 col-md-6 mt-3">
               <div className="card bg-warning text-white mb-4">
@@ -337,10 +333,8 @@ const handleSubmit = (e) => {
               </div>
             </div>
           </div>
-        </div>*/}
-      </div>
-    </div>
-  
+        </div>*/
+ 
   );
 }
 

@@ -12,7 +12,7 @@ const Setting = () => {
 
     <ul className='breadcrumb-item' style={{paddingLeft: '0px',backgroundColor:'beige'}}>
     {/* <li className="breadcrumb-item" > */}
-  <Link className="nav-link text-info" to="/admin/Setting" style={{paddingLeft: '8px'}}>
+  <Link className="nav-link text-info" to="/admin/SiteSetting" style={{paddingLeft: '8px'}}>
       {/* <i className="fas fa-tachometer-alt"></i> */}
     <span> Site Settings</span>
   </Link>

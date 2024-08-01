@@ -51,6 +51,7 @@
 .row{
 padding: 40px;
 }
+
 .temp{
   display: flex;
   flex-wrap: wrap;
@@ -98,4 +99,3 @@ main {
 ::-webkit-scrollbar-thumb:hover {
   background: #555; /* Color of the scrollbar thumb on hover */
 }
-

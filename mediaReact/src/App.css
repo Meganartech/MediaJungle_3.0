@@ -4803,10 +4803,7 @@ textarea.form-control-lg {
   margin-bottom: 1rem;
   list-style: none;
 }
-.breadcrumb-item {
-  flex: 1; /* Make the breadcrumb item take up the full width */
-  /* text-align: center; Center the text within the breadcrumb item */
-}
+
 .breadcrumb-item + .breadcrumb-item {
   padding-left: 0.5rem;
 }
@@ -11999,6 +11996,11 @@ font-weight: 900;
 .error-icon {
   margin-right: 5px;
   font-weight: bold;
+}
+.buttoncontainer {
+  display: flex;
+  align-items: center; /* Vertically center items */
+  justify-content: center; /* Horizontally center items */
 }
 
 /* App.css or separate CSS file */

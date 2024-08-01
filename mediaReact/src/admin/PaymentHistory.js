@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
 import API_URL from '../Config';
 import "../css/Sidebar.css";
@@ -29,11 +29,9 @@ const PaymentHistory = () => {
     <div className="container-fluid">
       <div className='container2'>
         <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item text-white">
-            {/* Breadcrumb items */}
-          </li>
-          <li className="breadcrumb-item text-white">User Details</li>
-          <li className="breadcrumb-item active">Payment History</li>
+       
+          <li className="breadcrumb-item"><Link to="/admin/SubscriptionPayments">Manage Users</Link></li>
+          <li className="breadcrumb-item active text-white">Payment History</li>
         </ol>
         <div className="card-body profile-card-body">
         <table id="datatablesSimple">
