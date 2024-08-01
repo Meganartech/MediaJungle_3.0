@@ -107,9 +107,9 @@ const handleSubmit = (e) => {
     <div className='container-fluid con-flu'>      
 <div className='container2'>
           <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item text-white"><Link to="/admin/ViewLanguage">Languages</Link>
+          <li className="breadcrumb-item"><Link to="/admin/ViewLanguage">Languages</Link>
           </li>
-            <li className="breadcrumb-item active">Add Language</li>
+            <li className="breadcrumb-item active  text-white">Add Language</li>
           </ol>
       <div className='temp justify-content-center'>
         <div className='col-lg-12'>

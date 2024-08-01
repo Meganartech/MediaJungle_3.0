@@ -76,12 +76,12 @@ const Editplan = () => {
   return (
    
       <div className="container-fluid">
-        <h1 className="mt-4 text-white">{updatedplan.planname}'s Profile</h1>
+        <div className="container2">
         <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item">
-            <Link to="/Dashboard">Dashboard</Link>
+          <Link to="/admin/PlanDetailsList">Plans</Link>
           </li>
-          <li className="breadcrumb-item active">Edit</li>
+          <li className="breadcrumb-item active">Edit Plan</li>
         </ol>
         <div className="row">
           <div className="col-lg-8">
@@ -90,6 +90,7 @@ const Editplan = () => {
                 <form onSubmit={handleSubmit}>
                   <table className="table">
                     <tbody>
+                      
                       <tr>
                         <th>Planname</th>
                         <td>
@@ -136,6 +137,7 @@ const Editplan = () => {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
  

@@ -78,6 +78,9 @@ import Viewcastandcrew from './admin/Viewcastandcrew';
 import Editcastandcrew from './admin/Editcastandcrew';
 import Userforgetpassword from './user/Screens/Userforgetpassword';
 import PaymentHistory from './admin/PaymentHistory';
+import TenureList from './admin/TenureList';
+import AddTenure from './admin/AddTenure';
+import SiteSetting from './admin/SiteSetting';
 
 const App = () => {
   const location = useLocation();
@@ -205,15 +208,19 @@ const App = () => {
             <Route path='addCategory'element= {<AddCategory/>} />
             <Route path='addCastCrew' element= {<AddCastCrew/>} />
             <Route path='Viewcastandcrew' element={<Viewcastandcrew />} />
+            <Route path='AddTenure' element={<AddTenure />} />
             <Route path='Editcastandcrew' element={<Editcastandcrew />} />
             <Route path='subscriptionPayments' element= {<SubscriptionPayments/>} />
             <Route path='paymentHistory/:userId' element={<PaymentHistory />} />
             <Route path='Adminplan' element= {<Adminplan/>} />
             <Route path='PlanDetailsList' element={<PlanDetailsList/>}/>
+            <Route path='TenureList' element={<TenureList/>}/>
             <Route path='Editplan' element={<Editplan />} />
             <Route path='PlanDescription' element={<PlanDescription />} />
             
             <Route path='setting' element= {<Setting/>} />
+            
+            <Route path='SiteSetting' element= {<SiteSetting/>} />
             <Route path='Video_setting' element= {<Video_setting/>} />
             <Route path='Setting_sidebar' element= {<Setting_sidebar/>} />
             <Route path='Social_setting' element= {<Social_setting/>} />

@@ -48,13 +48,13 @@ const SubscriptionPayments = () => {
 
   return (
     
-      <div className="container-fluid">
+      <div className="container-fluid con-flu">
         <div className='container2'>
           <ol className="breadcrumb mb-4">
              <li className="breadcrumb-item text-white">
-            <Link to="/admin/dashboard">Dashboard</Link>
+            <Link to="/admin/SubscriptionPayments">Manage Users</Link>
           </li>
-          <li className="breadcrumb-item active">Subscription Payments</li>
+          {/* <li className="breadcrumb-item active">Subscription Payments</li> */}
           </ol>
           <div className="card-body profile-card-body">
             <table id="datatablesSimple">

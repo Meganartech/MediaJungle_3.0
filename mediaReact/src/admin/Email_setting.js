@@ -160,13 +160,13 @@ const Email_setting = () => {
   }
   return (
 
-      <div className="container-fluid">
+      <div className="container-fluid con-flu">
         <div className='container2'>
         <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item text-white">
-            <Link to="/Dashboard">Dashboard</Link>
+          <li className="breadcrumb-item">
+            <Link to="/admin/Setting">Settings</Link>
           </li>
-          <li className="breadcrumb-item active">Email Settings</li>
+          <li className="breadcrumb-item active  text-white">Email Settings</li>
         </ol>
         <div className="card md-8" style={{ maxWidth: '91rem', paddingLeft: '0px' }}>
           <div className="container card-body">

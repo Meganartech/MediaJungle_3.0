@@ -1175,6 +1175,9 @@ pre code {
 }
 
 @media (min-width: 992px) {
+  #sidebarToggle {
+    display: none;
+  }
   .col-lg {
     flex-basis: 0;
     flex-grow: 1;
@@ -1341,6 +1344,9 @@ pre code {
 }
 
 @media (min-width: 1200px) {
+  #sidebarToggle {
+    display: none;
+  }
   .col-xl {
     flex-basis: 0;
     flex-grow: 1;
@@ -4048,6 +4054,7 @@ input[type="button"].btn-block {
 .nav-link {
   display: block;
   padding: 0.5rem 1rem;
+  cursor:pointer;
 }
 
 .nav-link:hover, .nav-link:focus {
@@ -4126,7 +4133,7 @@ input[type="button"].btn-block {
 }
 
 .navbar {
-  /* position: relative; */
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -4750,28 +4757,28 @@ input[type="button"].btn-block {
   border-radius: 0.35rem;
 }
 
-.breadcrumb-item + .breadcrumb-item {
+/* .breadcrumb-item + .breadcrumb-item {
   padding-left: 0.5rem;
-}
+} */
 
-.breadcrumb-item + .breadcrumb-item::before {
+/* .breadcrumb-item + .breadcrumb-item::before {
   float: left;
   padding-right: 0.5rem;
   color: #858796;
   content: "/";
-}
-
+} */
+/* 
 .breadcrumb-item + .breadcrumb-item:hover::before {
   text-decoration: underline;
-}
+} */
 
-.breadcrumb-item + .breadcrumb-item:hover::before {
+/* .breadcrumb-item + .breadcrumb-item:hover::before {
   text-decoration: none;
 }
 
 .breadcrumb-item.active {
   color: #858796;
-}
+} */
 
 .pagination {
   display: flex;
@@ -8101,6 +8108,7 @@ button.bg-dark:focus {
 .ml-auto,
 .mx-auto {
   margin-left: auto !important;
+  
 }
 
 @media (min-width: 576px) {
@@ -10367,6 +10375,7 @@ a:focus {
 .sidebar .nav-item .nav-link span {
   font-size: 0.65rem;
   display: block;
+  margin-right:0.30rem;
 }
 
 .sidebar .nav-item.active .nav-link {
@@ -10535,7 +10544,7 @@ a:focus {
 
 @media (min-width: 768px) {
   .sidebar {
-    width: 14rem !important;
+    width: 13rem !important;
   }
   .sidebar .nav-item .collapse {
     position: relative;
@@ -10558,7 +10567,7 @@ a:focus {
     margin: 0 1rem;
   }
   .sidebar .nav-item .nav-link {
-    display: block;
+    display: flex;
     width: 100%;
     text-align: left;
     padding: 1rem;
@@ -10566,7 +10575,7 @@ a:focus {
   }
   .sidebar .nav-item .nav-link i {
     font-size: 0.85rem;
-    margin-right: 0.25rem;
+    margin-right: 1rem;
   }
   .sidebar .nav-item .nav-link span {
     font-size: 0.85rem;
@@ -11394,10 +11403,10 @@ h1 {
   background-image: url('../img/Frame.png');
   background-repeat:no-repeat;
   background-size:cover;
-padding-top: 30px;
+padding-top: 20px;
 }
 .con-flu{
-  padding-top:120px;
+  padding-top:110px;
 }
 .card {
 max-width: 65rem;

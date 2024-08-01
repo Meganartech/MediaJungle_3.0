@@ -8,7 +8,11 @@ import Notification from '../Notification';
 
 
 const Sidebar = ({ activeLink, setActiveLink}) => {
-
+  const [isCatsTagsOpen, setIsCatsTagsOpen] = useState(false);
+  const [isUserAdminOpen, setIsUserAdminOpen] = useState(false);
+  const [isMediaOpen, setIsMediaOpen] = useState(false);
+  const [isLangCertiOpen, setIsLangCertiOpen] = useState(false);
+  const [isPlansTenureOpen, setIsPlansTenureOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isvalid, setIsvalid] = useState();
   const [isEmpty, setIsEmpty] = useState();
@@ -21,14 +25,10 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
   const token =sessionStorage.getItem("tokenn");
   console.log("token",token)
 
-  const handleClic = (link) => {
-    setActiveLink(link);
-    setOpenDropdown(''); // Close the dropdown when a link is clicked
-  };
+  const handleToggle = (setState) => {
+    setState(prevState => !prevState);
+};
 
-  const toggleDropdow = (dropdown) => {
-    setOpenDropdown(openDropdown === dropdown ? '' : dropdown);
-  };
 
   const fetchUnreadCount = async () => {
     try {
@@ -286,8 +286,8 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
         <div className="sidebar-brand-text mx-3">Menu </div>
       </div> */}
       <li className={`nav-item  ${activeLink === "/admin/Dashboard" ? 'active' : ''}`} onClick={() => handleClick("/admin/Dashboard")}>
-        <Link className="nav-link text-white" >
-          <i className="fas fa-tachometer-alt"></i>
+        <Link className="nav-link" >
+        <i class="bi bi-speedometer"></i>
             <span >  Dashboard</span>
         </Link>
       </li> 
@@ -297,22 +297,59 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
         <span>Add Subadmin</span>
       </Link>
   </li>  */}
-    
+     <li className="nav-item">
+                <div className="nav-link" onClick={() => handleToggle(setIsUserAdminOpen)}>
+                <i class="bi bi-people"></i>
+                    <span>Admin & User</span>
+                    <i className={`fas fa-chevron-${isUserAdminOpen ? 'down' : 'right'} ml-auto`}></i>
+                </div>
+                {isUserAdminOpen && (
+                           <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/Profile" ? 'active' : ''}`} onClick={() => handleClick("/admin/Profile")}>
-          <Link className="nav-link text-white" >
+          <Link className="nav-link" >
               <i className="fas fa-user"></i>
-            <span>  Subadmin</span>
+            <span>Sub Admin</span>
           </Link>
       </li>
+      <li className={`nav-item  ${activeLink === "/admin/SubscriptionPayments" ? 'active' : ''}`} onClick={() => handleClick("/admin/SubscriptionPayments")}>
+          <Link className="nav-link" >
+          <i class="bi bi-person-circle"></i>
+            <span>  User</span>
+          </Link>
+      </li>      </ul>
+                )}
+            </li>
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Video</div>
       </div> */}
+        <li className="nav-item">
+                <div className="nav-link" onClick={() => handleToggle(setIsMediaOpen)}>
+                <i class="bi bi-collection-play"></i>
+                    <span>Media</span>
+                    <i className={`fas fa-chevron-${isMediaOpen ? 'down' : 'right'} ml-auto`}></i>
+                </div>
+                {isMediaOpen && (
+                   <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/Video" ? 'active' : ''}`} onClick={() => handleClick("/admin/Video")}>
-          <Link className="nav-link text-white" >
-              <i className="fas fa-video"></i>
+          <Link className="nav-link" >
+          <i class="bi bi-camera-video-fill"></i>
             <span>  Video</span>
           </Link>
       </li>  
+       <li className={`nav-item  ${activeLink === "/admin/ListAudio" ? 'active' : ''}`} onClick={() => handleClick("/admin/ListAudio")}>
+       <Link className="nav-link" >
+       <i class="bi bi-music-note"></i>
+         <span> Audio</span>
+       </Link>
+   </li>
+   <li className={`nav-item  ${activeLink === "/admin/Viewcastandcrew" ? 'active' : ''}`} onClick={() => handleClick("/admin/Viewcastandcrew")}>
+          <Link className="nav-link" to="#">
+          <i class="bi bi-people-fill"></i>
+            <span>  Cast & Crew</span>
+          </Link>
+      </li>          </ul>
+                )}
+            </li>
       {/* <li className={`nav-item  ${activeLink === "/admin/AddVideo" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddVideo")}>
             <Link className="nav-link text-white" >
               <i className="fas fa-upload"></i>
@@ -322,12 +359,7 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Audio</div>
       </div> */}
-      <li className={`nav-item  ${activeLink === "/admin/ListAudio" ? 'active' : ''}`} onClick={() => handleClick("/admin/ListAudio")}>
-          <Link className="nav-link text-white" >
-              <i className="fas fa-music"></i>
-            <span> Audio</span>
-          </Link>
-      </li>
+     
       {/* <li className={`nav-item  ${activeLink === "/admin/AddAudio" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddAudio")}>
           <Link className="nav-link text-white" >
               <i className="fas fa-upload"></i>
@@ -344,10 +376,18 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
             <span> Add Category</span>
           </Link>
       </li> */}
+       <li className="nav-item">
+                <div className="nav-link" onClick={() => handleToggle(setIsCatsTagsOpen)}>
+                <i class="bi bi-list-ul"></i>
+                    <span>Category & Tags</span>
+                      <i className={`fas fa-chevron-${isCatsTagsOpen ? 'down' : 'right'} ml-auto`}></i>
+                </div>
+                {isCatsTagsOpen && (
+                    <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/ViewCategory" ? 'active' : ''}`} onClick={() => handleClick("/admin/ViewCategory")}>
-          <Link className="nav-link text-white" >
-              <i className="fas fa-upload"></i>
-            <span>  Category</span>
+          <Link className="nav-link" >
+          <i class="bi bi-grid-fill"></i>
+            <span>  Categories</span>
           </Link>
       </li>
      
@@ -361,11 +401,11 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
           </Link>
       </li> */}
       <li className={`nav-item  ${activeLink === "/admin/ViewTag" ? 'active' : ''}`} onClick={() => handleClick("/admin/ViewTag")}>
-          <Link className="nav-link text-white" >
-              <i className="fas fa-upload"></i>
-            <span>  Tag</span>
+          <Link className="nav-link" >
+          <i class="bi bi-tags-fill"></i>
+            <span>  Tags</span>
           </Link>
-      </li>
+      </li></ul>)} </li>
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Cast & Crew</div>
       </div> */}
@@ -375,12 +415,12 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
             <span> Add Cast & Crew</span>
           </Link>
       </li> */}
-      <li className={`nav-item  ${activeLink === "/admin/Viewcastandcrew" ? 'active' : ''}`} onClick={() => handleClick("/admin/Viewcastandcrew")}>
+      {/* <li className={`nav-item  ${activeLink === "/admin/Viewcastandcrew" ? 'active' : ''}`} onClick={() => handleClick("/admin/Viewcastandcrew")}>
           <Link className="nav-link text-white" to="#">
               <i className="fas fa-upload"></i>
             <span>  Cast & Crew</span>
           </Link>
-      </li>
+      </li> */}
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Language</div>
       </div> */}
@@ -390,10 +430,18 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
             <span> Add Langugae</span>
           </Link>
       </li> */}
+       <li className="nav-item">
+                <div className="nav-link" onClick={() => handleToggle(setIsLangCertiOpen)}>
+                <i class="bi bi-info-square"></i>
+                    <span>Lang & Certi</span>
+                    <i className={`fas fa-chevron-${isLangCertiOpen ? 'down' : 'right'} ml-auto`}></i>
+                </div>
+                {isLangCertiOpen && (
+                    <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/ViewLanguage" ? 'active' : ''}`} onClick={() => handleClick("/admin/ViewLanguage")}>
-          <Link className="nav-link text-white" >
-              <i className="fas fa-upload"></i>
-            <span>  Langugae</span>
+          <Link className="nav-link" >
+          <i class="bi bi-translate"></i>
+            <span>  Language</span>
           </Link>
       </li>
 
@@ -407,12 +455,14 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
           </Link>
       </li> */}
       <li className={`nav-item  ${activeLink === "/admin/ViewCertificate" ? 'active' : ''}`} onClick={() => handleClick("/admin/ViewCertificate")}>
-          <Link className="nav-link text-white" >
-              <i className="fas fa-upload"></i>
+          <Link className="nav-link" >
+          <i class="bi bi-award-fill"></i>
             <span>  Certificate</span>
           </Link>
       </li>
-
+      </ul>
+                )}
+            </li>
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Payments</div>
       </div> */}
@@ -421,31 +471,46 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
               <i className="fas fa-photo-video"></i>
             <span>PlanDetails</span>
           </Link>
-      </li> */}
+      </li> */} <li className="nav-item">
+                <div className="nav-link" onClick={() => handleToggle(setIsPlansTenureOpen)}>
+                <i class="bi bi-calendar"></i> 
+
+                    <span>Plans & Tenures</span>
+                    
+                    <i className={`fas fa-chevron-${isPlansTenureOpen ? 'down' : 'right'} ml-auto`}></i>
+                </div>
+                {isPlansTenureOpen && (
+                    <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/PlanDetailsList" ? 'active' : ''}`} onClick={() => handleClick("/admin/PlanDetailsList")}>
-          <Link className="nav-link text-white" >
-              <i className="fas fa-photo-video"></i>
-            <span>Plans</span>
+          <Link className="nav-link" >
+          <i class="bi bi-clipboard"></i> 
+
+            <span>  Plans</span>
           </Link>
       </li>
-      <li className={`nav-item  ${activeLink === "/admin/SubscriptionPayments" ? 'active' : ''}`} onClick={() => handleClick("/admin/SubscriptionPayments")}>
-          <Link className="nav-link text-white" >
-              <i className="fas fa-photo-video"></i>
-            <span>Registered User</span>
+      <li className={`nav-item  ${activeLink === "/admin/TenureList" ? 'active' : ''}`} onClick={() => handleClick("/admin/TenureList")}>
+          <Link className="nav-link" >
+          <i class="bi bi-hourglass"></i>
+
+            <span>  Tenures</span>
           </Link>
       </li>
+      </ul>
+                )}
+            </li>
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Settings</div>
       </div> */}
       <li className={`nav-item  ${activeLink === "/admin/Setting" ? 'active' : ''}`} onClick={() => handleClick("/admin/Setting")}>
-          <Link className="nav-link text-white" >
-              <i className="fas fa-photo-video"></i>
+          <Link className="nav-link" >
+          <i class="bi bi-gear-fill"></i>
             <span> Settings</span>
           </Link>
       </li>
       <li className={`nav-item  ${activeLink === "/admin/About_us" ? 'active' : ''}`} onClick={() => handleClick("/admin/About_us")}>
-          <Link className="nav-link text-white" >
-              <i className="fas fa-photo-video"></i>
+          <Link className="nav-link" >
+          <i class="bi bi-house"></i>
+
             <span> About-Us</span>
           </Link>
       </li>
