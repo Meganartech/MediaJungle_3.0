@@ -8,27 +8,17 @@ import Notification from '../Notification';
 
 
 const Sidebar = ({ activeLink, setActiveLink}) => {
-  const [isCatsTagsOpen, setIsCatsTagsOpen] = useState(false);
-  const [isUserAdminOpen, setIsUserAdminOpen] = useState(false);
-  const [isMediaOpen, setIsMediaOpen] = useState(false);
-  const [isLangCertiOpen, setIsLangCertiOpen] = useState(false);
-  const [isPlansTenureOpen, setIsPlansTenureOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isvalid, setIsvalid] = useState();
   const [isEmpty, setIsEmpty] = useState();
   const navigate = useNavigate();
   const location = useLocation();
-  const [openDropdown, setOpenDropdown] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
   const[count,setcount]=useState(0);
   const [isopen,setisopen]=useState(false);
   
   const token =sessionStorage.getItem("tokenn");
   console.log("token",token)
-
-  const handleToggle = (setState) => {
-    setState(prevState => !prevState);
-};
-
 
   const fetchUnreadCount = async () => {
     try {
@@ -215,7 +205,10 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
   const b=3;
   // alert(name);
 
-
+  const handleToggleDropdown = (dropdown) => {
+    setIsDropdownOpen(prev => (prev === dropdown ? null : dropdown));
+  };
+  
 
   return (
     
@@ -297,13 +290,13 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
         <span>Add Subadmin</span>
       </Link>
   </li>  */}
-     <li className="nav-item">
-                <div className="nav-link" onClick={() => handleToggle(setIsUserAdminOpen)}>
+    <li className={`nav-item ${isDropdownOpen === 'userAdmin' ? 'show' : ''}`}>
+                <div className="nav-link" onClick={() => handleToggleDropdown('userAdmin')}>
                 <i class="bi bi-people"></i>
                     <span>Admin & User</span>
-                    <i className={`fas fa-chevron-${isUserAdminOpen ? 'down' : 'right'} ml-auto`}></i>
+                    <i className={`fas fa-chevron-${isDropdownOpen === 'userAdmin' ? 'down' : 'right'} ml-auto`}></i>
                 </div>
-                {isUserAdminOpen && (
+                {isDropdownOpen === 'userAdmin' && (
                            <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/Profile" ? 'active' : ''}`} onClick={() => handleClick("/admin/Profile")}>
           <Link className="nav-link" >
@@ -322,13 +315,13 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Video</div>
       </div> */}
-        <li className="nav-item">
-                <div className="nav-link" onClick={() => handleToggle(setIsMediaOpen)}>
+       <li className={`nav-item ${isDropdownOpen === 'media' ? 'show' : ''}`}>
+                <div className="nav-link" onClick={() => handleToggleDropdown('media')}>
                 <i class="bi bi-collection-play"></i>
                     <span>Media</span>
-                    <i className={`fas fa-chevron-${isMediaOpen ? 'down' : 'right'} ml-auto`}></i>
+                    <i className={`fas fa-chevron-${isDropdownOpen === 'media' ?  'down' : 'right'} ml-auto`}></i>
                 </div>
-                {isMediaOpen && (
+                {isDropdownOpen === 'media' && (
                    <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/Video" ? 'active' : ''}`} onClick={() => handleClick("/admin/Video")}>
           <Link className="nav-link" >
@@ -376,13 +369,13 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
             <span> Add Category</span>
           </Link>
       </li> */}
-       <li className="nav-item">
-                <div className="nav-link" onClick={() => handleToggle(setIsCatsTagsOpen)}>
+       <li className={`nav-item ${isDropdownOpen === 'cattags' ? 'show' : ''}`}>
+                <div className="nav-link"  onClick={() => handleToggleDropdown('cattags')}>
                 <i class="bi bi-list-ul"></i>
                     <span>Category & Tags</span>
-                      <i className={`fas fa-chevron-${isCatsTagsOpen ? 'down' : 'right'} ml-auto`}></i>
+                      <i className={`fas fa-chevron-${isDropdownOpen === 'cattags' ?'down' : 'right'} ml-auto`}></i>
                 </div>
-                {isCatsTagsOpen && (
+                {isDropdownOpen === 'cattags' && (
                     <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/ViewCategory" ? 'active' : ''}`} onClick={() => handleClick("/admin/ViewCategory")}>
           <Link className="nav-link" >
@@ -430,13 +423,14 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
             <span> Add Langugae</span>
           </Link>
       </li> */}
-       <li className="nav-item">
-                <div className="nav-link" onClick={() => handleToggle(setIsLangCertiOpen)}>
+      
+<li className={`nav-item ${isDropdownOpen === 'langcerti' ? 'show' : ''}`}>
+                <div className="nav-link" onClick={() => handleToggleDropdown('langcerti')}>
                 <i class="bi bi-info-square"></i>
                     <span>Lang & Certi</span>
-                    <i className={`fas fa-chevron-${isLangCertiOpen ? 'down' : 'right'} ml-auto`}></i>
+                    <i className={`fas fa-chevron-${isDropdownOpen === 'langcerti' ? 'down' : 'right'} ml-auto`}></i>
                 </div>
-                {isLangCertiOpen && (
+                {isDropdownOpen === 'langcerti' && (
                     <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/ViewLanguage" ? 'active' : ''}`} onClick={() => handleClick("/admin/ViewLanguage")}>
           <Link className="nav-link" >
@@ -471,15 +465,16 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
               <i className="fas fa-photo-video"></i>
             <span>PlanDetails</span>
           </Link>
-      </li> */} <li className="nav-item">
-                <div className="nav-link" onClick={() => handleToggle(setIsPlansTenureOpen)}>
+      </li> */}
+<li className={`nav-item ${isDropdownOpen === 'plantenure' ? 'show' : ''}`}>
+                <div className="nav-link"onClick={() => handleToggleDropdown('plantenure')}>
                 <i class="bi bi-calendar"></i> 
 
                     <span>Plans & Tenures</span>
                     
-                    <i className={`fas fa-chevron-${isPlansTenureOpen ? 'down' : 'right'} ml-auto`}></i>
+                    <i className={`fas fa-chevron-${isDropdownOpen === 'plantenure' ? 'down' : 'right'} ml-auto`}></i>
                 </div>
-                {isPlansTenureOpen && (
+                {isDropdownOpen === 'plantenure' && (
                     <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/PlanDetailsList" ? 'active' : ''}`} onClick={() => handleClick("/admin/PlanDetailsList")}>
           <Link className="nav-link" >
