@@ -43,8 +43,7 @@ public class PaymentController {
     
     @Autowired
     private PaymentsettingRepository paymentsettingrepository;
-        
-    @GetMapping("/paymentHistory/{userId}")
+
     public ResponseEntity<List<PaymentUser>> getPaymentHistory(@PathVariable Long userId) {
         try {
             List<PaymentUser> paymentHistory = paymentrepository.findUserByUserId(userId);
