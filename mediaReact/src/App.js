@@ -157,7 +157,7 @@ const App = () => {
           <Route path='AdminSignin' element ={<AdminSignin />} />
           <Route path='Contactus' element={<ContactUs />}/>
           <Route path='watchpage/:id' element={<WatchPage />} />
-          <Route path='videoScreen/:id' element={<VideoScreen/>} /> 
+          {/* <Route path='videoScreen/:id' element={<VideoScreen/>} />  */}
           <Route path='userforgetpassword' element={<Userforgetpassword />} />
            {/* <Route path='singlemovie/:id' element={<SingleMovie />} /> */}
     
