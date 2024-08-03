@@ -26,7 +26,7 @@ const PaymentHistory = () => {
   
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid con-flu">
       <div className='container2'>
         <ol className="breadcrumb mb-4">
        

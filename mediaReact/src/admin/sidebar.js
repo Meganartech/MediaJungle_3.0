@@ -272,9 +272,10 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
 
 
       <ul className={`navbar-nav sidebar sidebar-dark accordion ${isActive ? 'active' : ''}`} id="content-wrapper">
-  
+      <div className="sidebar-logo mb-3 text-center">
+    <img src="/mediajungle.png" alt="Logo" className="logo-img" style={{height:'120px',width:'180px'}}/>
+  </div>
 
-     <hr/>
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Menu </div>
       </div> */}
