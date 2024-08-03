@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from './Layout/Layout'
-import siva from '../img/siva.png' 
+
 import API_URL from '../Config'
 import axios from 'axios';
 import { FaPlay, FaShareAlt } from 'react-icons/fa';
@@ -68,13 +68,13 @@ useEffect(() => {
 fetchData();
 }, [id]);
 
-const images = [
-  { id: 1, src: siva, alt: 'Image 1' },
-  { id: 2, src: siva, alt: 'Image 2' },
-  { id: 3, src: siva, alt: 'Image 3' },
-  { id: 4, src: siva, alt: 'Image 4' },
-  { id: 5, src: siva, alt: 'Image 5' },
-];
+// const images = [
+//   { id: 1, src: siva, alt: 'Image 1' },
+//   { id: 2, src: siva, alt: 'Image 2' },
+//   { id: 3, src: siva, alt: 'Image 3' },
+//   { id: 4, src: siva, alt: 'Image 4' },
+//   { id: 5, src: siva, alt: 'Image 5' },
+// ];
 
 const settings = {
   dots: true,
@@ -130,14 +130,14 @@ const settings = {
 {/* Image Gallery Section */}
 <div className="slider-container" style={{marginTop:'10px'}}>
   <Slider {...settings}>
-    {images.map((image, index) => (
+    {/* {images.map((image, index) => (
       <div key={index} className="slider-item">
         <div className='hover:scale-95 transitions  w-full p-3 italic text-xs text-text rounded flex-colo bg-dry border border-gray-800 overflow-hidden' style={{ height: '100%' ,width:'80%',marginLeft:'10px'}}>
           <img src={image.src} alt={image.alt}  className='w-full h-64 object-cover rounded mb-4' />
           <p>Siva</p>
         </div>
       </div>
-    ))}
+    ))} */}
   </Slider>
 </div>
 
