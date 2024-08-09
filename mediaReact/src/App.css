@@ -4797,7 +4797,7 @@ textarea.form-control-lg {
 
 .breadcrumb {
   display: flex;
-   width: 100%; 
+   width:100%; 
   flex-wrap: wrap;
   padding: 0 0;
   margin-bottom: 1rem;
@@ -11797,7 +11797,7 @@ margin: auto;
 .container {
    justify-content: center;
   align-items: center;
-  height: 100vh; /* Adjust the height as needed */
+  /* height: 50vh; Adjust the height as needed */
 }
 .dashboard-container {
   display: flex;
@@ -12010,7 +12010,7 @@ font-weight: 900;
  
 }
 
-. -card-body {
+.card-body {
   width: 100%; /* Set the width to 100% */
   padding: 0; /* Remove padding to avoid extra width */
   box-sizing: border-box; /* Include padding and border in the total width */

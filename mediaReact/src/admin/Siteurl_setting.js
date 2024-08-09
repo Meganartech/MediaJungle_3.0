@@ -50,10 +50,7 @@ const Siteurl_setting = () => {
 
   return (
 
-  
-
-      <div className="container-fluid con-flu"   >
-        <div className='container2'>
+    <div className='container2 mt-20'>
         <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item">
             <Link to="/admin/Setting">Settings</Link>
@@ -128,7 +125,7 @@ const Siteurl_setting = () => {
           </div>
         </div>
       </div>
-    </div>
+  
  
   );
 };

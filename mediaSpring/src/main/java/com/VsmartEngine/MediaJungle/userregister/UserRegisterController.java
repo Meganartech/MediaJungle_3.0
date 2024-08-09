@@ -65,6 +65,7 @@ public class UserRegisterController {
 			newRegister.setPassword(encodedPassword);
 			newRegister.setConfirmPassword(encodedconfirmPassword);
 			newRegister.setMobnum(mobnum);
+			newRegister.setRole("USER");
 			
 			if (profile != null && !profile.isEmpty()) {
 			byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
@@ -91,37 +92,30 @@ public class UserRegisterController {
             return ResponseEntity.notFound().build();
         }
     }
-  
- 
 
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         String email = loginRequest.get("email");
         String password = loginRequest.get("password");
-        
         Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
-        
         if (!userOptional.isPresent()) {
             // User with the provided email doesn't exist
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\": \"User not found\"}");
         }
-
         UserRegister user = userOptional.get();
-        
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if (!passwordEncoder.matches(password, user.getPassword())) {
             // Incorrect password
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Incorrect password\"}");
         }
-
         // Generate JWT token
-        String jwtToken = jwtUtil.generateToken(email);
+        String role = user.getRole(); // Get user role
+        String jwtToken = jwtUtil.generateToken(email,role);
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("token", jwtToken);
         responseBody.put("message", "Login successful");
         responseBody.put("name", user.getUsername());
         responseBody.put("email", user.getEmail());
         responseBody.put("userId", user.getId());
-        
         // Check if the user has an expiry date for subscription
         if (user.getPaymentId() != null && user.getPaymentId().getExpiryDate() != null) {
             LocalDate expdate = user.getPaymentId().getExpiryDate();
@@ -145,15 +139,11 @@ public class UserRegisterController {
                 }
             }
         }
-
         // Successful login
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
-
-
-
-
+    
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
         // Extract the token from the Authorization header
         // Check if the token is valid (e.g., not expired)

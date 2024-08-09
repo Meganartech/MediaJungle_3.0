@@ -108,7 +108,7 @@ const PlanDetailsList = () => {
 
   return (
     
-      <div className="container-fluid">
+    <div className="marquee-container">
     <div className='AddArea'>
           <button className='btn btn-custom' onClick={() => handleClick("/admin/AdminPlan")}>Add Plan</button>
         </div>  <br/>

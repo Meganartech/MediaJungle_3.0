@@ -1,5 +1,4 @@
- import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
@@ -96,53 +95,64 @@ const handleDeleteCategory = (categoryId) => {
   return (
     
 
-      <div className="container-fluid">
-   <div className='AddArea'>
-          <button className='btn btn-custom' onClick={() => handleClick("/admin/AddCategory")}>Add Category</button>
-        </div><br/>
-     <div className='container2'>
-        <ol className="breadcrumb mb-4">
-        <li className="breadcrumb-item text-white">Categories
+    <div className="marquee-container">
+    <div className='AddArea'>
+      <button className='btn btn-custom' onClick={() => handleClick("/admin/AddCategory")}>Add Categories</button>
+    </div><br/>
+    
+    <div className='container3'>
+      <ol className="breadcrumb mb-4 d-flex  my-0">
+        <li className="breadcrumb-item text-white">Categories</li>
+        <li className="ms-auto text-end text-white">
+          Bulk Action
+          <button className="ms-2">
+            <i className="bi bi-chevron-down"></i>
+          </button>
         </li>
-          {/* <li className="breadcrumb-item active">View Categories</li> */}
-        </ol>
-        {/* {
-          name=="admin"
-          ? */}
-        
-          <div className="card-body">
-            <table id="datatablesSimple">
-              <thead>
-                <tr>
-                  <th>S.No</th>
-                  <th>Categories</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categories.map((category, index) => (
-                  <tr key={category.id}>
-                    <td>{index + 1}</td>
-                    <td>{category.categories ? category.categories : 'No category available'}</td>
-                    <td>
-                    <button onClick={() => handlEdit(category.id)} >
-                          <i className="fas fa-edit" aria-hidden="true"></i>
-                        
+      </ol>
+      
+      <div className="table-container">
+      <table class="table table-striped">
+          <thead>
+            <tr className='table-header'>
+              < th style={{border: 'none' }}>
+                <input type="checkbox" />
+              </th>
+              <th style={{border: 'none' }}>S.NO</th>
+              <th style={{border: 'none' }}>CATEGORY NAME</th>
+              <th style={{border: 'none' }}>ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categories.map((category, index) => (
+              <tr key={category.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+                <td>
+                  <input type="checkbox" />
+                </td>
+                <td>{index + 1}</td>
+                <td>{category.categories ? category.categories : 'No category available'}</td>
+                <td>
+                  <button onClick={() => handlEdit(category.id)} className="btn btn-primary me-2">
+                    <i className="fas fa-edit" aria-hidden="true"></i> Edit
                   </button>
-                        <button onClick={() => handleDeleteCategory(category.id)}>
-                        <i className="fa fa-trash" aria-hidden="true"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-     
-        </div>
-        
+                  
+                  <button onClick={() => handleDeleteCategory(category.id)} className="btn btn-danger">
+                    <i className="fa fa-trash" aria-hidden="true"></i> Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
+    </div>
+ 
+  
+
  
   );
 };
 
 export default ViewCategory;
+

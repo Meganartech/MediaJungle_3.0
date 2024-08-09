@@ -86,10 +86,10 @@ const About_us = () => {
   };
   return (
  
-    <div className="container-fluid con-flu">
-       <div className="container2">
+    <div className="marquee-container">
+       <div className="container2 mt-4">
        <ol className="breadcrumb mb-4">
-         <li className="breadcrumb-item text-white"><Link to="/admin/About_us">About Us</Link>
+         <li className="breadcrumb-item text-white "><Link to="/admin/About_us">About Us</Link>
          </li>
          {/* <li className="breadcrumb-item active">About_us</li> */}
        </ol>

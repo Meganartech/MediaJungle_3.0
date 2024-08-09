@@ -42,6 +42,9 @@ public class UserRegister {
 	@Column(unique = true)
 	private String email;
 	
+	@Column(name="role")
+	private String role;
+	
 	@Column(name="password")
 	private String password;
 	
@@ -82,20 +85,24 @@ public class UserRegister {
 		// TODO Auto-generated constructor stub
 	}
 
-	public UserRegister(long id, String username, String email, String password, String confirmPassword, String mobnum,
-			byte[] profile,  Set<Addaudio1> favoriteAudios,Set<VideoDescription> favoriteVideos, PaymentUser paymentId) {
+	public UserRegister(long id, String username, String email, String role, String password, String confirmPassword,
+			String mobnum, byte[] profile, Set<Addaudio1> favoriteAudios, Set<VideoDescription> favoriteVideos,
+			PaymentUser paymentId) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.email = email;
+		this.role = role;
 		this.password = password;
 		this.confirmPassword = confirmPassword;
 		this.mobnum = mobnum;
 		this.profile = profile;
 		this.favoriteAudios = favoriteAudios;
 		this.favoriteVideos = favoriteVideos;
-		this.paymentId= paymentId;
+		this.paymentId = paymentId;
 	}
+
+
 
 	public long getId() {
 		return id;
@@ -177,4 +184,13 @@ public class UserRegister {
 		this.paymentId = paymentId;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	
 }

@@ -75,8 +75,8 @@ const UserLogin = () => {
   };
   return (
     <form onSubmit={handleSubmit}>
-  <Layout>
-    <div className='container mx-auto px-2 my-24 flex-colo'>
+  <Layout >
+    <div className='container mx-auto px-2 my-24 flex-colo' >
       <div className='w-full 2xl:w-2/5 gap-8 flex-colo p-8 sm:p-14 md:w-3/5 bg-dry rounded-lg border border-border'>
         {getall.length > 0 && getall[0].logo ? (
           <img

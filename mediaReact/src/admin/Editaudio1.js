@@ -252,9 +252,9 @@ fetchAudio(); // Replace 'yourDefaultFileName' with the desired default file nam
 
   return (
 
-    <div className="container-fluid px-4">
-      {/* <h1 className="mt-4 text-black">{updatedget.categories}'s Profile</h1> */}
-
+   
+     
+<div className='container2 mt-20'>
       <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item">
           <Link to="/Dashboard">Dashboard</Link>

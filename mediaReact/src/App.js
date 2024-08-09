@@ -6,6 +6,8 @@ import "./App.css";
 import "./css/sb-admin-2.css";
 import "./css/style.css";
 // import './index.css';
+import API_URL from './Config';
+
 
 
 import AddUser from "./admin/AddUser";
@@ -83,6 +85,7 @@ import AddTenure from './admin/AddTenure';
 import SiteSetting from './admin/SiteSetting';
 import Edittenure from './admin/Edittenure';
 
+
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -91,6 +94,30 @@ const App = () => {
   const log=localStorage.getItem('login'); 
   const storedData = localStorage.getItem('mySessionData')
   localStorage.setItem('mySessionData', false);
+  const [loading, setLoading] = useState(true);
+  
+
+  useEffect(() => {
+    const checkAdminRole = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/v2/checkAdminRole`);
+        const data = await response.json();
+        console.log("data", data.adminExists);
+        sessionStorage.setItem('initialsignup', data.adminExists);
+      } catch (error) {
+        console.error('Failed to check admin role:', error);
+        sessionStorage.setItem('initialsignup', 'false');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAdminRole();
+  }, []);
+
+
+
+
   
   useEffect(() => {
 
@@ -136,15 +163,25 @@ const App = () => {
   };
 
 
- 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
- 
   return (
 
     <div >
        {/* <Router> */}
         <Routes>
-          <Route path='/' element={<Home  />} />
+
+{/*         
+            <Route path='/' element={{hasSignedUp ?{navigate("/Home")} : {navigate("/admin/addUser")}} />} /> */}
+
+            <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<Home/>} />} />
+          {/* <Route path='/' element={<Home  />} /> */}
+
+          {/* <Route path='/' element={<UserPrivateRouter hasSignedUp={hasSignedUp}  element={<Home />} />} /> */}
+          {/* <Route path='/AdminSignin' element={<AdminSignin />} /> */}
+
           <Route path='MoviesPage' element={<MoviesPage />} />
           <Route path='VideoHomescreen' element={<VideoHomescreen />} />
           {/* <Route path='Homescreen' element={<Videosam />} /> */}
@@ -152,7 +189,6 @@ const App = () => {
           <Route path='UserLogin' element={<UserLogin />} />
           <Route path='Register' element={<Register />} />
           <Route path='AboutUs' element={<AboutUs />} />
-          <Route path="/movie/kanidhan" element={<SingleMovie />} />
           {/* <Route path='play' element={<Userplayer/>} /> */}
           <Route path='play' element={<UserPrivateRouter isAuthenticated={log} element={<Userplayer />} />} />
           <Route path='PlanDetails' element={<PlanDetails />} />
@@ -163,21 +199,11 @@ const App = () => {
           <Route path='watchpage/:id' element={<WatchPage />} />
           {/* <Route path='videoScreen/:id' element={<VideoScreen/>} />  */}
           <Route path='userforgetpassword' element={<Userforgetpassword />} />
-           {/* <Route path='singlemovie/:id' element={<SingleMovie />} /> */}
-    
-             
-           {/* <Route path="/admin" element={<Login />} />
-      <Route
-        path="/admin/*"
-        element={
-          <PrivateRoute >
-            <AdminLayout />
-          </PrivateRoute>
-        }
-      > */}
+          
+
           <Route path='admin' element={<Login />}  >
              <Route element={<PrivateRoutes />}> 
-             <Route element={<AdminLayout /> }   >
+             <Route element={<AdminLayout /> } >
              <Route path='ViewCategory' element={<ViewCategory />}/>
             <Route path='AddLanguage' element={<AddLanguage/>} />
             <Route path='ViewLanguage' element={<ViewLanguage/>} />

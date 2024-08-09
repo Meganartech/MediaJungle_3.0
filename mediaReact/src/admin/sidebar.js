@@ -3,69 +3,178 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
-import axios from 'axios';
+
+
 import Notification from '../Notification';
+import axios from 'axios';
+import notificationIcon from '../admin/icon/notification.png'
+
+
+
+
 
 
 const Sidebar = ({ activeLink, setActiveLink}) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const [isCatsTagsOpen, setIsCatsTagsOpen] = useState(false);
+  const [isUserAdminOpen, setIsUserAdminOpen] = useState(false);
+  const [isMediaOpen, setIsMediaOpen] = useState(false);
+  const [isLangCertiOpen, setIsLangCertiOpen] = useState(false);
+  const [isPlansTenureOpen, setIsPlansTenureOpen] = useState(false);
+
   const [isvalid, setIsvalid] = useState();
   const [isEmpty, setIsEmpty] = useState();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
-  const[count,setcount]=useState(0);
-  const [isopen,setisopen]=useState(false);
-  
   const token =sessionStorage.getItem("tokenn");
   console.log("token",token)
+  const [isActive, setIsActive] = useState(false);
+  const [getall,setGetAll] = useState('');
 
-  const fetchUnreadCount = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/api/v2/unreadCount`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-  
-      if (response.status === 200) {
-        const data = response.data;
-        setcount(data);
-        console.log("count",data)
-      }
-    } catch (error) {
-      console.error("Error fetching unread count:", error);
-    }
-  };
 
-  const handlemarkallasRead = async () => {
-    try {
-        const markread = await axios.post(`${API_URL}/api/v2/markAllAsRead`, {}, {
-            headers: {
-                Authorization: token,
-            },
-        });
-        
-        if (markread.status === 200) {
-            fetchUnreadCount();
-        }
-    } catch (error) {
-        console.error("Error marking all notifications as read:", error);
-    }
+
+  const handleToggle = (setState) => {
+    setState(prevState => !prevState);
 };
 
 
-  useEffect(() => {
-  
-  
-  
-    // Fetch initially
-    fetchUnreadCount();
-  
-    // Cleanup for interval
-  }, [count]); 
+const toggleSidebar = () => {
+  setIsActive(!isActive);
+};
+
+
+const [isopen,setisopen]=useState(false);
+const [dropdownOpen, setDropdownOpen] = useState(false);
+
+
+
+
+const[count,setcount]=useState(0);
+const handleLogout = async () => {
+  try {
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
+
+
+    const confirmLogout = await Swal.fire({
+      title: "Are you sure?",
+      text: "You are about to logout.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#FBC740",
+      cancelButtonColor: "#FBC740",
+      confirmButtonText: "Yes, logout",
+      cancelButtonText: "Cancel",
+    });
+
+
+    if (confirmLogout.isConfirmed) {
+      const response = await fetch(`${API_URL}/api/v2/logout/admin`, {
+        method: "POST",
+
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+
+      if (response.ok) {
+        sessionStorage.removeItem("tokenn");
+        sessionStorage.removeItem("username");
+        localStorage.clear();
+        sessionStorage.setItem('name', false);
+        navigate('/admin');
+        console.log("Logged out successfully");
+      } else {
+        console.error("Logout failed. Server responded with status:", response.status);
+        Swal.fire({
+          icon: 'error',
+          title: 'Logout failed',
+          text: 'Please try again later.',
+        });
+      }
+    }
+  } catch (error) {
+    console.error("An error occurred during logout:", error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred while logging out. Please try again later.',
+    });
+  }
+};
+
+
+const toggleDropdown = () => {
+  setDropdownOpen(!dropdownOpen);
+};
+
+
+const fetchUnreadCount = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/v2/unreadCount`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+
+
+    if (response.status === 200) {
+      const data = response.data;
+      setcount(data);
+      console.log("count",data)
+    }
+  } catch (error) {
+    console.error("Error fetching unread count:", error);
+  }
+};
+
+
+const handlemarkallasRead = async () => {
+  try {
+      const markread = await axios.post(`${API_URL}/api/v2/markAllAsRead`, {}, {
+          headers: {
+              Authorization: token,
+          },
+      });
+     
+      if (markread.status === 200) {
+          fetchUnreadCount();
+      }
+  } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+  }
+};
+
+
+
+
+useEffect(() => {
+
+
+
+
+
+
+  // Fetch initially
+  fetchUnreadCount();
+
+
+  // Cleanup for interval
+}, [count]);
+
+
+
+
+
+
+ 
   useEffect(() => {
    
+
 
     fetch(`${API_URL}/api/v2/GetAllUser`)
     .then(response => {
@@ -78,10 +187,6 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
             setIsEmpty(data.empty);
             setIsvalid(data.valid);
             const type = data.type;
-            // data.dataList.map((item, index) => {
-              // console.log("key 1"+data.dataList[0].key1);
-              // console.log("value 1"+data.dataList[0].key2);
-            // });
 
 
       sessionStorage.setItem('type',type);
@@ -92,189 +197,84 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
     });
   }, []);
 
+
   useEffect(() => {
     setActiveLink(location.pathname);
 }, [location.pathname, setActiveLink]);
 
-  // const handleLogout = () => {
-  //   let ab = false;
-  //   sessionStorage.setItem("name", ab);
-  //   navigate('/admin');
-  // };
-
-  const handleLogout = async () => {
-    try {
-      const token = sessionStorage.getItem("tokenn"); // Retrieve token from session storage
-      if (!token) {
-        console.error("Token not found");
-        return;
-      }
-  
-      // Display a confirmation dialog using Swal
-      const confirmLogout = await Swal.fire({
-        title: "Are you sure?",
-        text: "You are about to logout.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#FBC740",
-        cancelButtonColor: "#FBC740",
-        confirmButtonText: "Yes, logout",
-        cancelButtonText: "Cancel",
-      });
-  
-      if (confirmLogout.isConfirmed) {
-        // Send logout request to the server
-        const response = await fetch(`${API_URL}/api/v2/logout/admin`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-            "Content-Type": "application/json", // Add any other necessary headers
-          },
-          // Add any necessary body data here
-        });
-  
-        if (response.ok) {
-          // Clear token from session storage after successful logout
-          sessionStorage.removeItem("tokenn");
-          sessionStorage.removeItem("username")
-          localStorage.clear();
-          sessionStorage.setItem('name', false);
-          navigate('/admin');
-          console.log("Logged out successfully");
-          return;
-        } else {
-          // Handle unsuccessful logout (e.g., server error)
-          console.error("Logout failed. Server responded with status:", response.status);
-          // Show error message using Swal
-          Swal.fire({
-            icon: 'error',
-            title: 'Logout failed',
-            text: 'Please try again later.',
-          });
-        }
-      }
-    } catch (error) {
-      console.error("An error occurred during logout:", error);
-      // Show error message using Swal
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while logging out. Please try again later.',
-      });
-    }
-  };
-  
-
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
 
 
-  const [isActive, setIsActive] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsActive(!isActive);
-  };
-//   const handleClick = (link) => {
-//     navigate(link); // Navigate dynamically based on the link parameter
-//     console.log(link);
-// };
+
 
   const handleClick = (link) => {
     setActiveLink(link);
     localStorage.setItem('activeLink', link); // Store the active link in local storage
-    
+   
     if((link==="/admin/About_us" || link==="/admin/Dashboard")&& isEmpty)
     {
       // console.log("!isEmpty"+isEmpty+"isvalid"+isvalid+"!isEmpty"+!isEmpty)
       navigate(link);
     }
-    else if ((link==="/admin/About_us" || link==="/admin/Dashboard")&& !isEmpty && !isvalid) 
+    else if ((link==="/admin/About_us" || link==="/admin/Dashboard")&& !isEmpty && !isvalid)
     {
-      
+     
         navigate(link);
-    } 
+    }
     else if (!isEmpty && isvalid)
      {
-      
+     
         navigate(link);
-    } 
+    }
   }
 // };
   const name=sessionStorage.getItem('username');
   const b=3;
   // alert(name);
 
-  const handleToggleDropdown = (dropdown) => {
-    setIsDropdownOpen(prev => (prev === dropdown ? null : dropdown));
-  };
-  
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetsiteSettings`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetAll(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+
 
   return (
-    
+   
 <div>
-  <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark logo">
-    <a className="navbar-brand ps-3" href="./Dashboard.js" style={{ margin: '0px', padding: '0px'   }}></a>
-    <button className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!" onClick={toggleSidebar}>
-      <i className="fas fa-bars"></i>
-    </button>
-    <form className="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-      <div className="input-group">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search..."
-          aria-label="Search"
-          aria-describedby="basic-addon2"
-        />
-        <button className="btn btn-outline-secondary" type="button">
-          <i className="fas fa-search"></i>
-        </button>
-      </div>
-    </form>
 
 
-    <div className="notification-icon ms-3">
-  <button className="btn btn-outline-secondary position-relative" type="button">
-    <a onClick={() => { setisopen(!isopen); }} href="#">
-      <i className="fas fa-bell"></i>
-    </a>
-    {count > 0 && (
-      <span className="notification-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-        {count}
-      </span>
-    )}
-  </button>
-</div>
 
 
-        
-    <ul className="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-      <li className={`nav-item dropdown ${dropdownOpen ? 'show' : ''}`}>
-        <a className="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" onClick={toggleDropdown} aria-expanded={dropdownOpen}>
-          <i className="fas fa-user fa-fw"></i>
-        </a>
-        <ul className={`dropdown-menu dropdown-menu-end ${dropdownOpen ? 'show' : ''}`} aria-labelledby="navbarDropdown">
-          <li>
-            <a className="dropdown-item" href="change-password.php">
-              Change Password
-            </a>
-          </li>
-          <li>
-            <button className="dropdown-item" onClick={handleLogout} style={{ cursor: 'pointer' }}>
-              Logout
-            </button>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
 
 
+ 
       <ul className={`navbar-nav sidebar sidebar-dark accordion ${isActive ? 'active' : ''}`} id="content-wrapper">
-      <div className="sidebar-logo mb-3 text-center">
-    <img src="/mediajungle.png" alt="Logo" className="logo-img" style={{height:'120px',width:'180px'}}/>
-  </div>
+      <div className="d-flex justify-content-center mt-n5">
+        {getall.length > 0 && getall[0].logo ? (
+          <Link to="/">
+            <img src={`data:image/png;base64,${getall[0].logo}`} alt="logo" className="img-fluid" />
+          </Link>
+        ) : (
+          <div></div>
+        )}
+      </div>
+      <br />
+      <hr />
+   
 
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Menu </div>
@@ -284,7 +284,7 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
         <i class="bi bi-speedometer"></i>
             <span >  Dashboard</span>
         </Link>
-      </li> 
+      </li>
     {/* <li className={`nav-item  ${activeLink === "/admin/AddUser" ? 'active' : ''}`} onClick={() => handleClick("/admin/AddUser")}>
       <Link className="nav-link text-white">
           <i className="fas fa-tachometer-alt"></i>
@@ -440,6 +440,7 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
           </Link>
       </li>
 
+
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Certificate</div>
       </div> */}
@@ -466,20 +467,23 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
               <i className="fas fa-photo-video"></i>
             <span>PlanDetails</span>
           </Link>
-      </li> */}
-<li className={`nav-item ${isDropdownOpen === 'plantenure' ? 'show' : ''}`}>
-                <div className="nav-link"onClick={() => handleToggleDropdown('plantenure')}>
-                <i class="bi bi-calendar"></i> 
+
+      </li> */} <li className="nav-item">
+                <div className="nav-link" onClick={() => handleToggle(setIsPlansTenureOpen)}>
+                <i class="bi bi-calendar"></i>
+
 
                     <span>Plans & Tenures</span>
-                    
-                    <i className={`fas fa-chevron-${isDropdownOpen === 'plantenure' ? 'down' : 'right'} ml-auto`}></i>
+                   
+                    <i className={`fas fa-chevron-${isPlansTenureOpen ? 'down' : 'right'} ml-auto`}></i>
+
                 </div>
                 {isDropdownOpen === 'plantenure' && (
                     <ul className="nav flex-column pl-3">
       <li className={`nav-item  ${activeLink === "/admin/PlanDetailsList" ? 'active' : ''}`} onClick={() => handleClick("/admin/PlanDetailsList")}>
           <Link className="nav-link" >
-          <i class="bi bi-clipboard"></i> 
+          <i class="bi bi-clipboard"></i>
+
 
             <span>  Plans</span>
           </Link>
@@ -487,6 +491,7 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
       <li className={`nav-item  ${activeLink === "/admin/TenureList" ? 'active' : ''}`} onClick={() => handleClick("/admin/TenureList")}>
           <Link className="nav-link" >
           <i class="bi bi-hourglass"></i>
+
 
             <span>  Tenures</span>
           </Link>
@@ -507,22 +512,29 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
           <Link className="nav-link" >
           <i class="bi bi-house"></i>
 
+
             <span> About-Us</span>
           </Link>
       </li>
-      
+     
     </ul>
 
-    {isopen && <div>
+
+    {/* {isopen && <div>
         <Notification setisopen={setisopen} isopen={isopen} setcount={setcount} handlemarkallasRead={handlemarkallasRead}/>
-      
-    </div>}
+     
+    </div>} */}
+
 
   </div>
 
-  
-    
+
+ 
+   
   );
 };
 
+
 export default Sidebar;
+
+

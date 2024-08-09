@@ -90,9 +90,9 @@ const handleSubmit = (e) => {
 
 
 
-    <div className="container-fluid">
+    <div className='container2 mt-20'>
 
-      <h1 className="mt-4 text-white">{UpdatedTag.tag}'s Profile</h1>
+     
       <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item">
           <Link to="/Dashboard">Dashboard</Link>

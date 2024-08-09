@@ -165,8 +165,8 @@ const handleSubmit = (e) => {
 
   return (
   
-    <div className="container-fluid">
-       <div className='container2'>
+ 
+    <div className='container2 mt-20'>
       <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item">
           <Link to="/admin/Profile">Manage SubAdmin</Link>
@@ -290,7 +290,7 @@ const handleSubmit = (e) => {
               </form>
             </div>
           </div>
-        </div>
+        
         /*<div className="col-lg-4">
           <div className="row">
             <div className="col-xl-12 col-md-6 mt-3">

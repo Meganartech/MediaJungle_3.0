@@ -49,58 +49,17 @@ public class AddUserController {
     
     @Autowired
     private NotificationService notificationservice;
-	
-//	@PostMapping("/AddUser")
-//	public ResponseEntity<String> AddUser(@RequestHeader("Authorization") String token,@RequestBody AddUser data) {
-//		 try {
-//		        if (!jwtUtil.validateToken(token)) {
-//		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-//		        }
-//
-//		        String email = jwtUtil.getUsernameFromToken(token);
-//		        System.out.println("email: " + email);
-//		        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
-//
-//		        if (opUser.isPresent()) {
-//		            AddUser user = opUser.get();
-//		            String username = user.getUsername();
-//                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//                    String hashedPassword = passwordEncoder.encode(data.getPassword());
-//                    data.setPassword(hashedPassword);
-//                    BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
-//                    String hashedPass = passwordEncoder.encode(data.getConfirmPassword());
-//                    data.setConfirmPassword(hashedPass);
-//
-//			        AddUser adduser = adduserrepository.save(data);
-//			        // Assuming you need to create a notification for a new category
-//		            Long adduserId = adduser.getId();
-//		            String userName = adduser.getUsername(); // Adjust as needed
-//		            String heading = "New SubAdmin Added!";
-//
-//		            // Create notification
-//		            Long notifyId = notificationservice.createNotification(username, email, heading);
-//		            if (notifyId != null) {
-//		                Set<String> notiUserSet = new HashSet<>();
-//		                // Fetch all admins from AddUser table
-//		                List<AddUser> adminUsers = adduserrepository.findAll();
-//		                for (AddUser admin : adminUsers) {
-//		                    notiUserSet.add(admin.getEmail());
-//		                }
-//		                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
-//		            }
-//
-//		            return ResponseEntity.status(HttpStatus.CREATED).body("success");
-//		        } else {
-//		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-//		        }
-//		    } catch (Exception e) {
-//		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
-//		    }
-//		}
-	
-
-    	public ResponseEntity<?> AddUser(@RequestBody AddUser data) {
+   
+    public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
 		try {
+			Optional<AddUser> userOptional = adduserrepository.findByRole("ADMIN");
+			
+			 // If an ADMIN role already exists, set the role to SUBADMIN, otherwise set it to ADMIN
+	        if (userOptional.isPresent()) {
+	            data.setRole("SUBADMIN");
+	        } else {
+	            data.setRole("ADMIN");
+	        }
             // Example: Encrypting password before saving (if AddUser has a password field)
              BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
              String hashedPassword = passwordEncoder.encode(data.getPassword());
@@ -115,8 +74,41 @@ public class AddUserController {
         } catch (Exception e) {
         	 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed");
         }
+	
     }
+	
+    public ResponseEntity<?> addUser(@RequestBody AddUser data, @RequestHeader("Authorization") String token) {
+        try {
+            // Extract role from the token
+            String role = jwtUtil.getRoleFromToken(token);
+            System.out.println("role"+ role);
 
+            if (!"ADMIN".equals(role)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\": \"Only admin can add subadmins\"}");
+            }
+
+            Optional<AddUser> userOptional = adduserrepository.findByRole("ADMIN");
+
+            // If an ADMIN role already exists, set the role to SUBADMIN, otherwise set it to ADMIN
+            if (userOptional.isPresent()) {
+                data.setRole("SUBADMIN");
+            } else {
+                data.setRole("ADMIN");
+            }
+
+            // Encrypting password before saving
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(data.getPassword());
+            data.setPassword(hashedPassword);
+            String hashedConfirmPassword = passwordEncoder.encode(data.getConfirmPassword());
+            data.setConfirmPassword(hashedConfirmPassword);
+
+            adduserrepository.save(data);
+            return ResponseEntity.ok("success");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed");
+        }
+    }
 	
 	
 //	@PostMapping("/login/admin")
@@ -151,17 +143,18 @@ public class AddUserController {
 	        Optional<AddUser> userOptional = adduserrepository.findByUsername(username);
 
 	        if (userOptional.isEmpty()) {
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\": \"User not found\"}");
 	        }
 
 	        AddUser user = userOptional.get();
 	        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	        if (!passwordEncoder.matches(password, user.getPassword())) {
-	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+	        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Incorrect password\"}");
 	        }
-
-	        String jwtToken = jwtUtil.generateToken(username); // Use jwtUtil
+	        
+	        String role = user.getRole(); // Get user role
+	        String jwtToken = jwtUtil.generateToken(username,role); // Use jwtUtil
 	        Map<String, Object> responseBody = new HashMap<>();
 	        responseBody.put("Token", jwtToken);
 	        responseBody.put("message", "Login successful");
@@ -184,8 +177,7 @@ public class AddUserController {
 	    }
 	}
 	
-	@PostMapping("/logout/admin")
-    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> logoutadmin(@RequestHeader("Authorization") String token) {
         // Extract the token from the Authorization header
         // Check if the token is valid (e.g., not expired)
         // Blacklist the token to invalidate it
@@ -426,5 +418,14 @@ public class AddUserController {
 	    }
 	}
 
+	public ResponseEntity<?> checkAdminRole() {
+	    try {
+	        Optional<AddUser> adminOptional = adduserrepository.findByRole("ADMIN");
+	        return ResponseEntity.ok(Collections.singletonMap("adminExists", adminOptional.isPresent()));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check admin role");
+	    }
+	}
+	
 
 }

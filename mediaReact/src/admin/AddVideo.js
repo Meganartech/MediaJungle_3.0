@@ -574,8 +574,8 @@ const save = async (e) => {
 
     
 
-      <div className='container-fluid con-flu'>
-        <div className='container2'>
+    
+        <div className='container2 mt-20'>
           {/* <h1 className="mt-4 text-white">Add Video</h1> */}
           <ol className="breadcrumb mb-4">
             <li className="breadcrumb-item"><Link to="/admin/Video">Videos</Link>
@@ -848,7 +848,8 @@ const save = async (e) => {
              
           
           </div>
-       </div></div>
+       </div>
+     
   
  
     

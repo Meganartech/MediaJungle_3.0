@@ -21,6 +21,9 @@ public class AddUser {
 	@Column(unique = true)
 	private String email;
 	
+	@Column(name="role")
+	private String role;
+	
 	@Column(name="mobnum")
 	private  String mobnum;
 	
@@ -47,12 +50,13 @@ public class AddUser {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AddUser(long id, String username, String email, String mobnum, String compname, String pincode,
+	public AddUser(long id, String username, String email, String role, String mobnum, String compname, String pincode,
 			String country, String password, String confirmPassword, String address) {
 		super();
 		this.id = id;
 		Username = username;
 		this.email = email;
+		this.role = role;
 		this.mobnum = mobnum;
 		this.compname = compname;
 		this.pincode = pincode;
@@ -61,6 +65,8 @@ public class AddUser {
 		this.confirmPassword = confirmPassword;
 		this.address = address;
 	}
+
+
 
 	public long getId() {
 		return id;
@@ -141,6 +147,16 @@ public class AddUser {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	
 
 	
 }

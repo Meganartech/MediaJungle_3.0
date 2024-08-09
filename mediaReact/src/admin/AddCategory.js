@@ -7,10 +7,7 @@ import API_URL from '../Config';
 const AddCategory = () => {
   
     //.....................................Admin Function............................................
-    const name=sessionStorage.getItem('username');
   const [categoryName, setCategoryName] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const token = sessionStorage.getItem("tokenn")
 
 
@@ -45,7 +42,6 @@ const AddCategory = () => {
           text: 'Category inserted successfully!',
         });
       } else {
-        setErrorMessage('Error occurred while inserting category.');
         
         Swal.fire({
           icon: 'error',
@@ -55,7 +51,6 @@ const AddCategory = () => {
       }
     })
     .catch(error => {
-      setErrorMessage('Error occurred while inserting category.');
       console.error('Error:', error);
   
       Swal.fire({
@@ -65,144 +60,48 @@ const AddCategory = () => {
       });
     });
   };
-  //   //.....................................User Function............................................
-  //   const userid =sessionStorage.getItem('id');
-  // const [categoryName_u, setCategoryName_u] = useState('');
-  // const [errorMessage_u, setErrorMessage_u] = useState('');
-  // const [successMessage_u, setSuccessMessage_u] = useState('');
-
-  // const handleSubmit_u = (e) => {
-  //   e.preventDefault();
-
-  //   // Create form data object
-  //   // const formData = new FormData();
-  //   // formData.append('category_name', categoryName_u);
-
-  //   // console.log(categoryName_u);
-  //   // Send the category name to the server using a POST request
-  //   fetch(`${API_URL}/api/v2/AddNewCategories`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: new URLSearchParams(formData),
-  //   })
-    
-  //     .then(response => response.text())
-  //     .then(data => {
-  //       if (data === 'success') {
-  //         setSuccessMessage_u('Category inserted successfully!');
-  //         setCategoryName_u('');
-  //       } else {
-  //         setErrorMessage_u('Error occurred while inserting category.');
-  //       }
-  //     })
-  //     .catch(error => {
-  //       setErrorMessage_u('Error occurred while inserting category.');
-  //       console.error('Error:', error);
-  //     });
-  // };
+  
 
   return (
     
-    <div className='container-fluid con-flu'>
-      <div className='container2'>
-          <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item"><Link to="/admin/ViewCategory">Categories</Link>
-          </li>
-            <li className="breadcrumb-item active  text-white">Add Categories</li>
-          </ol>
-      <div className='temp justify-content-center'>
-        <div className='col-lg-12'>
-          {/* {name=="admin"
-          ? */}
-      
-            <div className='card-body'>
-              {errorMessage && (
-                <div className='alert alert-danger'>{errorMessage}</div>
-              )}
-              {successMessage && (
-                <div className='alert alert-success'>{successMessage}</div>
-              )}
-              <form onSubmit={handleSubmit}>
-                <div className='modal-header'>
-                  <h5 className='modal-title' id='exampleModalLongTitle' style={{fontFamily:'Poppins'}}>
-                    Add New Categories
-                  </h5>
-                </div>
-                <div className='modal-body text-center'>
-                  <input
-                    type='text'
-                    name='category_name'
-                    className='form-control'
-                    id='name'
-                    required
-                    placeholder='Category Name'
-                    value={categoryName}
-                    onChange={(e) => setCategoryName(e.target.value)}
-                  />
-                  <br />
-                </div>
-                <div className='modal-footer'>
-                  <input
-                    type='submit'
-                    name='but_upload'
-                    value='Save'
-                    className='btn btn-info'
-                  />
-                </div>
-              </form>
-            </div>
-          {/* : */}
-          {/* <div className='card shadow-lg border-0 rounded-lg mt-5'> 
-            <div className='card-header'>
-              <h2 className='text-center'>Add user Categories</h2>
-              <hr />
-            </div> */}
-            {/* <div className='card-body'>
-              {errorMessage_u && (
-                <div className='alert alert-danger'>{errorMessage_u}</div>
-              )}
-              {successMessage_u && (
-                <div className='alert alert-success'>{successMessage_u}</div>
-              )}
-              <form onSubmit={handleSubmit_u}>
-                <div className='modal-header bg-info'>
-                  <h5 className='modal-title' id='exampleModalLongTitle'>
-                    Add New Categories
-                  </h5>
-                </div>
-                <div className='modal-body text-center'>
-                  <input
-                    type='text'
-                    name='category_name'
-                    className='form-control'
-                    id='name'
-                    required
-                    placeholder='Category Name'
-                    value={categoryName_u}
-                    onChange={(e) => setCategoryName_u(e.target.value)}
-                  />
-                  <br />
-                </div>
-                <div className='modal-footer'>
-                  <input
-                    type='submit'
-                    name='but_upload'
-                    value='Save'
-                    className='btn btn-info'
-                  />
-                </div>
-              </form>
-            </div>*/}
-          </div>
-          {/* } */}
-        </div> 
+    <div className='container3 mt-20'>
+  <ol className="breadcrumb mb-4">
+    <li className="breadcrumb-item"><Link to="/admin/ViewCategory">Categories</Link></li>
+    <li className="breadcrumb-item active text-white">Add Categories</li>
+  </ol>
+  <div className="container mt-3">
+    <div className="row py-3 my-3 align-items-center">
+      <div className="col-md-3">
+        <label className="custom-label">Category Name</label>
+      </div>
+      <div className="col-md-4">
+        <input 
+          type='text'
+          name='category_name'
+          id='name'
+          required
+          value={categoryName}
+          onChange={(e) => setCategoryName(e.target.value)}
+          className="form-control border border-dark border-2" 
+          placeholder="Enter Category" 
+        />
       </div>
     </div>
-   
+    <div className="row py-3 my-5">
+      <div className="col-md-12" style={{ height: '200px' }}></div> {/* Placeholder div for spacing */}
+    </div>
+    <div className="row py-3 my-5">
+      <div className="col-md-8 ms-auto text-end">
+      <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
+        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={handleSubmit} style={{backgroundColor:'blue'}}
+        >Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   );
 };
 
 export default AddCategory;
+

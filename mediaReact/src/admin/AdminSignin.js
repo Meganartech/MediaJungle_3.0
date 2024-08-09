@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import API_URL from '../Config';
+import swal from 'sweetalert2';
 const AdminSignin = () => {
     const navigate = useNavigate();
     const [data, setData] = useState({
@@ -97,40 +98,40 @@ const AdminSignin = () => {
     
       const submitForm = async (e) => {
         e.preventDefault();
+      
         if (validateForm()) {
           try {
             const sendData = {
               username: data.username,
               mobnum: data.mobnum,
               address: data.address,
-              confirmPassword:data.confirm_Password,
+              confirmPassword: data.confirm_Password,
               pincode: data.pincode,
               email: data.email,
               compname: data.compname,
               country: data.country,
               password: data.password
-
             };
-    
+      
             console.log('Sending data:', sendData);
-    
+      
             const response = await axios.post(
-              `${API_URL}/api/v2/AddUser`,
+              `${API_URL}/api/v2/AdminRegister`,
               sendData
             );
-    
+      
             console.log('API Response:', response);
-    
+      
             if (response.status === 200) {
-              // history.push('/Dashboard');
-              //  history.push('/admin/Profile');
+              swal.fire('Success', 'Registration successful!', 'success');
               navigate('/admin');
             } else {
               console.log('Invalid User');
+              swal.fire('Error', 'Invalid user. Please try again.', 'error');
             }
           } catch (error) {
             console.error('Error:', error);
-            console.log('An error occurred while registering. Please try again.');
+            swal.fire('Error', 'An error occurred while registering. Please try again.', 'error');
           }
         }
       };
@@ -140,9 +141,9 @@ const AdminSignin = () => {
     <div id="content-wrapper" class="d-flex flex-column samp" style={{ marginLeft: "13rem"}}>
 
     {/* <Sidebar /> */}
-  <div className="container-fluid">
+  {/* <div className="container-fluid"> */}
   
-<div className='container2'>
+<div className='container2 mt-20 ml-15'>
     
         <ol className="breadcrumb mb-4">
         {/* <li className="breadcrumb-item text-white"><Link to="/Dashboard">Dashboard</Link>
@@ -297,7 +298,7 @@ const AdminSignin = () => {
     </form>
   </div>
   </div>
-  </div>
+  
   )
 }
 
