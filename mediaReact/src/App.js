@@ -81,6 +81,7 @@ import PaymentHistory from './admin/PaymentHistory';
 import TenureList from './admin/TenureList';
 import AddTenure from './admin/AddTenure';
 import SiteSetting from './admin/SiteSetting';
+import Edittenure from './admin/Edittenure';
 
 const App = () => {
   const location = useLocation();
@@ -215,6 +216,7 @@ const App = () => {
             <Route path='Adminplan' element= {<Adminplan/>} />
             <Route path='PlanDetailsList' element={<PlanDetailsList/>}/>
             <Route path='TenureList' element={<TenureList/>}/>
+            <Route path='Edittenure/:id' element={<Edittenure />} />
             <Route path='Editplan' element={<Editplan />} />
             <Route path='PlanDescription' element={<PlanDescription />} />
             

@@ -1,18 +1,96 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "../css/Sidebar.css";
+import API_URL from '../Config';
+import Swal from 'sweetalert2';
 
 const TenureList = () => {
-    const navigate = useNavigate(); // Initialize navigate
+    const navigate = useNavigate();
+    const [tenures, setTenures] = useState([]); // Use this state for tenures
 
-    const handleClick = (link) => {
-        navigate(link);
-    };
+    const token = sessionStorage.getItem('tokenn')
+    
+    const handleDelete = (id) => {
+        // Display confirmation dialog using SweetAlert
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'You will not be able to recover this Tenure!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!',
+          cancelButtonText: 'No, cancel',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // User confirmed deletion, proceed with fetch DELETE request
+            fetch(`${API_URL}/api/v2/deletetenure/${id}`, {
+              method: 'DELETE',
+              headers:{
+                Authorization:token
+              }
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.status <= 204 ? null : response.json();
+            })
+            .then(data => {
+              if (!data) {
+                console.log('Tenure deleted successfully');
+                // Remove the deleted tenure from the local state
+                setTenures(prevTenure => prevTenure.filter(tenure => tenure.id !== id));
+                Swal.fire(
+                  'Deleted!',
+                  'Your Tenure has been deleted.',
+                  'success'
+                );
+              } else {
+                console.error('Error deleting tenure:', data.error); // Log error message from server
+                Swal.fire(
+                  'Error!',
+                  'Failed to delete tenure. Please try again later.',
+                  'error'
+                );
+              }
+            })
+            .catch(error => {
+              console.error('Error deleting tenure:', error);
+              Swal.fire(
+                'Error!',
+                'Failed to delete tenure. Please try again later.',
+                'error'
+              );
+            });
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            console.log('Delete operation cancelled');
+          }
+        });
+      };
+    
+    useEffect(() => {
+        fetch(`${API_URL}/api/v2/tenures`)
+          .then(response => {
+            console.log(response);
+            if (!response.ok) {
+              throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log("Fetched data:", data);
+            setTenures(data);
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+    }, []);
 
     return (
         <div className="container-fluid">
             <div className='AddArea'>
-                <button className='btn btn-custom' onClick={() => handleClick("/admin/AddTenure")}>Add Tenure</button>
+                <button className='btn btn-custom' onClick={() => navigate("/admin/AddTenure")}>Add Tenure</button>
             </div>
             <br />
             <div className='container2'>
@@ -26,39 +104,47 @@ const TenureList = () => {
                         <thead>
                             <tr>
                                 <th>S.No</th>
-                                <th>Tenure name</th>
-                                <th>Amount</th>
-                                <th>Validity</th>
+                                <th>Tenure Name</th>
+                                <th>No of Months</th>
+                                <th>Discount Months</th>
                                 <th>Action</th>
-                                <th>Add Description</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Quarterly</td>
-                                <td>250</td>
-                                <td>30</td>
-                                <td>
-                                    <button>
-                                        <i className="fas fa-edit" aria-hidden="true"></i>
-                                    </button>
-                                    <button>
-                                        <i className="fa fa-trash" aria-hidden="true"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <button className="btn btn-secondary ml-2">
-                                        Add
-                                    </button>
-                                </td>
-                            </tr>
+                            {tenures.length > 0 ? (
+                                tenures.map((tenure, index) => (
+                                    <tr key={tenure.id}>
+                                        <td>{index + 1}</td> {/* Display serial number */}
+                                        <td>{tenure.tenure_name}</td>
+                                        <td>{tenure.months}</td>
+                                        <td>{tenure.discount}</td>
+                                        <td>
+                                            <button onClick={() => handleEdit(tenure.id)}>
+                                                <i className="fas fa-edit" aria-hidden="true"></i>
+                                            </button>
+                                            <button onClick={() => handleDelete(tenure.id)}>
+                                                <i className="fa fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5">No tenures available</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     );
+
+    function handleEdit(id) {
+        // Navigate to edit page or perform edit action
+        localStorage.setItem('items', id);
+        navigate(`/admin/EditTenure/${id}`);
+    }
 };
 
 export default TenureList;
