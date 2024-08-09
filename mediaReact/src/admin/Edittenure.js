@@ -3,14 +3,30 @@ import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import API_URL from '../Config';
 
-const Edittenure = () => {
+const EditTenure = () => {
     const id = localStorage.getItem('items');
+    const [selectedMonths, setSelectedMonths] = useState('');
     const [updatedTenure, setupdatedTenure] = useState({
         tenure_name: '',
-        amount: 0,
-        validity: ''
+        months: '',
+        discount: ''
     });
+    const [discountOptions, setDiscountOptions] = useState([]);
     const token = sessionStorage.getItem('token');
+
+    const handleMonthsChange = (e) => {
+        const selectedMonths = parseInt(e.target.value, 10);
+        setSelectedMonths(selectedMonths);
+    
+        // Define discount options based on selected months
+        let options = [];
+        if (selectedMonths === 1 || selectedMonths === 2) {
+            options = [0];
+        } else if (selectedMonths >= 3) {
+            options = Array.from({ length: selectedMonths + 1 }, (_, i) => i);
+        }
+        setDiscountOptions(options);
+    };
 
     useEffect(() => {
         fetch(`${API_URL}/api/v2/tenures/${id}`)
@@ -21,8 +37,11 @@ const Edittenure = () => {
                 return response.json();
             })
             .then(data => {
-                console.log('Fetched tenure data:', data); // Log the data
+                console.log('Fetched tenure data:', data);
                 setupdatedTenure(data);
+
+                // Initialize discount options based on fetched data
+                handleMonthsChange({ target: { value: data.months } });
             })
             .catch(error => {
                 console.error('Error fetching tenure:', error);
@@ -33,41 +52,52 @@ const Edittenure = () => {
         const { name, value } = e.target;
         setupdatedTenure(prevTenure => ({
             ...prevTenure,
-            [name]: value,
+            [name]: value , // Convert to number if necessary
         }));
     };
     const handleSubmit = (e) => {
         e.preventDefault();
+    
+        console.log('Submitting data:', updatedTenure);
+    
         fetch(`${API_URL}/api/v2/edittenure/${id}`, {
-            method: 'PUT', // or PATCH, depending on your API
+            method: 'PUT',
             headers: {
-                Authorization: token,
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(updatedTenure),
         })
-        .then((response) => {
-            console.log('Response status:', response.status); // Log the response status
-            if (response.ok) { // Check if the response status is 200-299
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json(); // Parse JSON response
+        })
+        .then(responseData => {
+            console.log('Response Data:', responseData);
+    
+            // Check if the response indicates success
+            if (responseData.success) {
                 Swal.fire({
                     icon: 'success',
+
                     title: 'Success',
                     text: 'Tenure details successfully updated',
                 });
             } else {
+                // If there's an error message from the backend
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Error updating tenure', // Generic error message
+                    text: responseData.message || 'Error updating tenure',
                 });
             }
         })
-        .catch((error) => {
-            console.error('Fetch error:', error); // Log the error
+        .catch(error => {
+            console.error('Fetch error:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'An error occurred while updating the tenure',
+                text: error.message || 'An error occurred while updating the tenure',
             });
         });
     };
@@ -81,61 +111,80 @@ const Edittenure = () => {
                     </li>
                     <li className="breadcrumb-item active text-white">Edit Tenure</li>
                 </ol>
-                
-                            <div className="card-body">
-                                <form onSubmit={handleSubmit}>
-                                    <table className="table">
-                                        <tbody>
-                                            <tr>
-                                                <th>Tenure name</th>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        name="tenure_name"
-                                                        value={updatedTenure.tenure_name || ''}
-                                                        onChange={handleChange}
-                                                        className="form-control"
-                                                    />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Amount</th>
-                                                <td>
-                                                    <input
-                                                        type="number"
-                                                        name="amount"
-                                                        value={updatedTenure.amount || ''}
-                                                        onChange={handleChange}
-                                                        className="form-control"
-                                                    />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Validity</th>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        name="validity"
-                                                        value={updatedTenure.validity || ''}
-                                                        onChange={handleChange}
-                                                        className="form-control"
-                                                    />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-    <button type="submit" className="btn btn-info">
-        Update
-    </button>
-</div>
 
-                                </form>
+                <div className="card-body">
+                    <form onSubmit={handleSubmit}>
+                        <div className="modal-body">
+                            <div className="temp">
+                                <div className="col-lg-6">
+                                    <label htmlFor="tenure_name">Tenure Name</label>
+                                    <input
+                                        type="text"
+                                        name="tenure_name"
+                                        id="tenure_name"
+                                        className="form-control"
+                                        value={updatedTenure.tenure_name || ''}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="col-lg-6">
+                                    <label htmlFor="months">No of Months</label>
+                                    <select
+                                        name="months"
+                                        id="months"
+                                        className="form-control"
+                                        value={updatedTenure.months || ''}
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                            handleMonthsChange(e); // Update discount options when months change
+                                        }}
+                                        required
+                                    >
+                                        <option value="">Select Months</option>
+                                        {[...Array(60).keys()].map(i => (
+                                            <option key={i + 1} value={i + 1}>
+                                                {i + 1}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-lg-6">
+                                    <label htmlFor="discount">Discount</label>
+                                    <select
+                                        name="discount"
+                                        id="discount"
+                                        className="form-control"
+                                        value={updatedTenure.discount || ''}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        <option value="">Select Discount</option>
+                                        {discountOptions.map(option => (
+                                            <option key={option} value={option}>
+                                                {option} Free Month{option > 1 ? 's' : ''}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="col-lg-12">
+                                    <div className="d-flex justify-content-center" style={{ marginTop: "10px" }}>
+                                        <button
+                                            type="submit"
+                                            className="text-center btn btn-info"
+                                        >
+                                            Update
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-          
+                    </form>
+                </div>
+            </div>
+        </div>
     );
-}
+};
 
-export default Edittenure;
+export default EditTenure;

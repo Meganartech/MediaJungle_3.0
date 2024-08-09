@@ -15,8 +15,8 @@ public class Tenure {
     private Long id;
 
     private String tenure_name; // Use snake_case to match database column names
-    private Integer amount;
-    private String validity;
+    private Integer months;
+    private Integer discount;
 
     // Getters and setters
     public Long getId() {
@@ -35,19 +35,19 @@ public class Tenure {
         this.tenure_name = tenure_name;
     }
 
-    public Integer getAmount() {
-        return amount;
+    public Integer getMonths() {
+        return months;
     }
 
-    public void setAmount(Integer amount) {
-        this.amount = amount;
+    public void setMonths(Integer months) {
+        this.months = months;
     }
 
-    public String getValidity() {
-        return validity;
+    public Integer getDiscount() {
+        return discount;
     }
 
-    public void setValidity(String validity) {
-        this.validity = validity;
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 }

@@ -49,8 +49,8 @@ public ResponseEntity<Tenure> getTenureById(@PathVariable long id){
 public ResponseEntity<Tenure> updateTenure(@PathVariable long id,@RequestBody Tenure tenureDetails){
 	Tenure updateTenure = tenureRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Tenure not exist with id:" +id));
 	updateTenure.setTenure_name(tenureDetails.getTenure_name());
-	updateTenure.setAmount(tenureDetails.getAmount());
-	updateTenure.setValidity(tenureDetails.getValidity());
+	updateTenure.setMonths(tenureDetails.getMonths());
+	updateTenure.setDiscount(tenureDetails.getDiscount());
 	tenureRepository.save(updateTenure);
 	return ResponseEntity.ok(updateTenure);
 }

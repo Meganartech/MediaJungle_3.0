@@ -105,8 +105,8 @@ const TenureList = () => {
                             <tr>
                                 <th>S.No</th>
                                 <th>Tenure Name</th>
-                                <th>Amount</th>
-                                <th>Validity</th>
+                                <th>No of Months</th>
+                                <th>Discount Months</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -116,8 +116,8 @@ const TenureList = () => {
                                     <tr key={tenure.id}>
                                         <td>{index + 1}</td> {/* Display serial number */}
                                         <td>{tenure.tenure_name}</td>
-                                        <td>{tenure.amount}</td>
-                                        <td>{tenure.validity}</td>
+                                        <td>{tenure.months}</td>
+                                        <td>{tenure.discount}</td>
                                         <td>
                                             <button onClick={() => handleEdit(tenure.id)}>
                                                 <i className="fas fa-edit" aria-hidden="true"></i>
