@@ -48,6 +48,7 @@ import com.VsmartEngine.MediaJungle.model.Emailsettings;
 import com.VsmartEngine.MediaJungle.model.License;
 import com.VsmartEngine.MediaJungle.model.Mobilesettings;
 import com.VsmartEngine.MediaJungle.model.Othersettings;
+import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
 import com.VsmartEngine.MediaJungle.model.PlanDetails;
 import com.VsmartEngine.MediaJungle.model.Seosettings;
@@ -561,7 +562,14 @@ public class FrontController {
 
 		return PaymentController.updatePaymentId(requestData);
 	}
-
+	
+	@GetMapping("/paymentHistory/{userId}")
+	public ResponseEntity<List<PaymentUser>> getPaymentHistory(@PathVariable Long userId) {
+			
+		return PaymentController.getPaymentHistory(userId);
+	  
+	}
+	
 	@PostMapping("/AddrazorpayId")
 	public ResponseEntity<?>  Addpaymentsetting (@RequestParam("razorpay_key") String razorpay_key,
 			@RequestParam("razorpay_secret_key")String razorpay_secret_key,

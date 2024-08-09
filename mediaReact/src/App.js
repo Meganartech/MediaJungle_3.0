@@ -83,6 +83,7 @@ import PaymentHistory from './admin/PaymentHistory';
 import TenureList from './admin/TenureList';
 import AddTenure from './admin/AddTenure';
 import SiteSetting from './admin/SiteSetting';
+import Edittenure from './admin/Edittenure';
 
 
 const App = () => {
@@ -196,7 +197,7 @@ const App = () => {
           <Route path='AdminSignin' element ={<AdminSignin />} />
           <Route path='Contactus' element={<ContactUs />}/>
           <Route path='watchpage/:id' element={<WatchPage />} />
-          <Route path='videoScreen/:id' element={<VideoScreen/>} /> 
+          {/* <Route path='videoScreen/:id' element={<VideoScreen/>} />  */}
           <Route path='userforgetpassword' element={<Userforgetpassword />} />
           
 
@@ -241,6 +242,7 @@ const App = () => {
             <Route path='Adminplan' element= {<Adminplan/>} />
             <Route path='PlanDetailsList' element={<PlanDetailsList/>}/>
             <Route path='TenureList' element={<TenureList/>}/>
+            <Route path='Edittenure/:id' element={<Edittenure />} />
             <Route path='Editplan' element={<Editplan />} />
             <Route path='PlanDescription' element={<PlanDescription />} />
             

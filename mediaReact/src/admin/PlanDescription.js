@@ -95,12 +95,14 @@ const PlanDescription = () => {
   };
 
   return (
+
     <div className='container2 mt-20'>
+
         <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item text-white">
-            <Link to="/Dashboard">Dashboard</Link>
+          <li className="breadcrumb-item">
+            <Link to="/admin/PlanDetailsList">Plans</Link>
           </li>
-          <li className="breadcrumb-item active">{getall ? `${getall.planname} description` : 'Loading...'}</li>
+          <li className="breadcrumb-item active  text-white">{getall ? `${getall.planname}'s Description` : 'Loading...'}</li>
         </ol>
 
         <div className="row">
