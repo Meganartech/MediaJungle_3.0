@@ -122,11 +122,16 @@ public class FrontController {
 	@Autowired
 	private VideoController VideoController;
 	
+	@PostMapping("/AdminRegister")
+	public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
+		return AddUserController.adminRegister(data);
+	}
+	
 
 	@PostMapping("/AddUser")
-	public ResponseEntity<?> AddUser(@RequestBody AddUser data) {
+	public ResponseEntity<?> addUser(@RequestBody AddUser data, @RequestHeader("Authorization") String token) {
 
-		return AddUserController.AddUser(data);
+		return AddUserController.addUser(data,token);
 	}
 
 	@PostMapping("/login/admin")
@@ -134,11 +139,20 @@ public class FrontController {
 
 		return AddUserController.loginadmin(loginRequest);
 	}
+	@PostMapping("/logout/admin")
+	 public ResponseEntity<String> logoutadmin(@RequestHeader("Authorization") String token) {
+		return AddUserController.logoutadmin(token);
+	}
 
 	@GetMapping("/GetUserId/{userId}")
 	public ResponseEntity<UserListWithStatus> getUser(@PathVariable Long userId) {
 
 		return AddUserController.getUser(userId);
+	}
+	
+	@GetMapping("/checkAdminRole")
+	public ResponseEntity<?> checkAdminRole() {
+           return AddUserController.checkAdminRole();
 	}
 
 	@DeleteMapping("/DeleteUser/{UserId}")
@@ -809,7 +823,7 @@ public class FrontController {
 		}
 		
 		@GetMapping(value = "/play/{id}")
-		 private ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
+		 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
 			
 			return VideoController.getVideo(id, request);
 		}

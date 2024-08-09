@@ -16,16 +16,20 @@ public class JwtUtil {
 	 
 	 public static final long JWT_EXPIRATION_MS = 86400000;
 
-	    public String generateToken(String username) {
-	    	Date now = new Date();
+	    public String generateToken(String username, String role) {
+	        Date now = new Date();
 	        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_MS);
 	        
 	        return Jwts.builder()
 	            .setSubject(username)
-	            .claim("username",username)
+	            .claim("username", username)
+	            .claim("role", role)
+	            .setIssuedAt(now)
+	            .setExpiration(expiryDate)
 	            .signWith(SignatureAlgorithm.HS256, jwtConfig.getSecretKey())
 	            .compact();
 	    }
+
 	    public boolean validateToken(String token) {
 	        try {
 	            Jwts.parser()
@@ -36,7 +40,7 @@ public class JwtUtil {
 	            return false;
 	        }
 	    }
-	    
+
 	    public String getUsernameFromToken(String token) {
 	        try {
 	            Claims claims = Jwts.parser()
@@ -51,4 +55,15 @@ public class JwtUtil {
 	        }
 	    }
 
+	    public String getRoleFromToken(String token) {
+	        Claims claims = getAllClaimsFromToken(token);
+	        return claims.get("role", String.class); // Adjust the key based on how roles are stored in your token
+	    }
+
+	    private Claims getAllClaimsFromToken(String token) {
+	        return Jwts.parser()
+	                .setSigningKey(jwtConfig.getSecretKey())
+	                .parseClaimsJws(token)
+	                .getBody();
+	    }
 }

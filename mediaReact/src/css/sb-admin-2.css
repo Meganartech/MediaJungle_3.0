@@ -4753,8 +4753,9 @@ input[type="button"].btn-block {
   padding: 1.5rem 1rem;
   margin-bottom: 1rem;
   list-style: none;
-  background-color: #2b2a52; ;
-  border-radius: 0.35rem;
+  background-color: #2b2a52; 
+  border-top-right-radius:20px;
+  border-top-left-radius:20px ;
 }
 
 /* .breadcrumb-item + .breadcrumb-item {
@@ -7788,10 +7789,10 @@ button.bg-dark:focus {
   margin-right: 1.5rem !important;
 }
 
-.mb-4,
+/* .mb-4,
 .my-4 {
   margin-bottom: 1.5rem !important;
-}
+} */
 
 .ml-4,
 .mx-4 {
@@ -11404,6 +11405,9 @@ h1 {
   background-repeat:no-repeat;
   background-size:cover;
 padding-top: 20px;
+overflow: auto;
+
+
 }
 .con-flu{
   padding-top:110px;
@@ -11736,6 +11740,8 @@ border-top-right-radius: 10px;
 
 .card-body {
 padding: 20px;
+width:100%;
+height:auto;
 }
 
 .form-container {
@@ -11821,3 +11827,78 @@ margin-top: 5px;
   border-radius: 4px;
 }
 
+/* admin search bar */
+
+.form .fa-search{
+  position: absolute;
+  top:8px;
+  left: 420px;
+  color: #9ca3af;
+
+}
+
+.left-pan{
+  padding-left: 7px;
+}
+
+.left-pan i{
+ 
+ padding-left: 10px;
+}
+
+.form-input{
+
+  height: 30px;
+  width: 200px;
+  text-indent: 33px;
+  border-radius: 20px;
+  margin-left: 400px;
+}
+
+.form-input:focus {
+  box-shadow: 0 0 5px rgb(0, 125, 255, 0.5); /* Adjust the shadow as needed */
+  border: none;
+}
+
+
+/* admin search bar end */
+
+/* notification icon */
+
+.notification-button{
+  position: relative;
+  margin: 10px 0 0 200px;
+
+}
+
+/* navbar dropdown */
+.adminprofile {
+  width: 30px;
+  height: 30px;
+  margin-left: 100px;
+  border-radius: 50%; /* Makes the element a circle */
+  background-color: white; /* Sets the background color to white */
+  display: flex; /* Centers content horizontally and vertically */
+  align-items: center; /* Centers content vertically */
+  justify-content: center; /* Centers content horizontally */
+}
+
+.adminfafauser{
+  color:black;
+
+}
+
+.adminprofile img {
+  width: 20%;
+  height: 20%;
+  object-fit: cover; /* Ensures the image covers the circle */
+}
+
+.adminprofile i {
+  font-size: 16px; /* Adjust size as needed */
+}
+
+/* Override hover effect */
+.adminprofile:hover {
+  color: black; /* Ensures the icon color remains black on hover */
+}

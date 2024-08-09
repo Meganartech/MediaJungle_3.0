@@ -99,6 +99,7 @@ public class PaymentController {
                 Order order = client.orders.create(orderRequest);
 
                 String orderId = order.get("id").toString();
+                
 
                 // Save or update payment details
                 PaymentUser payment;
@@ -108,7 +109,6 @@ public class PaymentController {
                     payment = new PaymentUser();
                     payment.setUserId(userId);
                 }
-
                 payment.setOrderId(orderId);
                 payment.setSubscriptionTitle(planName);
                 payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription

@@ -100,7 +100,7 @@ const Editcastandcrew = () => {
     };
 
     return (
-        <div className="container-fluid px-4">
+        <div className='container2 mt-20'>
             <ol className="breadcrumb mb-4">
                 <li className="breadcrumb-item">
                     <Link to="/Dashboard">Dashboard</Link>

@@ -6,10 +6,7 @@ import Swal from 'sweetalert2';
 
 const AddTag = () => {
    //.......................................Admin functiuons.....................................
-   const name=sessionStorage.getItem('username');
   const [tagName, setTagName] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const token = sessionStorage.getItem("tokenn")
 
 
@@ -42,7 +39,6 @@ const handleSubmit = (e) => {
         text: 'Tag inserted successfully!',
       });
     } else {
-      setErrorMessage('Error occurred while inserting tag.');
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -51,7 +47,6 @@ const handleSubmit = (e) => {
     }
   })
   .catch(error => {
-    setErrorMessage('Error occurred while inserting tag.');
     console.error('Error:', error);
     Swal.fire({
       icon: 'error',
@@ -63,59 +58,46 @@ const handleSubmit = (e) => {
 
   return (
 
-    <div className='container-fluid con-flu'>
-    <div className='container2'>
-          <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item"><Link to="/admin/ViewTag">Tags</Link>
-          </li>
-            <li className="breadcrumb-item active  text-white">Add Tag</li>
-          </ol>
-      <div className='temp justify-content-center'>
-        <div className='col-lg-12'>
-          {/* {name=="admin"
-          ? */}
-         
-         <div className='card-body'>
-           
-           
-              {errorMessage && (
-                <div className='alert alert-danger'>{errorMessage}</div>
-              )}
-              
-              <form onSubmit={handleSubmit}>
-               
-                <div className='modal-body text-center'>
-                <h5 className='modal-title modal-header'  style={{fontFamily:'Poppins'}} id='exampleModalLongTitle'>
-                    Add Tag
-                  </h5>
-                  <input
-                    type='text'
-                    name='Tag'
-                    className='form-control'
-                    id='Tag'
-                    required
-                    placeholder='Tag Name'
-                    onChange={(e) =>  setTagName(e.target.value)}
-                  />
-                  <br />
-                </div>
-                <div className='modal-footer'>
-                  <input
-                    type='submit'
-                    name='but_upload'
-                    value='Save'
-                    className='btn btn-info'
-                  />
-                </div>
-              </form>
-            </div>
-                    </div>
-        
-        </div> 
+<div className='container3 mt-20'>
+  <ol className="breadcrumb mb-4">
+    <li className="breadcrumb-item"><Link to="/admin/ViewTag">Tags</Link></li>
+    <li className="breadcrumb-item active  text-white">Add Tag</li>
+  </ol>
+  <div className="container mt-3">
+    <div className="row py-3 my-3 align-items-center">
+      <div className="col-md-3">
+        <label className="custom-label">Name Tags</label>
+      </div>
+      <div className="col-md-4">
+        <input 
+          type='text'
+          name='Tag'
+          id='name'
+          required
+          value={tagName}
+          onChange={(e) =>  setTagName(e.target.value)}
+          className="form-control border border-dark border-2" 
+          placeholder="Tags" 
+        />
       </div>
     </div>
+    <div className="row py-3 my-5">
+      <div className="col-md-12" style={{ height: '200px' }}></div> {/* Placeholder div for spacing */}
+    </div>
+    <div className="row py-3 my-5">
+      <div className="col-md-8 ms-auto text-end">
+      <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
+        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={handleSubmit} style={{backgroundColor:'blue'}}
+        >Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
 
       );
 };
 
 export default AddTag;
+

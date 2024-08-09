@@ -125,7 +125,7 @@ const Dashboard = () => {
 
 
   return (
-    <div className="container-fluid">
+    // <div className="container-fluid">
     <div className="marquee-container">
       <div className="marquee-content">
         {/* Your scrolling content goes here */}
@@ -134,7 +134,7 @@ const Dashboard = () => {
           License has been expired Need to uploard new License or contact "111111111111"
         </a>:<div></div>}
       </div>
-    </div>
+    {/* </div> */}
   <br/>  <br/>   <br/>
       {/* <App2 /> */}
     <div className='container2'>

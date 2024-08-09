@@ -17,16 +17,24 @@ public class AddCertificate {
 	
     @Column(name="certificate")
     private String certificate;
+    
+    @Column(name="description")
+    private String description;
+    
+    @Column(name="issuedby")
+    private String issuedby;
 
 	public AddCertificate() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public AddCertificate(long id, String certificate) {
+	public AddCertificate(long id, String certificate, String description, String issuedby) {
 		super();
 		this.id = id;
 		this.certificate = certificate;
+		this.description = description;
+		this.issuedby = issuedby;
 	}
 
 	public long getId() {
@@ -45,5 +53,20 @@ public class AddCertificate {
 		this.certificate = certificate;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getIssuedby() {
+		return issuedby;
+	}
+
+	public void setIssuedby(String issuedby) {
+		this.issuedby = issuedby;
+	}
 	
 }

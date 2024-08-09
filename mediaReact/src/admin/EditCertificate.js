@@ -83,8 +83,8 @@ const EditCertificate = () => {
   }
 
   return (
-      <div className="container-fluid">
-        <h1 className="mt-4 text-white">{updatedcertificate.id} - {updatedcertificate.certificate}'s Profile</h1>
+    <div className='container2 mt-20'>
+        
         <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item">
             <Link to="/Dashboard">Dashboard</Link>

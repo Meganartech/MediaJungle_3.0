@@ -10,7 +10,7 @@ const TenureList = () => {
     };
 
     return (
-        <div className="container-fluid">
+        <div className="marquee-container">
             <div className='AddArea'>
                 <button className='btn btn-custom' onClick={() => handleClick("/admin/AddTenure")}>Add Tenure</button>
             </div>

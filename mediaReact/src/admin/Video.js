@@ -123,19 +123,18 @@ const Video = () => {
 
   return (
 
-    <div className="container-fluid">
+    <div className="marquee-container">
         <div className='AddArea'>
           <button className='btn btn-custom' onClick={() => handleClick("/admin/AddVideo")}>Add Video</button>
         </div><br/>
       <div className='container2'>
-      <ol className="breadcrumb mb-4">
+      <ol className="breadcrumb">
         <li className="breadcrumb-item text-white">Videos
         </li>
-        {/* <li className="breadcrumb-item active">Videos</li> */}
+       
       </ol>
     
-          {/* {name === 'admin' 
-          ? */}
+         
             <div className="card-body profile-card-body">
               <table id="datatablesSimple">
                 <thead>
@@ -168,14 +167,7 @@ const Video = () => {
                       <td>{user.year}</td>
                       <td>{user.paid===true ? 1 : 0}</td>
                       <td>
-                        {/* <Link
-                          to={{
-                            pathname: `/admin/EditVideo`,
-                            state: { user },
-                          }}
-                        >
-                          <i className="fas fa-edit"></i>
-                        </Link> */}
+                        
                         <button onClick={() => handlEdit(user.id)} >
                           <i className="fas fa-edit" aria-hidden="true"></i>
                         </button>
@@ -189,51 +181,10 @@ const Video = () => {
                 </tbody>
               </table>
             </div> 
-          {/* : 
-          <div className="card-body">
-          <form onSubmit={handleSubmit} method='POST'>
-            <div className="user-details">
-              <label>User ID:</label>
-              <span>{id}</span>
-            </div>
-            <div className="user-details">
-              <label>Username:</label>
-              <input type="text" name="username" value={username} onChange={handleChange} />
-            </div>
-            <div className="user-details">
-              <label>Mobile Number:</label>
-              <input type="text" name="mobnum" value={mobnum} onChange={handleChange} />
-            </div>
-            <div className="user-details">
-              <label>Address:</label>
-              <input type="text" name="address" value={address} onChange={handleChange} />
-            </div>
-            <div className="user-details">
-              <label>Pincode:</label>
-              <input type="text" name="pincode" value={pincode} onChange={handleChange} />
-            </div>
-            <div className="user-details">
-              <label>Email:</label>
-              <input type="text" name="email" value={email} onChange={handleChange} />
-            </div>
-            <div className="user-details">
-              <label>Company Name:</label>
-              <input type="text" name="compname" value={compname} onChange={handleChange} />
-            </div>
-            <div className="user-details">
-              <label>Country:</label>
-              <input type="text" name="country" value={country} onChange={handleChange} />
-            </div>
-            <div className="user-details">
-              <label>Password:</label>
-              <input type="password" name="password" value={password} onChange={handleChange} />
-            </div>
-            <button type="submit" className="btn btn-info">Save Changes</button>
-          </form>
-        </div>
-          } */}
+          
         </div>
     </div>
+    
 
   );
 };

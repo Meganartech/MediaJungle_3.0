@@ -95,8 +95,7 @@ const PlanDescription = () => {
   };
 
   return (
-    <div className="container-fluid">
-      <div className="container2">
+    <div className='container2 mt-20'>
         <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item text-white">
             <Link to="/Dashboard">Dashboard</Link>
@@ -169,7 +168,7 @@ const PlanDescription = () => {
           </div>
         </div>
       </div>
-    </div>
+   
   );
 };
 

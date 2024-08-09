@@ -1,12 +1,15 @@
-2024-07-30 11:18:47 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: Payment with arguments: [{amount=2000, userId=13, planname=platinum}]
-2024-07-30 11:18:48 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: Payment with result: order_OejaZjCNArtmom
-2024-07-30 11:19:14 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: Payment with arguments: [{amount=2000, userId=13, planname=platinum}]
-2024-07-30 11:19:14 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: Payment with result: order_Oejb2ik5emQEv9
-2024-07-30 11:19:48 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: Payment with arguments: [{amount=2000, userId=13, planname=platinum}]
-2024-07-30 11:19:49 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: Payment with result: order_OejbeXgNGrcAfj
-2024-07-30 11:20:57 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: Payment with arguments: [{amount=200, userId=13, planname=midplan}]
-2024-07-30 11:20:57 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: Payment with result: order_OejcrR87gNrBqb
-2024-07-30 11:21:25 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: updatePaymentId with arguments: [{paymentId=pay_Oejd5dDvlm4ocu, orderId=order_OejcrR87gNrBqb, planname=midplan, userId=13, validity=100, signature=97802fb60e7c711410897ca5ae64ba3b84862f75451fc3e0b55aeb4a58d39fd2}]
-2024-07-30 11:21:26 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: updatePaymentId with result: <200 OK OK,Payment ID updated successfully for user ID: 13,[]>
-2024-07-30 11:22:19 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: Payment with arguments: [{amount=2000, userId=13, planname=platinum}]
-2024-07-30 11:22:19 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: Payment with result: You have already paid for the plan. Your subscription is valid until 2024-11-07
+2024-08-09 16:45:30 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-09 16:45:30 [http-nio-8080-exec-4] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-09 16:45:30 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@29ea1e6d,[]>
+2024-08-09 16:45:30 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-09 16:45:30 [http-nio-8080-exec-5] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-09 16:45:30 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@21908d72,[]>
+2024-08-09 16:45:35 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUserRegester with arguments: []
+2024-08-09 16:45:35 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-09 16:45:35 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUserRegester with result: <200 OK OK,[com.VsmartEngine.MediaJungle.userregister.UserRegister@1044824, com.VsmartEngine.MediaJungle.userregister.UserRegister@21a763f9, com.VsmartEngine.MediaJungle.userregister.UserRegister@3bcaf27a, com.VsmartEngine.MediaJungle.userregister.UserRegister@13ce1557, com.VsmartEngine.MediaJungle.userregister.UserRegister@53fc999e, com.VsmartEngine.MediaJungle.userregister.UserRegister@aab0049, com.VsmartEngine.MediaJungle.userregister.UserRegister@4aeb1d01, com.VsmartEngine.MediaJungle.userregister.UserRegister@3c5566e9, com.VsmartEngine.MediaJungle.userregister.UserRegister@6e8b7360, com.VsmartEngine.MediaJungle.userregister.UserRegister@176cf6d6, com.VsmartEngine.MediaJungle.userregister.UserRegister@22d11c66, com.VsmartEngine.MediaJungle.userregister.UserRegister@3d3dee6b, com.VsmartEngine.MediaJungle.userregister.UserRegister@7e1a1d4a, com.VsmartEngine.MediaJungle.userregister.UserRegister@50c74f93, com.VsmartEngine.MediaJungle.userregister.UserRegister@5c7d1e98],[]>
+2024-08-09 16:45:35 [http-nio-8080-exec-6] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-09 16:45:35 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@76a5a9b4,[]>
+2024-08-09 16:50:22 [RMI TCP Connection(376)-127.0.0.1] INFO  o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+2024-08-09 16:50:22 [RMI TCP Connection(376)-127.0.0.1] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-08-09 16:50:22 [RMI TCP Connection(376)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated...
+2024-08-09 16:50:22 [RMI TCP Connection(376)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed.

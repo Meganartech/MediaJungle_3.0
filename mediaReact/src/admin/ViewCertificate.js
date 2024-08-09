@@ -1,6 +1,5 @@
 import React, { useState ,useEffect} from 'react';
 import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
@@ -9,7 +8,6 @@ const ViewCertificate= () => {
   const [certificate, setCertificate] = useState([]);
   const navigate = useNavigate();
   const token = sessionStorage.getItem('tokenn')
-  let Id;
   const handleClick = (link) => {
     navigate(link);
   }
@@ -95,48 +93,54 @@ const handleDeleteCertificate = (certificateId) => {
     navigate('/admin/EditCertificate');
   };
   
+  
 return (
  
-  <div className="container-fluid">
+  <div className="marquee-container">
      <div className='AddArea'>
           <button className='btn btn-custom' onClick={() => handleClick("/admin/AddCertificate")}>Add Certificate</button>
         </div><br/>
-    <div className='container2'>
-    <ol className="breadcrumb mb-4">
+    <div className='container3'>
+    <ol className="breadcrumb mb-4 d-flex  my-0">
     <li className="breadcrumb-item text-white">Certificates
     </li>
-      {/* <li className="breadcrumb-item active">View Certificate</li> */}
+    <li className="ms-auto text-end text-white">
+          Bulk Action
+          <button className="ms-2">
+            <i className="bi bi-chevron-down"></i>
+          </button>
+        </li>
     </ol>
-    
-      <div className="card-body">
-        <table id="datatablesSimple">
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>Certificate</th>
+    <div className="table-container">
+    <table class="table table-striped">
+    <thead>
+            <tr className='table-header'>
+              < th style={{border: 'none' }}>
+                <input type="checkbox" />
+              </th>
+              <th style={{border: 'none' }}>S.NO</th>
+              <th style={{border: 'none' }}>CERTIFICATE NAME</th>
+              <th style={{border: 'none' }}>DESCRIPTION</th>
+              <th style={{border: 'none' }}>ISSUED BY</th>
+              <th style={{border: 'none' }}>ACTION</th>
             </tr>
           </thead>
           <tbody>
             {certificate.map((certificate, index) => (
-              <tr key={certificate.id}>
+              <tr key={certificate.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+                <td>
+                  <input type="checkbox" />
+                </td>
                 <td>{index + 1}</td>
                 <td>{certificate.certificate ? certificate.certificate : 'No certificate available'}</td>
+                <td>{certificate.description}</td>
+                <td>{certificate.issuedby}</td>
                 <td>
-                {/* <button>
-                <Link
-                  to={{
-                    pathname: `/admin/EditCertificate`,
-                    state: { certificate },
-                  }}
-                >
-                  <i className="fas fa-edit"></i>
-                </Link> */}
-              <button onClick={() => handlEdit(certificate.id)} >
-                          <i className="fas fa-edit" aria-hidden="true"></i>
-                        
+              <button onClick={() => handlEdit(certificate.id)} className="btn btn-primary me-2">
+                    <i className="fas fa-edit" aria-hidden="true"></i> Edit
                   </button>
-                    <button onClick={() => handleDeleteCertificate(certificate.id)}>
-                    <i className="fa fa-trash" aria-hidden="true"></i>
+                    <button onClick={() => handleDeleteCertificate(certificate.id)} className="btn btn-danger">
+                    <i className="fa fa-trash" aria-hidden="true"></i> Delete
                   </button>
                 </td>
               </tr>
@@ -146,6 +150,7 @@ return (
       </div>
     </div>
     </div>
+ 
    
    
   );
@@ -154,3 +159,4 @@ return (
 };
 
 export default ViewCertificate;
+

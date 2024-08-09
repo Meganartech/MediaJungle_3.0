@@ -124,34 +124,44 @@ const handleSubmit = async (e) => {
     });
 
     if (response.ok) {
-      // Await the JSON response
-      const data = await response.json(); // Retrieve JSON data
-      const jwtToken = data.Token; // Use the correct key based on your API response
-      const name = data.UserName; // Use the correct key based on your API response
-      const userId = data.AdminId; // Use the correct key based on your API response
+      try {
+        const data = await response.json(); // Attempt to parse JSON response
+        const jwtToken = data.Token; // Use the correct key based on your API response
+        const name = data.UserName; // Use the correct key based on your API response
+        const userId = data.AdminId; // Use the correct key based on your API response
+        const message = data.message;
 
-      // Store token in session storage
-      sessionStorage.setItem("username", name);
-      sessionStorage.setItem('tokenn', jwtToken);
-      sessionStorage.setItem('adminId', userId);
-      sessionStorage.setItem('name', true);
+        // Store token in session storage
+        sessionStorage.setItem("username", name);
+        sessionStorage.setItem('tokenn', jwtToken);
+        sessionStorage.setItem('adminId', userId);
+        sessionStorage.setItem('name', true);
 
+        console.log(name, jwtToken, userId);
 
-      console.log(name,jwtToken,userId)
-
-      // Navigate to the dashboard after successful login
-      navigate('/admin/Dashboard');
+        // Navigate to the dashboard after successful login
+        navigate('/admin/Dashboard');
+      } catch (jsonError) {
+        console.error('Error parsing JSON:', jsonError);
+        Swal.fire({
+          icon: 'error',
+          title: 'Login Error',
+          text: 'An error occurred while processing the response. Please try again later.',
+        });
+      }
     } else {
-      // Handle invalid username or password
+      // Handle invalid username or password based on status code
+      const errorData = await response.json().catch(() => ({})); // Handle cases where response is not JSON
+      const message = errorData.message || 'Invalid username or password';
+
       Swal.fire({
         icon: 'error',
         title: 'Login Failed',
-        text: 'Invalid username or password',
+        text: message,
       });
     }
   } catch (error) {
     console.error('Error during login:', error);
-    // Show a generic error message using SweetAlert
     Swal.fire({
       icon: 'error',
       title: 'Login Error',

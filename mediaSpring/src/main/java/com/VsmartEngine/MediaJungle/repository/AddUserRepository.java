@@ -13,5 +13,7 @@ public interface AddUserRepository extends JpaRepository<AddUser, Long>{
     Optional<AddUser> findByUsername(String Username);
 	@Query("SELECT u FROM AddUser u WHERE u.email = ?1")
     Optional<AddUser> findByEmail(String email);
+	@Query("SELECT u FROM AddUser u WHERE u.role=?1")
+	Optional<AddUser> findByRole(String role);
 
 }

@@ -123,15 +123,22 @@ const AddUser = () => {
   
         const response = await axios.post(
           `${API_URL}/api/v2/AddUser`,
-          sendData
+          sendData,
+          {
+            headers: {
+              Authorization: token,
+            }
+          }
         );
+        
   
         console.log('API Response:', response);
   
         if (response.status === 200) {
+          const message = response.data.message|| 'User registered successfully';
           Swal.fire({
             title: 'Success!',
-            text: 'User registered successfully',
+            text: message,
             icon: 'success',
             confirmButtonText: 'OK'
           });
@@ -148,9 +155,10 @@ const AddUser = () => {
           });
           console.log(data)
         } else {
+          const message = response.data.message || 'An unexpected error occurred';
           Swal.fire({
             title: 'Error!',
-            text: 'Invalid User',
+            text: message,
             icon: 'error',
             confirmButtonText: 'OK'
           });
@@ -159,7 +167,7 @@ const AddUser = () => {
         console.error('Error:', error);
         Swal.fire({
           title: 'Error!',
-          text: 'An error occurred while registering. Please try again.',
+          text: error.response?.data?.message || 'An error occurred while registering. Please try again.',
           icon: 'error',
           confirmButtonText: 'OK'
         });
@@ -170,9 +178,9 @@ const AddUser = () => {
   
   
   return (
-    <div className="container-fluid con-flu">
+   
     
-<div className='container2'>
+<div className='container2 mt-20'>
       
           <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item"><Link to="/admin/Profile">Sub Admin</Link>
@@ -325,8 +333,10 @@ const AddUser = () => {
      
         </div>
       </form>
-    </div>
-    </div>
+   
+      </div>
+      
+    
   );
 };
 

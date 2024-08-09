@@ -348,13 +348,13 @@ const hasPaymentPlan = () => {
 
 
   return (
-      <div className='container-fluid'>
-        <div>
+      
+    <div className='container2 mt-20'>
           {/* <h1 className="mt-4 text-white">Add Video</h1> */}
           <ol className="breadcrumb mb-4">
-            <li className="breadcrumb-item"><Link to="/Dashboard">Dashboard</Link>
+          <li className="breadcrumb-item"><Link to="/admin/Video">Videos</Link>
             </li>
-            <li className="breadcrumb-item active">Add Video</li>
+            <li className="breadcrumb-item active  text-white">Update Video</li>
           </ol>
           <div className='row justify-content-center'>
             <div className='col-lg-12'>
@@ -704,7 +704,7 @@ const hasPaymentPlan = () => {
             </div>
           </div>
         </div>
-      </div>
+    
   
   )
 }

@@ -48,34 +48,44 @@ const SubscriptionPayments = () => {
 
   return (
     
-      <div className="container-fluid con-flu">
-        <div className='container2'>
-          <ol className="breadcrumb mb-4">
+    <div className='container3  mt-20'>
+          <ol className="breadcrumb mb-4 d-flex my-0">
              <li className="breadcrumb-item text-white">
             <Link to="/admin/SubscriptionPayments">Manage Users</Link>
           </li>
-          {/* <li className="breadcrumb-item active">Subscription Payments</li> */}
+          <li className="ms-auto text-end text-white">
+        Bulk Action
+        <button className="ms-2">
+          <i className="bi bi-chevron-down"></i>
+        </button>
+      </li>
           </ol>
-          <div className="card-body profile-card-body">
-            <table id="datatablesSimple">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>User Name</th>
-                  <th>Mobile Number</th>
-                  <th>Email</th>
-                   <th>Payment History</th>
+          <div className="table-container">
+      <table className="table table-striped ">
+        <thead>
+          <tr className='table-header'>
+            <th style={{border: 'none' }}>
+              <input type="checkbox" />
+            </th>
+                  <th style={{border: 'none' }}>ID</th>
+                  <th style={{border: 'none' }}>User Name</th>
+                  <th style={{border: 'none' }}>Mobile Number</th>
+                  <th style={{border: 'none' }}>Email</th>
+                  <th style={{border: 'none' }}>Payment History</th>
                 </tr>
               </thead>
               <tbody>
                 {users && users.length > 0 ? (
                   users.map((user, index) => (
-                    <tr key={user.id}>
+                    <tr key={user.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+                      <td>
+                <input type="checkbox" />
+              </td>
                       <td>{index + 1}</td>
                       <td>{user.username}</td>
                       <td>{user.mobnum}</td>
                       <td>{user.email}</td>
- <td>
+ <td>       
                       <button onClick={() => handleNavigate(user.id, user.username)}>
                         View Payment History
                       </button>
@@ -92,9 +102,10 @@ const SubscriptionPayments = () => {
             </table>
           </div>
         </div>
-      </div>
+    
    
   );
 };
 
 export default SubscriptionPayments;
+
