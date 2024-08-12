@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.4.0",
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^1.0.6",
     "@tailwindcss/line-clamp": "^0.4.4",
