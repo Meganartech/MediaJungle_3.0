@@ -199,7 +199,6 @@ const App = () => {
           <Route path='watchpage/:id' element={<WatchPage />} />
           {/* <Route path='videoScreen/:id' element={<VideoScreen/>} />  */}
           <Route path='userforgetpassword' element={<Userforgetpassword />} />
-          
 
           <Route path='admin' element={<Login />}  >
              <Route element={<PrivateRoutes />}> 
