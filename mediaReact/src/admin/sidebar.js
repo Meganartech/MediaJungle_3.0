@@ -736,13 +736,13 @@ const [dropdownOpen, setDropdownOpen] = useState(false);
           </Link>
 
       </li> */} <li className="nav-item">
-                <div className="nav-link" onClick={() => handleToggle(setIsPlansTenureOpen)}>
+                <div className="nav-link" onClick={() => handleToggleDropdown('plantenure')}>
                 <i class="bi bi-calendar"></i>
 
 
                     <span>Plans & Tenures</span>
                    
-                    <i className={`fas fa-chevron-${isPlansTenureOpen ? 'down' : 'right'} ml-auto`}></i>
+                    <i className={`fas fa-chevron-${isDropdownOpen === 'plantenure' ? 'down' : 'right'} ml-auto`}></i>
 
                 </div>
                 {isDropdownOpen === 'plantenure' && (
