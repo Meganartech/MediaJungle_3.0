@@ -259,6 +259,7 @@ const App = () => {
             <Route path='Contact_setting' element= {<Contact_setting/>} />
             <Route path='SEO_setting' element= {<SEO_setting/>} />
             <Route path='Mobile_setting' element= {<Mobile_setting/>} />
+       
             </Route>
             </Route>
           </Route>

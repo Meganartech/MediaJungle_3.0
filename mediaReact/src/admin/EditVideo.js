@@ -358,11 +358,11 @@ const hasPaymentPlan = () => {
           </ol>
           <div className='row justify-content-center'>
             <div className='col-lg-12'>
-              <div className="card shadow-lg border-0 rounded-lg mt-5" style={{ marginLeft: "0px", marginRight: "0px",minWidth: "100%" }} >
-                <div className='card-header'>
+              {/* <div className="card shadow-lg border-0 rounded-lg mt-5" style={{ marginLeft: "0px", marginRight: "0px",minWidth: "100%" }} > */}
+                {/* <div className='card-header'>
                   <h2 className='text-center'>Add Movie</h2>
-                </div>
-                <div className='card-body'>
+                </div> */}
+                {/* <div className='card-body'> */}
                   {/* <form className='form-container'> */}
                   <div className='modal-body '>
                     <div className='row'>
@@ -702,8 +702,8 @@ const hasPaymentPlan = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          // </div>
+        // </div>
     
   
   )

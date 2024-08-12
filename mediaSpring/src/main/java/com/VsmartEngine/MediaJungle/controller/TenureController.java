@@ -1,6 +1,8 @@
 package com.VsmartEngine.MediaJungle.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,16 +46,20 @@ public ResponseEntity<Tenure> getTenureById(@PathVariable long id){
 	Tenure tenure = tenureRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Tenure not exist with id:" +id));
 	return ResponseEntity.ok(tenure);
 }
-
 @PutMapping("/edittenure/{id}")
-public ResponseEntity<Tenure> updateTenure(@PathVariable long id,@RequestBody Tenure tenureDetails){
-	Tenure updateTenure = tenureRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Tenure not exist with id:" +id));
-	updateTenure.setTenure_name(tenureDetails.getTenure_name());
-	updateTenure.setMonths(tenureDetails.getMonths());
-	updateTenure.setDiscount(tenureDetails.getDiscount());
-	tenureRepository.save(updateTenure);
-	return ResponseEntity.ok(updateTenure);
+public ResponseEntity<Map<String, Object>> updateTenure(@PathVariable long id, @RequestBody Tenure tenureDetails) {
+    Tenure updateTenure = tenureRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tenure not exist with id:" + id));
+    updateTenure.setTenure_name(tenureDetails.getTenure_name());
+    updateTenure.setMonths(tenureDetails.getMonths());
+    updateTenure.setDiscount(tenureDetails.getDiscount());
+    tenureRepository.save(updateTenure);
+    
+    Map<String, Object> response = new HashMap<>();
+    response.put("success", true);
+    response.put("data", updateTenure);
+    return ResponseEntity.ok(response);
 }
+
 
 @DeleteMapping("/deletetenure/{id}")
 public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){

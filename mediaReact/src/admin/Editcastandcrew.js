@@ -103,9 +103,9 @@ const Editcastandcrew = () => {
         <div className='container2 mt-20'>
             <ol className="breadcrumb mb-4">
                 <li className="breadcrumb-item">
-                    <Link to="/Dashboard">Dashboard</Link>
+                    <Link to="/admin/Viewcastandcrew">Cast and Crews</Link>
                 </li>
-                <li className="breadcrumb-item active">Edit</li>
+                <li className="breadcrumb-item active text-white">Edit</li>
             </ol>
             <div className="row justify-content-center">
                 <div className="col-lg-8">
