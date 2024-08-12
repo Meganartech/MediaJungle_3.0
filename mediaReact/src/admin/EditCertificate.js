@@ -87,7 +87,7 @@ const EditCertificate = () => {
         
         <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item">
-            <Link to="/admin/ViewCertificate">Certificate</Link>
+            <Link to="/admin/ViewCertificate">Certificates</Link>
           </li>
           <li className="breadcrumb-item active text-white">Edit</li>
         </ol>
