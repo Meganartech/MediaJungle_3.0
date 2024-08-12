@@ -16,21 +16,29 @@ import notificationIcon from '../admin/icon/notification.png'
 
 const Sidebar = ({ activeLink, setActiveLink}) => {
 
-  const [isCatsTagsOpen, setIsCatsTagsOpen] = useState(false);
-  const [isUserAdminOpen, setIsUserAdminOpen] = useState(false);
-  const [isMediaOpen, setIsMediaOpen] = useState(false);
-  const [isLangCertiOpen, setIsLangCertiOpen] = useState(false);
+//   const [isCatsTagsOpen, setIsCatsTagsOpen] = useState(false);
+//   const [isUserAdminOpen, setIsUserAdminOpen] = useState(false);
+//   const [isMediaOpen, setIsMediaOpen] = useState(false);
+//   const [isLangCertiOpen, setIsLangCertiOpen] = useState(false);
   const [isPlansTenureOpen, setIsPlansTenureOpen] = useState(false);
 
-  const [isvalid, setIsvalid] = useState();
-  const [isEmpty, setIsEmpty] = useState();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const token =sessionStorage.getItem("tokenn");
-  console.log("token",token)
-  const [isActive, setIsActive] = useState(false);
+//   const [isvalid, setIsvalid] = useState();
+//   const [isEmpty, setIsEmpty] = useState();
+//   const navigate = useNavigate();
+//   const location = useLocation(); 
+//   const token =sessionStorage.getItem("tokenn");
+//   console.log("token",token)
+//   const [isActive, setIsActive] = useState(false);
   const [getall,setGetAll] = useState('');
+//   const [isDropdownOpen, setIsDropdownOpen] = useState(null);
 
+//   const handleLogout = async () => {
+//     try {
+//       const token = sessionStorage.getItem("tokenn"); // Retrieve token from session storage
+//       if (!token) {
+//         console.error("Token not found");
+//         return;
+//       }
 
 
   const handleToggle = (setState) => {
@@ -38,133 +46,191 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
 };
 
 
-const toggleSidebar = () => {
-  setIsActive(!isActive);
-};
+// const toggleSidebar = () => {
+//   setIsActive(!isActive);
+// };
 
 
-const [isopen,setisopen]=useState(false);
-const [dropdownOpen, setDropdownOpen] = useState(false);
+// const [isopen,setisopen]=useState(false);
+// const [dropdownOpen, setDropdownOpen] = useState(false);
 
 
 
 
-const[count,setcount]=useState(0);
-const handleLogout = async () => {
-  try {
-    if (!token) {
-      console.error("Token not found");
-      return;
-    }
+// const[count,setcount]=useState(0);
+// const handleLogout = async () => {
+//   try {
+//     if (!token) {
+//       console.error("Token not found");
+//       return;
+//     }
 
 
-    const confirmLogout = await Swal.fire({
-      title: "Are you sure?",
-      text: "You are about to logout.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#FBC740",
-      cancelButtonColor: "#FBC740",
-      confirmButtonText: "Yes, logout",
-      cancelButtonText: "Cancel",
-    });
+
+//     const confirmLogout = await Swal.fire({
+//       title: "Are you sure?",
+//       text: "You are about to logout.",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonColor: "#FBC740",
+//       cancelButtonColor: "#FBC740",
+//       confirmButtonText: "Yes, logout",
+//       cancelButtonText: "Cancel",
+//     });
+
+//     if (confirmLogout.isConfirmed) {
+//       // Send logout request to the server
+//       const response = await fetch(`${API_URL}/api/v2/logout/admin`, {
+//         method: "POST",
+//         headers: {
+//           Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+//           "Content-Type": "application/json", // Add any other necessary headers
+//         },
+//         // Add any necessary body data here
+//       });
+
+//       if (response.ok) {
+//         // Clear token from session storage after successful logout
+//         sessionStorage.removeItem("tokenn");
+//         sessionStorage.removeItem("username")
+//         localStorage.clear();
+//         sessionStorage.setItem('name', false);
+//         navigate('/admin');
+//         console.log("Logged out successfully");
+//         return;
+//       } else {
+//         // Handle unsuccessful logout (e.g., server error)
+//         console.error("Logout failed. Server responded with status:", response.status);
+//         // Show error message using Swal
+//         Swal.fire({
+//           icon: 'error',
+//           title: 'Logout failed',
+//           text: 'Please try again later.',
+//         });
+//       }
+//     }
+//   } catch (error) {
+//     console.error("An error occurred during logout:", error);
+//     // Show error message using Swal
+//     Swal.fire({
+//       icon: 'error',
+//       title: 'Error',
+//       text: 'An error occurred while logging out. Please try again later.',
+//     });
+//   }
+// };
+
+// const toggleDropdown = () => {
+//   setDropdownOpen(!dropdownOpen);
+// };
+
+// const [isActive, setIsActive] = useState(false);
+
+// const name=sessionStorage.getItem('username');
+// const b=3;
+// // alert(name);
+
+// const handleToggleDropdown = (dropdown) => {
+//   setIsDropdownOpen(prev => (prev === dropdown ? null : dropdown));
+// };
 
 
-    if (confirmLogout.isConfirmed) {
-      const response = await fetch(`${API_URL}/api/v2/logout/admin`, {
-        method: "POST",
 
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+//     if (confirmLogout.isConfirmed) {
+//       const response = await fetch(`${API_URL}/api/v2/logout/admin`, {
+//         method: "POST",
 
-
-      if (response.ok) {
-        sessionStorage.removeItem("tokenn");
-        sessionStorage.removeItem("username");
-        localStorage.clear();
-        sessionStorage.setItem('name', false);
-        navigate('/admin');
-        console.log("Logged out successfully");
-      } else {
-        console.error("Logout failed. Server responded with status:", response.status);
-        Swal.fire({
-          icon: 'error',
-          title: 'Logout failed',
-          text: 'Please try again later.',
-        });
-      }
-    }
-  } catch (error) {
-    console.error("An error occurred during logout:", error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An error occurred while logging out. Please try again later.',
-    });
-  }
-};
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           "Content-Type": "application/json",
+//         },
+//       });
 
 
-const toggleDropdown = () => {
-  setDropdownOpen(!dropdownOpen);
-};
+//       if (response.ok) {
+//         sessionStorage.removeItem("tokenn");
+//         sessionStorage.removeItem("username");
+//         localStorage.clear();
+//         sessionStorage.setItem('name', false);
+//         navigate('/admin');
+//         console.log("Logged out successfully");
+//       } else {
+//         console.error("Logout failed. Server responded with status:", response.status);
+//         Swal.fire({
+//           icon: 'error',
+//           title: 'Logout failed',
+//           text: 'Please try again later.',
+//         });
+//       }
+//     }
+//   } catch (error) {
+//     console.error("An error occurred during logout:", error);
+//     Swal.fire({
+//       icon: 'error',
+//       title: 'Error',
+//       text: 'An error occurred while logging out. Please try again later.',
+//     });
+//   }
+// };
 
 
-const fetchUnreadCount = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/api/v2/unreadCount`, {
-      headers: {
-        Authorization: token,
-      },
-    });
+// const toggleDropdown = () => {
+//   setDropdownOpen(!dropdownOpen);
+// };
 
 
-    if (response.status === 200) {
-      const data = response.data;
-      setcount(data);
-      console.log("count",data)
-    }
-  } catch (error) {
-    console.error("Error fetching unread count:", error);
-  }
-};
+// const fetchUnreadCount = async () => {
+//   try {
+//     const response = await axios.get(`${API_URL}/api/v2/unreadCount`, {
+//       headers: {
+//         Authorization: token,
+//       },
+//     });
 
 
-const handlemarkallasRead = async () => {
-  try {
-      const markread = await axios.post(`${API_URL}/api/v2/markAllAsRead`, {}, {
-          headers: {
-              Authorization: token,
-          },
-      });
+//     if (response.status === 200) {
+//       const data = response.data;
+//       setcount(data);
+//       console.log("count",data)
+//     }
+//   } catch (error) {
+//     console.error("Error fetching unread count:", error);
+//   }
+// };
+
+
+// const handlemarkallasRead = async () => {
+//   try {
+//       const markread = await axios.post(`${API_URL}/api/v2/markAllAsRead`, {}, {
+//           headers: {
+//               Authorization: token,
+//           },
+//       });
      
-      if (markread.status === 200) {
-          fetchUnreadCount();
-      }
-  } catch (error) {
-      console.error("Error marking all notifications as read:", error);
-  }
-};
+//       if (markread.status === 200) {
+//           fetchUnreadCount();
+//       }
+//   } catch (error) {
+//       console.error("Error marking all notifications as read:", error);
+//   }
+// };
 
 
 
 
-useEffect(() => {
+// useEffect(() => {
 
 
 
 
 
 
-  // Fetch initially
-  fetchUnreadCount();
+//   // Fetch initially
+//   fetchUnreadCount();
 
 
-  // Cleanup for interval
-}, [count]);
+//   // Cleanup for interval
+// }, [count]);
 
 
 
@@ -172,9 +238,141 @@ useEffect(() => {
 
 
  
-  useEffect(() => {
+//   useEffect(() => {
    
 
+
+//     fetch(`${API_URL}/api/v2/GetAllUser`)
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//       }
+//       return response.json();
+//     })
+//           .then(data => {
+//             setIsEmpty(data.empty);
+//             setIsvalid(data.valid);
+//             const type = data.type;
+
+
+//       sessionStorage.setItem('type',type);
+     
+//     })
+//     .catch(error => {
+//       console.error('Error fetching data:', error);
+//     });
+//   }, []);
+
+
+//   useEffect(() => {
+//     setActiveLink(location.pathname);
+// }, [location.pathname, setActiveLink]);
+
+
+
+
+
+
+//   const handleClick = (link) => {
+//     setActiveLink(link);
+//     localStorage.setItem('activeLink', link); // Store the active link in local storage
+   
+//     if((link==="/admin/About_us" || link==="/admin/Dashboard")&& isEmpty)
+//     {
+//       // console.log("!isEmpty"+isEmpty+"isvalid"+isvalid+"!isEmpty"+!isEmpty)
+//       navigate(link);
+//     }
+//     else if ((link==="/admin/About_us" || link==="/admin/Dashboard")&& !isEmpty && !isvalid)
+//     {
+     
+//         navigate(link);
+//     }
+//     else if (!isEmpty && isvalid)
+//      {
+     
+//         navigate(link);
+//     }
+//   }
+// // };
+//   const name=sessionStorage.getItem('username');
+//   const b=3;
+//   // alert(name);
+
+
+//   useEffect(() => {
+//     fetch(`${API_URL}/api/v2/GetsiteSettings`)
+//       .then(response => {
+//         if (!response.ok) {
+//           throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//       })
+//       .then(data => {
+//         setGetAll(data);
+//         console.log(data);
+//       })
+//       .catch(error => {
+//         console.error('Error fetching data:', error);
+//       });
+//   }, []);
+const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isvalid, setIsvalid] = useState();
+  const [isEmpty, setIsEmpty] = useState();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
+  const[count,setcount]=useState(0);
+  const [isopen,setisopen]=useState(false);
+  
+  const token =sessionStorage.getItem("tokenn");
+  console.log("token",token)
+
+  const fetchUnreadCount = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v2/unreadCount`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+  
+      if (response.status === 200) {
+        const data = response.data;
+        setcount(data);
+        console.log("count",data)
+      }
+    } catch (error) {
+      console.error("Error fetching unread count:", error);
+    }
+  };
+
+  const handlemarkallasRead = async () => {
+    try {
+        const markread = await axios.post(`${API_URL}/api/v2/markAllAsRead`, {}, {
+            headers: {
+                Authorization: token,
+            },
+        });
+        
+        if (markread.status === 200) {
+            fetchUnreadCount();
+        }
+    } catch (error) {
+        console.error("Error marking all notifications as read:", error);
+    }
+};
+
+
+  useEffect(() => {
+  
+  
+  
+    // Fetch initially
+    fetchUnreadCount();
+  
+    // Cleanup for interval
+  }, [count]); 
+  useEffect(() => {
+   
 
     fetch(`${API_URL}/api/v2/GetAllUser`)
     .then(response => {
@@ -187,6 +385,10 @@ useEffect(() => {
             setIsEmpty(data.empty);
             setIsvalid(data.valid);
             const type = data.type;
+            // data.dataList.map((item, index) => {
+              // console.log("key 1"+data.dataList[0].key1);
+              // console.log("value 1"+data.dataList[0].key2);
+            // });
 
 
       sessionStorage.setItem('type',type);
@@ -197,58 +399,123 @@ useEffect(() => {
     });
   }, []);
 
-
   useEffect(() => {
     setActiveLink(location.pathname);
 }, [location.pathname, setActiveLink]);
 
+  // const handleLogout = () => {
+  //   let ab = false;
+  //   sessionStorage.setItem("name", ab);
+  //   navigate('/admin');
+  // };
+
+  const handleLogout = async () => {
+    try {
+      const token = sessionStorage.getItem("tokenn"); // Retrieve token from session storage
+      if (!token) {
+        console.error("Token not found");
+        return;
+      }
+  
+      // Display a confirmation dialog using Swal
+      const confirmLogout = await Swal.fire({
+        title: "Are you sure?",
+        text: "You are about to logout.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#FBC740",
+        cancelButtonColor: "#FBC740",
+        confirmButtonText: "Yes, logout",
+        cancelButtonText: "Cancel",
+      });
+  
+      if (confirmLogout.isConfirmed) {
+        // Send logout request to the server
+        const response = await fetch(`${API_URL}/api/v2/logout/admin`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+            "Content-Type": "application/json", // Add any other necessary headers
+          },
+          // Add any necessary body data here
+        });
+  
+        if (response.ok) {
+          // Clear token from session storage after successful logout
+          sessionStorage.removeItem("tokenn");
+          sessionStorage.removeItem("username")
+          localStorage.clear();
+          sessionStorage.setItem('name', false);
+          navigate('/admin');
+          console.log("Logged out successfully");
+          return;
+        } else {
+          // Handle unsuccessful logout (e.g., server error)
+          console.error("Logout failed. Server responded with status:", response.status);
+          // Show error message using Swal
+          Swal.fire({
+            icon: 'error',
+            title: 'Logout failed',
+            text: 'Please try again later.',
+          });
+        }
+      }
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
+      // Show error message using Swal
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while logging out. Please try again later.',
+      });
+    }
+  };
+  
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
 
 
+  const [isActive, setIsActive] = useState(false);
 
-
+  const toggleSidebar = () => {
+    setIsActive(!isActive);
+  };
+//   const handleClick = (link) => {
+//     navigate(link); // Navigate dynamically based on the link parameter
+//     console.log(link);
+// };
 
   const handleClick = (link) => {
     setActiveLink(link);
     localStorage.setItem('activeLink', link); // Store the active link in local storage
-   
+    
     if((link==="/admin/About_us" || link==="/admin/Dashboard")&& isEmpty)
     {
       // console.log("!isEmpty"+isEmpty+"isvalid"+isvalid+"!isEmpty"+!isEmpty)
       navigate(link);
     }
-    else if ((link==="/admin/About_us" || link==="/admin/Dashboard")&& !isEmpty && !isvalid)
+    else if ((link==="/admin/About_us" || link==="/admin/Dashboard")&& !isEmpty && !isvalid) 
     {
-     
+      
         navigate(link);
-    }
+    } 
     else if (!isEmpty && isvalid)
      {
-     
+      
         navigate(link);
-    }
+    } 
   }
 // };
   const name=sessionStorage.getItem('username');
   const b=3;
   // alert(name);
 
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/v2/GetsiteSettings`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setGetAll(data);
-        console.log(data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+  const handleToggleDropdown = (dropdown) => {
+    setIsDropdownOpen(prev => (prev === dropdown ? null : dropdown));
+  };
+  
 
 
 
