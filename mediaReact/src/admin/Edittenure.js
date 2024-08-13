@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import API_URL from '../Config';
+import "../css/style.css";
 
 const EditTenure = () => {
     const id = localStorage.getItem('items');
@@ -128,7 +129,7 @@ const EditTenure = () => {
                                 <select
                                     name="months"
                                     id="months"
-                                    className="form-control border border-dark border-2"
+                                    className="form-control border border-dark border-2 custom-select-menu"
                                     value={updatedTenure.months || ''}
                                     onChange={(e) => {
                                         handleChange(e);
@@ -154,7 +155,7 @@ const EditTenure = () => {
                                 <select
                                     name="discount"
                                     id="discount"
-                                    className="form-control border border-dark border-2"
+                                    className="form-control border border-dark border-2 custom-select-menu"
                                     value={updatedTenure.discount || ''}
                                     onChange={handleChange}
                                     required

@@ -2529,6 +2529,10 @@ margin-top: 12rem;
   background-color: #e9ecef9e;
   border-radius: 2px;
 }
+.custom-select-menu {
+  max-height: 200px; 
+  overflow-y: auto;
+}
 
 
 
