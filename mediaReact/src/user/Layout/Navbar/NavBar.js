@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom'
-import {FaHeart, FaSearch,FaBell} from 'react-icons/fa'
+import { FaSearch,FaBell} from 'react-icons/fa'
 import {CgUser} from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../../../Config';

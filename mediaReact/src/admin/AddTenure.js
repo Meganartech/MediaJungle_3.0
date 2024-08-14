@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import API_URL from '../Config';
+import '../css/style.css'; // Import your CSS file
 
 const AddTenure = () => {
     const [tenureName, setTenureName] = useState('');
@@ -9,12 +10,16 @@ const AddTenure = () => {
     const [discount, setDiscount] = useState('');
     const [selectedMonths, setSelectedMonths] = useState('');
     const [discountOptions, setDiscountOptions] = useState([]);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isMonthsDropdownOpen, setIsMonthsDropdownOpen] = useState(false);
     const token = sessionStorage.getItem('tokenn');
 
-    const handleMonthsChange = (e) => {
-        const selectedMonths = parseInt(e.target.value, 10); // Convert input to number
+    // Handle change for months dropdown
+    const handleMonthsChange = (value) => {
+        const selectedMonths = parseInt(value, 10); // Convert value to number
         setSelectedMonths(selectedMonths);
-    
+        setMonths(selectedMonths); // Update months state
+
         // Define discount options based on selected months
         let options = [];
         if (selectedMonths === 1 || selectedMonths === 2) {
@@ -23,6 +28,9 @@ const AddTenure = () => {
             options = Array.from({ length: selectedMonths + 1 }, (_, i) => i); // Discounts from 0 to selectedMonths
         }
         setDiscountOptions(options);
+
+        // Close the dropdown
+        setIsMonthsDropdownOpen(false);
     };
 
     const handleSubmit = async (e) => {
@@ -112,24 +120,27 @@ const AddTenure = () => {
                                 <label className="custom-label">No of Months</label>
                             </div>
                             <div className='col-md-4'>
-                                <select
-                                    name="months"
-                                    id="months"
-                                    className="form-control border border-dark border-2"
-                                    value={selectedMonths}
-                                    onChange={(e) => {
-                                        setMonths(e.target.value);
-                                        handleMonthsChange(e); // Update discount options when months change
-                                    }}
-                                    required
-                                >
-                                    <option value="">Select Months</option>
-                                    {[...Array(60).keys()].map(i => (
-                                        <option key={i + 1} value={i + 1}>
-                                            {i + 1}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="custom-dropdown-container">
+                                    <div
+                                        className="custom-dropdown-selected"
+                                        onClick={() => setIsMonthsDropdownOpen(!isMonthsDropdownOpen)}
+                                    >
+                                        {months || 'Select Months'}
+                                    </div>
+                                    {isMonthsDropdownOpen && (
+                                        <div className="custom-dropdown-menu">
+                                            {[...Array(60).keys()].map(i => (
+                                                <div
+                                                    key={i + 1}
+                                                    className="custom-dropdown-option"
+                                                    onClick={() => handleMonthsChange(i + 1)}
+                                                >
+                                                    {i + 1}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
@@ -138,27 +149,36 @@ const AddTenure = () => {
                                 <label className="custom-label">Discount</label>
                             </div>
                             <div className='col-md-4'>
-                                <select
-                                    name="discount"
-                                    id="discount"
-                                    className="form-control border border-dark border-2"
-                                    value={discount}
-                                    onChange={(e) => setDiscount(e.target.value)}
-                                    required
-                                >
-                                    <option value="">Select Discount</option>
-                                    {discountOptions.map(option => (
-                                        <option key={option} value={option}>
-                                            {option} Free Month{option > 1 ? 's' : ''}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="custom-dropdown-container">
+                                    <div
+                                        className="custom-dropdown-selected"
+                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    >
+                                        {discount || 'Select Discount'}
+                                    </div>
+                                    {isDropdownOpen && (
+                                        <div className="custom-dropdown-menu">
+                                            {discountOptions.map(option => (
+                                                <div
+                                                    key={option}
+                                                    className="custom-dropdown-option"
+                                                    onClick={() => {
+                                                        setDiscount(option);
+                                                        setIsDropdownOpen(false);
+                                                    }}
+                                                >
+                                                    {option} Free Month{option > 1 ? 's' : ''}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
                         <div className='row py-3 my-5'>
                             <div className='col-md-8 ms-auto text-end'>
-                                <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">
+                                <button type="button" className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">
                                     Cancel
                                 </button>
                                 <button

@@ -3,7 +3,7 @@ import Layout from './Layout/Layout'
 
 import API_URL from '../Config'
 import axios from 'axios';
-import { FaPlay, FaShareAlt } from 'react-icons/fa';
+import { FaPlay} from 'react-icons/fa';
 import Titles from './Components/Titles';
 import { FaUserFriends } from 'react-icons/fa'
 // import Carousel from 'react-carousel';
