@@ -1,0 +1,214 @@
+2024-08-13 17:16:37 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:16:37 [http-nio-8080-exec-8] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:16:37 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@846dee,[]>
+2024-08-13 17:16:38 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:16:38 [http-nio-8080-exec-4] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:16:38 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@444d3a25,[]>
+2024-08-13 17:17:07 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:17:07 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:17:08 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:17:08 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:17:08 [http-nio-8080-exec-3] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:17:08 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@14e4f83b,[]>
+2024-08-13 17:17:08 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:17:08 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:17:08 [http-nio-8080-exec-1] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:17:08 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@495fb1ab,[]>
+2024-08-13 17:17:08 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:17:08 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:17:08 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:17:08 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:17:08 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:17:08 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:17:11 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:17:11 [http-nio-8080-exec-9] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:17:11 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@e9fc0ab,[]>
+2024-08-13 17:17:13 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:17:13 [http-nio-8080-exec-3] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:17:13 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@10d68f2b,[]>
+2024-08-13 17:17:58 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:17:58 [http-nio-8080-exec-2] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:17:58 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@4dd80d82,[]>
+2024-08-13 17:17:59 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:17:59 [http-nio-8080-exec-9] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:17:59 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@5b23a8ac,[]>
+2024-08-13 17:19:20 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:19:20 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:19:21 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:19:21 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:19:21 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:19:21 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:19:21 [http-nio-8080-exec-4] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:19:21 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@4fa5af5f,[]>
+2024-08-13 17:19:21 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:19:21 [http-nio-8080-exec-7] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:19:21 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@511d0091,[]>
+2024-08-13 17:19:21 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:19:21 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:19:21 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:19:21 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:19:21 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:19:57 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:19:57 [http-nio-8080-exec-2] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:19:57 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@324d4752,[]>
+2024-08-13 17:19:59 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:19:59 [http-nio-8080-exec-7] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:19:59 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@251e3f59,[]>
+2024-08-13 17:23:47 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:23:47 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:23:47 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:23:47 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:23:47 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:23:47 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:23:47 [http-nio-8080-exec-7] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:23:47 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@468989ff,[]>
+2024-08-13 17:23:47 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:23:47 [http-nio-8080-exec-3] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:23:47 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@458f3c4,[]>
+2024-08-13 17:23:47 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:23:47 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:23:47 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:23:47 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:23:47 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:23:47 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:23:47 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:23:54 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:23:54 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:23:54 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:23:54 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:23:54 [http-nio-8080-exec-3] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:23:54 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@457b844b,[]>
+2024-08-13 17:23:54 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:23:54 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:23:54 [http-nio-8080-exec-5] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:23:54 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@ff3eaa2,[]>
+2024-08-13 17:23:54 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:23:54 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:23:55 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:23:55 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:23:55 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:23:55 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:23:57 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:23:57 [http-nio-8080-exec-9] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:23:57 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@23c82aac,[]>
+2024-08-13 17:23:59 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:23:59 [http-nio-8080-exec-10] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:23:59 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@57249d13,[]>
+2024-08-13 17:26:17 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:26:17 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:26:17 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:26:17 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:26:17 [http-nio-8080-exec-2] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:26:17 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@3fb5c354,[]>
+2024-08-13 17:26:17 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:26:17 [http-nio-8080-exec-10] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:26:17 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@52b1c4dc,[]>
+2024-08-13 17:26:17 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:26:17 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:26:17 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:26:17 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:26:17 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:26:17 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:26:18 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:28:11 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:28:11 [http-nio-8080-exec-9] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:28:11 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@1748401d,[]>
+2024-08-13 17:28:12 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:28:12 [http-nio-8080-exec-5] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:28:12 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@4b0c5598,[]>
+2024-08-13 17:30:40 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:30:40 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:30:40 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:30:40 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:30:40 [http-nio-8080-exec-6] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:30:40 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@6130ba40,[]>
+2024-08-13 17:30:40 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:30:40 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:30:40 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:30:40 [http-nio-8080-exec-4] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:30:40 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@57a2aed8,[]>
+2024-08-13 17:30:40 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:30:40 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:30:40 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:30:40 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:30:40 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:35:17 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:35:17 [http-nio-8080-exec-1] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:35:17 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@29c47986,[]>
+2024-08-13 17:35:18 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:35:18 [http-nio-8080-exec-8] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:35:18 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@45a58c,[]>
+2024-08-13 17:36:00 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:36:00 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:36:00 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:36:00 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:36:00 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:36:00 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:36:00 [http-nio-8080-exec-7] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:36:00 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@2f147602,[]>
+2024-08-13 17:36:00 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:36:00 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:36:01 [http-nio-8080-exec-4] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:36:01 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@5124c0ed,[]>
+2024-08-13 17:36:01 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:36:01 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:36:01 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:36:01 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:36:23 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:36:23 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:36:23 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:36:23 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:36:23 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:36:23 [http-nio-8080-exec-7] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:36:23 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@48cac07a,[]>
+2024-08-13 17:36:23 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:36:23 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:36:23 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:36:23 [http-nio-8080-exec-2] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:36:23 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@5ea7a1a8,[]>
+2024-08-13 17:36:23 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:36:23 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:36:24 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:36:24 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:41:19 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:41:19 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:41:20 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:41:20 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:41:20 [http-nio-8080-exec-7] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:41:20 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@117c5b4e,[]>
+2024-08-13 17:41:20 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:41:20 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:41:20 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:41:20 [http-nio-8080-exec-6] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:41:20 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@7c115319,[]>
+2024-08-13 17:41:20 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:41:20 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:41:20 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:41:20 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:41:20 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:43:14 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: checkAdminRole with arguments: []
+2024-08-13 17:43:14 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: checkAdminRole with result: <200 OK OK,{adminExists=true},[]>
+2024-08-13 17:43:15 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:43:15 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:43:15 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:43:15 [http-nio-8080-exec-10] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:43:15 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@36e1114d,[]>
+2024-08-13 17:43:15 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:43:15 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:43:15 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:43:15 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:43:15 [http-nio-8080-exec-3] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:43:15 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@70ea4959,[]>
+2024-08-13 17:43:15 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:43:15 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: UreadCount with arguments: [eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTb3VuZGFyaXlhIiwidXNlcm5hbWUiOiJTb3VuZGFyaXlhIiwiaWF0IjoxNzIzNTI3ODY2LCJleHAiOjE3MjM2MTQyNjZ9.jj0zLJc7axgK8VtAD9V5ihdzX36sGCFJN-d8xky8WaQ]
+2024-08-13 17:43:15 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: UreadCount with result: <200 OK OK,1,[]>
+2024-08-13 17:44:17 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:44:17 [http-nio-8080-exec-5] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:44:17 [http-nio-8080-exec-5] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@49d7dd19,[]>
+2024-08-13 17:44:19 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-08-13 17:44:19 [http-nio-8080-exec-3] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-08-13 17:44:19 [http-nio-8080-exec-3] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@7b03537f,[]>
+2024-08-13 17:46:48 [RMI TCP Connection(426)-127.0.0.1] INFO  o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+2024-08-13 17:46:48 [RMI TCP Connection(426)-127.0.0.1] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-08-13 17:46:48 [RMI TCP Connection(426)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-08-13 17:46:48 [RMI TCP Connection(426)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

@@ -5,9 +5,9 @@ import "../css/Sidebar.css";
 import API_URL from '../Config';
 
 
-import Notification from '../Notification';
+// import Notification from '../Notification';
 import axios from 'axios';
-import notificationIcon from '../admin/icon/notification.png'
+// import notificationIcon from '../admin/icon/notification.png'
 
 
 
@@ -19,8 +19,8 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
 //   const [isCatsTagsOpen, setIsCatsTagsOpen] = useState(false);
 //   const [isUserAdminOpen, setIsUserAdminOpen] = useState(false);
 //   const [isMediaOpen, setIsMediaOpen] = useState(false);
-//   const [isLangCertiOpen, setIsLangCertiOpen] = useState(false);
-  const [isPlansTenureOpen, setIsPlansTenureOpen] = useState(false);
+// //   const [isLangCertiOpen, setIsLangCertiOpen] = useState(false);
+//   const [isPlansTenureOpen, setIsPlansTenureOpen] = useState(false);
 
 //   const [isvalid, setIsvalid] = useState();
 //   const [isEmpty, setIsEmpty] = useState();

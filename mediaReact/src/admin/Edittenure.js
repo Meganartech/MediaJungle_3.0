@@ -7,6 +7,8 @@ import "../css/style.css";
 const EditTenure = () => {
     const id = localStorage.getItem('items');
     const [selectedMonths, setSelectedMonths] = useState('');
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isMonthsDropdownOpen, setIsMonthsDropdownOpen] = useState(false);
     const [updatedTenure, setUpdatedTenure] = useState({
         tenure_name: '',
         months: '',
@@ -101,13 +103,13 @@ const EditTenure = () => {
             </ol>
 
             <div className="container mt-3">
-                <form onSubmit={handleSubmit}>
-                    <div className="modal-body">
-                        <div className="row py-3 my-3 align-items-center">
-                            <div className="col-md-3">
+                <form className='form-container' onSubmit={handleSubmit}>
+                    <div className='modal-body'>
+                        <div className='row py-3 my-3 align-items-center'>
+                            <div className='col-md-3'>
                                 <label className="custom-label">Tenure Name</label>
                             </div>
-                            <div className="col-md-4">
+                            <div className='col-md-4'>
                                 <input
                                     type="text"
                                     name="tenure_name"
@@ -121,57 +123,73 @@ const EditTenure = () => {
                             </div>
                         </div>
 
-                        <div className="row py-3 my-3 align-items-center">
-                            <div className="col-md-3">
+                        <div className='row py-3 my-3 align-items-center'>
+                            <div className='col-md-3'>
                                 <label className="custom-label">No of Months</label>
                             </div>
-                            <div className="col-md-4">
-                                <select
-                                    name="months"
-                                    id="months"
-                                    className="form-control border border-dark border-2 custom-select-menu"
-                                    value={updatedTenure.months || ''}
-                                    onChange={(e) => {
-                                        handleChange(e);
-                                        handleMonthsChange(e); // Update discount options when months change
-                                    }}
-                                    required
-                                >
-                                    <option value="">Select Months</option>
-                                    {[...Array(60).keys()].map(i => (
-                                        <option key={i + 1} value={i + 1}>
-                                            {i + 1}
-                                        </option>
-                                    ))}
-                                </select>
+                            <div className='col-md-4'>
+                                <div className="custom-dropdown-container">
+                                    <div
+                                        className="custom-dropdown-selected"
+                                        onClick={() => setIsMonthsDropdownOpen(!isMonthsDropdownOpen)}
+                                    >
+                                        {selectedMonths || 'Select Months'}
+                                    </div>
+                                    {isMonthsDropdownOpen && (
+                                        <div className="custom-dropdown-menu">
+                                            {[...Array(60).keys()].map(i => (
+                                                <div
+                                                    key={i + 1}
+                                                    className="custom-dropdown-option"
+                                                    onClick={() => {
+                                                        handleMonthsChange({ target: { value: i + 1 } });
+                                                        setSelectedMonths(i + 1);
+                                                        setIsMonthsDropdownOpen(false);
+                                                    }}
+                                                >
+                                                    {i + 1}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="row py-3 my-3 align-items-center">
-                            <div className="col-md-3">
+                        <div className='row py-3 my-3 align-items-center'>
+                            <div className='col-md-3'>
                                 <label className="custom-label">Discount</label>
                             </div>
-                            <div className="col-md-4">
-                                <select
-                                    name="discount"
-                                    id="discount"
-                                    className="form-control border border-dark border-2 custom-select-menu"
-                                    value={updatedTenure.discount || ''}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="">Select Discount</option>
-                                    {discountOptions.map(option => (
-                                        <option key={option} value={option}>
-                                            {option} Free Month{option > 1 ? 's' : ''}
-                                        </option>
-                                    ))}
-                                </select>
+                            <div className='col-md-4'>
+                                <div className="custom-dropdown-container">
+                                    <div
+                                        className="custom-dropdown-selected"
+                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    >
+                                        {updatedTenure.discount || 'Select Discount'}
+                                    </div>
+                                    {isDropdownOpen && (
+                                        <div className="custom-dropdown-menu">
+                                            {discountOptions.map(option => (
+                                                <div
+                                                    key={option}
+                                                    className="custom-dropdown-option"
+                                                    onClick={() => {
+                                                        handleChange({ target: { name: 'discount', value: option } });
+                                                        setIsDropdownOpen(false);
+                                                    }}
+                                                >
+                                                    {option} Free Month{option > 1 ? 's' : ''}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="row py-3 my-5">
-                            <div className="col-md-8 ms-auto text-end">
+                        <div className='row py-3 my-5'>
+                            <div className='col-md-8 ms-auto text-end'>
                                 <button
                                     type="submit"
                                     className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
