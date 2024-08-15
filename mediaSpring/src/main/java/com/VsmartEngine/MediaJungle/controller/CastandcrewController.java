@@ -48,6 +48,7 @@ public class CastandcrewController {
 
 	public ResponseEntity<?> addCast(@RequestParam("image") MultipartFile image,
 	                                 @RequestParam("name") String name,
+	                                 @RequestParam("description") String description,
 	                                 @RequestHeader("Authorization") String token) throws IOException {
 	    try {
 	        if (!jwtUtil.validateToken(token)) {
@@ -66,7 +67,7 @@ public class CastandcrewController {
 	            CastandCrew cast = new CastandCrew();
 	            cast.setName(name);
 	            cast.setImage(thumbnailBytes);
-
+	            cast.setDescription(description);
 	            CastandCrew details = castandcrewrepository.save(cast);
 
 	            Long castId = details.getId();
@@ -218,6 +219,7 @@ public class CastandcrewController {
 	        @PathVariable Long id,
 	        @RequestParam(value = "image", required = false) MultipartFile image,
 	        @RequestParam(value = "name", required = false) String name,
+	        @RequestParam(value = "description",required = false)String description,
 	        @RequestHeader("Authorization") String token) {
 		try {
 	        // Validate JWT token
@@ -251,6 +253,10 @@ public class CastandcrewController {
 	        // Update name if provided
 	        if (name != null && !name.isEmpty()) {
 	            existingCast.setName(name);
+	        }
+	        
+	        if(description != null && !name.isEmpty()) {
+	        	existingCast.setDescription(description);
 	        }
 	        byte[] Image = existingCast.getImage();
 

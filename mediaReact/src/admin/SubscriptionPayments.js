@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Sidebar from './sidebar';
 import axios from 'axios';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
@@ -60,6 +59,7 @@ const SubscriptionPayments = () => {
         </button>
       </li>
           </ol>
+          <div class="outer-container">
           <div className="table-container">
       <table className="table table-striped ">
         <thead>
@@ -102,6 +102,7 @@ const SubscriptionPayments = () => {
             </table>
           </div>
         </div>
+      </div>
     
    
   );

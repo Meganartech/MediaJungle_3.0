@@ -38,6 +38,8 @@ import com.VsmartEngine.MediaJungle.userregister.TokenBlacklist;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 
+import jakarta.transaction.Transactional;
+
 
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -224,7 +226,69 @@ public class MobileAppController {
     private AddAudioRepository audiorepository;
     
 
+//    @PostMapping("/mobile/favourite/audio")
+//    public ResponseEntity<String> createOrder(@RequestBody Map<String, Long> requestData) {
+//        try {
+//            Long audioId = requestData.get("audioId");
+//            Long userId = requestData.get("userId");
+//
+//            if (audioId == null || userId == null) {
+//                return new ResponseEntity<>("Invalid request data", HttpStatus.BAD_REQUEST);
+//            }
+//
+//            Optional<Addaudio1> audioOptional = audiorepository.findById(audioId);
+//            if (audioOptional.isPresent()) {
+//                Addaudio1 audio = audioOptional.get();
+//
+//                favourite ordertable = new favourite();
+//               
+//                ordertable.setAudioId(audioId);
+//                ordertable.setUserId(userId);
+//                favouriterepository.save(ordertable);
+//                
+//                Long favaudio = ordertable.getAudioId();
+//                Long userid = ordertable.getUserId();
+//                
+//                Optional<UserRegister> optionalUser = userregisterrepository.findById(userid);
+//                Optional<Addaudio1> optionalAudio = audiorepository.findById(favaudio);
+//                
+//                if (optionalUser.isPresent() && optionalAudio.isPresent()) {
+//                    UserRegister user = optionalUser.get();
+//                    Addaudio1 favvaudio = optionalAudio.get();
+//
+//                    // Check if the user is already enrolled in the course
+//                    if (user.getFavoriteAudios().contains(favvaudio)) {
+//                        return ResponseEntity.badRequest().body("User is already add this audio in favourite");
+//                    }
+//                    
+//                    user.getFavoriteAudios().add(audio);
+//                    userregisterrepository.save(user);
+//     
+//                    return ResponseEntity.ok("Favourite audio added successfully");
+//                } else {
+//                    // If a user or course with the specified ID doesn't exist, return 404
+//                    String errorMessage = "";
+//                    if (!optionalUser.isPresent()) {
+//                        errorMessage += "User with ID " + userId + " not found. ";
+//                    }
+//                    if (!optionalAudio.isPresent()) {
+//                        errorMessage += "audio with ID " + favaudio+ " not found. ";
+//                    }
+//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage.trim());
+//                }
+//            } else {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating payment ID: " + e.getMessage());
+//        }
+//    }
+    
+    
+    
     @PostMapping("/mobile/favourite/audio")
+    @Transactional
     public ResponseEntity<String> createOrder(@RequestBody Map<String, Long> requestData) {
         try {
             Long audioId = requestData.get("audioId");
@@ -234,52 +298,42 @@ public class MobileAppController {
                 return new ResponseEntity<>("Invalid request data", HttpStatus.BAD_REQUEST);
             }
 
-            Optional<Addaudio1> audioOptional = audiorepository.findById(audioId);
-            if (audioOptional.isPresent()) {
-                Addaudio1 audio = audioOptional.get();
+            Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
+            Optional<Addaudio1> optionalAudio = audiorepository.findById(audioId);
 
+            if (optionalUser.isPresent() && optionalAudio.isPresent()) {
+                UserRegister user = optionalUser.get();
+                Addaudio1 favvaudio = optionalAudio.get();
+
+                // Check if the user is already enrolled in the course
+                if (user.getFavoriteAudios().contains(favvaudio)) {
+                    return ResponseEntity.badRequest().body("User has already added this audio to favourites");
+                }
+
+                // Add to favourites
                 favourite ordertable = new favourite();
-               
                 ordertable.setAudioId(audioId);
                 ordertable.setUserId(userId);
                 favouriterepository.save(ordertable);
-                
-                Long favaudio = ordertable.getAudioId();
-                Long userid = ordertable.getUserId();
-                
-                Optional<UserRegister> optionalUser = userregisterrepository.findById(userid);
-                Optional<Addaudio1> optionalAudio = audiorepository.findById(favaudio);
-                
-                if (optionalUser.isPresent() && optionalAudio.isPresent()) {
-                    UserRegister user = optionalUser.get();
-                    Addaudio1 favvaudio = optionalAudio.get();
 
-                    // Check if the user is already enrolled in the course
-                    if (user.getFavoriteAudios().contains(favvaudio)) {
-                        return ResponseEntity.badRequest().body("User is already add this audio in favourite");
-                    }
-                    
-                    user.getFavoriteAudios().add(audio);
-                    userregisterrepository.save(user);
-     
-                    return ResponseEntity.ok("Favourite audio added successfully");
-                } else {
-                    // If a user or course with the specified ID doesn't exist, return 404
-                    String errorMessage = "";
-                    if (!optionalUser.isPresent()) {
-                        errorMessage += "User with ID " + userId + " not found. ";
-                    }
-                    if (!optionalAudio.isPresent()) {
-                        errorMessage += "audio with ID " + favaudio+ " not found. ";
-                    }
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage.trim());
-                }
+                // Update the user's favourite list
+                user.getFavoriteAudios().add(favvaudio);
+                userregisterrepository.save(user);
+
+                return ResponseEntity.ok("Favourite audio added successfully");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found");
+                StringBuilder errorMessage = new StringBuilder();
+                if (!optionalUser.isPresent()) {
+                    errorMessage.append("User with ID ").append(userId).append(" not found. ");
+                }
+                if (!optionalAudio.isPresent()) {
+                    errorMessage.append("Audio with ID ").append(audioId).append(" not found.");
+                }
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage.toString().trim());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating payment ID: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding to favourites: " + e.getMessage());
         }
     }
     

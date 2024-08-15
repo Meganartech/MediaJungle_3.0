@@ -257,23 +257,24 @@ fetchAudio(); // Replace 'yourDefaultFileName' with the desired default file nam
 <div className='container2 mt-20'>
       <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item">
-          <Link to="/admin/ListAudio">Audios</Link>
+          <Link to="/Dashboard">Dashboard</Link>
         </li>
-        <li className="breadcrumb-item active text-white">Edit</li>
+        <li className="breadcrumb-item active">Edit</li>
       </ol>
       <div className="row">
-        <div className="col-lg-12">
-
+        <div className="col-lg-8">
+          <div className="card mb-4">
+            <div className="card-body">
             <form>
             <div className='modal-header bg-info'>
                   <h5 className='modal-title' id='exampleModalLongTitle'>
-                   Select Category
+                    Update Audio
                   </h5>
                 </div>
                 <div className='modal-body text-center'>
                 <div className="form-group">
                 <div className='col-lg-6'>
-                      {/* <label >category</label> */}
+                      <label >category</label>
                     <select
                   className='form-control'
                   name='category'
@@ -295,12 +296,12 @@ fetchAudio(); // Replace 'yourDefaultFileName' with the desired default file nam
                       Add New thumbnail File
                     </h5>
               <label htmlFor="Audioname" className="color">
-                {/* Audio Image */}
+                Audio Image
               </label>
               
               <img
                 src={thumbnail}
-                alt=""
+                alt="selected pic of course"
                 style={{
                     display: 'block', // Ensure the image is displayed as a block element
                     margin: 'auto',   // Center the image horizontally
@@ -327,7 +328,7 @@ fetchAudio(); // Replace 'yourDefaultFileName' with the desired default file nam
                     Add New Audio File
                   </h5>
                   <label htmlFor="Audioname" className="color">
-                {/* Audio  */}
+                Audio 
               </label>
               <p>{updatedget?.fileName?.replace(/^.*[\\\/]/, '').replace(/^.*_/, '').replace(/\.mp3$/, '')}</p>
               {audioFile ? (
@@ -341,7 +342,7 @@ fetchAudio(); // Replace 'yourDefaultFileName' with the desired default file nam
                 
               />
               ) : (
-                <p></p>
+                <p>Loading audio...</p>
               )}
               
               <br />
@@ -372,8 +373,8 @@ fetchAudio(); // Replace 'yourDefaultFileName' with the desired default file nam
             </div> 
            </div>
           </div>
-    //      </div>   
-    // </div>
+         </div>   
+    </div>
     
   )
 }

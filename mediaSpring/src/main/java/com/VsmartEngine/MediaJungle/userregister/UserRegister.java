@@ -11,6 +11,7 @@ import com.VsmartEngine.MediaJungle.model.Addaudio1;
 import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.SubScription;
 import com.VsmartEngine.MediaJungle.model.VideoDescription;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;

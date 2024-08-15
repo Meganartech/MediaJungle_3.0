@@ -112,6 +112,7 @@ const handleDeleteLanguage = (languageId) => {
           </button>
           </li>
         </ol>
+        <div class="outer-container">
         <div className="table-container">
         <table class="table table-striped">
         <thead>
@@ -147,6 +148,7 @@ const handleDeleteLanguage = (languageId) => {
           
     
        
+      </div>
       </div>
       </div>
       </div>
