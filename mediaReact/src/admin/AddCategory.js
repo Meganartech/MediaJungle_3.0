@@ -65,12 +65,15 @@ const AddCategory = () => {
   return (
     
     <div className='container3 mt-20'>
-  <ol className="breadcrumb mb-4">
+   <ol className="breadcrumb mb-4 d-flex my-0">
     <li className="breadcrumb-item"><Link to="/admin/ViewCategory">Categories</Link></li>
     <li className="breadcrumb-item active text-white">Add Categories</li>
   </ol>
-  <div className="container mt-3">
-    <div className="row py-3 my-3 align-items-center">
+  
+  {/* <div className="container mt-3"> */}
+  <div class="outer-container">
+    <div className="table-container">
+    <div className="row py-3 my-3 align-items-center w-100">
       <div className="col-md-3">
         <label className="custom-label">Category Name</label>
       </div>
@@ -87,17 +90,19 @@ const AddCategory = () => {
         />
       </div>
     </div>
-    <div className="row py-3 my-5">
-      <div className="col-md-12" style={{ height: '200px' }}></div> {/* Placeholder div for spacing */}
+
+    <div className="row py-3 my-5 w-100">
+      <div className="space" ></div> 
     </div>
-    <div className="row py-3 my-5">
+    <div className="row py-3 my-5 w-100">
       <div className="col-md-8 ms-auto text-end">
-      <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
+      <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg ">Cancel</button>
         <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={handleSubmit} style={{backgroundColor:'blue'}}
         >Submit</button>
       </div>
     </div>
   </div>
+</div>
 </div>
 
   );

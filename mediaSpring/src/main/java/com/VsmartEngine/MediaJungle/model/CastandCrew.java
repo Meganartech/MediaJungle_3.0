@@ -24,6 +24,8 @@ public class CastandCrew {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
+	private String description;
+	
 	@Lob
 	@Column(name="thumbnail" ,length=1000000)
 	private byte[] image;
@@ -37,27 +39,20 @@ public class CastandCrew {
 //	@ManyToMany(mappedBy = "castandcrewlist")
 //	@JsonBackReference
 //	private List<VideoDescription> videos;
-	
-
 
 	public CastandCrew() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-
-
-
-	public CastandCrew(long id, byte[] image, String name, List<VideoCastAndCrew> videoCastAndCrews) {
+	public CastandCrew(long id, String description, byte[] image, String name, List<VideoCastAndCrew> videoCastAndCrews) {
 	super();
 	this.id = id;
+	this.description = description;
 	this.image = image;
 	this.name = name;
 	this.videoCastAndCrews = videoCastAndCrews;
 }
-
-
-
 
 	public long getId() {
 		return id;
@@ -83,24 +78,20 @@ public class CastandCrew {
 		this.name = name;
 	}
 
-
-
-
 	public List<VideoCastAndCrew> getVideoCastAndCrews() {
 		return videoCastAndCrews;
 	}
-
-
-
 
 	public void setVideoCastAndCrews(List<VideoCastAndCrew> videoCastAndCrews) {
 		this.videoCastAndCrews = videoCastAndCrews;
 	}
 
+	public String getDescription() {
+		return description;
+	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-
-	
-	
-	
 }

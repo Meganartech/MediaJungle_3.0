@@ -1,11 +1,11 @@
-import React, {useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import { useLocation } from 'react-router-dom';
 import API_URL from '../Config';
 
 
 const VideoPlayer = () => {
-  // const [videoUrl, setVideoUrl] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
   const location = useLocation();
   const id = localStorage.getItem('items');
   const get = location.state ? location.state.get : null; // Check if location.state exists

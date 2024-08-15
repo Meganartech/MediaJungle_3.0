@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../Config';
 import Swal from 'sweetalert2';
@@ -100,45 +99,58 @@ const Viewcastandcrew = () => {
         <div className='AddArea'>
           <button className='btn btn-custom' onClick={() => handleClick("/admin/AddCastCrew")}>Add Cast and Crew</button>
         </div><br/>
-      <div className='container2'>
-        <ol className="breadcrumb mb-4">
+      <div className='container3'>
+      <ol className="breadcrumb mb-4 d-flex my-0">
           <li className="breadcrumb-item text-white">
           Cast and Crews
           </li>
-          {/* <li className="breadcrumb-item active">Cast and crew</li> */}
+          <li className="ms-auto text-end text-white">
+        Bulk Action
+        <button className="ms-2">
+          <i className="bi bi-chevron-down"></i>
+        </button>
+      </li>
         </ol>
        
-         
-            <div className="card-body profile-card-body">
-              <table id="datatablesSimple">
-                <thead>
-                  <tr>
-                    <th>S.No</th>
-                    <th>Name</th>
-                    <th>Image</th>
-                    <th>Action</th>
+        <div class="outer-container">
+    <div className="table-container">
+      <table className="table table-striped ">
+        <thead>
+          <tr className='table-header'>
+            <th style={{border: 'none' }}>
+              <input type="checkbox" />
+            </th>
+                    <th style={{border: 'none' }}>S.No</th>
+                    <th style={{border: 'none' }}>Name</th>
+                    <th style={{border: 'none' }}>Image</th>
+                    <th style={{border: 'none' }}>Description</th>
+                    <th style={{border: 'none' }}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {getall && getall.length > 0 && (
                     getall.map((cast, index) => (
-                      <tr key={cast.id}>
+                      <tr key={cast.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+                        <td>
+                <input type="checkbox" />
+              </td>
                         <td>{index + 1}</td>
                         <td>{cast.name}</td>
                         <td>
                           {cast.image && (
                             
-                            <img src={`data:image/jpeg;base64,${cast.image}`} alt={cast.name} style={{ width: '50px', height: 'auto' }} />
+                            <img src={`data:image/jpeg;base64,${cast.image}`} alt={cast.name} style={{ width: '55px', height: 'auto' }} />
                           )}
                         </td>
+                        <td>{cast.description}</td>
                         <td>
-                          <button onClick={() => handlEdit(cast.id)}>
-                            <i className="fas fa-edit" aria-hidden="true"></i>
-                          </button>
+                          <button onClick={() => handlEdit(cast.id)}className="btn btn-primary me-2">
+                  <i className="fas fa-edit" aria-hidden="true"></i> Edit
+                </button>
 
-                          <button onClick={() => handleDelete(cast.id)}>
-                            <i className="fa fa-trash" aria-hidden="true"></i>
-                          </button>
+                          <button onClick={() => handleDelete(cast.id)}className="btn btn-danger">
+                  <i className="fa fa-trash" aria-hidden="true"></i> Delete
+                </button>
                         </td>
                       </tr>
                     ))
@@ -147,6 +159,7 @@ const Viewcastandcrew = () => {
               </table>
             </div>
           </div>
+        </div>
         </div>
    
   )

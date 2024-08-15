@@ -87,11 +87,18 @@ public class UserRegisterController {
     public ResponseEntity<UserRegister> getUserById(@PathVariable Long id) {
         Optional<UserRegister> userOptional = userregisterrepository.findById(id);
         if (userOptional.isPresent()) {
-            return ResponseEntity.ok(userOptional.get());
+            UserRegister user = userOptional.get();
+            // Check if the profile is present (not null and not empty)
+            if (user.getProfile() != null && user.getProfile().length > 0) {
+                byte[] images = ImageUtils.decompressImage(user.getProfile());
+                user.setProfile(images);
+            }
+            return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         String email = loginRequest.get("email");
@@ -116,6 +123,8 @@ public class UserRegisterController {
         responseBody.put("name", user.getUsername());
         responseBody.put("email", user.getEmail());
         responseBody.put("userId", user.getId());
+        responseBody.put("profile", null); // Simply set image as null without loading it
+
         // Check if the user has an expiry date for subscription
         if (user.getPaymentId() != null && user.getPaymentId().getExpiryDate() != null) {
             LocalDate expdate = user.getPaymentId().getExpiryDate();

@@ -9,7 +9,7 @@ import API_URL from '../../../Config';
 const Banner = () => {
     const [all, setAll] = useState(null);
     const [vimage, setVImage] = useState([]);
-    // const log = localStorage.getItem('login');
+    const log = localStorage.getItem('login');
     const userid = sessionStorage.getItem('userId');
     const navigate = useNavigate();
 

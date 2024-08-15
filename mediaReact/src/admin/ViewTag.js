@@ -103,6 +103,7 @@ const handleDeleteTag = (tagId) => {
           </button>
           </li>
         </ol>
+        <div class="outer-container">
         <div className="table-container">
         <table class="table table-striped">
         <thead>
@@ -136,6 +137,7 @@ const handleDeleteTag = (tagId) => {
           </tbody>         
         </table>
       </div>
+    </div>
     </div>
     </div>
         

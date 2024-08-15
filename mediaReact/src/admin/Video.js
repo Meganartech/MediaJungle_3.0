@@ -127,62 +127,76 @@ const Video = () => {
         <div className='AddArea'>
           <button className='btn btn-custom' onClick={() => handleClick("/admin/AddVideo")}>Add Video</button>
         </div><br/>
-      <div className='container2'>
-      <ol className="breadcrumb">
+      <div className='container3'>
+      <ol className="breadcrumb mb-4 d-flex my-0">
         <li className="breadcrumb-item text-white">Videos
         </li>
+        <li className="ms-auto text-end text-white">
+        Bulk Action
+        <button className="ms-2">
+          <i className="bi bi-chevron-down"></i>
+        </button>
+      </li>
        
       </ol>
     
          
-            <div className="card-body profile-card-body">
-              <table id="datatablesSimple">
-                <thead>
-                  <tr>
-                    <th>S.No</th>
-                    <th>Movie Name</th>
-                    <th>Description</th>
-                    <th>Tags</th>
-                    <th>Category</th>
-                    <th>Certificate</th>
-                    <th>Language</th>
-                    <th>Duration</th>
-                    <th>Year</th>
-                    <th>Paid</th>
-                    <th>Action</th>
+      <div class="outer-container">
+    <div className="table-container">
+      <table className="table table-striped ">
+        <thead>
+          <tr className='table-header'>
+            <th style={{border: 'none' }}>
+              <input type="checkbox" />
+            </th>
+            <th style={{border: 'none' }}>S.No</th>
+            <th style={{border: 'none' }}>Movie Name</th>
+            <th style={{border: 'none' }}>Description</th>
+            <th style={{border: 'none' }}>Tags</th>
+            <th style={{border: 'none' }}>Category</th>
+            <th style={{border: 'none' }}>Certificate</th>
+            <th style={{border: 'none' }}>Language</th>
+            <th style={{border: 'none' }}>Duration</th>
+            <th style={{border: 'none' }}>Year</th>
+            <th style={{border: 'none' }}>Paid</th>
+            <th style={{border: 'none' }}>Action</th>
                     
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user, index) => (
-                    <tr key={user.id}>
-                      <td>{index + 1}</td>
-                      <td>{user.moviename}</td>
-                      <td>{user.description}</td>
-                      <td>{user.tags}</td>
-                      <td>{user.category}</td>
-                      <td>{user.certificate}</td>
-                      <td>{user.language}</td>
-                      <td>{user.duration}</td>
-                      <td>{user.year}</td>
-                      <td>{user.paid===true ? 1 : 0}</td>
-                      <td>
-                        
-                        <button onClick={() => handlEdit(user.id)} >
-                          <i className="fas fa-edit" aria-hidden="true"></i>
-                        </button>
-                        <button onClick={() => handleDelete(user.id)} >
-                          <i className="fa fa-trash" aria-hidden="true"></i>
-                        </button>
-                        
-                      </td>
-                    </tr>
-                  ))}
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user, index) => (
+            <tr key={user.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+              <td>
+                <input type="checkbox" />
+              </td>
+              <td>{index + 1}</td>
+              <td>{user.moviename}</td>
+              <td>{user.description}</td>
+              <td>{user.tags}</td>
+              <td>{user.category}</td>
+              <td>{user.certificate}</td>
+              <td>{user.language}</td>
+              <td>{user.duration}</td>
+              <td>{user.year}</td>
+              <td>{user.paid===true ? 1 : 0}</td>
+              <td>
+                
+                <button onClick={() => handlEdit(user.id)} className="btn btn-primary me-2">
+                  <i className="fas fa-edit" aria-hidden="true"></i> Edit
+                </button>
+                <button onClick={() => handleDelete(user.id)} className="btn btn-danger">
+                  <i className="fa fa-trash" aria-hidden="true"></i> Delete
+                </button>
+                
+              </td>
+            </tr>
+          ))}
                 </tbody>
               </table>
             </div> 
           
         </div>
+    </div>
     </div>
     
 

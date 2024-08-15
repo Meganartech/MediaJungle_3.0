@@ -110,7 +110,7 @@ const handleDeleteCategory = (categoryId) => {
           </button>
         </li>
       </ol>
-      
+      <div class="outer-container">
       <div className="table-container">
       <table class="table table-striped">
           <thead>
@@ -145,6 +145,7 @@ const handleDeleteCategory = (categoryId) => {
           </tbody>
         </table>
       </div>
+    </div>
     </div>
     </div>
  
