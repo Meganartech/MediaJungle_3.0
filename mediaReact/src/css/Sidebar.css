@@ -50,6 +50,7 @@
 }
 .row{
 padding: 40px;
+/* width:70vw; */
 }
 
 .temp{
@@ -215,10 +216,12 @@ main {
 }
 
 .table-header {
-  background-color: #EFEEEE; /* Darker header color */
+  background-color: #CFCFCF; /* Darker header color */
   color: black;
   
 }
+
+
 
 .ms-auto button {
   background-color: transparent;
@@ -234,10 +237,27 @@ td{
   color:black;
 }
 
+/* .table-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  height: 68.70vh;
+  border-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: skyblue;
+
+} */
+
+.outer-container {
+  overflow: hidden;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  }
+
 .table-container {
   overflow-x: auto;
   white-space: nowrap;
-  height: 70vh;
+  height: 68.70vh;
 }
 
 .table {
@@ -305,5 +325,50 @@ td{
   border-radius: 2px;
 }
 
+
+.drag-drop-area {
+  padding: 1rem;
+  border: 2px solid;
+  border-radius: 4px;
+  text-align: center;
+  flex: 1;
+  height: 100px;
+  width:150px;
+}
+
+
+
+/* Default height */
+.space {
+  height: 100px;
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (max-width: 992px) {
+  .space {
+    height: 130px; /* Adjust height for medium screens */
+  }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 768px) {
+  .space {
+    height: 30px; /* Adjust height for small screens */
+  }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 576px) {
+  .space {
+    height: 100px; /* Adjust height for extra small screens */
+  }
+}
+
+.label-width {
+  width: 200px; /* Adjust this value as needed */
+}
+.input-width {
+  width: calc(100% - 220px); /* Adjust based on label width and padding/margins */
+}
 
 

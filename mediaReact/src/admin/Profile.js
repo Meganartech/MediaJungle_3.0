@@ -107,6 +107,7 @@ const Profile = () => {
         </button>
       </li>
     </ol>
+    <div class="outer-container">
     <div className="table-container">
       <table className="table table-striped ">
         <thead>
@@ -123,7 +124,7 @@ const Profile = () => {
             <th style={{border: 'none' }}>Company Name</th>
             <th style={{border: 'none' }}>Country</th>
             <th style={{border: 'none' }}>Action</th>
-          </tr>
+          </tr> 
         </thead>
         <tbody>
           {users.map((user, index) => (
@@ -153,6 +154,7 @@ const Profile = () => {
       </table>
     </div>
   </div>
+</div>
 </div>
 
       

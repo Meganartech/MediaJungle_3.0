@@ -5,9 +5,9 @@ import "../css/Sidebar.css";
 import API_URL from '../Config';
 
 
-// import Notification from '../Notification';
+import Notification from '../Notification';
 import axios from 'axios';
-// import notificationIcon from '../admin/icon/notification.png'
+import notificationIcon from '../admin/icon/notification.png'
 
 
 
@@ -19,8 +19,8 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
 //   const [isCatsTagsOpen, setIsCatsTagsOpen] = useState(false);
 //   const [isUserAdminOpen, setIsUserAdminOpen] = useState(false);
 //   const [isMediaOpen, setIsMediaOpen] = useState(false);
-// //   const [isLangCertiOpen, setIsLangCertiOpen] = useState(false);
-//   const [isPlansTenureOpen, setIsPlansTenureOpen] = useState(false);
+//   const [isLangCertiOpen, setIsLangCertiOpen] = useState(false);
+  const [isPlansTenureOpen, setIsPlansTenureOpen] = useState(false);
 
 //   const [isvalid, setIsvalid] = useState();
 //   const [isEmpty, setIsEmpty] = useState();
@@ -325,50 +325,7 @@ const [dropdownOpen, setDropdownOpen] = useState(false);
   const token =sessionStorage.getItem("tokenn");
   console.log("token",token)
 
-  const fetchUnreadCount = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/api/v2/unreadCount`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-  
-      if (response.status === 200) {
-        const data = response.data;
-        setcount(data);
-        console.log("count",data)
-      }
-    } catch (error) {
-      console.error("Error fetching unread count:", error);
-    }
-  };
-
-  const handlemarkallasRead = async () => {
-    try {
-        const markread = await axios.post(`${API_URL}/api/v2/markAllAsRead`, {}, {
-            headers: {
-                Authorization: token,
-            },
-        });
-        
-        if (markread.status === 200) {
-            fetchUnreadCount();
-        }
-    } catch (error) {
-        console.error("Error marking all notifications as read:", error);
-    }
-};
-
-
-  useEffect(() => {
-  
-  
-  
-    // Fetch initially
-    fetchUnreadCount();
-  
-    // Cleanup for interval
-  }, [count]); 
+ 
   useEffect(() => {
    
 
@@ -407,79 +364,10 @@ const [dropdownOpen, setDropdownOpen] = useState(false);
   //   navigate('/admin');
   // };
 
-  const handleLogout = async () => {
-    try {
-      const token = sessionStorage.getItem("tokenn"); // Retrieve token from session storage
-      if (!token) {
-        console.error("Token not found");
-        return;
-      }
-  
-      // Display a confirmation dialog using Swal
-      const confirmLogout = await Swal.fire({
-        title: "Are you sure?",
-        text: "You are about to logout.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#FBC740",
-        cancelButtonColor: "#FBC740",
-        confirmButtonText: "Yes, logout",
-        cancelButtonText: "Cancel",
-      });
-  
-      if (confirmLogout.isConfirmed) {
-        // Send logout request to the server
-        const response = await fetch(`${API_URL}/api/v2/logout/admin`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-            "Content-Type": "application/json", // Add any other necessary headers
-          },
-          // Add any necessary body data here
-        });
-  
-        if (response.ok) {
-          // Clear token from session storage after successful logout
-          sessionStorage.removeItem("tokenn");
-          sessionStorage.removeItem("username")
-          localStorage.clear();
-          sessionStorage.setItem('name', false);
-          navigate('/admin');
-          console.log("Logged out successfully");
-          return;
-        } else {
-          // Handle unsuccessful logout (e.g., server error)
-          console.error("Logout failed. Server responded with status:", response.status);
-          // Show error message using Swal
-          Swal.fire({
-            icon: 'error',
-            title: 'Logout failed',
-            text: 'Please try again later.',
-          });
-        }
-      }
-    } catch (error) {
-      console.error("An error occurred during logout:", error);
-      // Show error message using Swal
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while logging out. Please try again later.',
-      });
-    }
-  };
-  
-
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
-
+ 
 
   const [isActive, setIsActive] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsActive(!isActive);
-  };
 //   const handleClick = (link) => {
 //     navigate(link); // Navigate dynamically based on the link parameter
 //     console.log(link);
@@ -514,23 +402,36 @@ const [dropdownOpen, setDropdownOpen] = useState(false);
     setIsDropdownOpen(prevState => prevState === dropdownName ? null : dropdownName);
 };
   
+
 const handlePlanClick = () => {
   setIsPlanFeaturesOpen(prevState => !prevState);
 };
+
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetsiteSettings`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetAll(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
 
   return (
    
 <div>
 
-
-
-
-
-
- 
       <ul className={`navbar-nav sidebar sidebar-dark accordion ${isActive ? 'active' : ''}`} id="content-wrapper">
-      <div className="d-flex justify-content-center mt-n5">
+      <div className="d-flex justify-content-center mt-n2">
         {getall.length > 0 && getall[0].logo ? (
           <Link to="/">
             <img src={`data:image/png;base64,${getall[0].logo}`} alt="logo" className="img-fluid" />
@@ -539,7 +440,6 @@ const handlePlanClick = () => {
           <div></div>
         )}
       </div>
-      <br />
       <hr />
    
 
@@ -735,11 +635,23 @@ const handlePlanClick = () => {
             <span>PlanDetails</span>
           </Link>
 
+
       </li> */}            <li className="nav-item" >
                 <div className="nav-link" onClick={() => handleToggleDropdown('plantenure')}>
                     <i className="bi bi-calendar"></i>
                     <span>Plans & Tenures</span>
                     <i className={`fas fa-chevron-${isDropdownOpen === 'plantenure' ? 'down' : 'right'} ml-auto`}></i>
+
+      </li> */} <li className="nav-item">
+                <div className="nav-link" onClick={() => handleToggle(setIsPlansTenureOpen)}>
+                <i class="bi bi-calendar"></i>
+
+
+                    <span>Plans & Tenures</span>
+                   
+                    <i className={`fas fa-chevron-${isPlansTenureOpen ? 'down' : 'right'} ml-auto`}></i>
+
+
                 </div>
 
                 {isDropdownOpen === 'plantenure' && (

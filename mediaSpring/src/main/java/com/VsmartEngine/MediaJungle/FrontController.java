@@ -263,9 +263,10 @@ public class FrontController {
 	@PostMapping("/addcastandcrew")
 	public ResponseEntity<?> addCast(@RequestParam("image") MultipartFile image,
             @RequestParam("name") String name,
+            @RequestParam("description")String description,
             @RequestHeader("Authorization") String token) throws IOException {
 
-		return CastandcrewController.addCast(image, name, token);
+		return CastandcrewController.addCast(image, name,description, token);
 	}
 
 	@GetMapping("/GetAllcastandcrew")
@@ -304,11 +305,11 @@ public class FrontController {
 	        @PathVariable Long id,
 	        @RequestParam(value = "image", required = false) MultipartFile image,
 	        @RequestParam(value = "name", required = false) String name,
+	        @RequestParam(value= "description",required = false)String description,
 	        @RequestHeader("Authorization") String token) {
-
-		return CastandcrewController.updateCast(id, image, name, token);
+		return CastandcrewController.updateCast(id, image, name,description,token);
 	}
-
+	
 	@PostMapping("/AddNewCategories")
 	public ResponseEntity<String> createCategory(@RequestHeader("Authorization") String token, @RequestBody AddNewCategories data) {
 		

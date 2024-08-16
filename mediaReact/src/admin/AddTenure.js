@@ -2,64 +2,59 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import API_URL from '../Config';
-import '../css/style.css'; // Import your CSS file
 
 const AddTenure = () => {
-    const [tenureName, setTenureName] = useState('');
+    const [tenurename, setTenurename] = useState('');
     const [months, setMonths] = useState('');
     const [discount, setDiscount] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const [selectedMonths, setSelectedMonths] = useState('');
     const [discountOptions, setDiscountOptions] = useState([]);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [isMonthsDropdownOpen, setIsMonthsDropdownOpen] = useState(false);
-    const token = sessionStorage.getItem('tokenn');
-
-    // Handle change for months dropdown
-    const handleMonthsChange = (value) => {
-        const selectedMonths = parseInt(value, 10); // Convert value to number
+    const token = sessionStorage.getItem("tokenn");
+    const handleMonthsChange = (e) => {
+        const selectedMonths = parseInt(e.target.value, 10); // Convert input to number
         setSelectedMonths(selectedMonths);
-        setMonths(selectedMonths); // Update months state
-
+    
         // Define discount options based on selected months
         let options = [];
-        if (selectedMonths === 1 || selectedMonths === 2) {
-            options = [0];
-        } else if (selectedMonths >= 3) {
+        if (selectedMonths ==1 || selectedMonths ==2){
+            options =[0];
+        }
+        if (selectedMonths >= 3) {
             options = Array.from({ length: selectedMonths + 1 }, (_, i) => i); // Discounts from 0 to selectedMonths
         }
         setDiscountOptions(options);
-
-        // Close the dropdown
-        setIsMonthsDropdownOpen(false);
     };
+    
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         const data = {
-            tenure_name: tenureName,
-            months: selectedMonths,
+            tenure_name: tenurename,
+            months:  selectedMonths,
             discount: discount
         };
 
-        console.log('Submitting data:', data);
+        console.log('Submitting data:', data); // Log the data being sent
 
-        try {
-            const response = await fetch(`${API_URL}/api/v2/addtenure`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-
-            console.log('Response Status:', response.status);
-            const responseData = await response.json();
-            console.log('Response Data:', responseData);
-
+        fetch(`${API_URL}/api/v2/addtenure`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`, // Ensure the token is passed correctly
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => {
+            console.log('Response Status:', response.status); // Log response status
+            return response.json(); // Parse JSON response
+        })
+        .then(responseData => {
+            console.log('Response Data:', responseData); // Log the response data
             if (responseData.id) {
-                setTenureName('');
+                // Clear the form fields
+                setTenurename('');
                 setMonths('');
                 setDiscount('');
 
@@ -69,129 +64,102 @@ const AddTenure = () => {
                     text: 'Tenure inserted successfully!',
                 });
             } else {
+                setErrorMessage(responseData.message || 'Error occurred while inserting tenure.');
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
                     text: responseData.message || 'Error occurred while inserting tenure.',
                 });
             }
-        } catch (error) {
-            console.error('Error:', error);
+        })
+        .catch(error => {
+            setErrorMessage('Error occurred while inserting tenure.');
+            console.error('Error:', error); // Log the error
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: 'An error occurred while inserting the tenure.',
             });
-        }
+        });
     };
 
     return (
-        <div className='container3 mt-20'>
-            <ol className="breadcrumb mb-4">
-                <li className="breadcrumb-item">
-                    <Link to="/admin/TenureList">Tenures</Link>
-                </li>
-                <li className="breadcrumb-item active text-white">Add Tenure</li>
-            </ol>
+        <div className="container-fluid con-flu">
+            <div className="container2">
+                <ol className="breadcrumb mb-4">
+                    <li className="breadcrumb-item">
+                        <Link to="/admin/TenureList">Tenures</Link>
+                    </li>
+                    <li className="breadcrumb-item active text-white">Add Tenure</li>
+                </ol>
 
-            <div className="container mt-3">
-                <form className='form-container' onSubmit={handleSubmit}>
-                    <div className='modal-body'>
-                        <div className='row py-3 my-3 align-items-center'>
-                            <div className='col-md-3'>
-                                <label className="custom-label">Tenure Name</label>
-                            </div>
-                            <div className='col-md-4'>
-                                <input
-                                    type="text"
-                                    name="tenureName"
-                                    id="tenureName"
-                                    className="form-control border border-dark border-2"
-                                    value={tenureName}
-                                    onChange={(e) => setTenureName(e.target.value)}
-                                    required
-                                    placeholder="Tenure Name"
-                                />
-                            </div>
-                        </div>
-
-                        <div className='row py-3 my-3 align-items-center'>
-                            <div className='col-md-3'>
-                                <label className="custom-label">No of Months</label>
-                            </div>
-                            <div className='col-md-4'>
-                                <div className="custom-dropdown-container">
-                                    <div
-                                        className="custom-dropdown-selected"
-                                        onClick={() => setIsMonthsDropdownOpen(!isMonthsDropdownOpen)}
+                <div className='card-body'>
+                    <form className='form-container' onSubmit={handleSubmit}>
+                        <div className='modal-body'>
+                            <div className='temp'>
+                                <div className='col-lg-6'>
+                                    <label htmlFor="tenurename">Tenure Name</label>
+                                    <input
+                                        type="text"
+                                        name="tenurename"
+                                        id="tenurename"
+                                        className="form-control"
+                                        value={tenurename}
+                                        onChange={(e) => setTenurename(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="col-lg-6">
+                                    <label htmlFor="months">No of Months</label>
+                                    <select
+                                        name="months"
+                                        id="months"
+                                        className="form-control"
+                                        value={selectedMonths}
+                                        onChange={handleMonthsChange}
+                                        required
                                     >
-                                        {months || 'Select Months'}
+                                        <option value="">Select Months</option>
+                                        {[...Array(60).keys()].map(i => (
+                                            <option key={i + 1} value={i + 1}>
+                                                {i + 1}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className='col-lg-6'>
+                                    <label htmlFor="discount">Discount</label>
+                                    <select
+                                        name="discount"
+                                        id="discount"
+                                        className="form-control"
+                                        value={discount}
+                                        onChange={(e) => setDiscount(e.target.value)}
+                                        required
+                                    >
+                                        <option value="">Select Discount</option>
+                                        {discountOptions.map(option => (
+                                            <option key={option} value={option}>
+                                                {option} Free Month{option > 1 ? 's' : ''}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className='col-lg-12'>
+                                    <div className="d-flex justify-content-center" style={{ marginTop: "10px" }}>
+                                        <button
+                                            type="submit"
+                                            className='text-center btn btn-info'
+                                        >
+                                            SAVE
+                                        </button>
                                     </div>
-                                    {isMonthsDropdownOpen && (
-                                        <div className="custom-dropdown-menu">
-                                            {[...Array(60).keys()].map(i => (
-                                                <div
-                                                    key={i + 1}
-                                                    className="custom-dropdown-option"
-                                                    onClick={() => handleMonthsChange(i + 1)}
-                                                >
-                                                    {i + 1}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         </div>
-
-                        <div className='row py-3 my-3 align-items-center'>
-                            <div className='col-md-3'>
-                                <label className="custom-label">Discount</label>
-                            </div>
-                            <div className='col-md-4'>
-                                <div className="custom-dropdown-container">
-                                    <div
-                                        className="custom-dropdown-selected"
-                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    >
-                                        {discount || 'Select Discount'}
-                                    </div>
-                                    {isDropdownOpen && (
-                                        <div className="custom-dropdown-menu">
-                                            {discountOptions.map(option => (
-                                                <div
-                                                    key={option}
-                                                    className="custom-dropdown-option"
-                                                    onClick={() => {
-                                                        setDiscount(option);
-                                                        setIsDropdownOpen(false);
-                                                    }}
-                                                >
-                                                    {option} Free Month{option > 1 ? 's' : ''}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='row py-3 my-5'>
-                            <div className='col-md-8 ms-auto text-end'>
-                                <button type="button" className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
-                                    style={{ backgroundColor: 'blue' }}
-                                >
-                                    Submit
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     );

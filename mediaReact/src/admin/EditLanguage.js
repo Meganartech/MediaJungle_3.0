@@ -89,14 +89,14 @@ const handleSubmit = (e) => {
     <div className='container2 mt-20'>
       <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item">
-          <Link to="/admin/ViewLanguage">Languages</Link>
+          <Link to="/Dashboard">Dashboard</Link>
         </li>
-        <li className="breadcrumb-item active text-white">Edit</li>
+        <li className="breadcrumb-item active">Edit</li>
       </ol>
       <div className="row">
-        {/* <div className="col-lg-8">
+        <div className="col-lg-8">
           <div className="card mb-4">
-            <div className="card-body"> */}
+            <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <table className="table">
                   <tbody>
@@ -121,10 +121,10 @@ const handleSubmit = (e) => {
               </form>
             </div>
           </div>
-    //     </div>
+        </div>
         
-    //   </div>
-    // </div>
+      </div>
+    </div>
   
   );
 

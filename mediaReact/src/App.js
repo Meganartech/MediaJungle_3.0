@@ -84,9 +84,15 @@ import TenureList from './admin/TenureList';
 import AddTenure from './admin/AddTenure';
 import SiteSetting from './admin/SiteSetting';
 import Edittenure from './admin/Edittenure';
+
 import PlanFeatures from './admin/PlanFeatures';
 import AddFeature from './admin/AddFeature';
 import EditFeature from './admin/EditFeature';
+
+import AddVideo1 from './admin/AddVideo1';
+import AddVideo3 from './admin/AddVideo2';
+import AddVideo2 from './admin/AddVideo2';
+
 
 
 const App = () => {
@@ -180,7 +186,7 @@ const App = () => {
             <Route path='/' element={{hasSignedUp ?{navigate("/Home")} : {navigate("/admin/addUser")}} />} /> */}
 
             <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<Home/>} />} />
-          {/* <Route path='/' element={<Home  />} /> */}
+          <Route path='/' element={<Home  />} />
 
           {/* <Route path='/' element={<UserPrivateRouter hasSignedUp={hasSignedUp}  element={<Home />} />} /> */}
           {/* <Route path='/AdminSignin' element={<AdminSignin />} /> */}
@@ -202,10 +208,12 @@ const App = () => {
           <Route path='watchpage/:id' element={<WatchPage />} />
           {/* <Route path='videoScreen/:id' element={<VideoScreen/>} />  */}
           <Route path='userforgetpassword' element={<Userforgetpassword />} />
+          
+
 
           <Route path='admin' element={<Login />}  >
-             <Route element={<PrivateRoutes />}> 
-             <Route element={<AdminLayout /> } >
+            <Route element={<PrivateRoutes/>} > 
+            <Route element={<AdminLayout /> } > 
              <Route path='ViewCategory' element={<ViewCategory />}/>
             <Route path='AddLanguage' element={<AddLanguage/>} />
             <Route path='ViewLanguage' element={<ViewLanguage/>} />
@@ -232,7 +240,12 @@ const App = () => {
             <Route path='profile' element={<Profile/>} />
             <Route path='video' element= {<Video/>} />
             <Route path='addVideo' element= {<AddVideo/>} />
+
             <Route path='addFeature' element= {<AddFeature/>} />
+
+            <Route path='addvideo1' element={<AddVideo1 />} />
+            <Route path='addvideo2' element={<AddVideo2 />} />
+
             <Route path='audio' element= {<Audio/>} />
             <Route path='addAudio' element= {<AddAudio/>} />
             <Route path='addCategory'element= {<AddCategory/>} />
@@ -264,10 +277,9 @@ const App = () => {
             <Route path='Contact_setting' element= {<Contact_setting/>} />
             <Route path='SEO_setting' element= {<SEO_setting/>} />
             <Route path='Mobile_setting' element= {<Mobile_setting/>} />
-       
             </Route>
-            </Route>
-          </Route>
+            </Route> 
+           </Route>
           <Route path='licence' element={<Licence/>} />
         </Routes>
       {/* </Router> */}

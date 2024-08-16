@@ -2,14 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import API_URL from '../Config';
-import "../css/style.css";
 
 const EditTenure = () => {
     const id = localStorage.getItem('items');
     const [selectedMonths, setSelectedMonths] = useState('');
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [isMonthsDropdownOpen, setIsMonthsDropdownOpen] = useState(false);
-    const [updatedTenure, setUpdatedTenure] = useState({
+    const [updatedTenure, setupdatedTenure] = useState({
         tenure_name: '',
         months: '',
         discount: ''
@@ -41,7 +38,7 @@ const EditTenure = () => {
             })
             .then(data => {
                 console.log('Fetched tenure data:', data);
-                setUpdatedTenure(data);
+                setupdatedTenure(data);
 
                 // Initialize discount options based on fetched data
                 handleMonthsChange({ target: { value: data.months } });
@@ -53,154 +50,138 @@ const EditTenure = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUpdatedTenure(prevTenure => ({
+        setupdatedTenure(prevTenure => ({
             ...prevTenure,
-            [name]: value,
+            [name]: value , // Convert to number if necessary
         }));
     };
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
     
         console.log('Submitting data:', updatedTenure);
     
-        try {
-            const response = await fetch(`${API_URL}/api/v2/edittenure/${id}`, {
-                method: 'PUT',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updatedTenure),
-            });
-    
-            console.log('Response Status:', response.status);
-            const responseData = await response.json();
+        fetch(`${API_URL}/api/v2/edittenure/${id}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedTenure),
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json(); // Parse JSON response
+        })
+        .then(responseData => {
             console.log('Response Data:', responseData);
-        
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Tenure details successfully updated',
-            });
-        } catch (error) {
+    
+            // Check if the response indicates success
+            if (responseData.success) {
+                Swal.fire({
+                    icon: 'success',
+
+                    title: 'Success',
+                    text: 'Tenure details successfully updated',
+                });
+            } else {
+                // If there's an error message from the backend
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: responseData.message || 'Error updating tenure',
+                });
+            }
+        })
+        .catch(error => {
             console.error('Fetch error:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: error.message || 'An error occurred while updating the tenure',
             });
-        }
+        });
     };
     
     return (
-        <div className='container3 mt-20'>
-            <ol className="breadcrumb mb-4">
-                <li className="breadcrumb-item">
-                    <Link to="/admin/TenureList">Tenures</Link>
-                </li>
-                <li className="breadcrumb-item active text-white">Edit Tenure</li>
-            </ol>
+        <div className="container-fluid con-flu">
+            <div className="container2">
+                <ol className="breadcrumb mb-4">
+                    <li className="breadcrumb-item">
+                        <Link to="/admin/TenureList">Tenures</Link>
+                    </li>
+                    <li className="breadcrumb-item active text-white">Edit Tenure</li>
+                </ol>
 
-            <div className="container mt-3">
-                <form className='form-container' onSubmit={handleSubmit}>
-                    <div className='modal-body'>
-                        <div className='row py-3 my-3 align-items-center'>
-                            <div className='col-md-3'>
-                                <label className="custom-label">Tenure Name</label>
-                            </div>
-                            <div className='col-md-4'>
-                                <input
-                                    type="text"
-                                    name="tenure_name"
-                                    id="tenure_name"
-                                    className="form-control border border-dark border-2"
-                                    value={updatedTenure.tenure_name || ''}
-                                    onChange={handleChange}
-                                    required
-                                    placeholder="Tenure Name"
-                                />
-                            </div>
-                        </div>
-
-                        <div className='row py-3 my-3 align-items-center'>
-                            <div className='col-md-3'>
-                                <label className="custom-label">No of Months</label>
-                            </div>
-                            <div className='col-md-4'>
-                                <div className="custom-dropdown-container">
-                                    <div
-                                        className="custom-dropdown-selected"
-                                        onClick={() => setIsMonthsDropdownOpen(!isMonthsDropdownOpen)}
+                <div className="card-body">
+                    <form onSubmit={handleSubmit}>
+                        <div className="modal-body">
+                            <div className="temp">
+                                <div className="col-lg-6">
+                                    <label htmlFor="tenure_name">Tenure Name</label>
+                                    <input
+                                        type="text"
+                                        name="tenure_name"
+                                        id="tenure_name"
+                                        className="form-control"
+                                        value={updatedTenure.tenure_name || ''}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="col-lg-6">
+                                    <label htmlFor="months">No of Months</label>
+                                    <select
+                                        name="months"
+                                        id="months"
+                                        className="form-control"
+                                        value={updatedTenure.months || ''}
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                            handleMonthsChange(e); // Update discount options when months change
+                                        }}
+                                        required
                                     >
-                                        {selectedMonths || 'Select Months'}
+                                        <option value="">Select Months</option>
+                                        {[...Array(60).keys()].map(i => (
+                                            <option key={i + 1} value={i + 1}>
+                                                {i + 1}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-lg-6">
+                                    <label htmlFor="discount">Discount</label>
+                                    <select
+                                        name="discount"
+                                        id="discount"
+                                        className="form-control"
+                                        value={updatedTenure.discount || ''}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        <option value="">Select Discount</option>
+                                        {discountOptions.map(option => (
+                                            <option key={option} value={option}>
+                                                {option} Free Month{option > 1 ? 's' : ''}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="col-lg-12">
+                                    <div className="d-flex justify-content-center" style={{ marginTop: "10px" }}>
+                                        <button
+                                            type="submit"
+                                            className="text-center btn btn-info"
+                                        >
+                                            Update
+                                        </button>
                                     </div>
-                                    {isMonthsDropdownOpen && (
-                                        <div className="custom-dropdown-menu">
-                                            {[...Array(60).keys()].map(i => (
-                                                <div
-                                                    key={i + 1}
-                                                    className="custom-dropdown-option"
-                                                    onClick={() => {
-                                                        handleMonthsChange({ target: { value: i + 1 } });
-                                                        setSelectedMonths(i + 1);
-                                                        setIsMonthsDropdownOpen(false);
-                                                    }}
-                                                >
-                                                    {i + 1}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         </div>
-
-                        <div className='row py-3 my-3 align-items-center'>
-                            <div className='col-md-3'>
-                                <label className="custom-label">Discount</label>
-                            </div>
-                            <div className='col-md-4'>
-                                <div className="custom-dropdown-container">
-                                    <div
-                                        className="custom-dropdown-selected"
-                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    >
-                                        {updatedTenure.discount || 'Select Discount'}
-                                    </div>
-                                    {isDropdownOpen && (
-                                        <div className="custom-dropdown-menu">
-                                            {discountOptions.map(option => (
-                                                <div
-                                                    key={option}
-                                                    className="custom-dropdown-option"
-                                                    onClick={() => {
-                                                        handleChange({ target: { name: 'discount', value: option } });
-                                                        setIsDropdownOpen(false);
-                                                    }}
-                                                >
-                                                    {option} Free Month{option > 1 ? 's' : ''}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='row py-3 my-5'>
-                            <div className='col-md-8 ms-auto text-end'>
-                                <button
-                                    type="submit"
-                                    className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
-                                    style={{ backgroundColor: 'blue' }}
-                                >
-                                    Update
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     );
