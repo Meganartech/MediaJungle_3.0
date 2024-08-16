@@ -364,4 +364,11 @@ td{
   }
 }
 
+.label-width {
+  width: 200px; /* Adjust this value as needed */
+}
+.input-width {
+  width: calc(100% - 220px); /* Adjust based on label width and padding/margins */
+}
+
 
