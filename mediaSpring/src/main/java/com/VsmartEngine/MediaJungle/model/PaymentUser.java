@@ -2,6 +2,7 @@ package com.VsmartEngine.MediaJungle.model;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +18,7 @@ public class PaymentUser {
     private Long id;
 	
 	private String orderId;
+	@Column(unique = true)
 	private Long userId;
 	private String paymentId;
 	private double Amount;
