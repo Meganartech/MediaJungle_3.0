@@ -26,6 +26,7 @@ import com.VsmartEngine.MediaJungle.controller.CastandcrewController;
 import com.VsmartEngine.MediaJungle.controller.CategoryController;
 import com.VsmartEngine.MediaJungle.controller.CertificateController;
 import com.VsmartEngine.MediaJungle.controller.EmployeeController;
+import com.VsmartEngine.MediaJungle.controller.FeatureController;
 import com.VsmartEngine.MediaJungle.controller.LanguageController;
 import com.VsmartEngine.MediaJungle.controller.LicenseController;
 import com.VsmartEngine.MediaJungle.controller.PaymentController;
@@ -51,6 +52,7 @@ import com.VsmartEngine.MediaJungle.model.Othersettings;
 import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
 import com.VsmartEngine.MediaJungle.model.PlanDetails;
+import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.model.Seosettings;
 import com.VsmartEngine.MediaJungle.model.Sitesetting;
 import com.VsmartEngine.MediaJungle.model.Socialsettings;
@@ -80,6 +82,10 @@ public class FrontController {
 
 	@Autowired
 	private CastandcrewController CastandcrewController;
+
+	@Autowired
+	private FeatureController FeatureController;
+
 
 	@Autowired
 	private CategoryController CategoryController;
@@ -309,16 +315,41 @@ public class FrontController {
 		return CategoryController.createCategory(token, data);
 	}
 
+	@PostMapping("/PlanFeatures")
+	public ResponseEntity<String> createFeature(@RequestHeader("Authorization") String token, @RequestBody PlanFeatures data) {
+		
+		return FeatureController.createFeature(token, data);
+	}
+
+
+	@GetMapping("/GetAllFeatures")
+	public ResponseEntity<List<PlanFeatures>> getAllFeatures() {
+
+		return FeatureController.getAllFeatures();
+	}
 	@GetMapping("/GetAllCategories")
 	public ResponseEntity<List<AddNewCategories>> getAllCategories() {
 
 		return CategoryController.getAllCategories();
 	}
 
+
+	@GetMapping("/GetFeatureById/{featureId}")
+	public ResponseEntity<PlanFeatures> getFeatureById(@PathVariable Long featureId) {
+
+		return FeatureController.getFeatureById(featureId);
+	}
 	@GetMapping("/GetCategoryById/{categoryId}")
 	public ResponseEntity<AddNewCategories> getCategoryById(@PathVariable Long categoryId) {
 
 		return CategoryController.getCategoryById(categoryId);
+	}
+
+	@DeleteMapping("/DeleteFeature/{featureId}")
+	public ResponseEntity<?> deleteFeature(@PathVariable Long featureId, @RequestHeader("Authorization") String token) {
+		
+
+		return FeatureController.deleteFeature(featureId, token);
 	}
 
 	@DeleteMapping("/DeleteCategory/{categoryId}")
@@ -327,6 +358,13 @@ public class FrontController {
 
 		return CategoryController.deleteCategory(categoryId, token);
 	}
+	@PatchMapping("/editFeature/{featureId}")
+	public ResponseEntity<String> editFeatures(@PathVariable Long featureId, @RequestBody PlanFeatures editFeature,@RequestHeader("Authorization") String token) {
+
+
+		return FeatureController.editFeatures(featureId, editFeature, token);
+	}
+
 
 	@PatchMapping("/editCategory/{categoryId}")
 	public ResponseEntity<String> editCategories(@PathVariable Long categoryId, @RequestBody AddNewCategories editCategory,@RequestHeader("Authorization") String token) {

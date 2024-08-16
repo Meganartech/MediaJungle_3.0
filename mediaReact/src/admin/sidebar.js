@@ -41,10 +41,6 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
 //       }
 
 
-  const handleToggle = (setState) => {
-    setState(prevState => !prevState);
-};
-
 
 // const toggleSidebar = () => {
 //   setIsActive(!isActive);
@@ -315,12 +311,14 @@ const Sidebar = ({ activeLink, setActiveLink}) => {
 //         console.error('Error fetching data:', error);
 //       });
 //   }, []);
+const [isDropdownOpen, setIsDropdownOpen] = useState(null); // State for the main dropdown
+const [isPlanFeaturesOpen, setIsPlanFeaturesOpen] = useState(false); // State for the Plan Features dropdown
+
 const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isvalid, setIsvalid] = useState();
   const [isEmpty, setIsEmpty] = useState();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
   const[count,setcount]=useState(0);
   const [isopen,setisopen]=useState(false);
   
@@ -512,11 +510,13 @@ const [dropdownOpen, setDropdownOpen] = useState(false);
   const b=3;
   // alert(name);
 
-  const handleToggleDropdown = (dropdown) => {
-    setIsDropdownOpen(prev => (prev === dropdown ? null : dropdown));
-  };
+  const handleToggleDropdown = (dropdownName) => {
+    setIsDropdownOpen(prevState => prevState === dropdownName ? null : dropdownName);
+};
   
-
+const handlePlanClick = () => {
+  setIsPlanFeaturesOpen(prevState => !prevState);
+};
 
 
   return (
@@ -735,37 +735,53 @@ const [dropdownOpen, setDropdownOpen] = useState(false);
             <span>PlanDetails</span>
           </Link>
 
-      </li> */} <li className="nav-item">
+      </li> */}            <li className="nav-item" >
                 <div className="nav-link" onClick={() => handleToggleDropdown('plantenure')}>
-                <i class="bi bi-calendar"></i>
-
-
+                    <i className="bi bi-calendar"></i>
                     <span>Plans & Tenures</span>
-                   
                     <i className={`fas fa-chevron-${isDropdownOpen === 'plantenure' ? 'down' : 'right'} ml-auto`}></i>
-
                 </div>
+
                 {isDropdownOpen === 'plantenure' && (
                     <ul className="nav flex-column pl-3">
-      <li className={`nav-item  ${activeLink === "/admin/PlanDetailsList" ? 'active' : ''}`} onClick={() => handleClick("/admin/PlanDetailsList")}>
-          <Link className="nav-link" >
-          <i class="bi bi-clipboard"></i>
+                        {/* Plans Item */}
+                        <li className={`nav-item ${activeLink === "/admin/PlanDetailsList" ? 'active' : ''}`}>
+                            <div
+                                className="nav-link"
+                                onClick={() => {
+                                    handleClick("/admin/PlanDetailsList");
+                                    handlePlanClick(); // Toggle Plan Features dropdown
+                                }}
+                            >
+                                <i className="bi bi-clipboard"></i>
+                                <span>Plans</span>
+                                <i className={`fas fa-chevron-${isPlanFeaturesOpen ? 'down' : 'right'} ml-auto`}></i>
+                            </div>
 
+                            {/* Plan Features Dropdown */}
+                            {isPlanFeaturesOpen && (
+                                <ul className="nav flex-column pl-3">
+                                    <li className={`nav-item ${activeLink === "/admin/PlanFeatures" ? 'active' : ''}`}>
+                                        <Link className="nav-link" to="/admin/PlanFeatures" onClick={() => handleClick("/admin/PlanFeatures")}>
+                                            <span>Plan Features</span>
+                                        </Link>
+                                    </li>
+                                </ul>
+                            )}
+                        </li>
 
-            <span>  Plans</span>
-          </Link>
-      </li>
-      <li className={`nav-item  ${activeLink === "/admin/TenureList" ? 'active' : ''}`} onClick={() => handleClick("/admin/TenureList")}>
-          <Link className="nav-link" >
-          <i class="bi bi-hourglass"></i>
-
-
-            <span>  Tenures</span>
-          </Link>
-      </li>
-      </ul>
+                        {/* Tenures Item */}
+                        <li className={`nav-item ${activeLink === "/admin/TenureList" ? 'active' : ''}`}>
+                            <Link className="nav-link" onClick={() => handleClick("/admin/TenureList")}>
+                                <i className="bi bi-hourglass"></i>
+                                <span>Tenures</span>
+                            </Link>
+                        </li>
+                    </ul>
                 )}
             </li>
+
+
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Settings</div>
       </div> */}
