@@ -257,9 +257,9 @@ const handleSubmit = async (e) => {
                         <label htmlFor="inputPassword">Password</label>
                       </div>
                       <div className="d-flex btn  align-items-center justify-content-between mt-4 mb-0">
-                        <a className="small colour" href="/AdminSignin">
+                        {/* <a className="small colour" href="/AdminSignin">
                           Admin SignIn
-                        </a>
+                        </a> */}
                         <button className="btn btn-primary" type="submit" style={{ color: "black" }}>LOGIN</button>
                       </div>
                       <div className="small text-center">

@@ -84,6 +84,9 @@ import TenureList from './admin/TenureList';
 import AddTenure from './admin/AddTenure';
 import SiteSetting from './admin/SiteSetting';
 import Edittenure from './admin/Edittenure';
+import AddVideo1 from './admin/AddVideo1';
+import AddVideo3 from './admin/AddVideo2';
+import AddVideo2 from './admin/AddVideo2';
 
 
 const App = () => {
@@ -176,7 +179,7 @@ const App = () => {
 {/*         
             <Route path='/' element={{hasSignedUp ?{navigate("/Home")} : {navigate("/admin/addUser")}} />} /> */}
 
-            {/* <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<Home/>} />} /> */}
+            <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<Home/>} />} />
           <Route path='/' element={<Home  />} />
 
           {/* <Route path='/' element={<UserPrivateRouter hasSignedUp={hasSignedUp}  element={<Home />} />} /> */}
@@ -200,20 +203,11 @@ const App = () => {
           {/* <Route path='videoScreen/:id' element={<VideoScreen/>} />  */}
           <Route path='userforgetpassword' element={<Userforgetpassword />} />
           
-{/* <Route path='admin' element={<PrivateRoutes element={<Login />}/>}> */}
 
-          {/* <Route path='admin' element={<Login />}  >
+
+          <Route path='admin' element={<Login />}  >
             <Route element={<PrivateRoutes/>} > 
-            <Route element={<AdminLayout /> } >  */}
-
-
-<Route path='/adminsignin' element={<AdminSignin />} />
-      <Route path='admin' element={<Login />} >
-      
-      <Route element={<PrivateRoutes />} >
-      <Route element={<AdminLayout />} >
-     
-      
+            <Route element={<AdminLayout /> } > 
              <Route path='ViewCategory' element={<ViewCategory />}/>
             <Route path='AddLanguage' element={<AddLanguage/>} />
             <Route path='ViewLanguage' element={<ViewLanguage/>} />
@@ -240,6 +234,8 @@ const App = () => {
             <Route path='profile' element={<Profile/>} />
             <Route path='video' element= {<Video/>} />
             <Route path='addVideo' element= {<AddVideo/>} />
+            <Route path='addvideo1' element={<AddVideo1 />} />
+            <Route path='addvideo2' element={<AddVideo2 />} />
             <Route path='audio' element= {<Audio/>} />
             <Route path='addAudio' element= {<AddAudio/>} />
             <Route path='addCategory'element= {<AddCategory/>} />
