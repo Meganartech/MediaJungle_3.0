@@ -84,9 +84,15 @@ import TenureList from './admin/TenureList';
 import AddTenure from './admin/AddTenure';
 import SiteSetting from './admin/SiteSetting';
 import Edittenure from './admin/Edittenure';
+
+import PlanFeatures from './admin/PlanFeatures';
+import AddFeature from './admin/AddFeature';
+import EditFeature from './admin/EditFeature';
+
 import AddVideo1 from './admin/AddVideo1';
 import AddVideo3 from './admin/AddVideo2';
 import AddVideo2 from './admin/AddVideo2';
+
 
 
 const App = () => {
@@ -234,8 +240,12 @@ const App = () => {
             <Route path='profile' element={<Profile/>} />
             <Route path='video' element= {<Video/>} />
             <Route path='addVideo' element= {<AddVideo/>} />
+
+            <Route path='addFeature' element= {<AddFeature/>} />
+
             <Route path='addvideo1' element={<AddVideo1 />} />
             <Route path='addvideo2' element={<AddVideo2 />} />
+
             <Route path='audio' element= {<Audio/>} />
             <Route path='addAudio' element= {<AddAudio/>} />
             <Route path='addCategory'element= {<AddCategory/>} />
@@ -250,6 +260,8 @@ const App = () => {
             <Route path='TenureList' element={<TenureList/>}/>
             <Route path='Edittenure/:id' element={<Edittenure />} />
             <Route path='Editplan' element={<Editplan />} />
+            <Route path='Editfeature' element={<EditFeature />} />
+            <Route path='planfeatures' element={<PlanFeatures />} />
             <Route path='PlanDescription' element={<PlanDescription />} />
             
             <Route path='setting' element= {<Setting/>} />
