@@ -14,9 +14,13 @@ import com.VsmartEngine.MediaJungle.model.VideoDescription;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -59,23 +63,16 @@ public class UserRegister {
 	@Column(name="profile" ,length=1000000)
 	private byte[] profile;
 	
-	@ManyToMany
-    @JoinTable(
-        name = "user_favorites",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "audio_id")
-    )
-	@JsonManagedReference
-    private Set<Addaudio1> favoriteAudios = new HashSet<>();
+	@ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "user_favorite_audios", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "audio_id")
+    private Set<Long> favoriteAudioIds = new HashSet<>();
 	
-	@ManyToMany
-	@JoinTable(
-	    name = "user_favoritesvideo",
-	    joinColumns = @JoinColumn(name = "user_id"),
-	    inverseJoinColumns = @JoinColumn(name = "video_id")
-	)
-	@JsonManagedReference
-	private Set<VideoDescription> favoriteVideos = new HashSet<>();
+	@ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "user_favorite_videos", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "video_id")
+    private Set<Long> favoriteVideosIds = new HashSet<>();
+	
 	
 	@OneToOne
 	@JoinColumn(name = "Payment_details")
@@ -86,8 +83,18 @@ public class UserRegister {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+
+
+
+	
+
+
+
+
+
 	public UserRegister(long id, String username, String email, String role, String password, String confirmPassword,
-			String mobnum, byte[] profile, Set<Addaudio1> favoriteAudios, Set<VideoDescription> favoriteVideos,
+			String mobnum, byte[] profile, Set<Long> favoriteAudioIds, Set<Long> favoriteVideosIds,
 			PaymentUser paymentId) {
 		super();
 		this.id = id;
@@ -98,10 +105,18 @@ public class UserRegister {
 		this.confirmPassword = confirmPassword;
 		this.mobnum = mobnum;
 		this.profile = profile;
-		this.favoriteAudios = favoriteAudios;
-		this.favoriteVideos = favoriteVideos;
+		this.favoriteAudioIds = favoriteAudioIds;
+		this.favoriteVideosIds = favoriteVideosIds;
 		this.paymentId = paymentId;
 	}
+
+
+
+
+
+
+
+
 
 
 
@@ -161,20 +176,26 @@ public class UserRegister {
 		this.profile = profile;
 	}
 
-	public Set<Addaudio1> getFavoriteAudios() {
-		return favoriteAudios;
+	
+
+	public Set<Long> getFavoriteAudioIds() {
+		return favoriteAudioIds;
 	}
 
-	public void setFavoriteAudios(Set<Addaudio1> favoriteAudios) {
-		this.favoriteAudios = favoriteAudios;
+
+
+
+
+	public void setFavoriteAudioIds(Set<Long> favoriteAudioIds) {
+		this.favoriteAudioIds = favoriteAudioIds;
 	}
 
-	public Set<VideoDescription> getFavoriteVideos() {
-		return favoriteVideos;
+	public Set<Long> getFavoriteVideosIds() {
+		return favoriteVideosIds;
 	}
 
-	public void setFavoriteVideos(Set<VideoDescription> favoriteVideos) {
-		this.favoriteVideos = favoriteVideos;
+	public void setFavoriteVideosIds(Set<Long> favoriteVideosIds) {
+		this.favoriteVideosIds = favoriteVideosIds;
 	}
 
 	public PaymentUser getPaymentId() {
@@ -192,6 +213,9 @@ public class UserRegister {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	
+
+
 
 	
 }

@@ -1556,29 +1556,28 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
           </div>
         </div>
 
-        {/* Age */}
+
+        {/* Main Video Duration */}
         <div className="col-md-6">
           <div className="d-flex align-items-center">
-            {/* <div className="flex-shrink-0 me-2"> */}
             <div className="label-width">
-              <label className="custom-label">Age</label>
+              <label className="custom-label">Main Video Duration</label>
             </div>
             <div className="flex-grow-1">
-              <select 
-                name='age'
-                id='age'
+              <input 
+                type='text'
+                name='main_video_duration'
+                id='main_video_duration'
                 required
-                className="form-control border border-dark border-2 input-width"
-              >
-                <option value="">Select Age</option>
-                <option value="13+">13+</option>
-                <option value="16+">16+</option>
-                <option value="18+">18+</option>
-              </select>
+                className="form-control border border-dark border-2 input-width" 
+                placeholder="Main Video Duration" 
+              />
             </div>
           </div>
         </div>
 
+
+        
       </div>
 
       <div className="row py-3 my-3 align-items-center w-100">
@@ -1602,24 +1601,29 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
           </div>
         </div>
 
-        {/* Main Video Duration */}
+        {/* Certificate Name */}
         <div className="col-md-6">
           <div className="d-flex align-items-center">
+            {/* <div className="flex-shrink-0 me-2"> */}
             <div className="label-width">
-              <label className="custom-label">Main Video Duration</label>
+              <label className="custom-label">Certificate Name</label>
             </div>
             <div className="flex-grow-1">
-              <input 
-                type='text'
-                name='main_video_duration'
-                id='main_video_duration'
+              <select 
+                name='certificatename'
+                id='certificate_name'
                 required
-                className="form-control border border-dark border-2 input-width" 
-                placeholder="Main Video Duration" 
-              />
+                className="form-control border border-dark border-2 input-width"
+              >
+                <option value="">Select certificate</option>
+                <option value="13+">U</option>
+                <option value="16+">U/A</option>
+                <option value="18+">U</option>
+              </select>
             </div>
           </div>
         </div>
+
 
       </div>
 
@@ -1647,31 +1651,26 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
         {/* Cast and Crew */}
         <div className="col-md-6">
           <div className="d-flex align-items-center">
+            {/* <div className="flex-shrink-0 me-2"> */}
             <div className="label-width">
               <label className="custom-label">Cast and Crew</label>
             </div>
             <div className="flex-grow-1">
-            <select  
-                type='text'
-                name='cast_and_crew'
-                id='cast_and_crew'
+              <select 
+                name='certificatename'
+                id='certificate_name'
                 required
-                className="form-control border border-dark border-2 input-width" 
-                
-                multiple
-                value={selectedCastAndCrew}
-            onChange={handleSelectChange}
+                className="form-control border border-dark border-2 input-width"
               >
-
-{castAndCrewOptions.map((person) => (
-              <option key={person.id} value={person.name}>
-                {person.name}
-              </option>
-            ))}
-        </select>
+                <option value="">Cast and Crew</option>
+                <option value="13+">U</option>
+                <option value="16+">U/A</option>
+                <option value="18+">U</option>
+              </select>
             </div>
           </div>
         </div>
+
 
       </div>
 
@@ -1696,24 +1695,15 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
           </div>
         </div>
 
-        {/* Certificate Name */}
-        <div className="col-md-6">
-          <div className="d-flex align-items-center">
-            <div className="label-width">
-              <label className="custom-label">Certificate Name</label>
-            </div>
-            <div className="flex-grow-1">
-              <input 
-                type='text'
-                name='certificate_name'
-                id='certificate_name'
-                required
-                className="form-control border border-dark border-2 input-width" 
-                placeholder="Certificate Name" 
-              />
-            </div>
-          </div>
-        </div>
+        {/* Empty Div with Border, Border Radius, and Increased Height */}
+  <div className="col-md-6">
+    <div className="d-flex align-items-center">
+      <div className="flex-grow-1 border border-dark border-2 p-3" 
+           style={{ borderRadius: '13px', height: '130px' }}>
+        {/* The div is empty, with only the border */}
+      </div>
+    </div>
+  </div>
 
       </div>
 
@@ -1723,7 +1713,7 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
         <div className="col-md-6">
           <div className="d-flex align-items-center">
             <div className="label-width">
-              <label className="custom-label">Subscription Type</label>
+              <label className="custom-label">Video Access Type</label>
             </div>
             <div className="flex-grow-1">
               <div className="d-flex">
@@ -1754,6 +1744,8 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
 
       </div>
 
+      
+
       <div className="row py-1 my-1 w-100">
               <div className="col-md-8 ms-auto text-end">
                 <button
@@ -1779,81 +1771,128 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
 
 {currentStep === 2 && (
             <>
-            <div className="row py-3 my-3 align-items-center w-100">
-      <div className="col-md-3">
-        <label className="custom-label">Category</label>
-      </div>
-      <div className="col-md-4">
-      <select 
-        name='age'
-        id='age'
-        required
-        className="form-control border border-dark border-2"
-      >
-        <option value="">Select category</option>
-        <option value="13+">13+</option>
-        <option value="16+">16+</option>
-        <option value="18+">18+</option>
-      </select>
-      </div>
-    </div>
 
+<div className="row py-3 my-3 align-items-center w-100">
 
-    <div className="row py-3 my-3 align-items-center w-100">
-      <div className="col-md-3">
-        <label className="custom-label">Tag</label>
-      </div>
-      <div className="col-md-4">
-      <select 
-        name='age'
-        id='age'
-        required
-        className="form-control border border-dark border-2"
-      >
-        <option value="">Category</option>
-        <option value="13+">13+</option>
-        <option value="16+">16+</option>
-        <option value="18+">18+</option>
-      </select>
-      </div>
-    </div>
-
-    <div className="row py-3 my-3 align-items-center w-100">
-      <div className="col-md-3">
-        <label className="custom-label">Production Company</label>
-      </div>
-      <div className="col-md-4">
-        <input 
-          type='text'
-          name='category_name'
-          id='name'
-          required
-        //   value={categoryName}
-        //   onChange={(e) => setCategoryName(e.target.value)}
-          className="form-control border border-dark border-2" 
-          placeholder="Production Company" 
-        />
-      </div>
-    </div>
-
-    <div className="row py-3 my-3 align-items-center w-100">
-      <div className="col-md-3">
+ {/* Address */}
+ <div className="col-md-6">
+    <div className="d-flex align-items-center">
+      <div className="label-width">
         <label className="custom-label">Description</label>
       </div>
-      <div className="col-md-4">
-        <input 
-          type='text'
-          name='category_name'
-          id='name'
+      <div className="flex-grow-1">
+        <textarea 
+          name='description'
+          id='description'
           required
-        //   value={categoryName}
-        //   onChange={(e) => setCategoryName(e.target.value)}
-          className="form-control border border-dark border-2" 
-          placeholder="Description" 
-        />
+          className="form-control border border-dark border-2 input-width" 
+          placeholder="description"
+          rows="2"
+        ></textarea>
       </div>
     </div>
+  </div>
 
+{/* Main Video Duration */}
+<div className="col-md-6">
+          <div className="d-flex align-items-center">
+            <div className="label-width">
+              <label className="custom-label">Production Company</label>
+            </div>
+            <div className="flex-grow-1">
+              <input 
+                type='text'
+                name='main_video_duration'
+                id='main_video_duration'
+                required
+                className="form-control border border-dark border-2 input-width" 
+                placeholder="Production Company" 
+              />
+            </div>
+          </div>
+        </div>
+
+
+</div>
+
+<div className="row py-3 my-3 align-items-center w-100">
+
+  {/* Cast and Crew */}
+  <div className="col-md-6">
+          <div className="d-flex align-items-center">
+            {/* <div className="flex-shrink-0 me-2"> */}
+            <div className="label-width">
+              <label className="custom-label">Tag</label>
+            </div>
+            <div className="flex-grow-1">
+              <select 
+                name='certificatename'
+                id='certificate_name'
+                required
+                className="form-control border border-dark border-2 input-width"
+              >
+                <option value="">Tag</option>
+                <option value="13+">U</option>
+                <option value="16+">U/A</option>
+                <option value="18+">U</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+{/* Cast and Crew */}
+<div className="col-md-6">
+          <div className="d-flex align-items-center">
+            {/* <div className="flex-shrink-0 me-2"> */}
+            <div className="label-width">
+              <label className="custom-label">Category</label>
+            </div>
+            <div className="flex-grow-1">
+              <select 
+                name='certificatename'
+                id='certificate_name'
+                required
+                className="form-control border border-dark border-2 input-width"
+              >
+                <option value="">Category</option>
+                <option value="13+">U</option>
+                <option value="16+">U/A</option>
+                <option value="18+">U</option>
+              </select>
+            </div>
+          </div>
+        </div>
+</div>
+
+<div className="row py-3 my-3 align-items-center w-100">
+
+  {/* Empty Div with Border, Border Radius, and Increased Height */}
+  <div className="col-md-6">
+    <div className="d-flex align-items-center">
+      <div className="flex-grow-1 border border-dark border-2 p-3" 
+           style={{ borderRadius: '13px', height: '130px' }}>
+        {/* The div is empty, with only the border */}
+      </div>
+    </div>
+  </div>
+
+  {/* Another Empty Div with Border, Border Radius, and Increased Height */}
+  <div className="col-md-6">
+    <div className="d-flex align-items-center">
+      <div className="flex-grow-1 border border-dark border-2 p-3" 
+           style={{ borderRadius: '13px', height: '130px' }}>
+        {/* The div is empty, with only the border */}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+            
     <div className="row py-1 my-1 w-100">
               <div className="col-md-8 ms-auto text-end">
                 {/* <Link to="/admin/AddVideo"> */}

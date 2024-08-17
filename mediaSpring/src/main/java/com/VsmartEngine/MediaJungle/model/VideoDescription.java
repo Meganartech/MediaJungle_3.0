@@ -45,10 +45,7 @@ public class VideoDescription {
 	private String name; 
 	private boolean paid;
 	
-	
-	@ManyToMany(mappedBy = "favoriteVideos", cascade = CascadeType.REMOVE)
-	@JsonBackReference
-	private List<UserRegister> users;
+
 
 	
 	
@@ -89,7 +86,7 @@ public class VideoDescription {
 
 
 	public VideoDescription(long id, String moviename, String description, String tags, String category, String certificate,
-		String language, String duration, String year, String name, boolean paid, List<UserRegister> users,
+		String language, String duration, String year, String name, boolean paid,
 		byte[] thumbnail, List<VideoCastAndCrew> videoCastAndCrews) {
 	super();
 	this.id = id;
@@ -103,7 +100,6 @@ public class VideoDescription {
 	this.year = year;
 	this.name = name;
 	this.paid = paid;
-	this.users = users;
 	this.thumbnail = thumbnail;
 	this.videoCastAndCrews = videoCastAndCrews;
 }
@@ -214,22 +210,6 @@ public class VideoDescription {
 	public void setThumbnail(byte[] thumbnail) {
 		this.thumbnail = thumbnail;
 	}
-
-	public List<UserRegister> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<UserRegister> users) {
-		this.users = users;
-	}
-
-
-	
-
-
-
-
-
 
 	public List<VideoCastAndCrew> getVideoCastAndCrews() {
 		return videoCastAndCrews;

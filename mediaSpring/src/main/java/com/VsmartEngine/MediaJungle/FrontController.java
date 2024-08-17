@@ -192,6 +192,7 @@ public class FrontController {
 	}
 
 	@GetMapping("/audio/{id}")
+	@Transactional
 	public ResponseEntity<Addaudio1> getAudioById(@PathVariable Long id) {
 
 		return AudioController.getAudioById(id);
@@ -762,7 +763,6 @@ public class FrontController {
 	@PostMapping("/login")
 	@Transactional
 	public ResponseEntity<?> userlogin(@RequestBody Map<String, String> loginRequest) {
-
 		return UserRegisterController.login(loginRequest);
 	}
 
@@ -773,6 +773,7 @@ public class FrontController {
 	}
 
 	@PostMapping("/forgetPassword")
+	@Transactional
 	public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> loginRequest) {
 
 		return UserRegisterController.resetPassword(loginRequest);

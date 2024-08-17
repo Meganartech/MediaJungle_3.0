@@ -89,9 +89,7 @@ import PlanFeatures from './admin/PlanFeatures';
 import AddFeature from './admin/AddFeature';
 import EditFeature from './admin/EditFeature';
 
-import AddVideo1 from './admin/AddVideo1';
-import AddVideo3 from './admin/AddVideo2';
-import AddVideo2 from './admin/AddVideo2';
+
 
 
 
@@ -242,9 +240,6 @@ const App = () => {
             <Route path='addVideo' element= {<AddVideo/>} />
 
             <Route path='addFeature' element= {<AddFeature/>} />
-
-            <Route path='addvideo1' element={<AddVideo1 />} />
-            <Route path='addvideo2' element={<AddVideo2 />} />
 
             <Route path='audio' element= {<Audio/>} />
             <Route path='addAudio' element= {<AddAudio/>} />
