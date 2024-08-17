@@ -142,10 +142,10 @@ const Profile = () => {
               <td>{user.country}</td>
               <td>
                 <button onClick={() => handlEdit(user.id)} className="btn btn-primary me-2">
-                  <i className="fas fa-edit" aria-hidden="true"></i> Edit
+                  <i className="fas fa-edit" aria-hidden="true"></i>
                 </button>
                 <button onClick={() => handleDeleteUser(user.id)} className="btn btn-danger">
-                  <i className="fa fa-trash" aria-hidden="true"></i> Delete
+                  <i className="fa fa-trash" aria-hidden="true"></i>
                 </button>
               </td>
             </tr>

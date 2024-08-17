@@ -70,7 +70,7 @@ public class PaymentController {
                 UserRegister user = userOption.get();
                 
                 // Check if the user has an existing payment
-                if (optionPayment.isPresent()) {
+                if (optionPayment.isPresent()){
                     PaymentUser paym = optionPayment.get();
                     
                     // Check if the existing payment is still valid
@@ -99,18 +99,30 @@ public class PaymentController {
 
                 String orderId = order.get("id").toString();
                 
+//                // Save or update payment details
+//                PaymentUser payment;
+//                if (optionPayment.isPresent()) {
+//                    payment = optionPayment.get();
+//                } else {
+//                    payment = new PaymentUser();
+//                    payment.setUserId(userId);
+//                }
+//                payment.setOrderId(orderId);
+//                payment.setSubscriptionTitle(planName);
+//                payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription
+//                paymentrepository.save(payment);
 
-                // Save or update payment details
-                PaymentUser payment;
-                if (optionPayment.isPresent()) {
-                    payment = optionPayment.get();
-                } else {
-                    payment = new PaymentUser();
-                    payment.setUserId(userId);
-                }
+             // Save or update payment details
+                PaymentUser payment = optionPayment.orElseGet(() -> {
+                    PaymentUser newPayment = new PaymentUser();
+                    newPayment.setUserId(userId);
+                    return newPayment;
+                });
+
                 payment.setOrderId(orderId);
                 payment.setSubscriptionTitle(planName);
                 payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription
+
                 paymentrepository.save(payment);
 
                 return orderId;
@@ -161,18 +173,6 @@ public class PaymentController {
             Optional<PaymentUser> paym = paymentrepository.findByUserId(userid);
             Optional<UserRegister> useroption = userregisterrepository.findById(userid);
 
-            if (useroption.isPresent()) {
-                UserRegister user = useroption.get();
-                PaymentUser p = paym.orElseThrow(() -> new RuntimeException("PaymentUser not found"));
-
-                if (status.equals("paid")) { 
-                    user.setPaymentId(p);
-                    userregisterrepository.save(user);
-                }
-            } else {
-                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-            }
-
             LocalDate currentDate = LocalDate.now();
             LocalDate expiryDate = currentDate.plusDays(validityDays);
 
@@ -185,6 +185,19 @@ public class PaymentController {
                 pay.setStatus(status);
                 pay.setExpiryDate(expiryDate);
                 paymentrepository.save(pay);
+                
+                
+                if (useroption.isPresent()) {
+                    UserRegister user = useroption.get();
+                    PaymentUser p = paym.orElseThrow(() -> new RuntimeException("PaymentUser not found"));
+
+                    if (status.equals("paid")) { 
+                        user.setPaymentId(p);
+                        userregisterrepository.save(user);
+                    }
+                } else {
+                    return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+                }
 
                 // Return a success response with the userId
                 return new ResponseEntity<>("Payment ID updated successfully for user ID: " + userid, HttpStatus.OK);

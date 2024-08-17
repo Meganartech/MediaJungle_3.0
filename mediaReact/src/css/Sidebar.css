@@ -371,4 +371,37 @@ td{
   width: calc(100% - 220px); /* Adjust based on label width and padding/margins */
 }
 
+.choosefile{
+  margin-top:63px;
+}
+
+/* video preview */
+
+.preview-container {
+  min-height: 70vh;
+}
+
+/* .preview-box {
+  background-color: white;
+  border-radius: 8px;
+  max-width: 900px;
+  width: 100%;
+} */
+
+.video-container {
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+.details-box {
+  max-width: 500px;
+  border-radius:15px;
+  border:2px solid black;
+}
+
+.button-group .btn {
+  width: 120px;
+}
+
 

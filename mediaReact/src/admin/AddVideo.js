@@ -897,6 +897,19 @@ const AddVideo = () => {
   const [castandcrewlist, setcastandcrewlist] = useState([]);
   const dropdownRef = useRef(null);
 
+  const [currentStep, setCurrentStep] = useState(1);
+  const [image, setImage] = useState(null);
+  const [error, setError] = useState('');
+  
+
+  const nextStep = () => {
+    setCurrentStep(currentStep + 1);
+  };
+
+  const prevStep = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
   const handleClickOutside = event => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
@@ -1097,14 +1110,14 @@ const hasPaymentPlan = () => {
     setCast_Crew(newValue); // Updating the state using the setter function
   };
 
-  const handleFileChange = (event) => {
-    // setThumbnail(event.target.files[0]);
-    // setFile(event.target.files[0]);
-  };
-  const handleFile = (event) => {
-    // setThumbnail(event.target.files[0]);
-    setFile(event.target.files[0]);
-  };
+  // const handleFileChange = (event) => {
+  //   // setThumbnail(event.target.files[0]);
+  //   // setFile(event.target.files[0]);
+  // };
+  // const handleFile = (event) => {
+  //   // setThumbnail(event.target.files[0]);
+  //   setFile(event.target.files[0]);
+  // };
 
   const handleRadioClick = () => {
     setSelected(!selected); // Toggle the value of 'selected'
@@ -1429,6 +1442,87 @@ const save = async (e) => {
 };
 
 
+const handleDrop = (event) => {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  handleFile(file);
+};
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  handleFile(file);
+};
+
+const [videoUrl, setVideoUrl] = useState(null);
+
+// const handleVideoFileChange = (event) =>{
+//   const file = event.target.files[0];
+//   if (file) {
+//       const videoUrl = URL.createObjectURL(file);
+//       setVideoUrl(videoUrl);
+//     }
+// }
+
+const handleVideoFileChange = (event) => {
+  const file = event.target.files[0];
+  console.log('File selected:', file);
+  if (file) {
+    const videoUrl = URL.createObjectURL(file);
+    console.log('Video URL:', videoUrl);
+    setVideoUrl(videoUrl);
+  }
+};
+
+
+
+const handleVideoDrop = (event) => {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  if (file) {
+    const videoUrl = URL.createObjectURL(file);
+    setVideoUrl(videoUrl);
+  }
+};
+
+
+
+const handleFile = (file) => {
+  if (file && file.type === 'image/png') {
+    setError('');
+    setImage(file);
+
+    // Display image preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImageUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    setError('Only PNG files are accepted.');
+  }
+};
+
+const handleDragOver = (event) => {
+  event.preventDefault();
+};
+
+
+const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
+
+  const castAndCrewOptions = [
+    { id: 1, name: 'Actor 1' },
+    { id: 2, name: 'Actor 2' },
+    { id: 3, name: 'Actor 3' },
+    { id: 4, name: 'Director 1' },
+    { id: 5, name: 'Director 2' },
+    // Add more options as needed
+  ];
+
+  const handleSelectChange = (event) => {
+    const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
+    setSelectedCastAndCrew(selectedOptions);
+  };
+
   return (
 <div className='container3 mt-20'>
   <ol className="breadcrumb mb-4 d-flex my-0">
@@ -1438,6 +1532,8 @@ const save = async (e) => {
   
   <div className="outer-container">
     <div className="table-container">
+    {currentStep === 1 && (
+            <>
       <div className="row py-3 my-3 align-items-center w-100">
 
         {/* Video Title */}
@@ -1555,14 +1651,24 @@ const save = async (e) => {
               <label className="custom-label">Cast and Crew</label>
             </div>
             <div className="flex-grow-1">
-              <input 
+            <select  
                 type='text'
                 name='cast_and_crew'
                 id='cast_and_crew'
                 required
                 className="form-control border border-dark border-2 input-width" 
-                placeholder="Cast and Crew" 
-              />
+                
+                multiple
+                value={selectedCastAndCrew}
+            onChange={handleSelectChange}
+              >
+
+{castAndCrewOptions.map((person) => (
+              <option key={person.id} value={person.name}>
+                {person.name}
+              </option>
+            ))}
+        </select>
             </div>
           </div>
         </div>
@@ -1656,17 +1762,459 @@ const save = async (e) => {
                 >
                   Cancel
                 </button>
-                <Link to="/admin/AddVideo1">
+                {/* <Link to="/admin/AddVideo1"> */}
                 <button
                   className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
                   type="submit"
                   style={{ backgroundColor: 'blue' }}
+                  onClick={nextStep}
                 >
                   Next
                 </button>
-                </Link>
+                {/* </Link> */}
               </div>
             </div>
+            </>
+          )}
+
+{currentStep === 2 && (
+            <>
+            <div className="row py-3 my-3 align-items-center w-100">
+      <div className="col-md-3">
+        <label className="custom-label">Category</label>
+      </div>
+      <div className="col-md-4">
+      <select 
+        name='age'
+        id='age'
+        required
+        className="form-control border border-dark border-2"
+      >
+        <option value="">Select category</option>
+        <option value="13+">13+</option>
+        <option value="16+">16+</option>
+        <option value="18+">18+</option>
+      </select>
+      </div>
+    </div>
+
+
+    <div className="row py-3 my-3 align-items-center w-100">
+      <div className="col-md-3">
+        <label className="custom-label">Tag</label>
+      </div>
+      <div className="col-md-4">
+      <select 
+        name='age'
+        id='age'
+        required
+        className="form-control border border-dark border-2"
+      >
+        <option value="">Category</option>
+        <option value="13+">13+</option>
+        <option value="16+">16+</option>
+        <option value="18+">18+</option>
+      </select>
+      </div>
+    </div>
+
+    <div className="row py-3 my-3 align-items-center w-100">
+      <div className="col-md-3">
+        <label className="custom-label">Production Company</label>
+      </div>
+      <div className="col-md-4">
+        <input 
+          type='text'
+          name='category_name'
+          id='name'
+          required
+        //   value={categoryName}
+        //   onChange={(e) => setCategoryName(e.target.value)}
+          className="form-control border border-dark border-2" 
+          placeholder="Production Company" 
+        />
+      </div>
+    </div>
+
+    <div className="row py-3 my-3 align-items-center w-100">
+      <div className="col-md-3">
+        <label className="custom-label">Description</label>
+      </div>
+      <div className="col-md-4">
+        <input 
+          type='text'
+          name='category_name'
+          id='name'
+          required
+        //   value={categoryName}
+        //   onChange={(e) => setCategoryName(e.target.value)}
+          className="form-control border border-dark border-2" 
+          placeholder="Description" 
+        />
+      </div>
+    </div>
+
+    <div className="row py-1 my-1 w-100">
+              <div className="col-md-8 ms-auto text-end">
+                {/* <Link to="/admin/AddVideo"> */}
+                <button
+                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  type="button"
+                  onClick={prevStep}
+                >
+                  Back
+                </button>
+                {/* </Link> */}
+                {/* <Link to="/admin/AddVideo2"> */}
+                <button
+                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  type="submit"
+                  style={{ backgroundColor: 'blue' }}
+                  onClick={nextStep}
+                >
+                  Next
+                </button>
+                {/* </Link> */}
+              </div>
+            </div>
+
+            </>
+          )}
+
+{currentStep === 3 && (
+  <>
+    <div className="row py-3 my-3 align-items-center w-100">
+    {/* First Instance */}
+    <div className="col-md-6">
+    <div className="d-flex align-items-center">
+          <div className="label-width">
+            <label className="custom-label">Original Video</label>
+          </div>
+          <div className="flex-grow-1">
+            <div className="d-flex align-items-center">
+              <div
+                className="drag-drop-area border border-dark border-2 text-center"
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                style={{
+                  backgroundVideo: imageUrl ? `url(${imageUrl})` : 'none',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
+                {!imageUrl && <span>Drag and drop</span>}
+              </div>
+              <button
+                type="button"
+                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                onClick={() => document.getElementById('fileInput1').click()}
+              >
+                Choose File
+              </button>
+              <input
+                type="file"
+                id="fileInput1"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="mt-2">
+              <span style={{ whiteSpace: 'nowrap' }}>Please choose PNG format only*</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Second Instance */}
+      <div className="col-md-6">
+        <div className="d-flex align-items-center">
+          <div className="label-width">
+            <label className="custom-label">Video Thumbnail</label>
+          </div>
+          <div className="flex-grow-1">
+            <div className="d-flex align-items-center">
+              <div
+                className="drag-drop-area border border-dark border-2 text-center"
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                style={{
+                  backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                {!imageUrl && <span>Drag and drop</span>}
+              </div>
+              <button
+                type="button"
+                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                onClick={() => document.getElementById('fileInput2').click()}
+              >
+                Choose File
+              </button>
+              <input
+                type="file"
+                id="fileInput2"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="mt-2">
+              <span style={{ whiteSpace: 'nowrap' }}>Please choose PNG format only*</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div className="row py-3 my-3 align-items-center w-100">
+    {/* First Instance */}
+    <div className="col-md-6">
+    <div className="d-flex align-items-center">
+          <div className="label-width">
+            <label className="custom-label">Trailer Video</label>
+          </div>
+          <div className="flex-grow-1">
+            <div className="d-flex align-items-center">
+              <div
+                className="drag-drop-area border border-dark border-2 text-center"
+                onDrop={handleVideoDrop}
+                onDragOver={handleDragOver}
+                style={{
+                  // backgroundVideo: videoUrl ? `url(${videoUrl})` : 'none',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
+                {videoUrl ? (
+                <video
+                  src={videoUrl}
+                  controls
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              ) : (
+                <span>Drag and drop</span>
+              )}
+              </div>
+              <button
+                type="button"
+                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                onClick={() => document.getElementById('fileInput1').click()}
+              >
+                Choose File
+              </button>
+              <input
+                type="file"
+                id="fileInput1"
+                style={{ display: 'none' }}
+                onChange={handleVideoFileChange}
+              />
+            </div>
+            <div className="mt-2">
+              <span style={{ whiteSpace: 'nowrap' }}>Please choose PNG format only*</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Second Instance */}
+      <div className="col-md-6">
+        <div className="d-flex align-items-center">
+          <div className="label-width">
+            <label className="custom-label">Trailer Thumbnail</label>
+          </div>
+          <div className="flex-grow-1">
+            <div className="d-flex align-items-center">
+              <div
+                className="drag-drop-area border border-dark border-2 text-center"
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                style={{
+                  backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                {!imageUrl && <span>Drag and drop</span>}
+              </div>
+              <button
+                type="button"
+                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                onClick={() => document.getElementById('fileInput2').click()}
+              >
+                Choose File
+              </button>
+              <input
+                type="file"
+                id="fileInput2"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="mt-2">
+              <span style={{ whiteSpace: 'nowrap' }}>Please choose PNG format only*</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div className="row py-3 my-3 align-items-center w-100">
+    {/* First Instance */}
+    <div className="col-md-6">
+    <div className="d-flex align-items-center">
+          <div className="label-width">
+            <label className="custom-label">User Banner</label>
+          </div>
+          <div className="flex-grow-1">
+            <div className="d-flex align-items-center">
+              <div
+                className="drag-drop-area border border-dark border-2 text-center"
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                style={{
+                  backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
+                {!imageUrl && <span>Drag and drop</span>}
+              </div>
+              <button
+                type="button"
+                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                onClick={() => document.getElementById('fileInput1').click()}
+              >
+                Choose File
+              </button>
+              <input
+                type="file"
+                id="fileInput1"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="mt-2">
+              <span style={{ whiteSpace: 'nowrap' }}>Please choose PNG format only*</span>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+<div className="row py-1 my-1 w-100">
+              <div className="col-md-8 ms-auto text-end">
+                {/* <Link to="/admin/AddVideo"> */}
+                <button
+                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  type="button"
+                  onClick={prevStep}
+                >
+                  Back
+                </button>
+                {/* </Link> */}
+                {/* <Link to="/admin/AddVideo2"> */}
+                <button
+                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  type="submit"
+                  style={{ backgroundColor: 'blue' }}
+                  onClick={nextStep}
+                >
+                  Next
+                </button>
+                {/* </Link> */}
+              </div>
+            </div>
+
+
+  </>
+)}
+
+{currentStep === 4 && (
+            <>
+            <div className="preview-container d-flex justify-content-center align-items-center">
+        <div className="d-flex">
+          <div className="flex-grow-1">
+            <div className='text-black'>Movie Name : Aayan</div>
+            <div className="video-container mt-3">
+              <video  controls>
+                <source src="path-to-your-video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+          <div className="details-box ml-4 p-3 border border-dark border-2">
+          
+          <div class="row">
+            <div class="col-6">
+              <div className='text-black'> Video Title:</div>
+              <div className='text-black'>Main Video Duration:</div>
+              <div className='text-black'>Trailer duration:</div>
+              <div className='text-black'>Cast and Crew:</div>
+              <div className='text-black'>Certificate No:</div>
+              <div className='text-black'>Certificate name:</div>
+              <div className='text-black'>Video access type:</div>
+              <div className='text-black'>Category:</div>
+              <div className='text-black'>Tag:</div>
+              <div className='text-black'>Production Company:</div>
+              <div className='text-black'>Description:</div>
+            </div>
+            <div class="col-6">
+              <p>Aayan</p>
+              <p>2hrs</p>
+              <p>2mins</p>
+              <p>Suriya, Tamana, Prabu</p>
+              <p>91234467</p>
+              <p>U/A</p>
+              <p>Paid</p>
+              <p>Action</p>
+              <p>#aayan, #suriya, #tamana, #harris jeyaraj</p>
+              <p>Sun pictures</p>
+              <p>The most hunting hero is serious about the job assigned...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+        </div>
+
+
+        <div className="row py-1 my-1 w-100">
+              <div className="col-md-8 ms-auto text-end">
+                {/* <Link to="/admin/AddVideo"> */}
+                <button
+                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  type="button"
+                  onClick={prevStep}
+                >
+                  Back
+                </button>
+                {/* </Link> */}
+                {/* <Link to="/admin/AddVideo2"> */}
+                <button
+                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  type="submit"
+                  style={{ backgroundColor: 'blue' }}
+                  
+                >
+                  Submit
+                </button>
+                {/* </Link> */}
+              </div>
+            </div>
+
+        
+   
+  </>
+)}
+
 
     </div>
   </div>
