@@ -636,14 +636,16 @@ const handlePlanClick = () => {
           </Link>
 
 
-      </li> */}            <li className="nav-item" >
-                <div className="nav-link" onClick={() => handleToggleDropdown('plantenure')}>
-                    <i className="bi bi-calendar"></i>
-                    <span>Plans & Tenures</span>
-                    <i className={`fas fa-chevron-${isDropdownOpen === 'plantenure' ? 'down' : 'right'} ml-auto`}></i>
+      // </li> */}          
+        {/* <li className="nav-item" >
+               <div className="nav-link" onClick={() => handleToggleDropdown('plantenure')}>
+                   <i className="bi bi-calendar"></i>
+                   <span>Plans & Tenures</span>
+                  <i className={`fas fa-chevron-${isDropdownOpen === 'plantenure' ? 'down' : 'right'} ml-auto`}></i>
 
-      </li> */} <li className="nav-item">
-                <div className="nav-link" onClick={() => handleToggle(setIsPlansTenureOpen)}>
+       </li>   */}
+      <li className="nav-item">
+                <div className="nav-link" onClick={() => handleToggleDropdown('plantenure')}>
                 <i class="bi bi-calendar"></i>
 
 
