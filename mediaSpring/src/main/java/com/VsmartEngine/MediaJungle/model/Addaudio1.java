@@ -1,5 +1,6 @@
 package com.VsmartEngine.MediaJungle.model;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -8,9 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -48,28 +51,35 @@ public class Addaudio1 {
 	
 	private boolean paid;
 
-	@ManyToMany(mappedBy = "favoriteAudios", cascade = CascadeType.REMOVE)
-	@JsonBackReference
-	private List<UserRegister> users;
+//	@ManyToMany(mappedBy = "favoriteAudios")
+//	@JsonBackReference
+//	private Set<UserRegister> users = new HashSet<>();;
 	
 	public Addaudio1() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
+
+
 	public Addaudio1(long id, AddNewCategories category, String songname, String musicdirector, MultipartFile audioFile,
-			String fileName, byte[] thumbnail, boolean paid, List<UserRegister> users) {
-		super();
-		this.id = id;
-		this.category = category;
-		this.songname = songname;
-		this.musicdirector = musicdirector;
-		this.audioFile = audioFile;
-		this.fileName = fileName;
-		this.thumbnail = thumbnail;
-		this.paid = paid;
-		this.users = users;
-	}
+		String fileName, byte[] thumbnail, boolean paid) {
+	super();
+	this.id = id;
+	this.category = category;
+	this.songname = songname;
+	this.musicdirector = musicdirector;
+	this.audioFile = audioFile;
+	this.fileName = fileName;
+	this.thumbnail = thumbnail;
+	this.paid = paid;
+}
+
+
+
+
 
 	public long getId() {
 		return id;
@@ -135,13 +145,10 @@ public class Addaudio1 {
 		this.paid = paid;
 	}
 
-	public List<UserRegister> getUsers() {
-		return users;
-	}
 
-	public void setUsers(List<UserRegister> users) {
-		this.users = users;
-	}
+	
+
+	
 
 	
 }	

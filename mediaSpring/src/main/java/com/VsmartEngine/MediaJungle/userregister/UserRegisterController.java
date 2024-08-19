@@ -98,8 +98,7 @@ public class UserRegisterController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
+  
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         String email = loginRequest.get("email");
         String password = loginRequest.get("password");
@@ -123,7 +122,7 @@ public class UserRegisterController {
         responseBody.put("name", user.getUsername());
         responseBody.put("email", user.getEmail());
         responseBody.put("userId", user.getId());
-        responseBody.put("profile", null); // Simply set image as null without loading it
+//        responseBody.put("profile", null); // Simply set image as null without loading it
 
         // Check if the user has an expiry date for subscription
         if (user.getPaymentId() != null && user.getPaymentId().getExpiryDate() != null) {
@@ -163,21 +162,6 @@ public class UserRegisterController {
         return ResponseEntity.ok().body("Logged out successfully");
     }
     
-//    @PostMapping("/forgetPassword")
-//    public ResponseEntity<?> forgetPassword( String email) {
-//        // Finding the user by email
-//        Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
-//
-//        // If the user doesn't exist, return 404 Not Found
-//        if (userOptional.isEmpty()) {
-//            return ResponseEntity.notFound().build();
-//        } else {
-//            // If the user exists, return 200 OK
-//            return ResponseEntity.ok().build();
-//        }
-//    }
-
-
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> loginRequest) {
         try {
             // Finding the user by email
@@ -226,6 +210,9 @@ public class UserRegisterController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
+    
+    
+   
 
 }
 
