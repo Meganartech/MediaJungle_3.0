@@ -405,3 +405,262 @@ td{
 }
 
 
+.select-with-arrow {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 30px;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.dropdown-arrow::after {
+  content: '\25BC'; /* Unicode for downward arrow */
+  font-size: 16px;
+  color: #000;
+}
+
+/* dashboard */
+
+.dashboard-content {
+  padding: 20px;
+}
+
+.stats-cards {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.carddashboard {
+  background-color: #1a2b4c; /* Dark background color */
+  color: #ffde00; /* Yellow text color */
+  border-radius: 10px; /* Rounded corners */
+  width: 200px; /* Fixed width for consistency */
+  height:110px;
+  text-align: center; /* Center align text and image */
+  position: relative; /* For absolute positioning of the link */
+  margin: 10px; /* Space around the card */
+}
+
+.carddashboard h4 {
+  margin-bottom: 10px; /* Space below the heading */
+  font-size: 18px; /* Adjust heading size */
+  color:white;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.icon-text {
+  display: flex; /* Use flexbox to align icon and text */
+  align-items: center; /* Align items vertically centered */
+  justify-content: center; /* Center align horizontally */
+  margin-bottom: 10px; /* Space below the icon-text container */
+}
+
+.icon-text img {
+  width: 50px; /* Set image width */
+  height:50px; /* Set image height */
+  margin-left: -60px; /* Space between the icon and text */
+  margin-top: -10px;
+}
+
+.icon-text span {
+  font-size: 24px; /* Larger text for the number */
+  margin: 0; /* Remove default margin */
+  font-weight: bold; /* Bold text */
+  margin-left: 30px;
+  color:yellow;
+}
+
+
+
+.carddashboard a {
+  width:200px;
+  justify-content: center;
+  color: white; 
+  background-color:#863254;
+  margin-top:-5px;
+  font-weight: bold; 
+  text-decoration: none;
+  position: absolute;
+  /* text-align: left; */
+  right: 0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.get-more-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none; /* Remove underline from the link */
+  color: inherit; /* Inherit color from parent */
+}
+
+.arrow-icon {
+  margin-left: 4px; /* Adjust spacing as needed */
+  width: 30px; /* Set icon size */
+  height: 30px; /* Set icon size */
+}
+
+
+.latest-sections {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 80px;
+}
+
+.latest-users,
+.latest-videos {
+  background-color:#2b2a52;
+  color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  width: 48%;
+}
+
+.latest-users h4,
+.latest-videos h4 {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.latest-users span {
+  font-size: 14px;
+  color: #888;
+}
+
+.users-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.user {
+  background-color: #2c3e5a;
+  padding: 10px;
+  border-radius: 50%;
+  margin: 5px;
+  text-align: center;
+  width: 70px;
+  height: 70px;
+}
+
+.user span {
+  display: block;
+  font-size: 12px;
+  color: #888;
+}
+
+.latest-videos .video {
+  display: flex;
+  align-items: center;
+  background-color:rgba(255, 255, 255,25%);
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.latest-videos .video img {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.latest-videos .video p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.latest-videos .video span {
+  display: block;
+  font-size: 14px;
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .stats-cards {
+    flex-direction: column; /* Stack cards vertically */
+    align-items: center; /* Center align cards */
+  }
+
+  .carddashboard {
+    width: 100%; /* Full width for cards */
+    margin: 10px 0; /* Adjust margin for vertical stacking */
+  }
+
+  .icon-text img {
+    margin-left: 0; /* Center icon above text */
+    margin-top: 0;
+  }
+
+  .icon-text p {
+    margin-left: 0; /* Center text below icon */
+    font-size: 20px; /* Slightly smaller font for text */
+  }
+
+  .carddashboard a {
+    width: 100%; /* Full width for link button */
+    text-align: center; /* Center align text */
+    right: auto; /* Remove right positioning */
+    left: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 10px 0;
+  }
+
+  .latest-sections {
+    flex-direction: column; /* Stack sections vertically */
+  }
+
+  .latest-users,
+  .latest-videos {
+    width: 100%; /* Full width for sections */
+    margin-bottom: 20px; /* Space between sections */
+  }
+
+  .user {
+    width: 60px; /* Smaller user avatars */
+    height: 60px;
+  }
+
+  .latest-videos .video img {
+    width: 40px; /* Smaller video thumbnails */
+    height: 40px;
+  }
+
+  .latest-videos .video p {
+    font-size: 14px; /* Smaller text for video titles */
+  }
+
+  .latest-videos .video span {
+    font-size: 12px; /* Smaller text for video details */
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-cards {
+    padding: 0 10px; /* Reduce padding for smaller screens */
+  }
+
+  .carddashboard h4 {
+    font-size: 16px; /* Smaller heading size */
+  }
+
+  .icon-text p {
+    font-size: 18px; /* Smaller text size */
+  }
+
+  .latest-users,
+  .latest-videos {
+    padding: 15px; /* Reduce padding for smaller sections */
+  }
+}
+
+
