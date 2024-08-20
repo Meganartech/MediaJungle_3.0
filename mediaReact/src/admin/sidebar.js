@@ -686,7 +686,7 @@ const handlePlanClick = () => {
 
                         {/* Tenures Item */}
                         <li className={`nav-item ${activeLink === "/admin/TenureList" ? 'active' : ''}`}>
-                            <Link className="nav-link" onClick={() => handleClick("/admin/TenureList")}>
+                            <Link className="nav-link" onClick={() => handleClick("admin/TenureList")}>
                                 <i className="bi bi-hourglass"></i>
                                 <span>Tenures</span>
                             </Link>

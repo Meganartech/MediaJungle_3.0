@@ -1507,21 +1507,7 @@ const handleDragOver = (event) => {
 };
 
 
-const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
 
-  const castAndCrewOptions = [
-    { id: 1, name: 'Actor 1' },
-    { id: 2, name: 'Actor 2' },
-    { id: 3, name: 'Actor 3' },
-    { id: 4, name: 'Director 1' },
-    { id: 5, name: 'Director 2' },
-    // Add more options as needed
-  ];
-
-  const handleSelectChange = (event) => {
-    const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
-    setSelectedCastAndCrew(selectedOptions);
-  };
 
   return (
 <div className='container3 mt-20'>
@@ -1817,52 +1803,55 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
 
 <div className="row py-3 my-3 align-items-center w-100">
 
-  {/* Cast and Crew */}
+  
   <div className="col-md-6">
-          <div className="d-flex align-items-center">
-            {/* <div className="flex-shrink-0 me-2"> */}
-            <div className="label-width">
-              <label className="custom-label">Tag</label>
-            </div>
-            <div className="flex-grow-1">
-              <select 
-                name='certificatename'
-                id='certificate_name'
-                required
-                className="form-control border border-dark border-2 input-width"
-              >
-                <option value="">Tag</option>
-                <option value="13+">U</option>
-                <option value="16+">U/A</option>
-                <option value="18+">U</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-{/* Cast and Crew */}
-<div className="col-md-6">
-          <div className="d-flex align-items-center">
-            {/* <div className="flex-shrink-0 me-2"> */}
-            <div className="label-width">
-              <label className="custom-label">Category</label>
-            </div>
-            <div className="flex-grow-1">
-              <select 
-                name='certificatename'
-                id='certificate_name'
-                required
-                className="form-control border border-dark border-2 input-width"
-              >
-                <option value="">Category</option>
-                <option value="13+">U</option>
-                <option value="16+">U/A</option>
-                <option value="18+">U</option>
-              </select>
-            </div>
-          </div>
-        </div>
+  <div className="d-flex align-items-center">
+    <div className="label-width">
+      <label className="custom-label">Tag</label>
+    </div>
+    <div className="flex-grow-1 position-relative">
+      <select 
+        name='certificatename'
+        id='certificate_name'
+        required
+        className="form-control border border-dark border-2 input-width select-with-arrow"
+      >
+        <option value="" >Tag</option>
+        <option value="13+">U</option>
+        <option value="16+">U/A</option>
+        <option value="18+" >U</option>
+      </select>
+      <span className="dropdown-arrow"></span>
+    </div>
+  </div>
 </div>
+
+
+<div className="col-md-6">
+  <div className="d-flex align-items-center">
+    <div className="label-width">
+      <label className="custom-label">Category</label>
+    </div>
+    <div className="flex-grow-1 position-relative">
+      <select 
+        name='certificatename'
+        id='certificate_name'
+        required
+        className="form-control border border-dark border-2 input-width select-with-arrow"
+      >
+        <option value="">Category</option>
+        <option value="13+">U</option>
+        <option value="16+">U/A</option>
+        <option value="18+">U</option>
+      </select>
+      <span className="dropdown-arrow"></span>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
 
 <div className="row py-3 my-3 align-items-center w-100">
 
@@ -2227,7 +2216,7 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
 
         <div className="row py-1 my-1 w-100">
               <div className="col-md-8 ms-auto text-end">
-                {/* <Link to="/admin/AddVideo"> */}
+               
                 <button
                   className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                   type="button"
@@ -2235,8 +2224,7 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
                 >
                   Back
                 </button>
-                {/* </Link> */}
-                {/* <Link to="/admin/AddVideo2"> */}
+               
                 <button
                   className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
                   type="submit"
@@ -2245,7 +2233,7 @@ const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
                 >
                   Submit
                 </button>
-                {/* </Link> */}
+                
               </div>
             </div>
 

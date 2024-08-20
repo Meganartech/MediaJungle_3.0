@@ -1,6 +1,7 @@
 package com.VsmartEngine.MediaJungle.model;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,241 +24,194 @@ import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 
-
-
 @Entity
 @Table
 public class VideoDescription {
-	
-	
+		
+//	private String moviename ;
+//	private String description ;
+//	private String tags ;
+//	private String category ;
+//	private String certificate ;
+//	private String language ;
+//	private String duration ;
+//	private String year; 
+//	private String name; 
+//	private boolean paid;
+//	@OneToMany(mappedBy = "videoDescription", cascade = CascadeType.ALL)
+//	@JsonBackReference
+//	private List<VideoCastAndCrew> videoCastAndCrews;	
+//	@Lob
+//	@Column(name="thumbnail" ,length=1000000)
+//	private byte[] thumbnail;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-	private String moviename ;
-	private String description ;
-	private String tags ;
-	private String category ;
-	private String certificate ;
-	private String language ;
-	private String duration ;
-	private String year; 
-	private String name; 
-	private boolean paid;
+	private String videoTitle;
+	private String mainVideoDuration;
+	private String trailerDuration;
+	private String rating;
+	private String certificateNumber;
+	private boolean videoAccessType;
+	private String description;
+	private String productionCompany;
+	@Column(name="videoThumbnail" ,length=1000000)
+	private byte[] videoThumbnail;
+	@Column(name="trailerThumbnail" ,length=1000000)
+	private byte[] trailerThumbnail;
+	@Column(name="userBanner" ,length=1000000)
+	private byte[] userBanner;
+	private List<Long> certificateName = new ArrayList<>();
+	private List<Long> castandcrewlist = new ArrayList<>();
+	private List<Long> taglist = new ArrayList<>();
+	private List<Long> categorylist = new ArrayList<>();
 	
-
-
-	
-	
-	
-	@OneToMany(mappedBy = "videoDescription", cascade = CascadeType.ALL)
-	@JsonBackReference
-	private List<VideoCastAndCrew> videoCastAndCrews;
-	
-//	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-//	  @JoinTable(
-//	      name = "video_castandcrew",
-//	      joinColumns = @JoinColumn(name = "video_id"),
-//	      inverseJoinColumns = @JoinColumn(name = "castandcrew_id")
-//	  )
-//	@JsonManagedReference
-//	  private List<CastandCrew> castandcrewlist;
-//	
-	
-	@Lob
-	@Column(name="thumbnail" ,length=1000000)
-	private byte[] thumbnail;
-	
-	  
 	public VideoDescription() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 	
-
-
-
-
-
-
-
-
-
-
-	public VideoDescription(long id, String moviename, String description, String tags, String category, String certificate,
-		String language, String duration, String year, String name, boolean paid,
-		byte[] thumbnail, List<VideoCastAndCrew> videoCastAndCrews) {
-	super();
-	this.id = id;
-	this.moviename = moviename;
-	this.description = description;
-	this.tags = tags;
-	this.category = category;
-	this.certificate = certificate;
-	this.language = language;
-	this.duration = duration;
-	this.year = year;
-	this.name = name;
-	this.paid = paid;
-	this.thumbnail = thumbnail;
-	this.videoCastAndCrews = videoCastAndCrews;
-}
-
-
-
-
-
-
-
-
-
-
-
+	public VideoDescription(long id, String videoTitle, String mainVideoDuration, String trailerDuration, String rating,
+			String certificateNumber, boolean videoAccessType, String description, String productionCompany,
+			byte[] videoThumbnail, byte[] trailerThumbnail, byte[] userBanner, List<Long> certificateName,
+			List<Long> castandcrewlist, List<Long> taglist, List<Long> categorylist) {
+		super();
+		this.id = id;
+		this.videoTitle = videoTitle;
+		this.mainVideoDuration = mainVideoDuration;
+		this.trailerDuration = trailerDuration;
+		this.rating = rating;
+		this.certificateNumber = certificateNumber;
+		this.videoAccessType = videoAccessType;
+		this.description = description;
+		this.productionCompany = productionCompany;
+		this.videoThumbnail = videoThumbnail;
+		this.trailerThumbnail = trailerThumbnail;
+		this.userBanner = userBanner;
+		this.certificateName = certificateName;
+		this.castandcrewlist = castandcrewlist;
+		this.taglist = taglist;
+		this.categorylist = categorylist;
+	}
 
 	public long getId() {
 		return id;
 	}
-
 	public void setId(long id) {
 		this.id = id;
 	}
-
-	public String getMoviename() {
-		return moviename;
+	public String getVideoTitle() {
+		return videoTitle;
 	}
-
-	public void setMoviename(String moviename) {
-		this.moviename = moviename;
+	public void setVideoTitle(String videoTitle) {
+		this.videoTitle = videoTitle;
 	}
-
+	public String getMainVideoDuration() {
+		return mainVideoDuration;
+	}
+	public void setMainVideoDuration(String mainVideoDuration) {
+		this.mainVideoDuration = mainVideoDuration;
+	}
+	public String getTrailerDuration() {
+		return trailerDuration;
+	}
+	public void setTrailerDuration(String trailerDuration) {
+		this.trailerDuration = trailerDuration;
+	}
+	public String getRating() {
+		return rating;
+	}
+	public void setRating(String rating) {
+		this.rating = rating;
+	}
+	public String getCertificateNumber() {
+		return certificateNumber;
+	}
+	public void setCertificateNumber(String certificateNumber) {
+		this.certificateNumber = certificateNumber;
+	}
+	public boolean isVideoAccessType() {
+		return videoAccessType;
+	}
+	public void setVideoAccessType(boolean videoAccessType) {
+		this.videoAccessType = videoAccessType;
+	}
 	public String getDescription() {
 		return description;
 	}
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public String getTags() {
-		return tags;
+	public String getProductionCompany() {
+		return productionCompany;
+	}
+	public void setProductionCompany(String productionCompany) {
+		this.productionCompany = productionCompany;
+	}
+	public byte[] getVideoThumbnail() {
+		return videoThumbnail;
+	}
+	public void setVideoThumbnail(byte[] videoThumbnail) {
+		this.videoThumbnail = videoThumbnail;
+	}
+	public byte[] getTrailerThumbnail() {
+		return trailerThumbnail;
+	}
+	public void setTrailerThumbnail(byte[] trailerThumbnail) {
+		this.trailerThumbnail = trailerThumbnail;
+	}
+	public byte[] getUserBanner() {
+		return userBanner;
+	}
+	public void setUserBanner(byte[] userBanner) {
+		this.userBanner = userBanner;
 	}
 
-	public void setTags(String tags) {
-		this.tags = tags;
+	public List<Long> getCertificateName() {
+		return certificateName;
 	}
 
-	public String getCategory() {
-		return category;
+	public void setCertificateName(List<Long> certificateName) {
+		this.certificateName = certificateName;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public List<Long> getCastandcrewlist() {
+		return castandcrewlist;
 	}
 
-	public String getCertificate() {
-		return certificate;
+	public void setCastandcrewlist(List<Long> castandcrewlist) {
+		this.castandcrewlist = castandcrewlist;
 	}
 
-	public void setCertificate(String certificate) {
-		this.certificate = certificate;
+	public List<Long> getTaglist() {
+		return taglist;
 	}
 
-	public String getLanguage() {
-		return language;
+	public void setTaglist(List<Long> taglist) {
+		this.taglist = taglist;
 	}
 
-	public void setLanguage(String language) {
-		this.language = language;
+	public List<Long> getCategorylist() {
+		return categorylist;
 	}
 
-	public String getDuration() {
-		return duration;
+	public void setCategorylist(List<Long> categorylist) {
+		this.categorylist = categorylist;
 	}
-
-	public void setDuration(String duration) {
-		this.duration = duration;
-	}
-
-	public String getYear() {
-		return year;
-	}
-
-	public void setYear(String year) {
-		this.year = year;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public boolean isPaid() {
-		return paid;
-	}
-
-	public void setPaid(boolean paid) {
-		this.paid = paid;
-	}
-
-	public byte[] getThumbnail() {
-		return thumbnail;
-	}
-
-	public void setThumbnail(byte[] thumbnail) {
-		this.thumbnail = thumbnail;
-	}
-
-	public List<VideoCastAndCrew> getVideoCastAndCrews() {
-		return videoCastAndCrews;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-	public void setVideoCastAndCrews(List<VideoCastAndCrew> videoCastAndCrews) {
-		this.videoCastAndCrews = videoCastAndCrews;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-	@Override
-	public String toString() {
-		return "VideoDescription [id=" + id + ", moviename=" + moviename + ", description=" + description + ", tags="
-				+ tags + ", category=" + category + ", certificate=" + certificate + ", language=" + language
-				+ ", duration=" + duration + ", year=" + year + ", name=" + name + ",paid=" + paid + ",thumbnail="
-				+ Arrays.toString(thumbnail) + "]";
-	}
+	
+		
+//	@Override
+//	public String toString() {
+//		return "VideoDescription [id=" + id + ", moviename=" + moviename + ", description=" + description + ", tags="
+//				+ tags + ", category=" + category + ", certificate=" + certificate + ", language=" + language
+//				+ ", duration=" + duration + ", year=" + year + ", name=" + name + ",paid=" + paid + ",thumbnail="
+//				+ Arrays.toString(thumbnail) + "]";
+//	}
 	
 	
 
 }
 
-//@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-//@JoinTable(
-//    name = "video_castandcrew",
-//    joinColumns = @JoinColumn(name = "video_id"),
-//    inverseJoinColumns = @JoinColumn(name = "castandcrew_id")
-//)
-//	@JsonManagedReference
-//private List castandcrewlist;
+
