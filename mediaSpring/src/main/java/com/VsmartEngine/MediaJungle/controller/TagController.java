@@ -53,7 +53,7 @@ public class TagController {
 	            AddUser user = opUser.get();
 	            String username = user.getUsername();
 		        Tag tag = tagrepository.save(data);
-		        Long tagId = tag.getId();
+		        Long tagId = tag.getTag_id();
 	            String tagName = tag.getTag(); // Adjust as needed
 	            String heading = tagName + ": New Tag Added!";
 

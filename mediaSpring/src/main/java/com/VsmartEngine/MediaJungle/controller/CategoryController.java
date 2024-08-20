@@ -17,9 +17,17 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AddUser;
+import com.VsmartEngine.MediaJungle.model.AudioCategories;
+import com.VsmartEngine.MediaJungle.model.AudioTags;
+import com.VsmartEngine.MediaJungle.model.Audiodescription;
+import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
+import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
 import com.VsmartEngine.MediaJungle.repository.AddNewCategoriesRepository;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
+import com.VsmartEngine.MediaJungle.repository.AudioCategoriesRepository;
+import com.VsmartEngine.MediaJungle.repository.AudioTagRepository;
+import com.VsmartEngine.MediaJungle.repository.TagRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 
 
@@ -37,6 +45,24 @@ public class CategoryController {
 	
 	@Autowired
 	private AddUserRepository adduserrepository;
+	
+	@Autowired
+	private AddAudiodescription AddAudiodescription;
+	
+	
+	@Autowired
+	private AddNewCategoriesRepository AddNewCategoriesRepository;
+	
+	
+	@Autowired
+	private AudioCategoriesRepository AudioCategoriesRepository;
+	
+	
+	@Autowired
+	private AudioTagRepository AudioTagRepository;
+	
+	@Autowired
+	private TagRepository TagRepository;
 	
 
 	
@@ -59,7 +85,7 @@ public class CategoryController {
 	            AddNewCategories savedCategory = addnewcategoriesrepository.save(data);
 
 	            // Assuming you need to create a notification for a new category
-	            Long categoryId = savedCategory.getId();
+	            Long categoryId = savedCategory.getCategory_id();
 	            String categoryName = savedCategory.getCategories(); // Adjust as needed
 	            String heading = categoryName +": New Category Added!";
 
@@ -83,7 +109,78 @@ public class CategoryController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
 	    }
 	}
+	 public ResponseEntity<?> savetags(
+	            long videoId,
+	            List<Long> castAndCrewIds) {
 
+	        try {
+	            Optional<Audiodescription> Audiodescription = AddAudiodescription.findById(videoId);
+	            
+	            
+             System.out.println("--------------------------------------------------------------");
+             System.out.println("Vide"+videoId);
+             
+	            for (Long castAndCrewId : castAndCrewIds) {
+	                Optional<Tag>Categories = TagRepository.findById(castAndCrewId);
+	                System.out.println("VideTag"+castAndCrewId);
+	                
+	                System.out.println("Tag Description found: " +TagRepository.findById(castAndCrewId));
+
+	                if (!Categories.isPresent()) {
+	                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	                }
+
+	                AudioTags videoCastAndCrew = new AudioTags();
+	                videoCastAndCrew.setAudio_id(Audiodescription.get());
+	                videoCastAndCrew.setTag_id(Categories.get());	                
+	                System.out.println("Video Description found: ");
+	                System.out.println("Video Description found: "+Categories.get());
+	        	    System.out.print("AudioCategoriesRepository :"+TagRepository.findAll());  
+
+	        	    AudioTagRepository.save(videoCastAndCrew); 
+
+	            }
+
+	            return ResponseEntity.status(HttpStatus.CREATED).build();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	        }
+	    }
+	    
+
+	 public ResponseEntity<?> saveCategories(
+	            long videoId,
+	            List<Long> castAndCrewIds) {
+
+	        try {
+	            Optional<Audiodescription> Audiodescription = AddAudiodescription.findById(videoId);
+	            for (Long castAndCrewId : castAndCrewIds) {
+	                Optional<AddNewCategories> Categories = AddNewCategoriesRepository.findById(castAndCrewId);
+	                
+	                System.out.println("Video Description found: " +AddNewCategoriesRepository.findById(castAndCrewId));
+
+	                if (!Categories.isPresent()) {
+	                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	                }
+
+	                AudioCategories videoCastAndCrew = new AudioCategories();
+	                videoCastAndCrew.setAudio_id(Audiodescription.get());
+	                videoCastAndCrew.setCategories_id(Categories.get());
+	                System.out.println("Video Description found: ");
+	                System.out.println("Video Description found: "+Categories.get());
+	        	    System.out.print("AudioCategoriesRepository :"+AudioCategoriesRepository.findAll());  
+
+	                AudioCategoriesRepository.save(videoCastAndCrew); 
+
+	            }
+
+	            return ResponseEntity.status(HttpStatus.CREATED).build();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	        }
+	    }
 
 	
 

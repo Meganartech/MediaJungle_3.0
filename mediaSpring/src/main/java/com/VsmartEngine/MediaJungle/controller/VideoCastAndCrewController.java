@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
+import com.VsmartEngine.MediaJungle.model.AudioCastAndCrew;
+import com.VsmartEngine.MediaJungle.model.Audiodescription;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.VideoCastAndCrew;
 import com.VsmartEngine.MediaJungle.model.VideoDescription;
+import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
 import com.VsmartEngine.MediaJungle.repository.AddVideoDescriptionRepository;
+import com.VsmartEngine.MediaJungle.repository.AudioCastandCrewRepository;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 import com.VsmartEngine.MediaJungle.repository.VideoCastandCrewRepository;
 
@@ -30,7 +34,15 @@ public class VideoCastAndCrewController {
 	private AddVideoDescriptionRepository videodescriptionRepository;
 	
 	@Autowired
+	private AddAudiodescription AudiodescriptionRepository;
+	
+	@Autowired
 	private CastandcrewRepository castandcrewrepository;
+	
+	
+	@Autowired
+	private AudioCastandCrewRepository Audiocastandcrewrepository;
+	
 	
 
 
@@ -59,6 +71,41 @@ public class VideoCastAndCrewController {
 
 
                 videocastandcrewrepository.save(videoCastAndCrew);
+            }
+
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    public ResponseEntity<?> saveAudioCastAndCrew(
+            long videoId,
+            List<Long> castAndCrewIds) {
+    
+
+        try {
+            Optional<Audiodescription> videoDescription = AudiodescriptionRepository.findById(videoId);
+
+            System.out.println("Video Description found: " + AudiodescriptionRepository.findById(videoId).toString());
+ 
+
+            for (Long castAndCrewId : castAndCrewIds) {
+                Optional<CastandCrew> castAndCrew = castandcrewrepository.findById(castAndCrewId);
+                
+                System.out.println("Video Description found: " +castandcrewrepository.findById(castAndCrewId).toString());
+
+                if (!castAndCrew.isPresent()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                }
+
+                AudioCastAndCrew videoCastAndCrew = new AudioCastAndCrew();
+                videoCastAndCrew.setAudio_id(videoDescription.get());
+                videoCastAndCrew.setCastandcrew_id(castAndCrew.get());
+              
+
+                Audiocastandcrewrepository.save(videoCastAndCrew);
+
             }
 
             return ResponseEntity.status(HttpStatus.CREATED).build();

@@ -13,7 +13,7 @@ public class Tag {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	private long tag_id;
 	
 	@Column(name = "tag")
 	private String tag;
@@ -23,19 +23,27 @@ public class Tag {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Tag(long id, String tag) {
+	
+
+	public Tag(long tag_id, String tag) {
 		super();
-		this.id = id;
+		this.tag_id = tag_id;
 		this.tag = tag;
 	}
 
-	public long getId() {
-		return id;
+
+
+	public long getTag_id() {
+		return tag_id;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+
+
+	public void setTag_id(long tag_id) {
+		this.tag_id = tag_id;
 	}
+
+
 
 	public String getTag() {
 		return tag;
