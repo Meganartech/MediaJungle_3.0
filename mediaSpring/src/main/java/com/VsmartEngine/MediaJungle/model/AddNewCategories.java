@@ -13,7 +13,7 @@ public class AddNewCategories {
 	
 		@Id
 		@GeneratedValue(strategy=GenerationType.IDENTITY)
-		private long id;
+		private long category_id;
 		
 		@Column(name = "categories")
 		private String categories;
@@ -33,19 +33,26 @@ public class AddNewCategories {
 			this.categories = categories;
 		}
 
-		public long getId() {
-			return id;
+		public long getCategory_id() {
+			return category_id;
 		}
 
-		public void setId(long id) {
-			this.id = id;
+		public void setCategory_id(long category_id) {
+			this.category_id = category_id;
 		}
 
-		public AddNewCategories(long id, String categories) {
+		public AddNewCategories(long category_id, String categories) {
 			super();
-			this.id = id;
+			this.category_id = category_id;
 			this.categories = categories;
 		}
+
+		@Override
+		public String toString() {
+			return "AddNewCategories [category_id=" + category_id + ", categories=" + categories + "]";
+		}
+
+		
 
 		
 		
