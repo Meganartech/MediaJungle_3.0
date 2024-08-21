@@ -1,9 +1,7 @@
-package com.VsmartEngine.MediaJungle.repository;
+package com.VsmartEngine.MediaJungle.video;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.VsmartEngine.MediaJungle.model.Videos;
 
 @Repository
 public interface VideoRepository extends JpaRepository<Videos, Integer> {

@@ -16,12 +16,12 @@ import com.VsmartEngine.MediaJungle.model.AudioCastAndCrew;
 import com.VsmartEngine.MediaJungle.model.Audiodescription;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.VideoCastAndCrew;
-import com.VsmartEngine.MediaJungle.model.VideoDescription;
 import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
-import com.VsmartEngine.MediaJungle.repository.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.repository.AudioCastandCrewRepository;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 import com.VsmartEngine.MediaJungle.repository.VideoCastandCrewRepository;
+import com.VsmartEngine.MediaJungle.video.AddVideoDescriptionRepository;
+import com.VsmartEngine.MediaJungle.video.VideoDescription;
 
 
 @Controller

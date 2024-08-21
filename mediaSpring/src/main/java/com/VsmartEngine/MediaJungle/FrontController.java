@@ -36,7 +36,6 @@ import com.VsmartEngine.MediaJungle.controller.PlanDetailsController;
 import com.VsmartEngine.MediaJungle.controller.TagController;
 import com.VsmartEngine.MediaJungle.controller.UserWithStatus;
 import com.VsmartEngine.MediaJungle.controller.VideoCastAndCrewController;
-import com.VsmartEngine.MediaJungle.controller.VideoController;
 import com.VsmartEngine.MediaJungle.model.AddCertificate;
 import com.VsmartEngine.MediaJungle.model.AddLanguage;
 import com.VsmartEngine.MediaJungle.model.AddNewCategories;
@@ -59,12 +58,13 @@ import com.VsmartEngine.MediaJungle.model.Socialsettings;
 import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.model.UserListWithStatus;
 import com.VsmartEngine.MediaJungle.model.VideoCastAndCrew;
-import com.VsmartEngine.MediaJungle.model.VideoDescription;
-import com.VsmartEngine.MediaJungle.model.Videos;
 import com.VsmartEngine.MediaJungle.model.Videosettings;
 import com.VsmartEngine.MediaJungle.notification.controller.NotificationController;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
+import com.VsmartEngine.MediaJungle.video.VideoController;
+import com.VsmartEngine.MediaJungle.video.VideoDescription;
+import com.VsmartEngine.MediaJungle.video.Videos;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -838,18 +838,20 @@ public class FrontController {
 				@RequestParam("videoAccessType") boolean videoAccessType,
 				@RequestParam("description") String description,
 				@RequestParam("productionCompany") String productionCompany,
-				@RequestParam("certificateName") List<Long> certificateName,
+				@RequestParam("certificateName") String certificateName,
 				@RequestParam("castandcrewlist") List<Long> castandcrewlist,
 				@RequestParam("taglist") List<Long> taglist,
 				@RequestParam("categorylist") List<Long> categorylist,
 				@RequestParam("videoThumbnail") MultipartFile videoThumbnail,
 				@RequestParam("trailerThumbnail") MultipartFile trailerThumbnail,
 				@RequestParam("userBanner") MultipartFile userBanner,
+				@RequestParam("video") MultipartFile video,
+		        @RequestParam("trailervideo") MultipartFile trailervideo,
 	              @RequestHeader("Authorization") String token){
 			
 			return VideoController.uploadVideoDescription(videoTitle, mainVideoDuration, trailerDuration, rating, certificateNumber, videoAccessType,
                     description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
-                    videoThumbnail, trailerThumbnail, userBanner,token);
+                    videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,token);
 		}
 //		
 //		@PostMapping("/updatedescriprion")
