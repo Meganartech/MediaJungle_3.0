@@ -1,5 +1,6 @@
 package com.VsmartEngine.MediaJungle.controller;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.PlanDescription;
+import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.repository.PlanDescriptionRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
@@ -33,7 +35,6 @@ public class PlanDescriptionController {
 	
 
 	public ResponseEntity<?> addPlanDescription(@RequestParam("description") String description,
-	        @RequestParam("planId") Long planId,
 	        @RequestHeader("Authorization") String token) {
 	    try {
 	        // Validate JWT token
@@ -57,7 +58,6 @@ public class PlanDescriptionController {
 	        // Create a new PlanDescription object
 	        PlanDescription plan = new PlanDescription();
 	        plan.setDescription(description);
-	        plan.setPlanId(planId);
 
 	        // Save the PlanDescription in the repository
 	        PlanDescription savedPlanDescription = plandescriptionrepository.save(plan);
@@ -69,7 +69,10 @@ public class PlanDescriptionController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding plan description.");
 	    }
 	}
-
+	public ResponseEntity<List<PlanDescription>> getAllDescriptions() {
+	    List<PlanDescription> descriptions = plandescriptionrepository.findAll();
+	    return new ResponseEntity<>(descriptions, HttpStatus.OK);
+	}
 
 	public ResponseEntity<?> addActiveStatus(
 	        @PathVariable Long id,
