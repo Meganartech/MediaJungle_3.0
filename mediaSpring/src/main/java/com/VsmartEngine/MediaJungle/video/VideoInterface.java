@@ -1,9 +1,8 @@
-package com.VsmartEngine.MediaJungle.service;
+package com.VsmartEngine.MediaJungle.video;
 
 import java.util.List;
 
 import com.VsmartEngine.MediaJungle.model.UpdateModel;
-import com.VsmartEngine.MediaJungle.model.Videos;
 
 public interface VideoInterface {
 	

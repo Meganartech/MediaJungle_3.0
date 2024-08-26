@@ -22,6 +22,9 @@ public class FileServiceImplementation implements FileService {
 	
 	 @Value("${project.video}")
 	    private String audioUploadDirectory;
+	 
+	 @Value("${project.videotrailer}")
+	 private String videotraileruploadDirectory;
 
 	@Override
 	public FileModel uploadVideo(String path, MultipartFile file) throws IOException {
@@ -47,6 +50,33 @@ public class FileServiceImplementation implements FileService {
 		
 		return fileModel;
 	}
+	
+	@Override
+	public FileModel uploadTrailerVideo(String path, MultipartFile file) throws IOException {
+		
+		FileModel fileModel = new FileModel();
+		//Fetch file original name .
+		String fileName = file.getOriginalFilename();
+		//try to generate random file name .
+		String randomId = UUID.randomUUID().toString();
+		String finalName = randomId.concat(fileName.substring(fileName.indexOf(".")));
+		
+		//File full path .
+		String filePath = path + File.separator + finalName ;
+		
+		//Create folder to store file .you can create any where you want .
+		File f = new File(path);
+		if(!f.exists()) {
+			f.mkdir();
+		}
+
+		Files.copy(file.getInputStream(),Paths.get(filePath));
+	
+		fileModel.setVideotrailerfilename(fileName);
+		
+		return fileModel;	
+	}
+	
 	@Override
 	public InputStream getVideoFIle(String path, String fileName, long id) throws  FileNotFoundException {
 		String fullPath = path+File.separator+fileName ;
