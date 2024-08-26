@@ -1,5 +1,6 @@
 package com.VsmartEngine.MediaJungle.model;
 
+import com.VsmartEngine.MediaJungle.video.VideoDescription;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;

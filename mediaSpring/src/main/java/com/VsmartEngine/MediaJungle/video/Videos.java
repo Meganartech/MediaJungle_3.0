@@ -1,4 +1,4 @@
-package com.VsmartEngine.MediaJungle.model;
+package com.VsmartEngine.MediaJungle.video;
 import java.util.Date;
 
 import jakarta.persistence.Entity;

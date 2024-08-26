@@ -31,13 +31,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.Addaudio1;
-import com.VsmartEngine.MediaJungle.model.VideoDescription;
 import com.VsmartEngine.MediaJungle.repository.AddAudioRepository;
-import com.VsmartEngine.MediaJungle.repository.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 import com.VsmartEngine.MediaJungle.userregister.TokenBlacklist;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
+import com.VsmartEngine.MediaJungle.video.AddVideoDescriptionRepository;
+import com.VsmartEngine.MediaJungle.video.VideoDescription;
 
 import jakarta.transaction.Transactional;
 
