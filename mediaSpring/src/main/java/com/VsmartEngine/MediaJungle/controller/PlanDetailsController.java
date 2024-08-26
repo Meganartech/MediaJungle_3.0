@@ -61,6 +61,8 @@ public class PlanDetailsController {
 		             pay.setAmount(amount);
 		             pay.setValidity(validity);
 		             PlanDetails details = planrepository.save(pay);	
+		             System.out.println("Idlfsjdfjsafasjdflkasjdfklasjfk");
+		             System.out.println(details.getId());
 		             Long planId = details.getId();
 			            String Name = details.getPlanname();
 			            String heading = Name + " New Paln Added!";

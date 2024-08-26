@@ -134,7 +134,7 @@ const PlanDetailsList = () => {
                         <th>Amount</th>
                         <th>Validity</th>
                         <th>Action</th>
-                        <th>Add Description</th>
+                        <th>Features</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -153,8 +153,8 @@ const PlanDetailsList = () => {
                               <i className="fa fa-trash" aria-hidden="true"></i>
                             </button></td>
                           <td>
-                            <button  onClick={() => handlAddDescription(plan.id)} className="btn btn-secondary ml-2" >
-                                Add
+                            <button  onClick={() => handleClick("/admin/PlanFeatures")} className="btn btn-secondary ml-2" >
+                                View
                             </button>
                           </td>
                           </tr>
