@@ -31,8 +31,9 @@ const Video = () => {
     // Fetch videos from the backend API
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/v2/videogetall`);
-        setUsers(response.data);  
+        const response = await axios.get(`${API_URL}/api/v2/video/getall`);
+        setUsers(response.data); 
+        console.log(response.data) 
       } catch (error) {
         console.log('Error fetching users:', error);
       }
@@ -113,9 +114,9 @@ const Video = () => {
     });
   };
 
-  const handlEdit = async (audioId) => {
-    localStorage.setItem('items', audioId);
-    navigate('/admin/EditVideo');
+  const handlEdit = async (videoId) => {
+    localStorage.setItem('items', videoId);
+    navigate('/admin/AddVideo');
   };
   
   
@@ -151,16 +152,12 @@ const Video = () => {
               <input type="checkbox" />
             </th>
             <th style={{border: 'none' }}>S.No</th>
-            <th style={{border: 'none' }}>Movie Name</th>
-            <th style={{border: 'none' }}>Description</th>
-            <th style={{border: 'none' }}>Tags</th>
-            <th style={{border: 'none' }}>Category</th>
-            <th style={{border: 'none' }}>Certificate</th>
-            <th style={{border: 'none' }}>Language</th>
-            <th style={{border: 'none' }}>Duration</th>
-            <th style={{border: 'none' }}>Year</th>
-            <th style={{border: 'none' }}>Paid</th>
-            <th style={{border: 'none' }}>Action</th>
+            <th style={{border: 'none' }}>VIDEO TITLE</th>
+            {/* <th style={{border: 'none' }}>BANNER</th> */}
+            <th style={{border: 'none' }}>PRODUCTION</th>
+            <th style={{border: 'none' }}>RATING</th>
+            <th style={{border: 'none' }}>VIDEO ACCESS TYPE</th>
+            <th style={{border: 'none' }}>ACTION</th>
                     
           </tr>
         </thead>
@@ -171,22 +168,17 @@ const Video = () => {
                 <input type="checkbox" />
               </td>
               <td>{index + 1}</td>
-              <td>{user.moviename}</td>
-              <td>{user.description}</td>
-              <td>{user.tags}</td>
-              <td>{user.category}</td>
-              <td>{user.certificate}</td>
-              <td>{user.language}</td>
-              <td>{user.duration}</td>
-              <td>{user.year}</td>
-              <td>{user.paid===true ? 1 : 0}</td>
+              <td>{user.videoTitle}</td>
+              <td>{user.productionCompany}</td>
+              <td>{user.rating}/10</td>
+              <td>{user.videoAccessType===true ? 1 : 0}</td>
               <td>
                 
                 <button onClick={() => handlEdit(user.id)} className="btn btn-primary me-2">
-                  <i className="fas fa-edit" aria-hidden="true"></i> Edit
+                  <i className="fas fa-edit" aria-hidden="true"></i>
                 </button>
                 <button onClick={() => handleDelete(user.id)} className="btn btn-danger">
-                  <i className="fa fa-trash" aria-hidden="true"></i> Delete
+                  <i className="fa fa-trash" aria-hidden="true"></i> 
                 </button>
                 
               </td>

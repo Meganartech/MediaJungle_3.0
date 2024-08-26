@@ -377,7 +377,10 @@ td{
 
 /* video preview */
 
+
+
 .preview-container {
+  margin-top: 40px;
   min-height: 70vh;
 }
 
@@ -388,17 +391,78 @@ td{
   width: 100%;
 } */
 
+.thumbnail-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.thumbnail-image {
+  max-width: 300px;
+  height: 200px;
+  border-radius: 10px;
+}
+
+.play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
+  color: white;
+  opacity: 0.8;
+  pointer-events: none; /* Allow clicking through the icon */
+}
+
 .video-container {
-  max-width: 500px;
+  max-width: 300px;
   margin: 0 auto;
   border-radius: 10px;
 }
 
 .details-box {
-  max-width: 500px;
-  border-radius:15px;
-  border:2px solid black;
+  max-width: 620px;
+  border-radius: 15px;
+  border: 2px solid black;
+   white-space: normal; /* Ensure text wraps to the next line as expected */
+  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
+
+
+.details-box table {
+  width: 600px; /* Make the table take up the full width of the container */
+  table-layout: fixed; /* Ensure equal spacing across columns */
+  border-collapse: collapse; /* Optional: Remove gaps between table cells */
+}
+
+.details-box th,
+.details-box td {
+  padding: 20px; /* Add padding for better spacing */
+  text-align: left; /* Align headers and cells to the left */
+  vertical-align: top; /* Align text at the top of the cell */
+  overflow-wrap: break-word; /* Ensure text within cells breaks properly */
+  word-wrap: break-word; /* Older property for compatibility */
+  word-break: break-word; /* Standard property to break words */
+}
+
+.details-box th {
+  width: 50%; /* Set a fixed width for table headers */
+}
+
+.details-box td {
+  width: 70%; /* Set a fixed width for table cells */
+}
+
+/* Specific styling for the Description cell */
+.details-box td.description {
+  word-break: break-all; /* Break words at any character to prevent overflow */
+  white-space: normal; /* Ensure text wraps normally */
+  hyphens: auto; /* Optional: Add hyphens when breaking words */
+}
+
+
+
+
 
 .button-group .btn {
   width: 120px;

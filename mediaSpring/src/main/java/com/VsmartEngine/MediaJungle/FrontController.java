@@ -64,6 +64,8 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
+import com.VsmartEngine.MediaJungle.video.VideoImage;
+import com.VsmartEngine.MediaJungle.video.VideoImageController;
 import com.VsmartEngine.MediaJungle.video.Videos;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -128,6 +130,9 @@ public class FrontController {
 
 	@Autowired
 	private VideoController VideoController;
+	
+	@Autowired
+	private VideoImageController videoImageController;
 	
 	@PostMapping("/AdminRegister")
 	public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
@@ -853,6 +858,29 @@ public class FrontController {
                     description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
                     videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,token);
 		}
+		
+		@GetMapping("/video/getall")
+		public ResponseEntity<List<VideoDescription>> getAllVideo() {
+			return VideoController.getAllVideo();
+		}
+		
+		 @GetMapping("/GetvideoDetail/{id}")
+		 public ResponseEntity<VideoDescription> getVideoDetailById(@PathVariable Long id) {			 
+			 return VideoController.getVideoDetailById(id);
+		 }
+		 
+		@GetMapping("/videoimage/{id}")
+		@Transactional
+			public ResponseEntity<VideoImage> getThumbnailByVideoId(@PathVariable Long id) {
+				return videoImageController.getThumbnailByVideoId(id);
+		}
+			
+		
+//		@GetMapping("/videoimage/{id}")
+//		public ResponseEntity<VideoImage> getVideoImageById(@PathVariable Long id) {
+//			return videoImageController.getVideoImageById(id);
+//		}
+		
 //		
 //		@PostMapping("/updatedescriprion")
 //		public ResponseEntity<VideoDescription> updatedescription(
@@ -909,11 +937,7 @@ public class FrontController {
 //			 return VideoController.deleteVideoById(id, token);
 //		 }
 //		 
-//		 @GetMapping("/GetvideoDetail/{id}")
-//		    public ResponseEntity<VideoDescription> getAudioDetails(@PathVariable Long id) {
-//			 
-//			 return VideoController.getAudioDetail(id);
-//		 }
+//		
 //		 
 //		 @GetMapping("/GetThumbnailsByid/{id}")
 //		    public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
