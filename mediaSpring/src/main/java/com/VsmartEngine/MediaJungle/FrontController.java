@@ -858,77 +858,77 @@ public class FrontController {
                     videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,token);
       }
 		
-		@PostMapping("/updatedescriprion")
-		public ResponseEntity<VideoDescription> updatedescription(
-		        @RequestParam("Movie_name") String moviename,
-		        @RequestParam("description") String description,
-		        @RequestParam("tags") String tags,
-		        @RequestParam("category") String category,
-		        @RequestParam("certificate") String certificate,
-		        @RequestParam("Language") String language,
-		        @RequestParam("Duration") String duration,
-		        @RequestParam("Year") String year,
-		        @RequestParam(value = "paid", required = false) boolean paid,
-		        @RequestParam("id") long id,
-		        @RequestHeader("Authorization") String token) {
-			
-			return VideoController.updatedescription(moviename, description, tags, category, certificate, language, duration, year, paid, id, token);
-		}
+//		@PostMapping("/updatedescriprion")
+//		public ResponseEntity<VideoDescription> updatedescription(
+//		        @RequestParam("Movie_name") String moviename,
+//		        @RequestParam("description") String description,
+//		        @RequestParam("tags") String tags,
+//		        @RequestParam("category") String category,
+//		        @RequestParam("certificate") String certificate,
+//		        @RequestParam("Language") String language,
+//		        @RequestParam("Duration") String duration,
+//		        @RequestParam("Year") String year,
+//		        @RequestParam(value = "paid", required = false) boolean paid,
+//		        @RequestParam("id") long id,
+//		        @RequestHeader("Authorization") String token) {
+//			
+//			return VideoController.updatedescription(moviename, description, tags, category, certificate, language, duration, year, paid, id, token);
+//		}
+//		
+//		@PostMapping("/postit")
+//		public Videos uploadingVideo(@RequestParam("video") MultipartFile video) throws IOException
+//		{
+//			
+//			return VideoController.uploadingVideo(video);
+//		}
+//		
+//		@GetMapping(value = "/play/{id}")
+//		 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
+//			
+//			return VideoController.getVideo(id, request);
+//
+//		}
+//		
+//		@GetMapping(value = "/updatevideo")
+//		public ResponseEntity<String> updateById() throws IOException {
+//			
+//			return VideoController.updateById();
+//		}
 		
-		@PostMapping("/postit")
-		public Videos uploadingVideo(@RequestParam("video") MultipartFile video) throws IOException
-		{
-			
-			return VideoController.uploadingVideo(video);
-		}
-		
-		@GetMapping(value = "/play/{id}")
-		 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
-			
-			return VideoController.getVideo(id, request);
-
-		}
-		
-		@GetMapping(value = "/updatevideo")
-		public ResponseEntity<String> updateById() throws IOException {
-			
-			return VideoController.updateById();
-		}
-		
-		 @GetMapping(value = "/videogetall")
-		    public ResponseEntity<List<VideoDescription>> videogetall() {
-			 
-			 return VideoController.videogetall();
-		 }
+//		 @GetMapping(value = "/videogetall")
+//		    public ResponseEntity<List<VideoDescription>> videogetall() {
+//			 
+//			 return VideoController.videogetall();
+//		 }
+//		 
+//		 @GetMapping("/GetvideoThumbnail")
+//		    public ResponseEntity<List<byte[]>> getAllThumbnails() {
+//			 
+//			 return VideoController.getAllThumbnail();
+//			 
+//		 }
 		 
-		 @GetMapping("/GetvideoThumbnail")
-		    public ResponseEntity<List<byte[]>> getAllThumbnails() {
-			 
-			 return VideoController.getAllThumbnail();
-			 
-		 }
-		 
-		 @DeleteMapping("/video/{id}")
-		 public ResponseEntity<?> deleteVideoById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
-			 
-			 return VideoController.deleteVideoById(id, token);
-		 }
-		 
-		 @GetMapping("/GetvideoDetail/{id}")
-		    public ResponseEntity<VideoDescription> getAudioDetails(@PathVariable Long id) {
-			 
-			 return VideoController.getAudioDetail(id);
-		 }
-		 
-		 @GetMapping("/GetThumbnailsByid/{id}")
-		    public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
-			 
-			 return VideoController.getThumbnailsById(id);
-		 }
-		 
-		 @GetMapping("/GetAllThumbnaill")
-		    public ResponseEntity<List<byte[]>> getAllThumbnaill() {
-			 
-			 return VideoController.getAllThumbnaill();
-		 }
+//		 @DeleteMapping("/video/{id}")
+//		 public ResponseEntity<?> deleteVideoById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+//			 
+//			 return VideoController.deleteVideoById(id, token);
+//		 }
+//		 
+//		 @GetMapping("/GetvideoDetail/{id}")
+//		    public ResponseEntity<VideoDescription> getAudioDetails(@PathVariable Long id) {
+//			 
+//			 return VideoController.getAudioDetail(id);
+//		 }
+//		 
+//		 @GetMapping("/GetThumbnailsByid/{id}")
+//		    public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
+//			 
+//			 return VideoController.getThumbnailsById(id);
+//		 }
+//		 
+//		 @GetMapping("/GetAllThumbnaill")
+//		    public ResponseEntity<List<byte[]>> getAllThumbnaill() {
+//			 
+//			 return VideoController.getAllThumbnaill();
+//		 }
 }
