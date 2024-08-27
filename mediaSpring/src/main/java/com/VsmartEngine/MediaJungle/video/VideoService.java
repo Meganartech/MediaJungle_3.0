@@ -1,4 +1,4 @@
-package com.VsmartEngine.MediaJungle.service;
+package com.VsmartEngine.MediaJungle.video;
 
 import java.io.IOException;
 import java.util.Date;
@@ -14,11 +14,8 @@ import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.exception.ResourceNotFoundException;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.UpdateModel;
-import com.VsmartEngine.MediaJungle.model.VideoDescription;
-import com.VsmartEngine.MediaJungle.model.Videos;
-import com.VsmartEngine.MediaJungle.repository.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
-import com.VsmartEngine.MediaJungle.repository.VideoRepository;
+import com.VsmartEngine.MediaJungle.service.FileServiceImplementation;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -120,25 +117,16 @@ Videos video = this.videoRepository.findById(id).orElseThrow(()-> new ResourceNo
 	public VideoDescription saveVideoDescriptio(String videoTitle, String mainVideoDuration, String trailerDuration,
             String rating, String certificateNumber, boolean videoAccessType, 
             String description, String productionCompany,
-            List<Long> certificateName, List<Long> castandcrewlist, 
-            List<Long> taglist, List<Long> categorylist, 
-            MultipartFile videoThumbnail, MultipartFile trailerThumbnail,
-            MultipartFile userBanner) throws IOException {
+            String certificateName, List<Long> castandcrewlist, 
+            List<Long> taglist, List<Long> categorylist) throws IOException {
 
-// Compress image files
-byte[] videothumbnailbyte = ImageUtils.compressImage(videoThumbnail.getBytes());
-byte[] trailerThumbnailbyte = ImageUtils.compressImage(trailerThumbnail.getBytes());
-byte[] userBannerbyte = ImageUtils.compressImage(userBanner.getBytes());
 
 // Create new VideoDescription entity
 VideoDescription newVideo = new VideoDescription();
 newVideo.setVideoTitle(videoTitle);
 newVideo.setMainVideoDuration(mainVideoDuration);
 newVideo.setTrailerDuration(trailerDuration);
-newVideo.setVideoThumbnail(videothumbnailbyte);
 newVideo.setVideoAccessType(videoAccessType);
-newVideo.setUserBanner(userBannerbyte);
-newVideo.setTrailerThumbnail(trailerThumbnailbyte);
 newVideo.setTaglist(taglist);
 newVideo.setRating(rating);
 newVideo.setProductionCompany(productionCompany);

@@ -1,4 +1,4 @@
-package com.VsmartEngine.MediaJungle.model;
+package com.VsmartEngine.MediaJungle.video;
 
 
 import java.util.ArrayList;
@@ -50,13 +50,10 @@ public class VideoDescription {
 	private boolean videoAccessType;
 	private String description;
 	private String productionCompany;
-	@Column(name="videoThumbnail" ,length=1000000)
-	private byte[] videoThumbnail;
-	@Column(name="trailerThumbnail" ,length=1000000)
-	private byte[] trailerThumbnail;
-	@Column(name="userBanner" ,length=1000000)
-	private byte[] userBanner;
-	private List<Long> certificateName = new ArrayList<>();
+	private String certificateName;
+	private String vidofilename;
+	private String videotrailerfilename;
+	
 	private List<Long> castandcrewlist = new ArrayList<>();
 	private List<Long> taglist = new ArrayList<>();
 	private List<Long> categorylist = new ArrayList<>();
@@ -66,10 +63,12 @@ public class VideoDescription {
 		// TODO Auto-generated constructor stub
 	}
 	
+	
+
 	public VideoDescription(long id, String videoTitle, String mainVideoDuration, String trailerDuration, String rating,
 			String certificateNumber, boolean videoAccessType, String description, String productionCompany,
-			byte[] videoThumbnail, byte[] trailerThumbnail, byte[] userBanner, List<Long> certificateName,
-			List<Long> castandcrewlist, List<Long> taglist, List<Long> categorylist) {
+			String certificateName, String vidofilename, String videotrailerfilename, List<Long> castandcrewlist,
+			List<Long> taglist, List<Long> categorylist) {
 		super();
 		this.id = id;
 		this.videoTitle = videoTitle;
@@ -80,14 +79,15 @@ public class VideoDescription {
 		this.videoAccessType = videoAccessType;
 		this.description = description;
 		this.productionCompany = productionCompany;
-		this.videoThumbnail = videoThumbnail;
-		this.trailerThumbnail = trailerThumbnail;
-		this.userBanner = userBanner;
 		this.certificateName = certificateName;
+		this.vidofilename = vidofilename;
+		this.videotrailerfilename = videotrailerfilename;
 		this.castandcrewlist = castandcrewlist;
 		this.taglist = taglist;
 		this.categorylist = categorylist;
 	}
+
+
 
 	public long getId() {
 		return id;
@@ -143,30 +143,13 @@ public class VideoDescription {
 	public void setProductionCompany(String productionCompany) {
 		this.productionCompany = productionCompany;
 	}
-	public byte[] getVideoThumbnail() {
-		return videoThumbnail;
-	}
-	public void setVideoThumbnail(byte[] videoThumbnail) {
-		this.videoThumbnail = videoThumbnail;
-	}
-	public byte[] getTrailerThumbnail() {
-		return trailerThumbnail;
-	}
-	public void setTrailerThumbnail(byte[] trailerThumbnail) {
-		this.trailerThumbnail = trailerThumbnail;
-	}
-	public byte[] getUserBanner() {
-		return userBanner;
-	}
-	public void setUserBanner(byte[] userBanner) {
-		this.userBanner = userBanner;
-	}
+	
 
-	public List<Long> getCertificateName() {
+	public String getCertificateName() {
 		return certificateName;
 	}
 
-	public void setCertificateName(List<Long> certificateName) {
+	public void setCertificateName(String certificateName) {
 		this.certificateName = certificateName;
 	}
 
@@ -193,6 +176,32 @@ public class VideoDescription {
 	public void setCategorylist(List<Long> categorylist) {
 		this.categorylist = categorylist;
 	}
+
+
+
+	public String getVidofilename() {
+		return vidofilename;
+	}
+
+
+
+	public void setVidofilename(String vidofilename) {
+		this.vidofilename = vidofilename;
+	}
+
+
+
+	public String getVideotrailerfilename() {
+		return videotrailerfilename;
+	}
+
+
+
+	public void setVideotrailerfilename(String videotrailerfilename) {
+		this.videotrailerfilename = videotrailerfilename;
+	}
+	
+	
 	
 		
 //	@Override

@@ -1,4 +1,4 @@
-package com.VsmartEngine.MediaJungle.controller;
+package com.VsmartEngine.MediaJungle.video;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -25,24 +25,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.Addaudio1;
 import com.VsmartEngine.MediaJungle.model.FileModel;
-import com.VsmartEngine.MediaJungle.model.VideoDescription;
-import com.VsmartEngine.MediaJungle.model.Videos;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
-import com.VsmartEngine.MediaJungle.repository.AddVideoDescriptionRepository;
-import com.VsmartEngine.MediaJungle.repository.VideoRepository;
 import com.VsmartEngine.MediaJungle.service.FileService;
-import com.VsmartEngine.MediaJungle.service.VideoService;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
@@ -61,6 +59,8 @@ public class VideoController {
 	@Value("${project.video}")
 	private String path;
 	
+	@Value("${project.videotrailer}")
+	private String trailervideoPath;
 	@Autowired
 	private VideoService videoService;
 
@@ -69,6 +69,8 @@ public class VideoController {
 
 	@Autowired
 	private FileService fileSevice;
+	
+	@Autowired VideoImageRepository videoimagerepository;
 
 	@Autowired
 	private VideoRepository videoRepository;
@@ -92,52 +94,82 @@ public class VideoController {
 	private AddVideoDescriptionRepository videodescription ;
 
 	public ResponseEntity<VideoDescription> uploadVideoDescription(
-            @RequestParam("videoTitle") String videoTitle,
-            @RequestParam("mainVideoDuration") String mainVideoDuration,
-            @RequestParam("trailerDuration") String trailerDuration,
-            @RequestParam("rating") String rating,
-            @RequestParam("certificateNumber") String certificateNumber,
-            @RequestParam("videoAccessType") boolean videoAccessType,
-            @RequestParam("description") String description,
-            @RequestParam("productionCompany") String productionCompany,
-            @RequestParam("certificateName") List<Long> certificateName,
-            @RequestParam("castandcrewlist") List<Long> castandcrewlist,
-            @RequestParam("taglist") List<Long> taglist,
-            @RequestParam("categorylist") List<Long> categorylist,
-            @RequestParam("videoThumbnail") MultipartFile videoThumbnail,
-            @RequestParam("trailerThumbnail") MultipartFile trailerThumbnail,
-            @RequestParam("userBanner") MultipartFile userBanner,
-            @RequestHeader("Authorization") String token) {
+	        @RequestParam("videoTitle") String videoTitle,
+	        @RequestParam("mainVideoDuration") String mainVideoDuration,
+	        @RequestParam("trailerDuration") String trailerDuration,
+	        @RequestParam("rating") String rating,
+	        @RequestParam("certificateNumber") String certificateNumber,
+	        @RequestParam("videoAccessType") boolean videoAccessType,
+	        @RequestParam("description") String description,
+	        @RequestParam("productionCompany") String productionCompany,
+	        @RequestParam("certificateName") String certificateName,
+	        @RequestParam("castandcrewlist") List<Long> castandcrewlist,
+	        @RequestParam("taglist") List<Long> taglist,
+	        @RequestParam("categorylist") List<Long> categorylist,
+	        @RequestParam("videoThumbnail") MultipartFile videoThumbnail,
+	        @RequestParam("trailerThumbnail") MultipartFile trailerThumbnail,
+	        @RequestParam("userBanner") MultipartFile userBanner,
+	        @RequestParam("video") MultipartFile video,
+	        @RequestParam("trailervideo") MultipartFile trailervideo,
+	        @RequestHeader("Authorization") String token) {
 
-        try {
-            // Validate token
-            if (!jwtUtil.validateToken(token)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
+	    try {
+	        // Validate token
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	        }
 
-            String email = jwtUtil.getUsernameFromToken(token);
-            System.out.println("email: " + email);
-            Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
 
-            if (opUser.isPresent()) {
-                AddUser user = opUser.get();
-                String username = user.getUsername();
+	        if (opUser.isPresent()) {
+	            AddUser user = opUser.get();
+	            
+	            FileModel upload= fileSevice.uploadVideo(path, video);
+	        	String videoname=upload.getVideoFileName();
+	        	FileModel uploadtrailervideo = fileSevice.uploadTrailerVideo(trailervideoPath,trailervideo);
+	        	String trailervideoname = uploadtrailervideo.getVideotrailerfilename();
+	            
+	            // Create and save VideoDescription
+	            VideoDescription newVideo = new VideoDescription();
+	            newVideo.setVideoTitle(videoTitle);
+	            newVideo.setMainVideoDuration(mainVideoDuration);
+	            newVideo.setTrailerDuration(trailerDuration);
+	            newVideo.setVideoAccessType(videoAccessType);
+	            newVideo.setTaglist(taglist);
+	            newVideo.setRating(rating);
+	            newVideo.setProductionCompany(productionCompany);
+	            newVideo.setDescription(description);
+	            newVideo.setCertificateNumber(certificateNumber);
+	            newVideo.setCertificateName(certificateName);
+	            newVideo.setCategorylist(categorylist);
+	            newVideo.setCastandcrewlist(castandcrewlist);
+	            newVideo.setVidofilename(videoname);
+	            newVideo.setVideotrailerfilename(trailervideoname);
 
-                // Save video description
-                VideoDescription savedDescription = videoService.saveVideoDescriptio(
-                        videoTitle, mainVideoDuration, trailerDuration, rating, certificateNumber, videoAccessType,
-                        description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
-                        videoThumbnail, trailerThumbnail, userBanner);
+	            // Save and get the generated ID
+	            VideoDescription savedDescription = videodescriptionRepository.save(newVideo);
+	            long videoId = savedDescription.getId(); // Get the generated videoId
 
-                return ResponseEntity.ok().body(savedDescription);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
+	            // Create and save VideoImage
+	            VideoImage videoImage = new VideoImage();
+	            videoImage.setVideoId(videoId);
+	            videoImage.setVideoThumbnail(videoThumbnail.getBytes());
+	            videoImage.setTrailerThumbnail(trailerThumbnail.getBytes());
+	            videoImage.setUserBanner(userBanner.getBytes());
+
+	            // Save the VideoImage entity
+	            videoimagerepository.save(videoImage);
+
+	            return ResponseEntity.ok().body(savedDescription);
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	    }
+	}
 	
 	@GetMapping("/video/getall")
 	public ResponseEntity<List<VideoDescription>> getAllVideo() {

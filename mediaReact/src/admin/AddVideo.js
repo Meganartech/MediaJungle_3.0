@@ -864,44 +864,40 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import API_URL from '../Config';
 import "../css/Sidebar.css";
-
 import "../App.css"
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
-
-
 import React, { useState, useEffect, useRef } from 'react';
 
+
 const AddVideo = () => {
-  const [file, setFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [categories, setCategories] = useState([]);
-  const [errors, setErrors] = useState({});
-  const [categoryId, setCategoryId] = useState('');
+  const [videoTitle,setVideoTitle] = useState('');
+  const [mainVideoDuration , setMainVideoDuration] = useState('');
+  const [trailerDuration,setTrailerDuration] = useState('');
+  const [certificateName,setCertificateName] = useState('');
   const [Certificate, setCertificate] = useState([]);
-  const [certificateId, setCertificateId] = useState('');
-  const [Language, setLanguage] = useState([]);
-  const [LanguageId, setLanguageId] = useState('');
-  const [Tag, setTag] = useState([]);
-  const [TagId, setTagId] = useState('');
-  const [thumbnail, setThumbnail] = useState(null);
-  const [selected, setSelected] = useState(false);
-  const [getall,setgetall] = useState(''); 
-  const [Getall,setGetall] = useState('');
-  const navigate = useNavigate();
-  const [selectedOption, setSelectedOption] = useState('free');
-  const [imageUrl, setImageUrl] = useState(null); // To display image preview
-  const token = sessionStorage.getItem("tokenn")
-
-  const [isOpen, setIsOpen] = useState(false);
+  const [rating,setRating] = useState('');
+  const [certificateNumber,setCertificateNumber] = useState('');
+  const [videoAccessType, setVideoAccessType] = useState('free');
   const [castandcrewlist, setcastandcrewlist] = useState([]);
-  const dropdownRef = useRef(null);
+  const [description,setdescription] = useState('');
+  const [productionCompany,setProductionCompany] = useState('');
 
+  const [taglist,settaglist] = useState([]);
+  const [Tag, setTag] = useState([]);
+
+  const [category,setCategory] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [image, setImage] = useState(null);
   const [error, setError] = useState('');
+  const token = sessionStorage.getItem("tokenn")
+  const [imageUrl, setImageUrl] = useState(null); // To display image preview
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpentag, setIsOpentag] = useState(false);
+  const [isOpencategory, setIsOpencategory] = useState(false);
   
-
+  
   const nextStep = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -910,11 +906,71 @@ const AddVideo = () => {
     setCurrentStep(currentStep - 1);
   };
 
+
+
+
+
+
+
+
+  const [file, setFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  
+  const [errors, setErrors] = useState({});
+  const [categoryId, setCategoryId] = useState('');
+  const [certificateId, setCertificateId] = useState('');
+  const [Language, setLanguage] = useState([]);
+  const [LanguageId, setLanguageId] = useState('');
+  
+  const [TagId, setTagId] = useState('');
+  const [thumbnail, setThumbnail] = useState(null);
+  const [selected, setSelected] = useState(false);
+  const [getall,setgetall] = useState(''); 
+  const [Getall,setGetall] = useState('');
+  const navigate = useNavigate();
+  const [selectedOption, setSelectedOption] = useState('free');
+  
+
+ 
+  
+  const dropdownRef = useRef(null);
+  const dropdownReftag = useRef(null);
+  const dropdownRefcategory = useRef(null);
+
+  
+
   const handleClickOutside = event => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
   };
+
+  const handleClickOutsidetag = event => {
+    if (dropdownReftag.current && !dropdownReftag.current.contains(event.target)) {
+      setIsOpentag(false);
+    }
+  };
+
+  const handleClickOutsidecategory = event => {
+    if (dropdownRefcategory.current && !dropdownRefcategory.current.contains(event.target)) {
+      setIsOpencategory(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutsidetag);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsidetag);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutsidecategory);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsidecategory);
+    };
+  }, []);
+
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -943,6 +999,14 @@ const AddVideo = () => {
     setIsOpen(!isOpen);
   };
 
+  const toggleDropdowntag = () => {
+    setIsOpentag(!isOpen);
+  };
+
+  const toggleDropdowncategory = () => {
+    setIsOpencategory(!isOpen);
+  };
+
   const handleCheckboxChange = (option) => (e) => {
     const isChecked = e.target.checked;
     const id = (option.id); // Convert ID to number
@@ -953,6 +1017,33 @@ const AddVideo = () => {
       setcastandcrewlist((prevList) => prevList.filter((item) => item !== id));
     }
   };
+
+
+  const handleCheckboxChangetag = (option) => (e) => {
+    const isChecked = e.target.checked;
+    const id = (option.tag_id); // Convert ID to number
+    
+    if (isChecked) {
+      settaglist((prevList) => [...prevList, id]);
+     
+    } else {
+      settaglist((prevList) => prevList.filter((item) => item !== id));
+    }
+  };
+
+  const handleCheckboxChangecategory = (option) => (e) => {
+    const isChecked = e.target.checked;
+    const id = (option.category_id); // Convert ID to number
+    
+    if (isChecked) {
+      setCategory((prevList) => [...prevList, id]);
+     
+    } else {
+      setCategory((prevList) => prevList.filter((item) => item !== id));
+    }
+  };
+  
+
 
 
   useEffect(() => {
@@ -1146,210 +1237,6 @@ const hasPaymentPlan = () => {
       console.error('Error uploading file:', error);
     }
   };
-  
-  
-
-  // const save = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //   const formData = new FormData();
-  //   const audioData = {
-        
-  //     thumbnail: thumbnail,
-  //   };
-  //   console.log("audioData")
-  //   console.log(audioData)
-  //   const Addvideo = { Movie_name: Movie_name, tags: TagId, description: Description,category: categoryId,certificate: certificateId,Language: LanguageId,Duration:Duration,Year:Year,thumbnail:thumbnail,video:file, paid: selected ? 1 : 0,};
-  //   console.log(Addvideo);
-
-
-  //   for (const key in Addvideo) {
-  //     formData.append(key, Addvideo[key]);
-  //   }
-
-  //   const response = await axios.post(`${API_URL}/api/uploaddescriprion`, formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       onUploadProgress: (progressEvent) => {
-  //         const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-  //         setUploadProgress(progress);
-  //       }
-  //     });
-  //       console.log(response.data);
-  //     console.log("video updated successfully");
-  //   } catch (error) {
-  //     console.error('Error uploading audio:', error);
-  //     // Handle error, e.g., show an error message to the user
-  //   }
-   
-  //   // Employee.setVideo(Addvideo).then(res => {
-  //   //   // handleUpload();
-  //   //   setMovie_name('');
-  //   //   setTags('');
-  //   //   setDescription('');
-  //   // })
-  // }
-
-  
-  // const save = async (e) => {
-  //   e.preventDefault();
-  
-  //   try {
-  //     // First fetch request to check the count
-  //     const response = await fetch(`${API_URL}/api/v2/count`, {
-  //       method: 'GET',
-  //     });
-  
-  //     console.log(response);
-  
-  //     if (response.ok) {
-  //       try {
-  //         // Initialize formData
-  //         const formData = new FormData();
-  
-  //         // Define Addvideo object with the necessary data
-  //         const Addvideo = {
-  //           Movie_name: Movie_name,
-  //           tags: TagId,
-  //           description: Description,
-  //           category: categoryId,
-  //           certificate: certificateId,
-  //           Language: LanguageId,
-  //           Duration: Duration,
-  //           Year: Year,
-  //           thumbnail: thumbnail,
-  //           video: file,
-  //           paid: selectedOption === 'paid' ? 1 : 0,
-  //         };
-  
-  //         // Append cast and crew list to formData
-  //         castandcrewlist.forEach((id) => {
-  //           formData.append('castandcrewlist', id);
-  //         });
-  
-  //         // Append Addvideo properties to formData
-  //         for (const key in Addvideo) {
-  //           formData.append(key, Addvideo[key]);
-  //         }
-  
-  //         console.log("Addvideo:");
-  //         console.log(Addvideo);
-  
-  //         // Make the POST request to upload description
-  //         const uploadResponse = await axios.post(`${API_URL}/api/uploaddescriprion`, formData, {
-  //           headers: {
-  //             'Content-Type': 'multipart/form-data',
-  //           },
-  //           onUploadProgress: (progressEvent) => {
-  //             const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-  //             setUploadProgress(progress);
-  //           },
-  //         });
-  
-  //         console.log(uploadResponse.data);
-  //         console.log("Video updated successfully");
-  //       } catch (error) {
-  //         console.error('Error uploading video:', error);
-  //         // Handle error, e.g., show an error message to the user
-  //       }
-  //     } else {
-  //       alert("Limit reached");
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching count:', error);
-  //   }
-  // };
-
-
-//   const save = async (e) => {
-//     e.preventDefault();
-//     try {
-//         const response = await fetch(`${API_URL}/api/v2/count`, {
-//             method: 'GET',
-//         });
-//         console.log(response);
-//         if (response.ok) {
-//             try {
-//                 const formData = new FormData();
-//                 formData.append('moviename', Movie_name);
-//                 formData.append('description', Description);
-//                 formData.append('tags', TagId);
-//                 formData.append('category', categoryId);
-//                 formData.append('certificate', certificateId);
-//                 formData.append('language', LanguageId);
-//                 formData.append('duration', Duration);
-//                 formData.append('year', Year);
-//                 formData.append('thumbnail', thumbnail);
-//                 formData.append('video', file);
-//                 formData.append('paid', selectedOption === 'paid' ? 1 : 0);
-
-//                 // Correctly append each item in castandcrewlist
-//                 castandcrewlist.forEach((id) => {
-//                   formData.append('castandcrewlist', id);
-//                 });
-
-//                 const uploadResponse = await axios.post(`${API_URL}/api/uploaddescription`, formData, {
-//                     onUploadProgress: (progressEvent) => {
-//                         const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-//                         setUploadProgress(progress);
-//                     }
-//                 });
-
-//                 console.log(uploadResponse.data);
-//                 Swal.fire({
-//                     title: 'Success!',
-//                     text: 'Video updated successfully',
-//                     icon: 'success',
-//                     confirmButtonText: 'OK'
-//                 });
-//             } catch (error) {
-//                 console.error('Error uploading video:', error);
-//                 Swal.fire({
-//                     title: 'Error!',
-//                     text: 'Error uploading video',
-//                     icon: 'error',
-//                     confirmButtonText: 'OK'
-//                 });
-//             }
-//         } else {
-//             Swal.fire({
-//                 title: 'Limit Reached',
-//                 text: 'The upload limit has been reached',
-//                 icon: 'warning',
-//                 confirmButtonText: 'OK'
-//             });
-//         }
-//     } catch (error) {
-//         console.error('Error ', error);
-//         Swal.fire({
-//             title: 'Error!',
-//             text: 'An error occurred',
-//             icon: 'error',
-//             confirmButtonText: 'OK'
-//         });
-//     }
-
-//     console.log("audioData");
-//     const Addvideo = { 
-//         Movie_name, 
-//         tags: TagId, 
-//         description: Description, 
-//         category: categoryId, 
-//         certificate: certificateId, 
-//         language: LanguageId, 
-//         duration: Duration, 
-//         year: Year, 
-//         thumbnail, 
-//         video: file, 
-//         paid: selectedOption === 'paid' ? 1 : 0,
-//         castandcrewlist: castandcrewlist // Add the selectedItems to the object
-//     };
-
-//     console.log(Addvideo);
-// };
-
 
 const save = async (e) => {
     e.preventDefault();
@@ -1510,7 +1397,7 @@ const handleDragOver = (event) => {
 
 
   return (
-<div className='container3 mt-20'>
+<div className='container3 mt-2'>
   <ol className="breadcrumb mb-4 d-flex my-0">
     <li className="breadcrumb-item"><Link to="/admin/Video">Videos</Link></li>
     <li className="breadcrumb-item active text-white">Add Video</li>
@@ -1525,7 +1412,6 @@ const handleDragOver = (event) => {
         {/* Video Title */}
         <div className="col-md-6">
           <div className="d-flex align-items-center">
-            {/* <div className="flex-shrink-0 me-2"> */}
             <div className="label-width">
               <label className="custom-label">Video Title</label>
             </div>
@@ -1536,7 +1422,9 @@ const handleDragOver = (event) => {
                 id='name'
                 required
                 className="form-control border border-dark border-2 input-width" 
-                placeholder="Video Title" 
+                placeholder="Video Title"
+                value={videoTitle}
+                onChange ={(e) => setVideoTitle(e.target.value) }
               />
             </div>
           </div>
@@ -1557,6 +1445,8 @@ const handleDragOver = (event) => {
                 required
                 className="form-control border border-dark border-2 input-width" 
                 placeholder="Main Video Duration" 
+                value={mainVideoDuration}
+                onChange ={(e) => setMainVideoDuration(e.target.value) }
               />
             </div>
           </div>
@@ -1582,6 +1472,8 @@ const handleDragOver = (event) => {
                 required
                 className="form-control border border-dark border-2 input-width" 
                 placeholder="Trailer Duration" 
+                value={trailerDuration}
+                onChange ={(e) => setTrailerDuration(e.target.value) }
               />
             </div>
           </div>
@@ -1600,11 +1492,15 @@ const handleDragOver = (event) => {
                 id='certificate_name'
                 required
                 className="form-control border border-dark border-2 input-width"
+                value={certificateName}
+                onChange ={(e) => setCertificateName(e.target.value) }
               >
                 <option value="">Select certificate</option>
-                <option value="13+">U</option>
-                <option value="16+">U/A</option>
-                <option value="18+">U</option>
+        {Certificate.map(cert => (
+          <option key={cert.id} value={cert.value}>
+            {cert.certificate}
+          </option>
+        ))}
               </select>
             </div>
           </div>
@@ -1629,38 +1525,12 @@ const handleDragOver = (event) => {
                 required
                 className="form-control border border-dark border-2 input-width" 
                 placeholder="/10" 
+                value={rating}
+                onChange ={(e) => setRating(e.target.value) }
               />
             </div>
           </div>
         </div>
-
-        {/* Cast and Crew */}
-        <div className="col-md-6">
-          <div className="d-flex align-items-center">
-            {/* <div className="flex-shrink-0 me-2"> */}
-            <div className="label-width">
-              <label className="custom-label">Cast and Crew</label>
-            </div>
-            <div className="flex-grow-1">
-              <select 
-                name='certificatename'
-                id='certificate_name'
-                required
-                className="form-control border border-dark border-2 input-width"
-              >
-                <option value="">Cast and Crew</option>
-                <option value="13+">U</option>
-                <option value="16+">U/A</option>
-                <option value="18+">U</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-
-      </div>
-
-      <div className="row py-3 my-3 align-items-center w-100">
 
         {/* Certificate No */}
         <div className="col-md-6">
@@ -1676,20 +1546,15 @@ const handleDragOver = (event) => {
                 required
                 className="form-control border border-dark border-2 input-width" 
                 placeholder="Certificate No" 
+                value={certificateNumber}
+                onChange ={(e) => setCertificateNumber(e.target.value) }
               />
             </div>
           </div>
         </div>
 
-        {/* Empty Div with Border, Border Radius, and Increased Height */}
-  <div className="col-md-6">
-    <div className="d-flex align-items-center">
-      <div className="flex-grow-1 border border-dark border-2 p-3" 
-           style={{ borderRadius: '13px', height: '130px' }}>
-        {/* The div is empty, with only the border */}
-      </div>
-    </div>
-  </div>
+
+        
 
       </div>
 
@@ -1708,25 +1573,117 @@ const handleDragOver = (event) => {
                     className="form-check-input"
                     type="radio"
                     name="subscriptionType"
-                    id="paid"
-                    value="Paid"
-                  />
-                  <label className="form-check-label" htmlFor="paid">Paid</label>
-                </div>
-                <div className="form-check form-check-inline ms-3">
-                  <input 
-                    className="form-check-input"
-                    type="radio"
-                    name="subscriptionType"
                     id="free"
-                    value="Free"
+                    value="free"
+                    checked={videoAccessType === 'free'}
+                    onChange={handleRadioChange}
                   />
                   <label className="form-check-label" htmlFor="free">Free</label>
+                </div>
+
+                <div className="form-check form-check-inline ms-3">
+                  <input 
+                    className={`form-check-input ${videoAccessType === 'paid' ? ' selected' : ''}`}
+                    type="radio"
+                    name="subscriptionType"
+                    id="Paid"
+                    value="Paid"
+                    checked={videoAccessType === 'paid'}
+                disabled={!hasPaymentPlan()}
+                onChange={() => {
+                    if (hasPaymentPlan()) {
+                        setSelectedOption('paid');
+                    }
+
+                }}
+                
+                  />
+                  <label className={`form-check-label ${videoAccessType === 'paid' ? ' selected' : ''}`}
+                   htmlFor="Paid"
+                   onMouseEnter={handlePaidRadioHover}
+                            onClick={() => {
+                                if (hasPaymentPlan()) {
+                                    setSelectedOption('paid');
+                                }
+                            }}
+                            >
+                              Paid</label>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+
+      
+        {/*  {/* Cast and Crew */}
+        <div className="col-md-6">
+          <div className="d-flex align-items-center" >
+            <div className="label-width">
+              <label className="custom-label">Cast and Crew</label>
+            </div>
+          
+            <div className="dropdown flex-grow-1 dropdown-container" ref={dropdownRef}>
+
+               <button
+              type="button"
+              name='Cast_and_Crew'
+                id='Cast_and_Crew'
+                required
+              className="form-control border border-dark border-2 input-width" 
+              onClick={toggleDropdown}
+            >
+              {castandcrewlist.length > 0 ? 'Selected' : 'Select Cast & Crew'}
+            </button>
+            {isOpen && (
+              <div className="dropdown-menu show"  style={{ maxHeight: '200px', overflowY: 'auto' }}
+>
+                {Getall.map(option => (
+                  <div key={option.id} className="dropdown-item">
+                    <input
+                      type="checkbox"
+                      value={option.name}
+                      checked={castandcrewlist.includes(option.id)}
+                      onChange={handleCheckboxChange(option)}
+                    />
+                    <label className="ml-2">{option.name}</label>
+                  </div>
+                ))}
+              </div>
+            )}
+            </div>
+            
+
+
+  
+          </div>
+        </div>
+
+        
+        
+
+      </div>
+
+      <div className="row py-3 my-3 align-items-center w-100">
+
+        {/* Empty Div with Border, Border Radius, and Increased Height */}
+  <div className="col-md-6">
+    
+  </div>
+
+  {/* Empty Div with Border, Border Radius, and Increased Height */}
+  <div className="col-md-6">
+    <div className="d-flex align-items-center">
+      <div className="flex-grow-1 border border-dark border-2 p-3" 
+           style={{ borderRadius: '13px', height: '130px', overflowY: 'auto' }}>
+        {castandcrewlist.map(id => (
+          <div key={id}>
+            {Getall.find(option => option.id === id)?.name} {/* Display name based on ID */}
+          </div>  
+        ))}
+      </div>
+    </div>
+  </div>
 
       </div>
 
@@ -1774,6 +1731,8 @@ const handleDragOver = (event) => {
           className="form-control border border-dark border-2 input-width" 
           placeholder="description"
           rows="2"
+          value={description}
+          onChange ={(e) => setdescription(e.target.value) }
         ></textarea>
       </div>
     </div>
@@ -1792,7 +1751,9 @@ const handleDragOver = (event) => {
                 id='main_video_duration'
                 required
                 className="form-control border border-dark border-2 input-width" 
-                placeholder="Production Company" 
+                placeholder="Production Company"
+                value={productionCompany}
+                onChange ={(e) => setProductionCompany(e.target.value) } 
               />
             </div>
           </div>
@@ -1804,24 +1765,40 @@ const handleDragOver = (event) => {
 <div className="row py-3 my-3 align-items-center w-100">
 
   
-  <div className="col-md-6">
+   {/* Tag */}
+   <div className="col-md-6">
   <div className="d-flex align-items-center">
     <div className="label-width">
       <label className="custom-label">Tag</label>
     </div>
-    <div className="flex-grow-1 position-relative">
-      <select 
-        name='certificatename'
-        id='certificate_name'
+    
+
+    <div className="dropdown flex-grow-1 dropdown-container" ref={dropdownReftag}>
+    <button
+              type="button"
+              name='Tag'
+        id='Tag'
         required
-        className="form-control border border-dark border-2 input-width select-with-arrow"
-      >
-        <option value="" >Tag</option>
-        <option value="13+">U</option>
-        <option value="16+">U/A</option>
-        <option value="18+" >U</option>
-      </select>
-      <span className="dropdown-arrow"></span>
+              className="form-control border border-dark border-2 input-width"
+              onClick={toggleDropdowntag}
+            >
+              {taglist.length > 0 ? 'Selected' : 'Select Tag'}
+            </button>
+            {isOpentag && (
+              <div className="dropdown-menu show">
+                {Tag.map(option => (
+                  <div key={option.tag_id} className="dropdown-item">
+                    <input
+                      type="checkbox"
+                      value={option.tag}
+                      checked={taglist.includes(option.tag_id)}
+                      onChange={handleCheckboxChangetag(option)}
+                    />
+                    <label className="ml-2">{option.tag}</label>
+                  </div>
+                ))}
+              </div>
+            )}
     </div>
   </div>
 </div>
@@ -1832,19 +1809,34 @@ const handleDragOver = (event) => {
     <div className="label-width">
       <label className="custom-label">Category</label>
     </div>
-    <div className="flex-grow-1 position-relative">
-      <select 
-        name='certificatename'
-        id='certificate_name'
+    
+
+    <div className="dropdown flex-grow-1 dropdown-container" ref={dropdownRefcategory}>
+    <button
+              type="button"
+              name='category'
+        id='category'
         required
-        className="form-control border border-dark border-2 input-width select-with-arrow"
-      >
-        <option value="">Category</option>
-        <option value="13+">U</option>
-        <option value="16+">U/A</option>
-        <option value="18+">U</option>
-      </select>
-      <span className="dropdown-arrow"></span>
+              className="form-control border border-dark border-2 input-width"
+              onClick={toggleDropdowncategory}
+            >
+              {category.length > 0 ? 'Selected' : 'Select categories'}
+            </button>
+            {isOpencategory && (
+              <div className="dropdown-menu show">
+                {categories.map(option => (
+                  <div key={option.category_id} className="dropdown-item">
+                    <input
+                      type="checkbox"
+                      value={option.categories                     }
+                      checked={category.includes(option.category_id)}
+                      onChange={handleCheckboxChangecategory(option)}
+                    />
+                    <label className="ml-2">{option.categories}</label>
+                  </div>
+                ))}
+              </div>
+            )}
     </div>
   </div>
 </div>
@@ -1859,8 +1851,12 @@ const handleDragOver = (event) => {
   <div className="col-md-6">
     <div className="d-flex align-items-center">
       <div className="flex-grow-1 border border-dark border-2 p-3" 
-           style={{ borderRadius: '13px', height: '130px' }}>
-        {/* The div is empty, with only the border */}
+           style={{ borderRadius: '13px', height: '130px', overflowY: 'auto' }}>
+        {taglist.map(id => (
+          <div key={id}>
+            {Tag.find(option => option.tag_id === id)?.tag} {/* Display name based on ID */}
+          </div>
+        ))}
       </div>
     </div>
   </div>
@@ -1869,8 +1865,12 @@ const handleDragOver = (event) => {
   <div className="col-md-6">
     <div className="d-flex align-items-center">
       <div className="flex-grow-1 border border-dark border-2 p-3" 
-           style={{ borderRadius: '13px', height: '130px' }}>
-        {/* The div is empty, with only the border */}
+           style={{ borderRadius: '13px', height: '130px', overflowY: 'auto' }}>
+           {category.map(id => (
+             <div key={id}>
+               {categories.find(option => option.category_id === id)?.categories} {/* Display name based on ID */}
+             </div>
+           ))}
       </div>
     </div>
   </div>

@@ -40,8 +40,8 @@ import org.xml.sax.SAXException;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.License;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
-import com.VsmartEngine.MediaJungle.repository.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.repository.licenseRepository;
+import com.VsmartEngine.MediaJungle.video.AddVideoDescriptionRepository;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

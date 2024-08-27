@@ -9,17 +9,27 @@ public class FileModel {
 	
 	
 	private String videoFileName ;
+	private String videotrailerfilename;
 //	private Double duration ;
 	public String getVideoFileName() {
 		return videoFileName;
 	}
 	public void setVideoFileName(String videoFileName) {
 		this.videoFileName = videoFileName;
+		
 	}
+	
 
-	public FileModel(String videoFileName) {
+	public String getVideotrailerfilename() {
+		return videotrailerfilename;
+	}
+	public void setVideotrailerfilename(String videotrailerfilename) {
+		this.videotrailerfilename = videotrailerfilename;
+	}
+	public FileModel(String videoFileName,String videotrailerfilename) {
 		super();
 		this.videoFileName = videoFileName;
+		this.videotrailerfilename = videotrailerfilename;
 	}
 
 	public FileModel() {
