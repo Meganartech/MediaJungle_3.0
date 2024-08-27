@@ -244,6 +244,20 @@ public class FrontController {
 		return AudioController.getAllThumbnail();
 
 	}
+	
+	
+	
+	@GetMapping("/getbannerthumbnailsbyid/{id}")
+	public ResponseEntity<List<String>> getaudiobannerById(@PathVariable Long id) {
+
+		return AudioController.getaudiobannerById(id);
+	}
+	
+	@GetMapping("/getaudiothumbnailsbyid/{id}")
+	public ResponseEntity<List<String>> getaudioThumbnailsById(@PathVariable Long id) {
+
+		return AudioController.getaudioThumbnailsById(id);
+	}
 
 	@GetMapping("/GetThumbnailsById/{id}")
 	public ResponseEntity<List<String>> getAudioThumbnailsById(@PathVariable Long id) {
