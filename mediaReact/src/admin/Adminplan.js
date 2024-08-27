@@ -10,27 +10,34 @@ import Swal from 'sweetalert2';
 const Adminplan = () => {
   const [planname, setplanname] = useState('');
   const [amount, setamount] = useState('');
-  const [validity, setvalidity] = useState('');
+  const [validity, setvalidity] = useState('1');
   const [getall, setgetall] = useState();
-  const [descriptions, setdescriptions] = useState([]);
+  const [features, setfeatures] = useState([]);
   const [planid, setplanid] = useState('');
   const [plan, setplan] = useState('');
   const navigate = useNavigate();
   const token = sessionStorage.getItem("tokenn");
 
   useEffect(() => {
-    const fetchdescriptions = async () => {
+    const fetchFeatures = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/v2/GetAllDescriptions`);
-        setdescriptions(response.data);
-        console.log(response.data);
+        const response = await axios.get(`${API_URL}/api/v2/GetAllFeatures`);
+  
+        // Ensure all features have 'active' set to null initially if not provided
+        const updatedFeatures = response.data.map((feature) => ({
+          ...feature,
+          active: feature.active === undefined || feature.active === null ? null : feature.active,
+        }));
+  
+        setfeatures(updatedFeatures);
       } catch (error) {
-        console.error('Error fetching descriptions:', error);
+        console.error('Error fetching features:', error);
       }
     };
-
-    fetchdescriptions();
+  
+    fetchFeatures();
   }, []);
+  
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/getrazorpay`)
@@ -66,32 +73,44 @@ const Adminplan = () => {
   // useEffect(() => {
   //   fetchData();
   // }, []);
-  const handleSetActive = async (descriptionId, active) => {
+  const handleSetActive = async (featureId, active) => {
     try {
-      const response = await axios.post(
-        `${API_URL}/api/v2/active/${descriptionId}?active=${active}`,
+      const response = await axios.put(
+        `${API_URL}/api/v2/set-active/${featureId}?active=${active}`,
         null,
         {
           headers: {
             Authorization: token,
           },
+          params: {
+            active: active, // Pass boolean directly
+          },
         }
       );
-
-      const updateddescriptions = descriptions.map((description) => {
-        if (description.id === descriptionId) {
-          return { ...description, active: active };
-        }
-        return description;
+      
+      // Log to check API response
+      console.log("Request Data:", {
+        featureId: featureId,
+        active: active,
+        token: token,
       });
-
-      setdescriptions(updateddescriptions);
+      
+      // Update feature state locally
+      const updatedfeatures = features.map((feature) => {
+        if (feature.id === featureId) {
+          return { ...feature, active: active }; // Use boolean values
+        }
+        return feature;
+      });
+  
+      setfeatures(updatedfeatures);
     } catch (error) {
-      console.error(`Error setting description ${descriptionId} active=${active}:`, error);
+      console.error(`Error setting feature ${featureId} active=${active}:`, error);
     }
   };
+  
 
-  const handleDeletedescription = async (descId) => {
+  const handleDeletefeature = async (descId) => {
     try {
       await axios.delete(`${API_URL}/api/v2/deletedesc/${descId}`, {
         headers: {
@@ -99,29 +118,29 @@ const Adminplan = () => {
         },
       });
   
-      // Update state to remove the deleted description
-      setdescriptions((prevDescriptions) =>
-        prevDescriptions.filter((description) => description.id !== descId)
+      // Update state to remove the deleted feature
+      setfeatures((prevFeatures) =>
+        prevFeatures.filter((feature) => feature.id !== descId)
       );
   
       Swal.fire({
         icon: 'success',
         title: 'Deleted',
-        text: 'Description deleted successfully',
+        text: 'Feature deleted successfully',
       });
     } catch (error) {
-      console.error(`Error deleting plan description ${descId}:`, error);
+      console.error(`Error deleting plan feature ${descId}:`, error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Failed to delete description. Please try again later.',
+        text: 'Failed to delete feature. Please try again later.',
       });
     }
   };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!hasPaymentPlan()) {
       Swal.fire({
         title: 'Error!',
@@ -133,57 +152,80 @@ const Adminplan = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           navigate('/admin/Payment_setting');
-        } else if (result.isDismissed) {
-          console.log('Cancel was clicked');
         }
       });
       return;
     }
-
+  
     try {
+      // Prepare form data
       const formData = new FormData();
       const planData = {
         planname: planname,
         amount: amount,
         validity: validity,
       };
-
+  
       for (const key in planData) {
         formData.append(key, planData[key]);
       }
-
+  
+      console.log("Sending data:", planData);
+  
+      // Send request to save plan details
       const response = await axios.post(`${API_URL}/api/v2/PlanDetails`, formData, {
         headers: {
           Authorization: token,
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      console.log(response.data);
-      setplanid(response.data.id);
-      setplan(response.data.planname);
-
+  
+      console.log("Response data:", response.data);
+  
+      const planId = response.data.planId;
+  
+      // Prepare features data with planId and descriptionId
+      const selectedFeatures = features.filter(feature => feature.active !== null); // Only save features that are marked active/inactive
+  
+      const featuresData = selectedFeatures.map(feature => ({
+        planId: planId,
+        descriptionId: feature.id, // Assuming the feature's ID is the description ID
+        active: feature.active === 'yes' ? true : false, // Convert to boolean for saving
+      }));
+  
+      console.log("Features data:", featuresData);
+  
+      // Save features with the planId and descriptionId
+      await axios.post(`${API_URL}/api/v2/SaveFeatures`, featuresData, {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json',
+        },
+      });
+  
       Swal.fire({
         icon: 'success',
         title: 'Success',
-        text: 'Plan details uploaded successfully',
+        text: 'Plan details and features updated successfully',
       });
+  
+      // Clear the form
+      setplanname('');
+      setamount('');
+      setvalidity('1');
+  
     } catch (error) {
-      console.error('Error uploading plan details:', error);
+      console.error('Error uploading plan details:', error.response ? error.response.data : error.message);
       Swal.fire({
         icon: 'error',
         title: 'Error',
         text: 'Failed to upload plan details. Please try again later.',
       });
     }
-
-    setplanname('');
-    setamount('');
-    setvalidity('');
   };
-
+  
   const handleAddFeatures = () => {
-    navigate('/admin/PlanDescription');
+    navigate('/admin/PlanFeatures');
   };
 
   return (
@@ -212,7 +254,7 @@ const Adminplan = () => {
                 />
               </div>
               <div className="col-lg-12">
-                <label htmlFor="amount">Amount</label>
+                <label htmlFor="amount">Amount  (per Month)</label>
                 <input
                   type="number"
                   name="amount"
@@ -225,17 +267,16 @@ const Adminplan = () => {
                 <br />
               </div>
               <div className='col-lg-12'>
-                <label htmlFor="validity">Validity</label>
-                <input
-                  type="text"
-                  name="validity"
-                  id="validity"
-                  className="form-control"
-                  value={validity}
-                  onChange={(e) => setvalidity(e.target.value)}
-                  required
-                />
-              </div>
+  <input
+    type="hidden"
+    name="validity"
+    id="validity"
+    className="form-control"
+    value={validity}
+    onChange={(e) => setvalidity(e.target.value)}
+  />
+</div>
+
             </div>
             <div className="col-lg-2 d-flex align-items-center justify-content-center">
               <div style={{ height: "100%", width: "1px", backgroundColor: "skyblue" }}></div>
@@ -250,28 +291,29 @@ const Adminplan = () => {
               <div className="col-lg-6 w-100 d-flex flex-column align-items-center justify-content-center">
                 <div className="w-100 d-flex">
                   <div className="w-100">
-                    {descriptions && descriptions.length > 0 ? (
-                      descriptions.map((description, index) => (
-                        <div key={index} className="mb-2 d-flex align-items-center">
-                          <button className="flex-grow-1" style={{ textAlign: "left" }}>
-                            {description.active === 'yes' && <span>&#10003;</span>}
-                            {description.active === 'no' && <span>&#10007;</span>}
-                            {description.description}
-                          </button>
-                          <button className="btn btn-info ms-2" onClick={() => handleSetActive(description.id, 'yes')}>
-                            Active
-                          </button>
-                          <button className="btn btn-info ms-2" onClick={() => handleSetActive(description.id, 'no')}>
-                            Inactive
-                          </button>
-                          <button className="btn btn-danger ms-2 " onClick={() => handleDeletedescription(description.id)}>
-                            <i className="fa fa-trash" aria-hidden="true"></i>
-                          </button>
-                        </div>
-                      ))
-                    ) : (
-                      <div>No descriptions available</div>
-                    )}
+                  {features && features.length > 0 ? (
+  features.map((feature, index) => (
+    <div key={index} className="mb-2 d-flex align-items-center">
+      <button className="flex-grow-1" style={{ textAlign: "left" }}>
+        {/* Only show tick or cross mark after clicking Active or Inactive */}
+        {feature.active === 'yes' && <span>&#10003;</span>}
+        {feature.active === 'no' && <span>&#10007;</span>}
+        {feature.features}
+      </button>
+      <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'yes')}>
+        Active
+      </button>
+      <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'no')}>
+        Inactive
+      </button>
+      {/* <button className="btn btn-danger ms-2" onClick={() => handleDeletefeature(feature.id)}>
+        <i className="fa fa-trash" aria-hidden="true"></i>
+      </button> */}
+    </div>
+  ))
+) : (
+  <div>No features available</div>
+)}
                   </div>
                 </div>
               </div>

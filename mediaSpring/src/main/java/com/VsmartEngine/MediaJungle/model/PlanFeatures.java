@@ -44,6 +44,12 @@ public class PlanFeatures {
 			this.features = features;
 		}
 
+		public void setFeature(PlanFeatures feature) {
+			// TODO Auto-generated method stub
+			this.features = features;
+		}
+
+		
 	}
 
 

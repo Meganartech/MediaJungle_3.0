@@ -50,7 +50,6 @@ import com.VsmartEngine.MediaJungle.model.Mobilesettings;
 import com.VsmartEngine.MediaJungle.model.Othersettings;
 import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
-import com.VsmartEngine.MediaJungle.model.PlanDescription;
 import com.VsmartEngine.MediaJungle.model.PlanDetails;
 import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.model.Seosettings;
@@ -59,15 +58,18 @@ import com.VsmartEngine.MediaJungle.model.Socialsettings;
 import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.model.UserListWithStatus;
 import com.VsmartEngine.MediaJungle.model.VideoCastAndCrew;
+// import com.VsmartEngine.MediaJungle.model.VideoDescription;
 import com.VsmartEngine.MediaJungle.model.Videosettings;
 import com.VsmartEngine.MediaJungle.notification.controller.NotificationController;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
+
 import com.VsmartEngine.MediaJungle.video.VideoImage;
 import com.VsmartEngine.MediaJungle.video.VideoImageController;
 import com.VsmartEngine.MediaJungle.video.Videos;
+
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -328,14 +330,10 @@ public class FrontController {
 		
 		return FeatureController.createFeature(token, data);
 	}
-	@GetMapping("/GetAllDescriptions")
-	public ResponseEntity<List<PlanDescription>> getAlldescriptions() {
 
-		return PlanDescriptionController.getAllDescriptions();
-	}
 
 	@GetMapping("/GetAllFeatures")
-	public ResponseEntity<List<PlanFeatures>> getAllFeatures() {
+	public ResponseEntity<List<PlanFeatures>> getAllFeature() {
 
 		return FeatureController.getAllFeatures();
 	}
@@ -645,14 +643,20 @@ public class FrontController {
 		return PlanDescriptionController.addPlanDescription(description, token);
 	}
 
-	@PostMapping("/active/{id}")
-	public ResponseEntity<?> addActiveStatus(
-	        @PathVariable Long id,
-	        @RequestParam("active") String active,
-	        @RequestHeader("Authorization") String token
-	) {
-		return PlanDescriptionController.addActiveStatus(id, active, token);
+	@PostMapping("/AddPlanFeature")
+	public ResponseEntity<?> addPlanFeature(@RequestParam("feature") String feature,
+	        @RequestHeader("Authorization") String token) {
+		return FeatureController.addPlanFeature(feature, token);
 	}
+
+//	@PostMapping("/active/{id}")
+//	public ResponseEntity<?> addActiveStatus(
+//	        @PathVariable Long id,
+//	        @RequestParam("active") String active,
+//	        @RequestHeader("Authorization") String token
+//	) {
+//		return PlanDescriptionController.addActiveStatus(id, active, token);
+//	}
 	
 	@DeleteMapping("/deletedesc/{id}")
 	public ResponseEntity<?> deletedescription(@PathVariable Long id, @RequestHeader("Authorization") String token) {
@@ -923,8 +927,7 @@ public class FrontController {
 //		public ResponseEntity<String> updateById() throws IOException {
 //			
 //			return VideoController.updateById();
-//		}
-		
+//		}		
 //		 @GetMapping(value = "/videogetall")
 //		    public ResponseEntity<List<VideoDescription>> videogetall() {
 //			 
@@ -957,4 +960,5 @@ public class FrontController {
 //			 
 //			 return VideoController.getAllThumbnaill();
 //		 }
+
 }

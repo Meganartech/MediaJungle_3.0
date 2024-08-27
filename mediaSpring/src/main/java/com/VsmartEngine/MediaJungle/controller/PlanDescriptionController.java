@@ -71,6 +71,8 @@ public class PlanDescriptionController {
 	}
 	public ResponseEntity<List<PlanDescription>> getAllDescriptions() {
 	    List<PlanDescription> descriptions = plandescriptionrepository.findAll();
+	    System.out.println("descri____ptions");
+	    System.out.println(descriptions);
 	    return new ResponseEntity<>(descriptions, HttpStatus.OK);
 	}
 
