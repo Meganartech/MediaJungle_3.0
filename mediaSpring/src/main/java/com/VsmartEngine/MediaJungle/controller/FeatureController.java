@@ -12,23 +12,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.model.AddUser;
+import com.VsmartEngine.MediaJungle.model.PlanFeatureMerge;
+import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
-import com.VsmartEngine.MediaJungle.repository.PlanFeaturesRepository;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
+import com.VsmartEngine.MediaJungle.repository.PlanFeatureMergeRepository;
+import com.VsmartEngine.MediaJungle.repository.PlanFeaturesRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 
 
 @Controller
 public class FeatureController {
-	
+
 	@Autowired
 	private PlanFeaturesRepository planfeaturesrepository;
 	
+	@Autowired
+	private PlanFeatureMergeRepository planfeaturemergerepository;
 	@Autowired
     private NotificationService notificationservice;
 	
@@ -39,6 +46,41 @@ public class FeatureController {
 	private AddUserRepository adduserrepository;
 	
 
+	public ResponseEntity<?> addPlanFeature(@RequestParam("feature") String feature,
+	        @RequestHeader("Authorization") String token) {
+	    try {
+	        // Validate JWT token
+	        if (!jwtUtil.validateToken(token)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+	        }
+
+	        // Extract email from token
+	        String email = jwtUtil.getUsernameFromToken(token);
+	        System.out.println("email: " + email);
+
+	        // Fetch user details from repository
+	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+	        if (!opUser.isPresent()) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        }
+
+	        AddUser user = opUser.get();
+	        String username = user.getUsername();
+
+	        // Create a new PlanDescription object
+	        PlanFeatures features = new PlanFeatures();
+	        features.setFeature(features);
+
+	        // Save the PlanDescription in the repository
+	        PlanFeatures savedPlanFeature = planfeaturesrepository.save(features);
+
+	        // Optionally, you can create a notification or perform other actions here
+	        
+	        return ResponseEntity.ok(savedPlanFeature);
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding plan description.");
+	    }
+	}
 	
 
 	public ResponseEntity<String> createFeature(@RequestHeader("Authorization") String token, @RequestBody PlanFeatures data) {
