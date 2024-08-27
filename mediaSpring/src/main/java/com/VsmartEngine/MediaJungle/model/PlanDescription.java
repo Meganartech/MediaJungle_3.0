@@ -10,6 +10,14 @@ import jakarta.persistence.Table;
 @Table
 public class PlanDescription {
 	
+	@Override
+	public String toString() {
+		return "PlanDescription [id=" + id + ", description=" + description + ", planId=" + planId + ", active="
+				+ active + "]";
+	}
+
+
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
