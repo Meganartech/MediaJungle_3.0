@@ -894,8 +894,7 @@ public class FrontController {
 //		public ResponseEntity<String> updateById() throws IOException {
 //			
 //			return VideoController.updateById();
-//		}
-		
+//		}		
 //		 @GetMapping(value = "/videogetall")
 //		    public ResponseEntity<List<VideoDescription>> videogetall() {
 //			 
@@ -932,8 +931,5 @@ public class FrontController {
 //			 
 //			 return VideoController.getAllThumbnaill();
 //		 }
-		
-		
 
-		 
 }
