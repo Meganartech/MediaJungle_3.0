@@ -58,18 +58,12 @@ import com.VsmartEngine.MediaJungle.model.Socialsettings;
 import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.model.UserListWithStatus;
 import com.VsmartEngine.MediaJungle.model.VideoCastAndCrew;
-// import com.VsmartEngine.MediaJungle.model.VideoDescription;
 import com.VsmartEngine.MediaJungle.model.Videosettings;
 import com.VsmartEngine.MediaJungle.notification.controller.NotificationController;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
-
-import com.VsmartEngine.MediaJungle.video.VideoImage;
-import com.VsmartEngine.MediaJungle.video.VideoImageController;
-import com.VsmartEngine.MediaJungle.video.Videos;
-
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -133,9 +127,6 @@ public class FrontController {
 
 	@Autowired
 	private VideoController VideoController;
-	
-	@Autowired
-	private VideoImageController videoImageController;
 	
 	@PostMapping("/AdminRegister")
 	public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
@@ -649,14 +640,14 @@ public class FrontController {
 		return FeatureController.addPlanFeature(feature, token);
 	}
 
-//	@PostMapping("/active/{id}")
-//	public ResponseEntity<?> addActiveStatus(
-//	        @PathVariable Long id,
-//	        @RequestParam("active") String active,
-//	        @RequestHeader("Authorization") String token
-//	) {
-//		return PlanDescriptionController.addActiveStatus(id, active, token);
-//	}
+	@PostMapping("/active/{id}")
+	public ResponseEntity<?> addActiveStatus(
+	        @PathVariable Long id,
+	        @RequestParam("active") String active,
+	        @RequestHeader("Authorization") String token
+	) {
+		return PlanDescriptionController.addActiveStatus(id, active, token);
+	}
 	
 	@DeleteMapping("/deletedesc/{id}")
 	public ResponseEntity<?> deletedescription(@PathVariable Long id, @RequestHeader("Authorization") String token) {
@@ -841,57 +832,7 @@ public class FrontController {
 			return NotificationController.ClearAlluser(token);
 		}
 		
-		@PostMapping("/uploaddescription")
-	    public ResponseEntity<VideoDescription> uploadVideoDescription(
-	    		  	@RequestParam("videoTitle") String videoTitle,
-				@RequestParam("mainVideoDuration") String mainVideoDuration,
-				@RequestParam("trailerDuration") String trailerDuration,
-				@RequestParam("rating") String rating,
-				@RequestParam("certificateNumber") String certificateNumber,
-				@RequestParam("videoAccessType") boolean videoAccessType,
-				@RequestParam("description") String description,
-				@RequestParam("productionCompany") String productionCompany,
-				@RequestParam("certificateName") String certificateName,
-				@RequestParam("castandcrewlist") List<Long> castandcrewlist,
-				@RequestParam("taglist") List<Long> taglist,
-				@RequestParam("categorylist") List<Long> categorylist,
-				@RequestParam("videoThumbnail") MultipartFile videoThumbnail,
-				@RequestParam("trailerThumbnail") MultipartFile trailerThumbnail,
-				@RequestParam("userBanner") MultipartFile userBanner,
-				@RequestParam("video") MultipartFile video,
-		        @RequestParam("trailervideo") MultipartFile trailervideo,
-	              @RequestHeader("Authorization") String token){
-			
-			return VideoController.uploadVideoDescription(videoTitle, mainVideoDuration, trailerDuration, rating, certificateNumber, videoAccessType,
-                    description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
-                    videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,token);
-
-		}
-		
-		@GetMapping("/video/getall")
-		public ResponseEntity<List<VideoDescription>> getAllVideo() {
-			return VideoController.getAllVideo();
-		}
-		
-		 @GetMapping("/GetvideoDetail/{id}")
-		 public ResponseEntity<VideoDescription> getVideoDetailById(@PathVariable Long id) {			 
-			 return VideoController.getVideoDetailById(id);
-		 }
-		 
-		@GetMapping("/videoimage/{id}")
-		@Transactional
-			public ResponseEntity<VideoImage> getThumbnailByVideoId(@PathVariable Long id) {
-				return videoImageController.getThumbnailByVideoId(id);
-		}
-			
-		
-//		@GetMapping("/videoimage/{id}")
-//		public ResponseEntity<VideoImage> getVideoImageById(@PathVariable Long id) {
-//			return videoImageController.getVideoImageById(id);
-//		}
-		
 //		
-
 //		@PostMapping("/updatedescriprion")
 //		public ResponseEntity<VideoDescription> updatedescription(
 //		        @RequestParam("Movie_name") String moviename,
@@ -920,14 +861,14 @@ public class FrontController {
 //		 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
 //			
 //			return VideoController.getVideo(id, request);
-//
 //		}
 //		
 //		@GetMapping(value = "/updatevideo")
 //		public ResponseEntity<String> updateById() throws IOException {
 //			
 //			return VideoController.updateById();
-//		}		
+//		}
+//		
 //		 @GetMapping(value = "/videogetall")
 //		    public ResponseEntity<List<VideoDescription>> videogetall() {
 //			 
@@ -940,14 +881,18 @@ public class FrontController {
 //			 return VideoController.getAllThumbnail();
 //			 
 //		 }
-		 
+//		 
 //		 @DeleteMapping("/video/{id}")
 //		 public ResponseEntity<?> deleteVideoById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
 //			 
 //			 return VideoController.deleteVideoById(id, token);
 //		 }
 //		 
-//		
+//		 @GetMapping("/GetvideoDetail/{id}")
+//		    public ResponseEntity<VideoDescription> getAudioDetails(@PathVariable Long id) {
+//			 
+//			 return VideoController.getAudioDetail(id);
+//		 }
 //		 
 //		 @GetMapping("/GetThumbnailsByid/{id}")
 //		    public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
@@ -960,5 +905,4 @@ public class FrontController {
 //			 
 //			 return VideoController.getAllThumbnaill();
 //		 }
-
 }
