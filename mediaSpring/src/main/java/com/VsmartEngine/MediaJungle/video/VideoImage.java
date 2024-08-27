@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,13 +16,18 @@ public class VideoImage {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-	@Column(name="videoId") 
+	@Column(name="videoId",unique = true) 
 	private long videoId;
 	
+	@Lob
 	@Column(name="videoThumbnail" ,length=1000000)
 	private byte[] videoThumbnail;
+	
+	@Lob
 	@Column(name="trailerThumbnail" ,length=1000000)
 	private byte[] trailerThumbnail;
+	
+	@Lob
 	@Column(name="userBanner" ,length=1000000)
 	private byte[] userBanner;
 	public VideoImage() {

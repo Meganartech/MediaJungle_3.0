@@ -154,9 +154,12 @@ public class VideoController {
 	            // Create and save VideoImage
 	            VideoImage videoImage = new VideoImage();
 	            videoImage.setVideoId(videoId);
-	            videoImage.setVideoThumbnail(videoThumbnail.getBytes());
-	            videoImage.setTrailerThumbnail(trailerThumbnail.getBytes());
-	            videoImage.setUserBanner(userBanner.getBytes());
+	            byte[] videothumbnailBytes = ImageUtils.compressImage(videoThumbnail.getBytes());
+	            videoImage.setVideoThumbnail(videothumbnailBytes);
+	            byte[] trailerthumbnailBytes = ImageUtils.compressImage(trailerThumbnail.getBytes());
+	            videoImage.setTrailerThumbnail(trailerthumbnailBytes);
+	            byte[] userbannerBytes = ImageUtils.compressImage(userBanner.getBytes());
+	            videoImage.setUserBanner(userbannerBytes);
 
 	            // Save the VideoImage entity
 	            videoimagerepository.save(videoImage);
@@ -171,11 +174,29 @@ public class VideoController {
 	    }
 	}
 	
-	@GetMapping("/video/getall")
+
 	public ResponseEntity<List<VideoDescription>> getAllVideo() {
 	    List<VideoDescription> getUser = videodescription.findAll();
 	    return new ResponseEntity<>(getUser, HttpStatus.OK);
 	}
+	
+
+	 public ResponseEntity<VideoDescription> getVideoDetailById(@PathVariable Long id) {
+	        try {
+	            Optional<VideoDescription> videoDetail = videodescriptionRepository.findById(id);
+	            if (videoDetail.isPresent()) {
+	            	System.out.println(videoDetail.get());
+	                return new ResponseEntity<>(videoDetail.get(), HttpStatus.OK);
+	            } else {
+	                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	            }
+	        } catch (Exception e) {
+	            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	        }
+	    }
+	
+	
+	
 	
 //    public ResponseEntity<VideoDescription> uploadVideoDescription(
 //            @RequestParam("moviename") String moviename,
@@ -466,7 +487,7 @@ public class VideoController {
 //			}
 //			
 //
-//			    public ResponseEntity<List<VideoDescription>> videogetall() {
+////			    public ResponseEntity<List<VideoDescription>> videogetall() {
 //			        try {
 //			            List<VideoDescription> videoDetails = videodescriptionRepository.findAll();
 //			            System.out.println("All video passed");

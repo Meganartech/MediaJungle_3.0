@@ -406,6 +406,25 @@ const Dashboard = () => {
     });
    },[]);
 
+  // const [videothumbnail,setvideothumbnail] = useState(null);
+
+  //  useEffect(() => {
+  //   fetch(`${API_URL}/api/v2/videoimage/{id}`)
+  //   .then(response =>{
+  //     if (!response.ok){
+  //       throw new Error('Network response was not ok');
+  //     }
+  //     return response.json();
+  //   })
+  //   .then(data =>{
+  //     setvideothumbnail(data);
+  //     console.log("videothumbnail",data)
+  //   })
+  //   .catch(error =>{
+  //     console.error('Error fetching data:',error)
+  //   });
+  //  },[]);
+
 
   return (
     // <div className="container-fluid">
