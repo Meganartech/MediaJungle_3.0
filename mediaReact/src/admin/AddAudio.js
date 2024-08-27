@@ -956,7 +956,7 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
 
       </div>
 
-      <div className="row py-1 my-1 w-100">
+      {/* <div className="row py-1 my-1 w-100">
               <div className="col-md-8 ms-auto text-end">
                 <button
                   className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
@@ -964,7 +964,7 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
                 >
                   Cancel
                 </button>
-                {/* <Link to="/admin/AddVideo1"> */}
+         
                 <button
                   className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
                   type="submit"
@@ -973,9 +973,9 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
                 >
                   Next
                 </button>
-                {/* </Link> */}
+       
               </div>
-            </div>
+            </div> */}
             </>
           )}
 
@@ -1141,29 +1141,7 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
 
  
 
-    <div className="row py-1 my-1 w-100">
-              <div className="col-md-8 ms-auto text-end">
-                {/* <Link to="/admin/AddVideo"> */}
-                <button
-                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
-                  type="button"
-                  onClick={prevStep}
-                >
-                  Back
-                </button>
-                {/* </Link> */}
-                {/* <Link to="/admin/AddVideo2"> */}
-                <button
-                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
-                  type="submit"
-                  style={{ backgroundColor: 'blue' }}
-                  onClick={nextStep}
-                >
-                  Next
-                </button>
-                {/* </Link> */}
-              </div>
-            </div>
+
 
             </>
           )}
@@ -1426,9 +1404,9 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
         </div>
 
 
-        <div className="row py-1 my-1 w-100">
+  {/* <div className="row py-1 my-1 w-100">
               <div className="col-md-8 ms-auto text-end">
-                {/* <Link to="/admin/AddVideo"> */}
+            
                 <button
                   className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                   type="button"
@@ -1436,8 +1414,7 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
                 >
                   Back
                 </button>
-                {/* </Link> */}
-                {/* <Link to="/admin/AddVideo2"> */}
+       
                 <button
                   className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
                   type="submit"
@@ -1447,9 +1424,9 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
                 >
                   Submit
                 </button>
-                {/* </Link> */}
+          
               </div>
-            </div>
+            </div>       */}
 
         
    
@@ -1458,6 +1435,28 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
 
 
     </div>
+    <div className="row py-1 my-1 w-100">
+              <div className="col-md-8 ms-auto text-end">
+              
+                <button
+                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  type="button"
+                  onClick={prevStep}
+                >
+                  Back
+                </button>
+               
+                <button
+                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  type="submit"
+                  style={{ backgroundColor: 'blue' }}
+                  onClick={nextStep}
+                >
+                  Next
+                </button>
+               
+              </div>
+            </div>
   </div>
 </div>
 

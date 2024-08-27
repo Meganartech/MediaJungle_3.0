@@ -244,7 +244,14 @@ public class FrontController {
 	
 	
 	
+
 	
+	@GetMapping("/getaudiothumbnailsbyid/{id}")
+	public ResponseEntity<List<String>> getaudioThumbnailsById(@PathVariable Long id) {
+
+		return AudioController.getaudioThumbnailsById(id);
+	}
+
 
 	@GetMapping("/GetThumbnailsById/{id}")
 	public ResponseEntity<List<String>> getAudioThumbnailsById(@PathVariable Long id) {

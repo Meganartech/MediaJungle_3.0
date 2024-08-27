@@ -47,6 +47,16 @@ public class test {
     @Autowired
     private AudioFileService fileService;
 	
+    
+//   public static void main(String [] args) {
+//    test sam= new test();
+//	   System.out.println("Audio Title: ");
+//	   sam.test();
+//	   System.out.println("Audio Title: ");
+//	   
+//	  
+//	   
+//   }
 	
 	@PostMapping("/test")
 	public ResponseEntity<?> testaudio(
@@ -89,7 +99,7 @@ public class test {
 	}
 	
 	 @GetMapping("/getaudio")
-	    public ResponseEntity<List<Audiodescription>> getaudio() {
+	    public ResponseEntity<List<Audiodescription>> test() {
 	        // Fetch all audio descriptions from the database
 	        List<Audiodescription> audioList = audio.findAll();
 
@@ -100,26 +110,49 @@ public class test {
 	        return ResponseEntity.ok(audioList);
 	    }
 	 
-//	 @GetMapping("/getaudiodto")
-//	 public ResponseEntity<List<AudiodescriptionDTO>> getAudio() {
-//	     // Fetch all audio descriptions from the database
-//	     List<Audiodescription> audioList = audio.findAll();
-////	     List<Audioimages>audioImage=audioI.findAll();
-//
-//	     // Map to DTOs
-//	     List<AudiodescriptionDTO> dtoList = audioList.stream()
-//	    	        .map(a -> new AudiodescriptionDTO(a.getId(), a.getAudio_title()) )
-//	    	        .collect(Collectors.toList());
-//
-//	    	    // Print the list to the console (for debugging purposes)
-//	    	    dtoList.forEach(System.out::println);
-////		        System.out.println("Audio Title: "+audioImage);
-//
-//	    	    
-////	    	    audioImage.forEach(System.out::println);
-//	     // Return the list in the response body
-//	     return ResponseEntity.ok(dtoList);
-//	 }
+	 @GetMapping("/getaudiohomedto")
+	 public ResponseEntity<List<AudiodescriptionDTO>> getAudiohomedto() {
+	     // Fetch all audio descriptions from the database
+	     List<Audiodescription> audioList = audio.findAll();
+//	     List<Audioimages>audioImage=audioI.findAll();
+
+	     // Map to DTOs
+	     List<AudiodescriptionDTO> dtoList = audioList.stream()
+	    	        .map(a -> new AudiodescriptionDTO(a.getId(), a.getAudio_title()) )
+	    	        .collect(Collectors.toList());
+
+	    	    // Print the list to the console (for debugging purposes)
+	    	    dtoList.forEach(System.out::println);
+//		        System.out.println("Audio Title: "+audioImage);
+
+	    	    
+//	    	    audioImage.forEach(System.out::println);
+	     // Return the list in the response body
+	     return ResponseEntity.ok(dtoList);
+	 }
+	 
+	 @GetMapping("/getaudiodetailsdto")
+	 public ResponseEntity<List<AudiodescriptionDTO>> getAudio() {
+	     // Fetch all audio descriptions from the database
+	     List<Audiodescription> audioList = audio.findAll();
+//	     List<Audioimages>audioImage=audioI.findAll();
+
+	     // Map to DTOs
+	     List<AudiodescriptionDTO> dtoList = audioList.stream()
+	    	        .map(a -> new AudiodescriptionDTO(a.getId(), a.getAudio_title()) )
+	    	        .collect(Collectors.toList());
+
+	    	    // Print the list to the console (for debugging purposes)
+	    	    dtoList.forEach(System.out::println);
+//		        System.out.println("Audio Title: "+audioImage);
+
+	    	    
+//	    	    audioImage.forEach(System.out::println);
+	     // Return the list in the response body
+	     return ResponseEntity.ok(dtoList);
+	 }
+	 
+	 
 
 	
 }

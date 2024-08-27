@@ -9,6 +9,7 @@ public class MediaSpringApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MediaSpringApplication.class, args);
+		
 	}
 	
 }

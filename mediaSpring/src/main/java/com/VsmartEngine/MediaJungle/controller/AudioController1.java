@@ -34,10 +34,13 @@ import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.fileservice.AudioFileService;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.Addaudio1;
+import com.VsmartEngine.MediaJungle.model.Audioimages;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 import com.VsmartEngine.MediaJungle.repository.AddAudioRepository;
+import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
 import com.VsmartEngine.MediaJungle.repository.AddNewCategoriesRepository;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
+import com.VsmartEngine.MediaJungle.repository.Audioimage;
 import com.VsmartEngine.MediaJungle.service.AudioService;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
@@ -47,7 +50,13 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class AudioController1 {
+	
+	@Autowired
+	private AddAudiodescription audio ;
 
+	@Autowired
+	private Audioimage audioI;
+	
 	@Autowired
 	private  AudioService audioservice;
 	
@@ -416,6 +425,64 @@ public class AudioController1 {
             e.printStackTrace(); // Log the exception for debugging
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+    
+//    -------------------------------------NEW AUDIO TUMBNAIL API--------------------------------------------------
+    
+    public ResponseEntity<List<String>> getaudioThumbnailsById(@PathVariable Long id) {
+        try {
+        	
+        	 Optional<Audioimages> audioTumbnail = audioI.findById(id);
+//            Optional<Addaudio1> audioOptional = audiorepository.findById(id);
+
+            if (audioTumbnail.isPresent()) {
+            	Audioimages audioImage = audioTumbnail.get();  
+
+                // Assuming decompressImage returns the raw thumbnail data
+                byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getAudio_thumbnail());
+
+                // Convert the byte array to Base64
+                String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);
+
+                // Return a list with a single Base64-encoded thumbnail
+                return ResponseEntity.ok(Collections.singletonList(base64Thumbnail));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+
+//  -------------------------------------NEW AUDIO Banner API--------------------------------------------------
+  
+
+    public ResponseEntity<List<String>> getaudiobannerById(@PathVariable Long id) {
+    	  try {
+          	
+         	 Optional<Audioimages> audioTumbnail = audioI.findById(id);
+//             Optional<Addaudio1> audioOptional = audiorepository.findById(id);
+
+             if (audioTumbnail.isPresent()) {
+             	Audioimages audioImage = audioTumbnail.get();  
+
+                 // Assuming decompressImage returns the raw thumbnail data
+                 byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getBannerthumbnail());
+
+                 // Convert the byte array to Base64
+                 String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);
+
+                 // Return a list with a single Base64-encoded thumbnail
+                 return ResponseEntity.ok(Collections.singletonList(base64Thumbnail));
+             } else {
+                 return ResponseEntity.notFound().build();
+             }
+         } catch (Exception e) {
+             e.printStackTrace(); // Log the exception for debugging
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+         }
     }
 
 
