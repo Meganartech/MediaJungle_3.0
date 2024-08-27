@@ -50,6 +50,7 @@ import com.VsmartEngine.MediaJungle.model.Mobilesettings;
 import com.VsmartEngine.MediaJungle.model.Othersettings;
 import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
+import com.VsmartEngine.MediaJungle.model.PlanDescription;
 import com.VsmartEngine.MediaJungle.model.PlanDetails;
 import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.model.Seosettings;
@@ -327,7 +328,11 @@ public class FrontController {
 		
 		return FeatureController.createFeature(token, data);
 	}
+	@GetMapping("/GetAllDescriptions")
+	public ResponseEntity<List<PlanDescription>> getAlldescriptions() {
 
+		return PlanDescriptionController.getAllDescriptions();
+	}
 
 	@GetMapping("/GetAllFeatures")
 	public ResponseEntity<List<PlanFeatures>> getAllFeatures() {
@@ -636,9 +641,8 @@ public class FrontController {
 
 	@PostMapping("/AddPlanDescription")
 	public ResponseEntity<?> addPlanDescription(@RequestParam("description") String description,
-	        @RequestParam("planId") Long planId,
 	        @RequestHeader("Authorization") String token) {
-		return PlanDescriptionController.addPlanDescription(description, planId, token);
+		return PlanDescriptionController.addPlanDescription(description, token);
 	}
 
 	@PostMapping("/active/{id}")
@@ -835,7 +839,7 @@ public class FrontController {
 		
 		@PostMapping("/uploaddescription")
 	    public ResponseEntity<VideoDescription> uploadVideoDescription(
-	    		@RequestParam("videoTitle") String videoTitle,
+	    		  	@RequestParam("videoTitle") String videoTitle,
 				@RequestParam("mainVideoDuration") String mainVideoDuration,
 				@RequestParam("trailerDuration") String trailerDuration,
 				@RequestParam("rating") String rating,
@@ -857,6 +861,7 @@ public class FrontController {
 			return VideoController.uploadVideoDescription(videoTitle, mainVideoDuration, trailerDuration, rating, certificateNumber, videoAccessType,
                     description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
                     videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,token);
+
 		}
 		
 		@GetMapping("/video/getall")
@@ -882,6 +887,7 @@ public class FrontController {
 //		}
 		
 //		
+
 //		@PostMapping("/updatedescriprion")
 //		public ResponseEntity<VideoDescription> updatedescription(
 //		        @RequestParam("Movie_name") String moviename,
@@ -910,6 +916,7 @@ public class FrontController {
 //		 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
 //			
 //			return VideoController.getVideo(id, request);
+//
 //		}
 //		
 //		@GetMapping(value = "/updatevideo")
@@ -917,7 +924,7 @@ public class FrontController {
 //			
 //			return VideoController.updateById();
 //		}
-//		
+		
 //		 @GetMapping(value = "/videogetall")
 //		    public ResponseEntity<List<VideoDescription>> videogetall() {
 //			 
@@ -930,7 +937,7 @@ public class FrontController {
 //			 return VideoController.getAllThumbnail();
 //			 
 //		 }
-//		 
+		 
 //		 @DeleteMapping("/video/{id}")
 //		 public ResponseEntity<?> deleteVideoById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
 //			 

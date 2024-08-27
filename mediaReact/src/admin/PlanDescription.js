@@ -32,26 +32,37 @@ const PlanDescription = () => {
       const formData = new FormData();
       const planDescription = {
         description: description,
-        planId: planid,
       };
       
       for (const key in planDescription) {
         formData.append(key, planDescription[key]);
       }
-      
+  
       const response = await axios.post(`${API_URL}/api/v2/AddPlanDescription`, formData, {
         headers: {
-          Authorization: token,
+          Authorization: token, // Ensure the token is correctly formatted
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
       setDescription(''); // Clear input after successful submission
       fetchData(); // Refresh data after adding description
+  
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Feature added successfully',
+      });
     } catch (error) {
-      console.error('Error uploading plan description:', error);
+      console.error('Error uploading plan description:', error.response || error.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response ? error.response.data.message : 'Failed to add feature. Please try again later.',
+      });
     }
   };
+  
 
   const handleSetActive = async (descId, active) => {
     try {
@@ -97,23 +108,21 @@ const PlanDescription = () => {
   return (
 
     <div className='container2 mt-20'>
-
         <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item">
             <Link to="/admin/PlanDetailsList">Plans</Link>
           </li>
           <li className="breadcrumb-item active  text-white">{getall ? `${getall.planname}'s Description` : 'Loading...'}</li>
         </ol>
-
         <div className="row">
           {/* Left side with the form */}
-          <div className="col-lg-6">
+          <div className="col-lg-12">
             <div className="card-body">
               <form className="form-container" onSubmit={handleSubmit}>
                 <div className="modal-body">
                   <div className="temp">
                     <div className="col-lg-12">
-                      <label htmlFor="planname">Plan Description</label>
+                      <label htmlFor="planname">Add Plan Features</label>
                       <input
                         type="text"
                         name="planname"
@@ -137,28 +146,29 @@ const PlanDescription = () => {
             </div>
           </div>
 
-          {/* Separator line */}
+          {/* Separator line
           <div className="col-lg-1 d-flex align-items-center justify-content-center">
             <div style={{ height: "100%", width: "1px", backgroundColor: "skyblue" }}></div>
-          </div>
+          </div> */}
 
           {/* Right side with descriptions */}
-          <div className="col-lg-5 d-flex flex-column align-items-center justify-content-center">
-            {getall && getall.descriptions && getall.descriptions.length > 0 ? (
+          {/* <div className="col-lg-5 d-flex flex-column align-items-center justify-content-center">
+           {getall && getall.descriptions && getall.descriptions.length > 0 ? (
               getall.descriptions.map((desc, index) => (
                 <div key={index} className="w-100 mb-2 d-flex align-items-center">
-                  <button style={{ width: "500px" }}>
+               <button style={{ width: "500px" }}>
+          {index+1}
                     {desc.active === 'yes' && <span>&#10003;</span>} {/* Checkmark displayed if active is 'yes' */}
-                    {desc.active === 'no' && <span>&#10007;</span>} {/* Wrong mark displayed if active is 'no' */}
-                    {desc.description}
-                  </button>
-                  <button className="btn btn-info" style={{ margin: "3px 0 0 0" }} onClick={() => handleSetActive(desc.id, 'yes')}>
+                    {/* {desc.active === 'no' && <span>&#10007;</span>} {/* Wrong mark displayed if active is 'no' */}
+                    {/* {desc.description} */}
+                   {/* </button>   */}
+                  {/* <button className="btn btn-info" style={{ margin: "3px 0 0 0" }} onClick={() => handleSetActive(desc.id, 'yes')}>
                     Active
-                  </button>
-                  <button className="btn btn-info" style={{ margin: "3px 0 0 3px" }} onClick={() => handleSetActive(desc.id, 'no')}>
+                  </button> */}
+                  {/* <button className="btn btn-info" style={{ margin: "3px 0 0 3px" }} onClick={() => handleSetActive(desc.id, 'no')}>
                     Inactive
-                  </button>
-                  <button  style={{ margin: "3px 0 0 3px" }} onClick={() => handleDeleteDescription(desc.id)}>
+                  </button> */}
+                  {/* <button  style={{ margin: "3px 0 0 3px" }} onClick={() => handleDeleteDescription(desc.id)}>
                   <i className="fa fa-trash" aria-hidden="true"></i>
                   </button>
 
@@ -167,7 +177,7 @@ const PlanDescription = () => {
             ) : (
               <div>No descriptions available</div>
             )}
-          </div>
+          </div> */} 
         </div>
       </div>
    

@@ -7,15 +7,15 @@ import Swal from 'sweetalert2';
 const PlanFeature = () => {
   //.......................................Admin functiuons.....................................
   
-  const [features, setFeatures] = useState([]);
+  const [descriptions, setDescriptions] = useState([]);
   const navigate = useNavigate();
   const token = sessionStorage.getItem('tokenn')
 
 
 
   useEffect(() => {
-    // fetch feature data from the backend
-    fetch(`${API_URL}/api/v2/GetAllFeatures`)
+    // fetch description data from the backend
+    fetch(`${API_URL}/api/v2/GetAllDescriptions`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -23,7 +23,7 @@ const PlanFeature = () => {
         return response.json();
       })
       .then(data => {
-        setFeatures(data);
+        setDescriptions(data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -35,7 +35,7 @@ const PlanFeature = () => {
 
   
 
-const handleDeleteFeature = (featureId) => {
+const handleDeletedescription = (descriptionId) => {
   Swal.fire({
     title: 'Are you sure?',
     text: "You won't be able to revert this!",
@@ -47,7 +47,7 @@ const handleDeleteFeature = (featureId) => {
     cancelButtonText: 'No, keep it'
   }).then((result) => {
     if (result.isConfirmed) {
-      fetch(`${API_URL}/api/v2/DeleteFeature/${featureId}`, {
+      fetch(`${API_URL}/api/v2/deletedesc/${descriptionId}`, {
         method: 'DELETE',
         headers: {
           Authorization: token,
@@ -66,8 +66,8 @@ const handleDeleteFeature = (featureId) => {
         } else {
           console.log('Feature deleted successfully (no content)');
         }
-        // Remove the deleted feature from the local state
-        setFeatures(prevFeatures => prevFeatures.filter(feature => feature.id !== featureId));
+        // Remove the deleted description from the local state
+        setDescriptions(prevdescriptions => prevdescriptions.filter(description => description.id !== descriptionId));
         Swal.fire(
           'Deleted!',
           'Your feature has been deleted.',
@@ -86,9 +86,9 @@ const handleDeleteFeature = (featureId) => {
   });
 };
 
-  const handlEdit = async (featureId) => {
-    localStorage.setItem('items', featureId);
-    navigate('/admin/EditFeature');
+  const handlEdit = async (descriptionId) => {
+    localStorage.setItem('items', descriptionId);
+    navigate('/admin/Editdescription');
   };
   
 
@@ -97,7 +97,7 @@ const handleDeleteFeature = (featureId) => {
 
     <div className="marquee-container">
     <div className='AddArea'>
-      <button className='btn btn-custom' onClick={() => handleClick("/admin/AddFeature")}>Add Features</button>
+      <button className='btn btn-custom' onClick={() => handleClick("/admin/PlanDescription")}>Add Feature</button>
     </div><br/>
     
     <div className='container3'>
@@ -124,19 +124,19 @@ const handleDeleteFeature = (featureId) => {
             </tr>
           </thead>
           <tbody>
-            {features.map((feature, index) => (
-              <tr key={feature.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+            {descriptions.map((description, index) => (
+              <tr key={description.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
                 <td>
                   <input type="checkbox" />
                 </td>
                 <td>{index + 1}</td>
-                <td>{feature.features ? feature.features : 'No feature available'}</td>
+                <td>{description.description ? description.description : 'No feature available'}</td>
                 <td>
-                  <button onClick={() => handlEdit(feature.id)} className="btn btn-primary me-2">
+                  <button onClick={() => handlEdit(description.id)} className="btn btn-primary me-2">
                     <i className="fas fa-edit" aria-hidden="true"></i> Edit
                   </button>
                   
-                  <button onClick={() => handleDeleteFeature(feature.id)} className="btn btn-danger">
+                  <button onClick={() => handleDeletedescription(description.id)} className="btn btn-danger">
                     <i className="fa fa-trash" aria-hidden="true"></i> Delete
                   </button>
                 </td>
