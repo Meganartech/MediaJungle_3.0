@@ -276,7 +276,6 @@ const App = () => {
             </Route> 
            </Route>
           <Route path='licence' element={<Licence/>} />
-          <Route path=' ' element= {<AddAudio/>} />
         </Routes>
       {/* </Router> */}
     </div>
