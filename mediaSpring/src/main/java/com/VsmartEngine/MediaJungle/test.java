@@ -48,15 +48,7 @@ public class test {
     private AudioFileService fileService;
 	
     
-//   public static void main(String [] args) {
-//    test sam= new test();
-//	   System.out.println("Audio Title: ");
-//	   sam.test();
-//	   System.out.println("Audio Title: ");
-//	   
-//	  
-//	   
-//   }
+  
 	
 	@PostMapping("/test")
 	public ResponseEntity<?> testaudio(
