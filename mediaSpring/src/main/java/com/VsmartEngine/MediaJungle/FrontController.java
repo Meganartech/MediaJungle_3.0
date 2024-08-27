@@ -50,7 +50,6 @@ import com.VsmartEngine.MediaJungle.model.Mobilesettings;
 import com.VsmartEngine.MediaJungle.model.Othersettings;
 import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
-import com.VsmartEngine.MediaJungle.model.PlanDescription;
 import com.VsmartEngine.MediaJungle.model.PlanDetails;
 import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.model.Seosettings;
@@ -66,7 +65,6 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
-import com.VsmartEngine.MediaJungle.video.Videos;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
