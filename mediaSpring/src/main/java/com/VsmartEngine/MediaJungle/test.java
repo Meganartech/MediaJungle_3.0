@@ -1,6 +1,8 @@
 package com.VsmartEngine.MediaJungle;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,9 +22,11 @@ import com.VsmartEngine.MediaJungle.controller.CategoryController;
 import com.VsmartEngine.MediaJungle.controller.VideoCastAndCrewController;
 import com.VsmartEngine.MediaJungle.fileservice.AudioFileService;
 import com.VsmartEngine.MediaJungle.model.Audiodescription;
-import com.VsmartEngine.MediaJungle.model.AudiodescriptionDTO;
+import com.VsmartEngine.MediaJungle.model.AudiodetailsDTO;
 import com.VsmartEngine.MediaJungle.model.Audioimages;
+import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
+import com.VsmartEngine.MediaJungle.repository.AudioTagRepository;
 import com.VsmartEngine.MediaJungle.repository.Audioimage;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -46,6 +51,9 @@ public class test {
 	
     @Autowired
     private AudioFileService fileService;
+    
+	@Autowired
+	private AudioTagRepository AudioTagRepository;
 	
     
   
@@ -75,7 +83,8 @@ public class test {
 
 	         Audioimages cast = new Audioimages();
 //	            cast.setImage(thumbnailBytes);
-	         	cast.setAudio_id(savedData.getId());
+	         cast.setId(savedData.getId());
+	         	cast.setAudioId(savedData.getId());
 	            cast.setAudio_thumbnail(audiothumbnailBytes);
 	            cast.setBannerthumbnail(bannerthumbnailBytes);
 	            audioI.save(cast);
@@ -91,26 +100,34 @@ public class test {
 	}
 	
 	 @GetMapping("/getaudio")
-	    public ResponseEntity<List<Audiodescription>> test() {
+	    public ResponseEntity<List<Tag>> Audiolistdetails() {
 	        // Fetch all audio descriptions from the database
 	        List<Audiodescription> audioList = audio.findAll();
+	        long a=1;
+	        List<Tag>audioTag= AudioTagRepository.findByAudio_Id(a);
+	        audioTag.forEach(System.out::println);
 
 	        // Print the list to the console (for debugging purposes)
-	        audioList.forEach(System.out::println);
+//	        audioList.forEach(System.out::println);
+//	        audioTag.ifPresent(tag -> {
+//	            System.out.println("AudioTags ID: " + tag.getAudioTags_id());
+//	            System.out.println("Audio ID: " + tag.getAudio_id().getId());
+//	            System.out.println("Tag ID: " + tag.getTag_id());
+//	        });
 	        
 	        // Return the list in the response body
-	        return ResponseEntity.ok(audioList);
+	        return ResponseEntity.ok(audioTag);
 	    }
 	 
 	 @GetMapping("/getaudiohomedto")
-	 public ResponseEntity<List<AudiodescriptionDTO>> getAudiohomedto() {
+	 public ResponseEntity<List<AudiodetailsDTO>> getAudiohomedto() {
 	     // Fetch all audio descriptions from the database
 	     List<Audiodescription> audioList = audio.findAll();
 //	     List<Audioimages>audioImage=audioI.findAll();
 
 	     // Map to DTOs
-	     List<AudiodescriptionDTO> dtoList = audioList.stream()
-	    	        .map(a -> new AudiodescriptionDTO(a.getId(), a.getAudio_title()) )
+	     List<AudiodetailsDTO> dtoList = audioList.stream()
+	    	        .map(a -> new AudiodetailsDTO(a.getId(), a.getAudio_title()) )
 	    	        .collect(Collectors.toList());
 
 	    	    // Print the list to the console (for debugging purposes)
@@ -124,14 +141,14 @@ public class test {
 	 }
 	 
 	 @GetMapping("/getaudiodetailsdto")
-	 public ResponseEntity<List<AudiodescriptionDTO>> getAudio() {
+	 public ResponseEntity<List<AudiodetailsDTO>> getAudio() {
 	     // Fetch all audio descriptions from the database
 	     List<Audiodescription> audioList = audio.findAll();
 //	     List<Audioimages>audioImage=audioI.findAll();
 
 	     // Map to DTOs
-	     List<AudiodescriptionDTO> dtoList = audioList.stream()
-	    	        .map(a -> new AudiodescriptionDTO(a.getId(), a.getAudio_title()) )
+	     List<AudiodetailsDTO> dtoList = audioList.stream()
+	    	        .map(a -> new AudiodetailsDTO(a.getId(), a.getAudio_title()) )
 	    	        .collect(Collectors.toList());
 
 	    	    // Print the list to the console (for debugging purposes)
@@ -143,6 +160,35 @@ public class test {
 	     // Return the list in the response body
 	     return ResponseEntity.ok(dtoList);
 	 }
+	 
+	 @GetMapping("/test/{id}")
+	 public ResponseEntity<List> getToken(@PathVariable("id") long id) {
+		 
+	        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	        Random random = new Random();
+	        StringBuilder sb = new StringBuilder();
+	        for (int i = 0; i < 4; i++) {
+	            int index = random.nextInt(characters.length());
+	            sb.append(characters.charAt(index));
+	        }
+	        
+	        String randomAlphanumeric = sb.toString();
+	        
+	        String idStr = String.format("%02d", id % 100);
+	        
+	        String combined = randomAlphanumeric + idStr;
+	        
+	        
+	        List<String> test = new ArrayList<>();
+	        String jsonString = String.format("token: %s", combined);
+	        test.add(jsonString);
+	   
+	     return ResponseEntity.ok(test);
+	 }
+	 
+	 
+	 
+	 
 	 
 	 
 

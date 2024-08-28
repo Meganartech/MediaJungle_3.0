@@ -1,6 +1,6 @@
 package com.VsmartEngine.MediaJungle.model;
 
-public class AudiodescriptionDTO {
+public class AudiodetailsDTO {
 
 	    private Long id;
 	    private String audioTitle;
@@ -9,7 +9,7 @@ public class AudiodescriptionDTO {
 		
         
 
-	    public AudiodescriptionDTO(Long id, String audioTitle) {
+	    public AudiodetailsDTO(Long id, String audioTitle) {
 			super();
 			this.id = id;
 			this.audioTitle = audioTitle;

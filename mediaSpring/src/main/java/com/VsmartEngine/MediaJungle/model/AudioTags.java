@@ -20,14 +20,14 @@ public class AudioTags {
 	private long AudioTags_id;
 	
 	@ManyToOne
-	 @JoinColumn(name = "audio_id")
+	 @JoinColumn(name = "audioid")
 	 @JsonManagedReference
-	 private Audiodescription audio_id;
+	 private Audiodescription Audioid;
 
 	 @ManyToOne
-	 @JoinColumn(name = "tag_id")
+	 @JoinColumn(name = "tagid")
 	 @JsonManagedReference
-	private Tag Tag_id;
+	private Tag Tagid;
 
 	public long getAudioTags_id() {
 		return AudioTags_id;
@@ -37,25 +37,25 @@ public class AudioTags {
 		AudioTags_id = audioTags_id;
 	}
 
-	public Audiodescription getAudio_id() {
-		return audio_id;
+	public Audiodescription getAudioid() {
+		return Audioid;
 	}
 
-	public void setAudio_id(Audiodescription audio_id) {
-		this.audio_id = audio_id;
+	public void setAudioid(Audiodescription audioid) {
+		Audioid = audioid;
 	}
 
-	public Tag getTag_id() {
-		return Tag_id;
+	public Tag getTagid() {
+		return Tagid;
 	}
 
-	public void setTag_id(Tag tag_id) {
-		Tag_id = tag_id;
+	public void setTagid(Tag tagid) {
+		Tagid = tagid;
 	}
 
 	@Override
 	public String toString() {
-		return "AudioTags [AudioTags_id=" + AudioTags_id + ", audio_id=" + audio_id + ", Tag_id=" + Tag_id + "]";
+		return "AudioTags [AudioTags_id=" + AudioTags_id + ", Audioid=" + Audioid + ", Tagid=" + Tagid + "]";
 	}
 
 	

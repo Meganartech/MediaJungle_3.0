@@ -15,11 +15,10 @@ import jakarta.persistence.Table;
 public class Audioimages {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-	@Column(name="audio_id") 
-	private long audio_id;
+	@Column(name="audioId") 
+	private long audioId;
 	
 	@Lob
 	@Column(name="Bannerthumbnail" ,length=1000000)
@@ -55,17 +54,19 @@ public class Audioimages {
 		this.audio_thumbnail = audio_thumbnail;
 	}
 
-	public long getAudio_id() {
-		return audio_id;
+	
+
+	public long getAudioId() {
+		return audioId;
 	}
 
-	public void setAudio_id(long audio_id) {
-		this.audio_id = audio_id;
+	public void setAudioId(long audioId) {
+		this.audioId = audioId;
 	}
 
 	@Override
 	public String toString() {
-		return "Audioimages [id=" + id + ", audio_id=" + audio_id + ", bannerthumbnail="
+		return "Audioimages [id=" + id + ", audio_id=" + audioId + ", bannerthumbnail="
 				+ Arrays.toString(bannerthumbnail) + ", audio_thumbnail=" + Arrays.toString(audio_thumbnail) + "]";
 	}
 

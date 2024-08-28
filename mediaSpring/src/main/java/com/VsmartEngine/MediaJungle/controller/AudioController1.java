@@ -429,23 +429,28 @@ public class AudioController1 {
     
 //    -------------------------------------NEW AUDIO TUMBNAIL API--------------------------------------------------
     
-    public ResponseEntity<List<String>> getaudioThumbnailsById(@PathVariable Long id) {
+    public ResponseEntity<List> getaudioThumbnailsById(@PathVariable Long id) {
         try {
         	
-        	 Optional<Audioimages> audioTumbnail = audioI.findById(id);
+        	Optional<Audioimages> audioThumbnail = audioI.findByAudioId(id);
 //            Optional<Addaudio1> audioOptional = audiorepository.findById(id);
+        	System.out.println(audioThumbnail);
 
-            if (audioTumbnail.isPresent()) {
-            	Audioimages audioImage = audioTumbnail.get();  
+            if (audioThumbnail !=null) {
+            	
+            	Audioimages audioImage = audioThumbnail.get() ;
 
                 // Assuming decompressImage returns the raw thumbnail data
-                byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getAudio_thumbnail());
+                byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getBannerthumbnail());
+     
+                // Assuming decompressImage returns the raw thumbnail data
+//                byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getAudio_thumbnail());
 
                 // Convert the byte array to Base64
                 String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);
 
                 // Return a list with a single Base64-encoded thumbnail
-                return ResponseEntity.ok(Collections.singletonList(base64Thumbnail));
+                return ResponseEntity.ok(Collections.singletonList(audioThumbnail));
             } else {
                 return ResponseEntity.notFound().build();
             }
