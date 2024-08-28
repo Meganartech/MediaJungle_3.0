@@ -132,7 +132,7 @@ const PlanDetailsList = () => {
                         <th>S.No</th>
                         <th>Plan name</th>
                         <th>Amount</th>
-                        <th>Validity</th>
+                        {/* <th>Validity</th> */}
                         <th>Action</th>
                         <th>Features</th>
                       </tr>
@@ -144,7 +144,7 @@ const PlanDetailsList = () => {
                           <td>{index + 1}</td>
                           <td>{plan.planname}</td>
                           <td>{plan.amount}</td>
-                          <td>{plan.validity}</td>
+                          {/* <td>{plan.validity}</td> */}
                           <td> <button onClick={() => handlEdit(plan.id)}>
                               <i className="fas fa-edit" aria-hidden="true"></i>
                             </button>

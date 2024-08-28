@@ -8,51 +8,55 @@ public class PlanFeatureMerge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long planFeatureId;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "planid", nullable = false)
-    private PlanDetails plan;
+    @Column(name = "plan_id")
+    private Long planId;
 
-    @ManyToOne
-    @JoinColumn(name = "featureid", nullable = false)
-    private PlanFeatures feature;
+    @Column(name = "feature_id")
+    private Long featureId;
 
-    @Column(nullable = false)
-    private Boolean active;
+    @Column(name = "active")
+    private boolean active;
 
-	public Long getPlanFeatureId() {
-		return planFeatureId;
-	}
+    public PlanFeatureMerge() {}
 
-	public void setPlanFeatureId(Long planFeatureId) {
-		this.planFeatureId = planFeatureId;
-	}
-
-	public PlanDetails getPlan() {
-		return plan;
-	}
-
-	public void setPlan(PlanDetails plan) {
-		this.plan = plan;
-	}
-
-	public PlanFeatures getFeature() {
-		return feature;
-	}
-
-	public void setFeature(PlanFeatures feature) {
-		this.feature = feature;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+    public PlanFeatureMerge(Long planId, Long featureId, boolean active) {
+        this.planId = planId;
+        this.featureId = featureId;
+        this.active = active;
+    }
 
     // Getters and Setters
-    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getPlanId() {
+        return planId;
+    }
+
+    public void setPlanId(Long planId) {
+        this.planId = planId;
+    }
+
+    public Long getFeatureId() {
+        return featureId;
+    }
+
+    public void setFeatureId(Long featureId) {
+        this.featureId = featureId;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }
