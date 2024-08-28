@@ -22,6 +22,7 @@ const Video = () => {
   const token= sessionStorage.getItem('tokenn')
 
   const handleClick = (link) => {
+    localStorage.removeItem('items'); // Clear the stored videoId
     navigate(link);
   }
 

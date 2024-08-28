@@ -1401,44 +1401,45 @@ const handleClick = () => {
 };
 
 /* edit mode */
-// const [isEditMode, setIsEditMode] = useState(false);
-// const videoId = localStorage.getItem('items');
-// console.log("videoId",videoId);
-// useEffect(() => {
-//   if (videoId) {
-//     setIsEditMode(true);
-//     // Fetch the video details based on videoId
-//     fetch(`${API_URL}/api/v2/GetvideoDetail/${videoId}`)
-//       .then(response => response.json())
-//       .then(data => {
-//         setVideoTitle(data.videoTitle);
-//         setMainVideoDuration(data.mainVideoDuration);
-//         setTrailerDuration(data.trailerDuration);
-//         setRating(data.rating);
-//         setCertificateNumber(data.certificateNumber);
-//         setVideoAccessType(data.videoAccessType);
-//         setdescription(data.description);
-//         setProductionCompany(data.productionCompany);
-//         setCertificateName(data.certificateName);
-//         setcastandcrewlist(data.castandcrewlist);
-//         settaglist(data.taglist);
-//         setCategory(data.categorylist);
-//       });
-//       fetch(`${API_URL}/api/v2/videoimage/${videoId}`)
-//       .then(response => response.json())
-//     .then(data=>{
-//        setvideothumbnail(data.videoThumbnail);
-//     })
-//   }
-// }, [videoId]);
+const [isEditMode, setIsEditMode] = useState(false);
+const videoId = localStorage.getItem('items');
+console.log("videoId",videoId);
+useEffect(() => {
+  if (videoId) {
+    setIsEditMode(true);
+    // Fetch the video details based on videoId
+    fetch(`${API_URL}/api/v2/GetvideoDetail/${videoId}`)
+      .then(response => response.json())
+      .then(data => {
+        setVideoTitle(data.videoTitle);
+        setMainVideoDuration(data.mainVideoDuration);
+        setTrailerDuration(data.trailerDuration);
+        setRating(data.rating);
+        setCertificateNumber(data.certificateNumber);
+        setVideoAccessType(data.videoAccessType);
+        setdescription(data.description);
+        setProductionCompany(data.productionCompany);
+        setCertificateName(data.certificateName);
+        setcastandcrewlist(data.castandcrewlist);
+        settaglist(data.taglist);
+        setCategory(data.categorylist);
+      });
+      fetch(`${API_URL}/api/v2/videoimage/${videoId}`)
+      .then(response => response.json())
+    .then(data=>{
+      //  const image = `data:image/png;base64,${}`;
+       setvideothumbnail(data.videoThumbnail)
+    })
+  }
+}, [videoId]);
 
 
   return (
 <div className='container3 mt-2'>
 <ol className="breadcrumb mb-4 d-flex my-0">
         <li className="breadcrumb-item"><Link to="/admin/Video">Videos</Link></li>
-        {/* <li className="breadcrumb-item active text-white">{isEditMode ? 'Edit Video' : 'Add Video'}</li> */}
-        <li className="breadcrumb-item active text-white">Add Video</li>
+        <li className="breadcrumb-item active text-white">{isEditMode ? 'Edit Video' : 'Add Video'}</li>
+        {/* <li className="breadcrumb-item active text-white">Add Video</li> */}
       </ol>
   
   <div className="outer-container">
@@ -2004,11 +2005,19 @@ const handleClick = () => {
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 style={{
-                  backgroundImage: videothumbnailUrl ? `url(${videothumbnailUrl})` : 'none',
+                  backgroundImage: !isEditMode && videothumbnailUrl ? `url(${videothumbnailUrl})` : 'none',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
-              >
+                >
+                  {isEditMode && videothumbnailUrl ? <img src={`data:image/png;base64,${videothumbnail}`} alt="videothumbnail" 
+                  style={{
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                  /> : 'none'}
+                
+              
                 {!videothumbnailUrl && <span>Drag and drop</span>}
               </div>
               <button
@@ -2329,8 +2338,8 @@ const handleClick = () => {
                   onClick={save}
                   
                 >
-                  {/* {isEditMode ? 'Update' : 'Submit'} */}
-                  Submit
+                  {isEditMode ? 'Update' : 'Submit'}
+                  {/* Submit */}
                 </button>                
               </div>
             </div>   
