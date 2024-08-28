@@ -7,6 +7,7 @@ const PlanDetails = () => {
 
   const [getall,setgetall] = useState('');
   const [GetAll,setGetAll] = useState('');
+  const [getfea,setgetfea] = useState('');
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetsiteSettings`)
@@ -35,18 +36,45 @@ const PlanDetails = () => {
       })
       .then(data => {
         setgetall(data);
+       
+        
+      })
+      
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+     
+  }, []);
+  console.log("**********")
+  console.log(getall);
+// Printing the data in a for loop
+for (let i = 0; i < getall.length; i++) {
+  console.log(getall[i].id);
+}
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetFeatures`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+      setgetfea(data);
+
         console.log(data)
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
   }, []);
-
   const userId = sessionStorage.getItem('userId')
   console.log(userId)
 
 
 const handlesubmit = async (amount, userId, planname, validity) => {
+
+
   try {
     const response = await fetch(`${API_URL}/api/v2/payment`, {
       method: 'POST',
@@ -189,6 +217,7 @@ return (
                 >
                   Subscribe
                 </a>
+                
               </div>
             </div>
           </form>

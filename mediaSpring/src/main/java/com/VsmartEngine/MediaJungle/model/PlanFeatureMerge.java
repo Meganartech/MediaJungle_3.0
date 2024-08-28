@@ -1,32 +1,22 @@
 package com.VsmartEngine.MediaJungle.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "plan_feature_merge")
 public class PlanFeatureMerge {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	  @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long id;
-
-    @Column(name = "plan_id")
     private Long planId;
-
-    @Column(name = "feature_id")
     private Long featureId;
+    private Boolean active;
 
-    @Column(name = "active")
-    private boolean active;
-
-    public PlanFeatureMerge() {}
-
-    public PlanFeatureMerge(Long planId, Long featureId, boolean active) {
-        this.planId = planId;
-        this.featureId = featureId;
-        this.active = active;
-    }
-
+    
     // Getters and Setters
     public Long getId() {
         return id;
@@ -52,11 +42,11 @@ public class PlanFeatureMerge {
         this.featureId = featureId;
     }
 
-    public boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 }

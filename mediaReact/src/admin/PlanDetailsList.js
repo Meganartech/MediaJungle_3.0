@@ -35,64 +35,65 @@ const PlanDetailsList = () => {
 
 
   const handleDelete = (planId) => {
-    // Display confirmation dialog using SweetAlert
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this plan!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel',
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this plan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel',
     }).then((result) => {
-      if (result.isConfirmed) {
-        // User confirmed deletion, proceed with fetch DELETE request
-        fetch(`${API_URL}/api/v2/DeletePlan/${planId}`, {
-          method: 'DELETE',
-          headers:{
-            Authorization:token
-          }
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.status <= 204 ? null : response.json();
-        })
-        .then(data => {
-          if (!data) {
-            console.log('Plan deleted successfully');
-            // Remove the deleted plan from the local state
-            setgetall(prevPlan => prevPlan.filter(plan => plan.id !== planId));
-            Swal.fire(
-              'Deleted!',
-              'Your plan has been deleted.',
-              'success'
-            );
-          } else {
-            console.error('Error deleting plan:', data.error); // Log error message from server
-            Swal.fire(
-              'Error!',
-              'Failed to delete plan. Please try again later.',
-              'error'
-            );
-          }
-        })
-        .catch(error => {
-          console.error('Error deleting plan:', error);
-          Swal.fire(
-            'Error!',
-            'Failed to delete plan. Please try again later.',
-            'error'
-          );
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        console.log('Delete operation cancelled');
-      }
+        if (result.isConfirmed) {
+            const apiUrl1 = `${API_URL}/api/v2/planfeaturemerge?planId=${planId}`;
+            const apiUrl2 = `${API_URL}/api/v2/plans/${planId}`;
+
+            Promise.all([
+                fetch(apiUrl1, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                }),
+                fetch(apiUrl2, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                })
+            ])
+            .then(async ([response1, response2]) => {
+                console.log('Response 1 Status:', response1.status);
+                console.log('Response 2 Status:', response2.status);
+
+                const [text1, text2] = await Promise.all([response1.text(), response2.text()]);
+                console.log('Response 1 Body:', text1);
+                console.log('Response 2 Body:', text2);
+
+                // Check if both responses indicate success
+                if (response1.ok && response2.ok) {
+                    // Remove the deleted plan from the state
+                    setgetall(prevPlans => prevPlans.filter(plan => plan.id !== planId));
+                    Swal.fire('Deleted!', 'Your plan and associated features have been deleted.', 'success').then(() => {
+                        navigate('/admin/PlanDetailsList'); // Redirect to plan list page
+                    });
+                } else {
+                    throw new Error('Failed to delete one or both resources');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting plan:', error);
+                Swal.fire('Error!', 'Failed to delete plan. Please try again later.', 'error');
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            console.log('Delete operation cancelled');
+        }
     });
-  };
-  
+};
+
 
   const handlEdit = async (planId) => {
     localStorage.setItem('items', planId);

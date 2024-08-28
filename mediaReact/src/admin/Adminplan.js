@@ -13,6 +13,7 @@
     const [features, setfeatures] = useState([]);
     const navigate = useNavigate();
     const token = sessionStorage.getItem("tokenn");
+    const [featureStates, setFeatureStates] = useState([]);
 
     useEffect(() => {
       const fetchFeatures = async () => {
@@ -39,21 +40,18 @@
 
     const hasPaymentPlan = () => getall && getall.length > 0;
 
-    const handleSetActive = async (featureId, active) => {
-      try {
-        // Using PUT request to update the active status
-        await axios.put(`${API_URL}/api/v2/active/${featureId}?active=${active}`, null, {
-          headers: { Authorization: token },
-        });
+    const handleSetActive = (featureId, active) => {
+      // Update local state for the specific feature
+      const updatedFeatureStates = featureStates.map((feature) =>
+        feature.id === featureId ? { ...feature, active } : feature
+      );
+      setFeatureStates(updatedFeatureStates);
     
-        // Update local state after the feature has been updated
-        const updatedFeatures = features.map((feature) =>
-          feature.id === featureId ? { ...feature, active: active } : feature
-        );
-        setfeatures(updatedFeatures);
-      } catch (error) {
-        console.error(`Error setting feature ${featureId} active=${active}:`, error);
-      }
+      // Update the features state if needed
+      const updatedFeatures = features.map((feature) =>
+        feature.id === featureId ? { ...feature, active } : feature
+      );
+      setfeatures(updatedFeatures);
     };
     
 
@@ -90,36 +88,32 @@
         const planId = planResponse.data.id;
         console.log("Plan ID:", planId);
     
-        // Collect all feature IDs
-        const featureIds = features.map(feature => feature.id);
-        console.log("Feature IDs:", featureIds);
-    
-        // Filter and prepare features data
-        const selectedFeatures = features.filter(feature => feature.active !== null);
-        const featuresData = selectedFeatures.map(feature => ({
+        // Collect feature data
+        const featuresData = features.map(feature => ({
           planId,
-          featureIds,
-          active: feature.active === 'yes',
+          featureId: feature.id,
+          active: feature.active === 'yes', // Adjust if needed based on your data
         }));
-        console.log(features.active);
-        console.log("Features Data:", planId+featureIds);
+        console.log("Features Data:", featuresData);
     
         // Send request to save features
-        await axios.post(`${API_URL}/api/v2/SaveFeatures`, featuresData, {
+        await axios.put(`${API_URL}/api/v2/planfeaturemerge`, featuresData, {
           headers: { Authorization: token, 'Content-Type': 'application/json' },
         });
     
         Swal.fire({ icon: 'success', title: 'Success', text: 'Plan details and features updated successfully' });
-        
-        // Clear form fields
+    
+        // Clear form fields and feature states
         setplanname(''); 
         setamount(''); 
         setvalidity('1');
+        // setfeatures([]); // Clear the features array
       } catch (error) {
         console.error('Error uploading plan details:', error.response ? error.response.data : error.message);
         Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to upload plan details. Please try again later.' });
       }
     };
+    
     
 
     const handleAddFeatures = () => navigate('/admin/PlanFeatures');
