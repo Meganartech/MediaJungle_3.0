@@ -15,5 +15,9 @@ public interface FileService {
 	FileModel uploadTrailerVideo(String path,MultipartFile file) throws IOException ;
 	
 	InputStream getVideoFIle(String path,String fileName , long id) throws FileNotFoundException ;
+	
+	boolean deletetrailerFile(String fileName) throws IOException;
+	
+	boolean deleteVideoFile(String fileName) throws IOException;
 
 }

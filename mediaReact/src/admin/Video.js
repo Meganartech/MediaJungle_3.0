@@ -55,10 +55,7 @@ const Video = () => {
   //     console.log('Error fetching users:', error);
   //   }
   // };
-  const handleDelete = async (audioId) => {
-    const audId = audioId;
-    console.log(audId);
-  
+  const handleDelete = async (videoId) => {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -70,31 +67,23 @@ const Video = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`${API_URL}/api/video/${audId}`, {
+          const response = await fetch(`${API_URL}/api/v2/deletevideo/${videoId}`, {
             method: 'DELETE',
-            headers:{
-              Authorization:token,
+            headers: {
+              Authorization: token,
             }
           });
   
           if (response.ok) {
-            // fetchAudios();
-            // setDeleteStatus('Audio deleted successfully');
-            // setGetall((prevGetAll) => {
-            //   const updatedGetAll = [...prevGetAll];
-            //   updatedGetAll.splice(index, 1);
-            //   return updatedGetAll;
-            // });
-            // fetchUsers();
-            console.log('deleteStatus');
+            // Remove the deleted video from the state
+            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== videoId));
+  
             Swal.fire(
               'Deleted!',
               'The video has been deleted.',
               'success'
             );
           } else {
-            // setDeleteStatus('Error deleting audio');
-            console.log('deleteStatus');
             Swal.fire(
               'Error!',
               'There was a problem deleting the video.',
@@ -103,8 +92,6 @@ const Video = () => {
           }
         } catch (error) {
           console.error('Error:', error);
-          // setDeleteStatus('Error deleting audio');
-          console.log("deleteStatus");
           Swal.fire(
             'Error!',
             'There was a problem deleting the video.',
@@ -114,7 +101,7 @@ const Video = () => {
       }
     });
   };
-
+  
   const handlEdit = async (videoId) => {
     localStorage.setItem('items', videoId);
     navigate('/admin/AddVideo');
