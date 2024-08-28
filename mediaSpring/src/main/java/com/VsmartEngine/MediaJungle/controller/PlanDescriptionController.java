@@ -32,7 +32,6 @@ public class PlanDescriptionController {
 	@Autowired
 	private AddUserRepository adduserrepository;
 	
-	
 
 	public ResponseEntity<?> addPlanDescription(@RequestParam("description") String description,
 	        @RequestHeader("Authorization") String token) {
