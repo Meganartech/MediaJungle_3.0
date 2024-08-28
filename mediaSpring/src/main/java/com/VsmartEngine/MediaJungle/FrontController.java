@@ -888,8 +888,8 @@ public class FrontController {
 		 
 		@GetMapping("/videoimage/{id}")
 		@Transactional
-			public ResponseEntity<VideoImage> getThumbnailByVideoId(@PathVariable Long id) {
-				return videoImageController.getThumbnailByVideoId(id);
+		public ResponseEntity<byte[]> getVideoThumbnailByVideoId(@PathVariable Long id) {
+				return videoImageController.getVideoThumbnailByVideoId(id);
 		}
 			
 		
