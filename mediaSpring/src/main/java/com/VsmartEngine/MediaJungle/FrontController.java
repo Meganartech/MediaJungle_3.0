@@ -65,8 +65,11 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
+
 import com.VsmartEngine.MediaJungle.video.VideoImage;
 import com.VsmartEngine.MediaJungle.video.VideoImageController;
+import com.VsmartEngine.MediaJungle.video.Videos;
+
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -244,14 +247,17 @@ public class FrontController {
 	
 	
 	
+	@GetMapping("/getbannerthumbnailsbyid/{id}")
+	public ResponseEntity<List<String>> getaudiobannerById(@PathVariable Long id) {
 
+		return AudioController.getaudiobannerById(id);
+	}
 	
 	@GetMapping("/getaudiothumbnailsbyid/{id}")
 	public ResponseEntity<List<String>> getaudioThumbnailsById(@PathVariable Long id) {
 
 		return AudioController.getaudioThumbnailsById(id);
 	}
-
 
 	@GetMapping("/GetThumbnailsById/{id}")
 	public ResponseEntity<List<String>> getAudioThumbnailsById(@PathVariable Long id) {
