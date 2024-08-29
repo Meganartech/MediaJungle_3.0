@@ -135,8 +135,8 @@ public class CategoryController {
 	                }
 
 	                AudioTags videoCastAndCrew = new AudioTags();
-	                videoCastAndCrew.setAudio_id(Audiodescription.get());
-	                videoCastAndCrew.setTag_id(Categories.get());	                
+	                videoCastAndCrew.setAudioid(Audiodescription.get());
+	                videoCastAndCrew.setTagid(Categories.get());	                
 	                System.out.println("Video Description found: ");
 	                System.out.println("Video Description found: "+Categories.get());
 	        	    System.out.print("AudioCategoriesRepository :"+TagRepository.findAll());  

@@ -30,6 +30,7 @@ const AddAudio = () => {
   const [Certificateid, setCertificateid] = useState([]);
   const [Certificatename, setCertificatename] = useState([]);
   const [selectedOption, setSelectedOption] = useState('free');
+  const [getalldata, setgetalldata] = useState([]);
 
   const token = sessionStorage.getItem("tokenn")
 
@@ -353,6 +354,51 @@ const [Getall,setGetall] = useState('');
       });
   }, []);
 
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/getaudio`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setgetalldata(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  // _______________________________________set all values______________________________________________________
+
+    // useEffect(() => {
+
+    //   console.log(getalldata.audioTitle)
+    //   setaudio_title(getalldata.audioTitle);
+
+
+
+    // }, []);
+  useEffect(() => {
+    if (getalldata) {
+      setaudio_title(getalldata.audioTitle); // Update the audio_title state with the value from getalldata
+      setMovie_name(getalldata.movie_name);
+      setCertificate_name(getalldata.certificate_name);
+      setRating(getalldata.rating); 
+      setCertificate_no(getalldata.certificate_no); 
+      setaudio_Duration(getalldata.audio_Duration);
+      setSelectedOption(getalldata.paid="false"?'free':'paid');
+      setProduction_Company(getalldata.production_company);
+      setDescription(getalldata.description); 
+      handleCheckboxChangecategory(getalldata.category);
+
+
+    }
+  }, [getalldata]); // Dependency on getalldata
+
+
 const handleCheckboxChange = (option) => (e) => {
     const isChecked = e.target.checked;
     const id = (option.id); // Convert ID to number
@@ -445,6 +491,7 @@ const handleCheckboxChange = (option) => (e) => {
     setIsOpentag(!isOpentag);
   };
   const handleCheckboxChangecategory = (option) => (e) => {
+    console.log(e);
     const isChecked = e.target.checked;
     const id = (option.category_id);
     const name= (option.categories);// Convert ID to number
