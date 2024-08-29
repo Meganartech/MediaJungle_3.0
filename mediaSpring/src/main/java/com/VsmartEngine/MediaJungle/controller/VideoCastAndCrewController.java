@@ -99,8 +99,8 @@ public class VideoCastAndCrewController {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
                 }
 
-                AudioCastAndCrew videoCastAndCrew = new AudioCastAndCrew();
-                videoCastAndCrew.setAudio_id(videoDescription.get());
+                AudioCastAndCrew videoCastAndCrew = new AudioCastAndCrew();;
+                videoCastAndCrew.setAudio_id(videoId);
                 videoCastAndCrew.setCastandcrew_id(castAndCrew.get());
               
 

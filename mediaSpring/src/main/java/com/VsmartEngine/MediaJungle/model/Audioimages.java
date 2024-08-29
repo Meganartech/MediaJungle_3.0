@@ -16,10 +16,8 @@ public class Audioimages {
 
 	@Id
 	private long audioId;
-	
-//	@Column(name="audioId") 
-//	private long audioId;
-//	
+
+
 	@Lob
 	@Column(name="Bannerthumbnail" ,length=1000000)
 	private byte[] bannerthumbnail;
@@ -28,14 +26,7 @@ public class Audioimages {
 	@Column(name="Audio_thumbnail" ,length=1000000)
 	private byte[] audio_thumbnail;
 
-	
-//	public long getId() {
-//		return id;
-//	}
-//
-//	public void setId(long id) {
-//		this.id = id;
-//	}
+
 	
 
 	public byte[] getBannerthumbnail() {

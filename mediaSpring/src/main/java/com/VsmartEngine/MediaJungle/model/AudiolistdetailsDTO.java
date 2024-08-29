@@ -18,7 +18,7 @@ public class AudiolistdetailsDTO {
 	
 	 private List<AddNewCategories> Category;
 	 private List<Tag> Tag;
-	 private Optional<Audioimages> CastandCrew;
+	 private  Optional<AudioCastAndCrew> CastandCrew;
 	public Long getId() {
 		return id;
 	}
@@ -97,10 +97,10 @@ public class AudiolistdetailsDTO {
 	public void setTag(List<Tag> tag) {
 		Tag = tag;
 	}
-	public Optional<Audioimages> getCastandCrew() {
+	public  Optional<AudioCastAndCrew> getCastandCrew() {
 		return CastandCrew;
 	}
-	public void setCastandCrew(Optional<Audioimages> castandCrew) {
+	public void setCastandCrew( Optional<AudioCastAndCrew> castandCrew) {
 		CastandCrew = castandCrew;
 	}
 	 

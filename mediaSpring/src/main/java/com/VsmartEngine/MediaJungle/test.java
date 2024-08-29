@@ -23,13 +23,16 @@ import com.VsmartEngine.MediaJungle.controller.CategoryController;
 import com.VsmartEngine.MediaJungle.controller.VideoCastAndCrewController;
 import com.VsmartEngine.MediaJungle.fileservice.AudioFileService;
 import com.VsmartEngine.MediaJungle.model.AddNewCategories;
+import com.VsmartEngine.MediaJungle.model.AudioCastAndCrew;
 import com.VsmartEngine.MediaJungle.model.Audiodescription;
 import com.VsmartEngine.MediaJungle.model.AudiodetailsDTO;
 import com.VsmartEngine.MediaJungle.model.Audioimages;
 import com.VsmartEngine.MediaJungle.model.AudioimagesDTO;
 import com.VsmartEngine.MediaJungle.model.AudiolistdetailsDTO;
+import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
+import com.VsmartEngine.MediaJungle.repository.AudioCastandCrewRepository;
 import com.VsmartEngine.MediaJungle.repository.AudioCategoriesRepository;
 import com.VsmartEngine.MediaJungle.repository.AudioTagRepository;
 import com.VsmartEngine.MediaJungle.repository.Audioimage;
@@ -63,6 +66,9 @@ public class test {
 	@Autowired
 	private AudioCategoriesRepository AudioCategoriesRepository;
 	
+	@Autowired
+	private AudioCastandCrewRepository Audiocastandcrewrepository;
+	
     
   
 	
@@ -92,11 +98,12 @@ public class test {
 	         Audioimages cast = new Audioimages();
 //	            cast.setImage(thumbnailBytes);
 //	         cast.setId(savedData.getId());
+	         
 	         	cast.setAudioId(savedData.getId());
 	            cast.setAudio_thumbnail(audiothumbnailBytes);
 	            cast.setBannerthumbnail(bannerthumbnailBytes);
 	            audioI.save(cast);
-	            
+//	            
 //	            this.getAudio();O
 	        System.out.println("Audio Title: ");
 
@@ -106,14 +113,14 @@ public class test {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
 	    }
 	}
-	
 	 @GetMapping("/getaudio")
 	    public ResponseEntity<AudiolistdetailsDTO> Audiolistdetails() {
-	        long a=2;
+	        long a=11;
 	        Optional<Audiodescription> audioList = audio.findById(a);
 	        List<Tag>audioTag= AudioTagRepository.findByAudio_Id(a);
 	        List<AddNewCategories>audioCategorie= AudioCategoriesRepository.findByCategorie_Id(a);
 	        Optional<Audioimages>audioImage=audioI.findById(a);
+	        Optional<AudioCastAndCrew>audioCastandCrew=Audiocastandcrewrepository.findById(a);
 	        
 	        AudiolistdetailsDTO dto = new AudiolistdetailsDTO();
 	        if (audioList.isPresent()) {
@@ -134,7 +141,7 @@ public class test {
 	            dto.setCertificate_no(audio.getCertificate_no());
 	            dto.setTag(audioTag);
 	            dto.setCategory(audioCategorie);
-	            dto.setCastandCrew(audioImage);
+	            dto.setCastandCrew(audioCastandCrew);
 //	            return ResponseEntity.ok(dto);
 	        } else {
 	            return ResponseEntity.notFound().build();
