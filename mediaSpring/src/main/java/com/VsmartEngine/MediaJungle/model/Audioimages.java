@@ -15,11 +15,11 @@ import jakarta.persistence.Table;
 public class Audioimages {
 
 	@Id
-	private long id;
-	
-	@Column(name="audioId") 
 	private long audioId;
 	
+//	@Column(name="audioId") 
+//	private long audioId;
+//	
 	@Lob
 	@Column(name="Bannerthumbnail" ,length=1000000)
 	private byte[] bannerthumbnail;
@@ -29,13 +29,13 @@ public class Audioimages {
 	private byte[] audio_thumbnail;
 
 	
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
+//	public long getId() {
+//		return id;
+//	}
+//
+//	public void setId(long id) {
+//		this.id = id;
+//	}
 	
 
 	public byte[] getBannerthumbnail() {
@@ -66,7 +66,7 @@ public class Audioimages {
 
 	@Override
 	public String toString() {
-		return "Audioimages [id=" + id + ", audio_id=" + audioId + ", bannerthumbnail="
+		return "Audioimages [id=" + ", audio_id=" + audioId + ", bannerthumbnail="
 				+ Arrays.toString(bannerthumbnail) + ", audio_thumbnail=" + Arrays.toString(audio_thumbnail) + "]";
 	}
 

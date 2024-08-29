@@ -1,6 +1,7 @@
 package com.VsmartEngine.MediaJungle.model;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AudiolistdetailsDTO {
 	private Long id;
@@ -15,9 +16,9 @@ public class AudiolistdetailsDTO {
 	private String Certificate_no;
 	private String Certificate_name;
 	
-	 private List<String> Category;
-	 private List<String> Tag;
-	 private List<String> CastandCrew;
+	 private List<AddNewCategories> Category;
+	 private List<Tag> Tag;
+	 private Optional<Audioimages> CastandCrew;
 	public Long getId() {
 		return id;
 	}
@@ -84,22 +85,22 @@ public class AudiolistdetailsDTO {
 	public void setCertificate_name(String certificate_name) {
 		Certificate_name = certificate_name;
 	}
-	public List<String> getCategory() {
+	public List<AddNewCategories> getCategory() {
 		return Category;
 	}
-	public void setCategory(List<String> category) {
+	public void setCategory(List<AddNewCategories> category) {
 		Category = category;
 	}
-	public List<String> getTag() {
+	public List<Tag> getTag() {
 		return Tag;
 	}
-	public void setTag(List<String> tag) {
+	public void setTag(List<Tag> tag) {
 		Tag = tag;
 	}
-	public List<String> getCastandCrew() {
+	public Optional<Audioimages> getCastandCrew() {
 		return CastandCrew;
 	}
-	public void setCastandCrew(List<String> castandCrew) {
+	public void setCastandCrew(Optional<Audioimages> castandCrew) {
 		CastandCrew = castandCrew;
 	}
 	 
