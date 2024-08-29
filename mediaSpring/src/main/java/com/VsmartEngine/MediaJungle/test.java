@@ -29,7 +29,6 @@ import com.VsmartEngine.MediaJungle.model.AudiodetailsDTO;
 import com.VsmartEngine.MediaJungle.model.Audioimages;
 import com.VsmartEngine.MediaJungle.model.AudioimagesDTO;
 import com.VsmartEngine.MediaJungle.model.AudiolistdetailsDTO;
-import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
 import com.VsmartEngine.MediaJungle.repository.AudioCastandCrewRepository;
@@ -113,14 +112,14 @@ public class test {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
 	    }
 	}
-	 @GetMapping("/getaudio")
-	    public ResponseEntity<AudiolistdetailsDTO> Audiolistdetails() {
-	        long a=11;
-	        Optional<Audiodescription> audioList = audio.findById(a);
-	        List<Tag>audioTag= AudioTagRepository.findByAudio_Id(a);
-	        List<AddNewCategories>audioCategorie= AudioCategoriesRepository.findByCategorie_Id(a);
-	        Optional<Audioimages>audioImage=audioI.findById(a);
-	        Optional<AudioCastAndCrew>audioCastandCrew=Audiocastandcrewrepository.findById(a);
+	 @GetMapping("/getaudio/{id}")
+	    public ResponseEntity<AudiolistdetailsDTO> Audiolistdetails(@PathVariable("id") long id) {
+	        
+	        Optional<Audiodescription> audioList = audio.findById(id);
+	        List<Tag>audioTag= AudioTagRepository.findByAudio_Id(id);
+	        List<AddNewCategories>audioCategorie= AudioCategoriesRepository.findByCategorie_Id(id);
+	        Optional<Audioimages>audioImage=audioI.findById(id);
+	        Optional<AudioCastAndCrew>audioCastandCrew=Audiocastandcrewrepository.findById(id);
 	        
 	        AudiolistdetailsDTO dto = new AudiolistdetailsDTO();
 	        if (audioList.isPresent()) {
