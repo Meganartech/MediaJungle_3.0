@@ -1402,15 +1402,20 @@ const handleClick = () => {
 
 /* edit mode */
 const [isEditMode, setIsEditMode] = useState(false);
+const [getvideothumbnail,setgetvideothumbnail] = useState('');
+const [gettrailerthumbnail,setgettrailerthumbnail] = useState('');
+const [getuserbanner,setgetuserbanner] = useState('');
 const videoId = localStorage.getItem('items');
 console.log("videoId",videoId);
 useEffect(() => {
   if (videoId) {
     setIsEditMode(true);
+
     // Fetch the video details based on videoId
     fetch(`${API_URL}/api/v2/GetvideoDetail/${videoId}`)
       .then(response => response.json())
       .then(data => {
+        // console.log('Video Details:', data); // Log the video details
         setVideoTitle(data.videoTitle);
         setMainVideoDuration(data.mainVideoDuration);
         setTrailerDuration(data.trailerDuration);
@@ -1423,13 +1428,19 @@ useEffect(() => {
         setcastandcrewlist(data.castandcrewlist);
         settaglist(data.taglist);
         setCategory(data.categorylist);
-      });
-      fetch(`${API_URL}/api/v2/videoimage/${videoId}`)
+      })
+      .catch(error => console.error('Error fetching video details:', error));
+
+    // Fetch the video images based on videoId
+    fetch(`${API_URL}/api/v2/videoimage/${videoId}`)
       .then(response => response.json())
-    .then(data=>{
-      //  const image = `data:image/png;base64,${}`;
-       setvideothumbnail(data.videoThumbnail)
-    })
+      .then(data => {
+        // console.log('Video Images:', data); // Log the video images
+        setgetvideothumbnail(data.videoThumbnail);
+        setgettrailerthumbnail(data.trailerThumbnail);
+        setgetuserbanner(data.userBanner);
+      })
+      .catch(error => console.error('Error fetching video images:', error));
   }
 }, [videoId]);
 
@@ -2005,20 +2016,14 @@ useEffect(() => {
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 style={{
-                  backgroundImage: !isEditMode && videothumbnailUrl ? `url(${videothumbnailUrl})` : 'none',
+                  backgroundImage: !isEditMode
+                    ? `url(${videothumbnailUrl})`
+                    : `url(data:image/png;base64,${getvideothumbnail})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
-                >
-                  {isEditMode && videothumbnailUrl ? <img src={`data:image/png;base64,${videothumbnail}`} alt="videothumbnail" 
-                  style={{
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                  /> : 'none'}
-                
-              
-                {!videothumbnailUrl && <span>Drag and drop</span>}
+              >
+                {!isEditMode && !videothumbnailUrl && <span>Drag and drop</span>}
               </div>
               <button
                 type="button"
@@ -2112,12 +2117,14 @@ useEffect(() => {
                 onDrop={handleDroptrailerthumbnail}
                 onDragOver={handleDragOver}
                 style={{
-                  backgroundImage: trailerthumbnailUrl ? `url(${trailerthumbnailUrl})` : 'none',
+                  backgroundImage: !isEditMode
+                    ? `url(${trailerthumbnailUrl})`
+                    : `url(data:image/png;base64,${gettrailerthumbnail})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
               >
-              {!trailerthumbnailUrl && <span>Drag and drop</span>}
+             {!isEditMode && !trailerthumbnailUrl && <span>Drag and drop</span>}
               </div>
               <button
                 type="button"
@@ -2157,12 +2164,14 @@ useEffect(() => {
                 onDrop={handleDropuserbanner}
                 onDragOver={handleDragOver}
                 style={{
-                  backgroundImage: userbannerUrl ? `url(${userbannerUrl})` : 'none',
+                  backgroundImage: !isEditMode
+                    ? `url(${userbannerUrl})`
+                    : `url(data:image/png;base64,${getuserbanner})`,
                   backgroundSize: 'cover',
-                  backgroundPosition: 'center'
+                  backgroundPosition: 'center',
                 }}
               >
-                {!userbannerUrl && <span>Drag and drop</span>}
+                {!isEditMode && !userbannerUrl && <span>Drag and Drop</span>}
               </div>
               <button
                 type="button"
@@ -2229,7 +2238,7 @@ useEffect(() => {
       ) : (
         <div className="thumbnail-container" onClick={handleClick}>
           <img
-            src={videothumbnailUrl}
+            src={isEditMode && getvideothumbnail ? `data:image/png;base64,${getvideothumbnail}` : videothumbnailUrl}
             alt="Video Thumbnail"
             className="thumbnail-image"
           />
@@ -2238,35 +2247,9 @@ useEffect(() => {
       )}
     </div>
 
-    <div className='text-black'>TrailerThumbnail</div>
-<div className="video-container mt-3 text-center">
-  {trailerthumbnailUrl ? (
-    <div className="thumbnail-container" onClick={handleClick}>
-      <img
-        src={trailerthumbnailUrl}
-        alt="Video Thumbnail"
-        className="thumbnail-image"
-      />
-    </div>
-  ) : (
-    <div>No trailer available</div>  
-    )}
-</div>
+    
 
-<div className='text-black'>TrailerThumbnail</div>
-<div className="video-container mt-3 text-center">
-  {userbannerUrl ? (
-    <div className="thumbnail-container" onClick={handleClick}>
-      <img
-        src={userbannerUrl}
-        alt="Video Thumbnail"
-        className="thumbnail-image"
-      />
-    </div>
-  ) : (
-    <div>No trailer available</div>  
-    )}
-</div>
+
           </div>          
           <div className="details-box ml-4 p-3 border border-dark border-2">
     <div className="col-6">

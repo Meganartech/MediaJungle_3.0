@@ -437,7 +437,7 @@ td{
 
 .details-box th,
 .details-box td {
-  padding: 20px; /* Add padding for better spacing */
+  padding: 8px; /* Add padding for better spacing */
   text-align: left; /* Align headers and cells to the left */
   vertical-align: top; /* Align text at the top of the cell */
   overflow-wrap: break-word; /* Ensure text within cells breaks properly */

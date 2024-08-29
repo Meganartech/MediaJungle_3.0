@@ -3,7 +3,9 @@ package com.VsmartEngine.MediaJungle.video;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,86 +27,65 @@ public class VideoImageController {
 	private VideoImageRepository videoimagerepository;
 	
 	
-	
-//	public ResponseEntity<VideoImage> getThumbnailByVideoId(@PathVariable Long id) {
+		
+//	public ResponseEntity<Map<String, byte[]>> getVideoImagesByVideoId(@PathVariable Long id) {
 //	    try {
-//	        return videoimagerepository.findById(id)
-//	            .map(videoImage -> {
-//	                // Decompress and set the images
-//	                videoImage.setVideoThumbnail(ImageUtils.decompressImage(videoImage.getVideoThumbnail()));
-////	                videoImage.setTrailerThumbnail(ImageUtils.decompressImage(videoImage.getTrailerThumbnail()));
-////	                videoImage.setUserBanner(ImageUtils.decompressImage(videoImage.getUserBanner()));
-//	                return new ResponseEntity<>(videoImage, HttpStatus.OK);
-//	            })
-//	            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-//	    } catch (Exception e) {
-//	        // Log the exception (optional)
-//	        e.printStackTrace();  // Replace with a proper logging mechanism
-//	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//	    }
-//	}
-	
-//	public ResponseEntity<VideoImage> getThumbnailByVideoId(@PathVariable Long id) {
-//	try {
-//        Optional<VideoImage> castDetail = videoimagerepository.findByVideoId(id);
-//        if (castDetail.isPresent()) {
-//        	// Assuming decompressImage returns the raw thumbnail data
-//            return new ResponseEntity<>(castDetail.get(), HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    } catch (Exception e) {
-//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
-//	}
-	
-
-//	@GetMapping("/videoimage/{id}")
-//	public ResponseEntity<List<String>> getThumbnailByVideoId(@PathVariable Long id) {
-//	    try {
-//	        Optional<VideoImage> videoImage = videoimagerepository.findByVideoId(id);
-//	        if (videoImage.isPresent()) {
-//	            VideoImage image = videoImage.get();
-//	            // Assuming decompressImage returns the raw thumbnail data
-//	            byte[] thumbnailData = ImageUtils.decompressImage(image.getVideoThumbnail());
+//	        // Fetching the video images from the repository
+//	        Optional<VideoImage> videoImageOptional = videoimagerepository.findVideoById(id);
 //
-//	            // Convert the byte array to Base64
-//	            String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);
+//	        if (videoImageOptional.isPresent()) {
+//	            VideoImage videoImage = videoImageOptional.get();
 //
-//	         // Return a list with a single Base64-encoded thumbnail
-//                return ResponseEntity.ok(Collections.singletonList(base64Thumbnail));
-//            } else {
-//	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//	            // Prepare a map to hold the image data
+//	            Map<String, byte[]> imageMap = new HashMap<>();
+//	            imageMap.put("videoThumbnail", videoImage.getVideoThumbnail());
+//	            imageMap.put("trailerThumbnail", videoImage.getTrailerThumbnail());
+//	            imageMap.put("userBanner", videoImage.getUserBanner());
+//
+//	            // Return the map as a response
+//	            return ResponseEntity.ok()
+//	                                 .contentType(MediaType.APPLICATION_JSON)
+//	                                 .body(imageMap);
+//	        } else {
+//	            return ResponseEntity.notFound().build();
 //	        }
 //	    } catch (Exception e) {
-//	        // Log the exception (optional)
 //	        e.printStackTrace();  // Replace with proper logging in production
 //	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //	    }
 //	}
-	
-	
-	public ResponseEntity<byte[]> getVideoThumbnailByVideoId(@PathVariable Long id) {
+
+	public ResponseEntity<Map<String, byte[]>> getVideoImagesByVideoId(@PathVariable Long id) {
 	    try {
-	        Optional<byte[]> videoThumbnailOptional = videoimagerepository.findVideoThumbnailByVideoId(id);
-	        
-	        if (videoThumbnailOptional.isPresent()) {
-	            byte[] thumbnailBytes = videoThumbnailOptional.get();
-	            byte[] decompressedThumbnailBytes = ImageUtils.decompressImage(thumbnailBytes);
-	            
+	        // Fetching the video images from the repository
+	        Optional<VideoImage> videoImageOptional = videoimagerepository.findVideoById(id);
+
+	        if (videoImageOptional.isPresent()) {
+	            VideoImage videoImage = videoImageOptional.get();
+
+	            // Decompressing the image bytes
+	            byte[] decompressedVideoThumbnail = ImageUtils.decompressImage(videoImage.getVideoThumbnail());
+	            byte[] decompressedTrailerThumbnail = ImageUtils.decompressImage(videoImage.getTrailerThumbnail());
+	            byte[] decompressedUserBanner = ImageUtils.decompressImage(videoImage.getUserBanner());
+
+	            // Prepare a map to hold the decompressed image data
+	            Map<String, byte[]> imageMap = new HashMap<>();
+	            imageMap.put("videoThumbnail", decompressedVideoThumbnail);
+	            imageMap.put("trailerThumbnail", decompressedTrailerThumbnail);
+	            imageMap.put("userBanner", decompressedUserBanner);
+
+	            // Return the map as a response
 	            return ResponseEntity.ok()
-	                                 .contentType(MediaType.IMAGE_JPEG) // Or the correct media type
-	                                 .body(decompressedThumbnailBytes);
+	                                 .contentType(MediaType.APPLICATION_JSON)
+	                                 .body(imageMap);
 	        } else {
 	            return ResponseEntity.notFound().build();
 	        }
 	    } catch (Exception e) {
-	    	e.printStackTrace();  // Replace with proper logging in production
+	        e.printStackTrace();  // Replace with proper logging in production
 	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 	}
-
-
 
 
 

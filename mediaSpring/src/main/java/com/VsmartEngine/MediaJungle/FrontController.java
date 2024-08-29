@@ -856,8 +856,8 @@ public class FrontController {
 		}
 		
 		@PostMapping("/uploaddescription")
-	    public ResponseEntity<VideoDescription> uploadVideoDescription(
-	    		  	@RequestParam("videoTitle") String videoTitle,
+	    public ResponseEntity<?> uploadVideoDescription(
+	    		@RequestParam("videoTitle") String videoTitle,
 				@RequestParam("mainVideoDuration") String mainVideoDuration,
 				@RequestParam("trailerDuration") String trailerDuration,
 				@RequestParam("rating") String rating,
@@ -874,12 +874,10 @@ public class FrontController {
 				@RequestParam("userBanner") MultipartFile userBanner,
 				@RequestParam("video") MultipartFile video,
 		        @RequestParam("trailervideo") MultipartFile trailervideo,
-	              @RequestHeader("Authorization") String token){
-			
+	            @RequestHeader("Authorization") String token){
 			return VideoController.uploadVideoDescription(videoTitle, mainVideoDuration, trailerDuration, rating, certificateNumber, videoAccessType,
                     description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
                     videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,token);
-
 		}
 		
 		@GetMapping("/video/getall")
@@ -892,17 +890,59 @@ public class FrontController {
 			 return VideoController.getVideoDetailById(id);
 		 }
 		 
-		@GetMapping("/videoimage/{id}")
-		@Transactional
-		public ResponseEntity<byte[]> getVideoThumbnailByVideoId(@PathVariable Long id) {
-				return videoImageController.getVideoThumbnailByVideoId(id);
+		 @GetMapping("/videoimage/{id}")
+			@Transactional
+			public ResponseEntity<Map<String, byte[]>> getVideoImagesByVideoId(@PathVariable Long id) {
+					return videoImageController.getVideoImagesByVideoId(id);
+			}
+		 
+		 @GetMapping("/{videofilename}/videofile")
+		 public ResponseEntity<?> getVideo(@PathVariable String videofilename, HttpServletRequest request) {	
+			return VideoController.getVideo(videofilename, request);
 		}
-			
+		 
 		
-//		@GetMapping("/videoimage/{id}")
-//		public ResponseEntity<VideoImage> getVideoImageById(@PathVariable Long id) {
-//			return videoImageController.getVideoImageById(id);
-//		}
+		 @PatchMapping("/updateVideoDescription/{videoId}")
+		 @Transactional
+		 public ResponseEntity<?> updateVideoDescription(
+		         @PathVariable("videoId") Long videoId,
+		         @RequestParam(value = "videoTitle", required = false) String videoTitle,
+		         @RequestParam(value = "mainVideoDuration", required = false) String mainVideoDuration,
+		         @RequestParam(value = "trailerDuration", required = false) String trailerDuration,
+		         @RequestParam(value = "rating", required = false) String rating,
+		         @RequestParam(value = "certificateNumber", required = false) String certificateNumber,
+		         @RequestParam(value = "videoAccessType", required = false) Boolean videoAccessType,
+		         @RequestParam(value = "description", required = false) String description,
+		         @RequestParam(value = "productionCompany", required = false) String productionCompany,
+		         @RequestParam(value = "certificateName", required = false) String certificateName,
+		         @RequestParam(value = "castandcrewlist", required = false) List<Long> castandcrewlist,
+		         @RequestParam(value = "taglist", required = false) List<Long> taglist,
+		         @RequestParam(value = "categorylist", required = false) List<Long> categorylist,
+		         @RequestParam(value = "videoThumbnail", required = false) MultipartFile videoThumbnail,
+		         @RequestParam(value = "trailerThumbnail", required = false) MultipartFile trailerThumbnail,
+		         @RequestParam(value = "userBanner", required = false) MultipartFile userBanner,
+		         @RequestParam(value = "video", required = false) MultipartFile video,
+		         @RequestParam(value = "trailervideo", required = false) MultipartFile trailervideo,
+		         @RequestHeader("Authorization") String token) {
+			 
+			 return VideoController.updateVideoDescription(videoId,videoTitle, mainVideoDuration, trailerDuration, rating, certificateNumber, videoAccessType,
+	                    description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
+	                    videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,token);
+			}
+		 
+		 @DeleteMapping("/deletevideo/{videoId}")
+		 @Transactional
+		    public ResponseEntity<?> deleteVideoDescription(@PathVariable("videoId") Long videoId,
+		                                                    @RequestHeader("Authorization") String token) {
+			 return VideoController.deleteVideoDescription(videoId, token);
+		 }
+		 
+		
+//		 @GetMapping("/{filename}/file")
+//			public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
+//
+//				return AudioController.getAudioFi(filename, request);
+//			}
 		
 //		
 

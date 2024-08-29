@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -47,6 +49,7 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 //import java.nio.file.Path;
 //import java.nio.file.Paths;
@@ -93,7 +96,7 @@ public class VideoController {
 	@Autowired
 	private AddVideoDescriptionRepository videodescription ;
 
-	public ResponseEntity<VideoDescription> uploadVideoDescription(
+	public ResponseEntity<?> uploadVideoDescription(
 	        @RequestParam("videoTitle") String videoTitle,
 	        @RequestParam("mainVideoDuration") String mainVideoDuration,
 	        @RequestParam("trailerDuration") String trailerDuration,
@@ -119,7 +122,6 @@ public class VideoController {
 	        if (!jwtUtil.validateToken(token)) {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	        }
-
 	        String email = jwtUtil.getUsernameFromToken(token);
 	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
 
@@ -129,8 +131,7 @@ public class VideoController {
 	            FileModel upload= fileSevice.uploadVideo(path, video);
 	        	String videoname=upload.getVideoFileName();
 	        	FileModel uploadtrailervideo = fileSevice.uploadTrailerVideo(trailervideoPath,trailervideo);
-	        	String trailervideoname = uploadtrailervideo.getVideotrailerfilename();
-	            
+	        	String trailervideoname = uploadtrailervideo.getVideotrailerfilename();        
 	            // Create and save VideoDescription
 	            VideoDescription newVideo = new VideoDescription();
 	            newVideo.setVideoTitle(videoTitle);
@@ -165,7 +166,12 @@ public class VideoController {
 	            // Save the VideoImage entity
 	            videoimagerepository.save(videoImage);
 
-	            return ResponseEntity.ok().body(savedDescription);
+	         // Prepare response map
+	            Map<String, Object> response = new HashMap<>();
+	            response.put("videoDescription", savedDescription);
+	            response.put("videoImage", videoImage);
+
+	            return ResponseEntity.ok().body(response);
 	        } else {
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	        }
@@ -197,6 +203,295 @@ public class VideoController {
 	    }
 	
 	
+	 public ResponseEntity<?> getVideo(@PathVariable String videofilename, HttpServletRequest request) {
+     try {
+
+//         Optional<VideoDescription> optionalLesson = videodescriptionRepository.findById(id);
+//         if (!optionalLesson.isPresent()) {
+//             return ResponseEntity.notFound().build();
+//         }
+//         String filename =optionalLesson.get().getVidofilename();
+
+         if (videofilename != null) {
+         	Path filePath = Paths.get(path, videofilename);
+         	System.out.println("filePath"+ filePath);
+ 		    try {
+ 		        if (filePath.toFile().exists() && filePath.toFile().isFile()) {
+ 		            Resource resource = new UrlResource(filePath.toUri());
+ 		            if (resource.exists() && resource.isReadable()) {
+ 		                HttpHeaders headers = new HttpHeaders();
+
+ 		                // Set the Content-Type based on the file's extension
+ 		                String mimeType = Files.probeContentType(filePath);
+ 		                if (mimeType == null) {
+ 		                    mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+ 		                }
+ 		                headers.add(HttpHeaders.CONTENT_TYPE, mimeType);
+
+ 		                // Set Content-Disposition to "inline" to stream the video inline
+ 		                headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline");
+
+ 		                // Define the initial chunk size (5 MB)
+ 		                final long INITIAL_CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB
+ 		                long fileSize = Files.size(filePath);
+
+ 		                // Get the Range header from the request
+ 		                String rangeHeader = request.getHeader(HttpHeaders.RANGE);
+
+ 		                if (rangeHeader != null) {
+ 		                    // Handle range request from the client
+ 		                    String[] ranges = rangeHeader.replace("bytes=", "").split("-");
+ 		                    long rangeStart = Long.parseLong(ranges[0]);
+ 		                    long rangeEnd = ranges.length > 1 ? Long.parseLong(ranges[1]) : fileSize - 1;
+
+ 		                    // Calculate the content length
+ 		                    long contentLength = rangeEnd - rangeStart + 1;
+
+ 		                    System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
+ 		                    // Create a RandomAccessFile to read the specified range
+ 		                    try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
+ 		                        file.seek(rangeStart);
+ 		                        byte[] buffer = new byte[(int) contentLength];
+ 		                        file.readFully(buffer);
+
+ 		                        // Create a ByteArrayResource to hold the requested range of bytes
+ 		                        ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+
+ 		                        // Set the Content-Range header
+ 		                        headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
+ 		                        System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
+
+ 		                        // Return a 206 Partial Content response
+ 		                        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+ 		                                .headers(headers)
+ 		                                .contentLength(contentLength)
+ 		                                .body(byteArrayResource);
+ 		                    }
+ 		                } else {
+ 		                    // No range header, send the initial 5 MB chunk
+ 		                    long rangeStart = 0;
+ 		                    long rangeEnd = Math.min(INITIAL_CHUNK_SIZE - 1, fileSize - 1);
+ 		                    long contentLength = rangeEnd - rangeStart + 1;
+		                    System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
+
+ 		                    // Create a RandomAccessFile to read the specified range
+ 		                    try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
+ 		                        file.seek(rangeStart);
+ 		                        byte[] buffer = new byte[(int) contentLength];
+ 		                        file.readFully(buffer);
+
+ 		                        // Create a ByteArrayResource to hold the requested range of bytes
+ 		                        ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+
+ 		                        // Set the Content-Range header
+ 		                        headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
+
+ 		                        // Return a 206 Partial Content response
+ 		                        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+ 		                                .headers(headers)
+ 		                                .contentLength(contentLength)
+ 		                                .body(byteArrayResource);
+ 		                    }
+ 		                }
+ 		            }
+ 		        }else {
+
+		            	System.out.println("file is null");
+ 		        }
+ 		    } catch (Exception e) {
+ 		        // Handle exceptions
+ 		        e.printStackTrace();
+ 		    }
+
+ 		    // Return a 404 Not Found response if the file does not exist
+ 		    return ResponseEntity.notFound().build();
+
+         } else {
+             return ResponseEntity.ok(videofilename);
+         }
+     } catch (Exception e) {
+         // Log the exception (you can use a proper logging library)
+         e.printStackTrace();
+         // Return an internal server error response
+         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+     }
+     
+ }
+
+	 public ResponseEntity<?> updateVideoDescription(
+	         @PathVariable("videoId") Long videoId,
+	         @RequestParam(value = "videoTitle", required = false) String videoTitle,
+	         @RequestParam(value = "mainVideoDuration", required = false) String mainVideoDuration,
+	         @RequestParam(value = "trailerDuration", required = false) String trailerDuration,
+	         @RequestParam(value = "rating", required = false) String rating,
+	         @RequestParam(value = "certificateNumber", required = false) String certificateNumber,
+	         @RequestParam(value = "videoAccessType", required = false) Boolean videoAccessType,
+	         @RequestParam(value = "description", required = false) String description,
+	         @RequestParam(value = "productionCompany", required = false) String productionCompany,
+	         @RequestParam(value = "certificateName", required = false) String certificateName,
+	         @RequestParam(value = "castandcrewlist", required = false) List<Long> castandcrewlist,
+	         @RequestParam(value = "taglist", required = false) List<Long> taglist,
+	         @RequestParam(value = "categorylist", required = false) List<Long> categorylist,
+	         @RequestParam(value = "videoThumbnail", required = false) MultipartFile videoThumbnail,
+	         @RequestParam(value = "trailerThumbnail", required = false) MultipartFile trailerThumbnail,
+	         @RequestParam(value = "userBanner", required = false) MultipartFile userBanner,
+	         @RequestParam(value = "video", required = false) MultipartFile video,
+	         @RequestParam(value = "trailervideo", required = false) MultipartFile trailervideo,
+	         @RequestHeader("Authorization") String token) {
+
+	     try {
+	         // Validate token
+	         if (!jwtUtil.validateToken(token)) {
+	             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	         }
+	         String email = jwtUtil.getUsernameFromToken(token);
+	         Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	         if (opUser.isPresent()) {
+	             AddUser user = opUser.get();
+
+	             // Fetch existing VideoDescription
+	             Optional<VideoDescription> optionalVideoDescription = videodescriptionRepository.findById(videoId);
+	             if (!optionalVideoDescription.isPresent()) {
+	                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	             }
+
+	             VideoDescription videoDescription = optionalVideoDescription.get();
+
+	             // Handle video file update
+	             if (video != null) {
+	                 String existingVideoFileName = videoDescription.getVidofilename();
+	                 if (existingVideoFileName != null) {
+	                     fileSevice.deleteVideoFile(existingVideoFileName);
+	                 }
+
+	                 // Upload new video file
+	                 FileModel upload = fileSevice.uploadVideo(path, video);
+	                 videoDescription.setVidofilename(upload.getVideoFileName());
+	             }
+
+	             // Handle trailer video file update
+	             if (trailervideo != null) {
+	                 // Delete existing trailer video file if it exists
+	                 String existingTrailerFileName = videoDescription.getVideotrailerfilename();
+	                 if (existingTrailerFileName != null) {
+	                     fileSevice.deletetrailerFile(existingTrailerFileName);
+	                 }
+
+	                 // Upload new trailer video file
+	                 FileModel uploadtrailervideo = fileSevice.uploadTrailerVideo(trailervideoPath, trailervideo);
+	                 videoDescription.setVideotrailerfilename(uploadtrailervideo.getVideotrailerfilename());
+	             }
+
+	             // Update VideoDescription fields if provided
+	             if (videoTitle != null) videoDescription.setVideoTitle(videoTitle);
+	             if (mainVideoDuration != null) videoDescription.setMainVideoDuration(mainVideoDuration);
+	             if (trailerDuration != null) videoDescription.setTrailerDuration(trailerDuration);
+	             if (rating != null) videoDescription.setRating(rating);
+	             if (certificateNumber != null) videoDescription.setCertificateNumber(certificateNumber);
+	             if (videoAccessType != null) videoDescription.setVideoAccessType(videoAccessType);
+	             if (description != null) videoDescription.setDescription(description);
+	             if (productionCompany != null) videoDescription.setProductionCompany(productionCompany);
+	             if (certificateName != null) videoDescription.setCertificateName(certificateName);
+	             if (castandcrewlist != null) videoDescription.setCastandcrewlist(castandcrewlist);
+	             if (taglist != null) videoDescription.setTaglist(taglist);
+	             if (categorylist != null) videoDescription.setCategorylist(categorylist);
+
+	             // Save updated VideoDescription
+	             VideoDescription updatedVideoDescription = videodescriptionRepository.save(videoDescription);
+
+	             // Fetch existing VideoImage and update if needed
+	             Optional<VideoImage> optionalVideoImage = videoimagerepository.findVideoById(videoId);
+	             VideoImage videoImage;
+	             if (optionalVideoImage.isPresent()) {
+	                 videoImage = optionalVideoImage.get();
+	             } else {
+	                 videoImage = new VideoImage();
+	                 videoImage.setVideoId(videoId);
+	             }
+
+	             if (videoThumbnail != null) {
+	                 byte[] videothumbnailBytes = ImageUtils.compressImage(videoThumbnail.getBytes());
+	                 videoImage.setVideoThumbnail(videothumbnailBytes);
+	             }
+	             if (trailerThumbnail != null) {
+	                 byte[] trailerthumbnailBytes = ImageUtils.compressImage(trailerThumbnail.getBytes());
+	                 videoImage.setTrailerThumbnail(trailerthumbnailBytes);
+	             }
+	             if (userBanner != null) {
+	                 byte[] userbannerBytes = ImageUtils.compressImage(userBanner.getBytes());
+	                 videoImage.setUserBanner(userbannerBytes);
+	             }
+
+	             // Save updated VideoImage
+	             videoimagerepository.save(videoImage);
+
+	             // Prepare response map
+	             Map<String, Object> response = new HashMap<>();
+	             response.put("videoDescription", updatedVideoDescription);
+	             response.put("videoImage", videoImage);
+
+	             return ResponseEntity.ok().body(response);
+	         } else {
+	             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	         }
+	     } catch (IOException e) {
+	         e.printStackTrace();
+	         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	     }
+	 }
+
+
+	 
+	 
+	    public ResponseEntity<?> deleteVideoDescription(@PathVariable("videoId") Long videoId,
+	                                                    @RequestHeader("Authorization") String token) {
+	        try {
+	            // Validate token
+	            if (!jwtUtil.validateToken(token)) {
+	                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	            }
+	            String email = jwtUtil.getUsernameFromToken(token);
+	            Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	            if (opUser.isPresent()) {
+	                AddUser user = opUser.get();
+
+	                // Fetch VideoDescription
+	                Optional<VideoDescription> optionalVideoDescription = videodescriptionRepository.findById(videoId);
+	                if (!optionalVideoDescription.isPresent()) {
+	                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	                }
+
+	                VideoDescription videoDescription = optionalVideoDescription.get();
+
+	                // Delete video file if it exists
+	                String videoFileName = videoDescription.getVidofilename();
+	                if (videoFileName != null) {
+	                    fileSevice.deleteVideoFile(videoFileName);
+	                }
+
+	                // Delete trailer video file if it exists
+	                String trailerFileName = videoDescription.getVideotrailerfilename();
+	                if (trailerFileName != null) {
+	                    fileSevice.deletetrailerFile(trailerFileName);
+	                }
+
+	                // Delete VideoDescription and VideoImage
+	                videodescriptionRepository.deleteById(videoId);
+	                videoimagerepository.deleteByVideoId(videoId);
+
+	                // Prepare response
+	                return ResponseEntity.ok().build();
+	            } else {
+	                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	        }
+	    }
+
 	
 	
 //    public ResponseEntity<VideoDescription> uploadVideoDescription(
