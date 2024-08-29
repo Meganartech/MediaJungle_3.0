@@ -10,12 +10,14 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.PlanDetails;
@@ -25,8 +27,9 @@ import com.VsmartEngine.MediaJungle.repository.PlanDetailsRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 
 
+@RestController
+@RequestMapping("/api/v2")
 @CrossOrigin(origins = "http://localhost:3000")
-@Controller
 public class PlanDetailsController {
 	
 	@Autowired
@@ -37,6 +40,12 @@ public class PlanDetailsController {
 	
 	@Autowired
 	private JwtUtil jwtUtil; // Autowire JwtUtil
+	
+	
+	
+	@Autowired
+	private PlanFeatureMergeController PlanFeatureMergeController;
+	
 	
 	@Autowired
 	private AddUserRepository adduserrepository;
@@ -67,7 +76,7 @@ public class PlanDetailsController {
 		             System.out.println(details.getId());
 		             Long planId = details.getId();
 			            String Name = details.getPlanname();
-			            String heading = Name + " New Paln Added!";
+			            String heading = Name + " New Plan Added!";
 			            // Create notification with optional file (thumbnail)
 			            Long notifyId = notificationservice.createNotification(username, email, heading);
 
@@ -108,60 +117,55 @@ public class PlanDetailsController {
     }
 	
 
-	public ResponseEntity<?> deletePlan(@PathVariable Long planId, @RequestHeader("Authorization") String token) {
-	    try {
-	        // Validate JWT token
-	        if (!jwtUtil.validateToken(token)) {
-	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid token"));
-	        }
+    @DeleteMapping("/plans/{planId}")
+    public ResponseEntity<?> deletePlan(@PathVariable Long planId, @RequestHeader("Authorization") String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        try {
+            if (!jwtUtil.validateToken(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid token"));
+            }
 
-	        // Extract username from token
-	        String email = jwtUtil.getUsernameFromToken(token);
-	        Optional<AddUser> optionalUser = adduserrepository.findByUsername(email);
+            String email = jwtUtil.getUsernameFromToken(token);
+            Optional<AddUser> optionalUser = adduserrepository.findByUsername(email);
 
-	        if (optionalUser.isPresent()) {
-	            AddUser user = optionalUser.get();
-	            String username = user.getUsername();
+            if (optionalUser.isPresent()) {
+                AddUser user = optionalUser.get();
+                String username = user.getUsername();
 
-	            // Fetch plan details before deletion
-	            Optional<PlanDetails> optionalPlan = planrepository.findById(planId);
-	            if (optionalPlan.isEmpty()) {
-	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Plan not found"));
-	            }
-	            PlanDetails plan = optionalPlan.get();
-	            String name = plan.getPlanname();
+                Optional<PlanDetails> optionalPlan = planrepository.findById(planId);
+                if (optionalPlan.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Plan not found"));
+                }
 
-	            
-	            // Delete the plan
-	            planrepository.deleteById(planId);
+                // Delete the plan
+                planrepository.deleteById(planId);
 
-	            // Create notification if plan is deleted
-	            String heading = name + " Plan Deleted!";
-	            Long notifyId = notificationservice.createNotification(username, email, heading);
+                // Create notification
+                String name = optionalPlan.get().getPlanname();
+                String heading = name + " Plan Deleted!";
+                Long notifyId = notificationservice.createNotification(username, email, heading);
 
-	            if (notifyId != null) {
-	                // Notify all admins
-	                Set<String> notiUserSet = new HashSet<>();
-	                List<AddUser> adminUsers = adduserrepository.findAll();
-	                for (AddUser admin : adminUsers) {
-	                    notiUserSet.add(admin.getEmail());
-	                }
-	                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
-	            }
+                if (notifyId != null) {
+                    // Notify all admins
+                    Set<String> notiUserSet = new HashSet<>();
+                    List<AddUser> adminUsers = adduserrepository.findAll();
+                    for (AddUser admin : adminUsers) {
+                        notiUserSet.add(admin.getEmail());
+                    }
+                    notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+                }
 
-	            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	        } else {
-	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authorized"));
-	        }
-	    } catch (Exception e) {
-	        // Log the exception for debugging
-	        e.printStackTrace();
-	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	}
-
-	
-
+                return ResponseEntity.noContent().build(); // 204 No Content
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authorized"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal server error"));
+        }
+    }
     public ResponseEntity<String> editplans(@PathVariable Long planId, @RequestBody PlanDetails updatedPlanDetails,@RequestHeader("Authorization") String token) {
 		try {
 	        // Validate JWT token
