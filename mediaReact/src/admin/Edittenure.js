@@ -103,16 +103,12 @@ const EditTenure = () => {
     };
     
     return (
-        <div className="container-fluid con-flu">
-            <div className="container2">
-                <ol className="breadcrumb mb-4">
-                    <li className="breadcrumb-item">
-                        <Link to="/admin/TenureList">Tenures</Link>
-                    </li>
-                    <li className="breadcrumb-item active text-white">Edit Tenure</li>
-                </ol>
-
-                <div className="card-body">
+        <div className='container3 mt-20'>
+        <ol className="breadcrumb mb-4">
+          <li className="breadcrumb-item"><Link to="/admin/TenureList">Tenures</Link></li>
+          <li className="breadcrumb-item active text-white">Edit Tenures</li>
+        </ol>
+        <div className="container mt-3">
                     <form onSubmit={handleSubmit}>
                         <div className="modal-body">
                             <div className="temp">
@@ -183,7 +179,7 @@ const EditTenure = () => {
                     </form>
                 </div>
             </div>
-        </div>
+     
     );
 };
 

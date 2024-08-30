@@ -106,7 +106,7 @@
         // Clear form fields and feature states
         setplanname(''); 
         setamount(''); 
-        setvalidity('1');
+        setvalidity('30');
         // setfeatures([]); // Clear the features array
       } catch (error) {
         console.error('Error uploading plan details:', error.response ? error.response.data : error.message);
