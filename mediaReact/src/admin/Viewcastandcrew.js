@@ -9,6 +9,7 @@ const Viewcastandcrew = () => {
   const navigate = useNavigate();
   const token = sessionStorage.getItem('tokenn')
   const handleClick = (link) => {
+    localStorage.removeItem('items');
     navigate(link);
   }
 
@@ -91,7 +92,7 @@ const Viewcastandcrew = () => {
 
   const handlEdit = async (castId) => {
     localStorage.setItem('items', castId);
-    navigate('/admin/Editcastandcrew');
+    navigate('/admin/Addcastcrew');
   };
 
   return (

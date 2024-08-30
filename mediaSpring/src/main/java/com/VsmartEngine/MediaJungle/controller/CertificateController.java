@@ -177,6 +177,15 @@ public class CertificateController {
 		        if (editCertificate.getCertificate() != null) {
 		        	existingCertificate.setCertificate(editCertificate.getCertificate());
 		        }
+		        
+		        if(editCertificate.getDescription() != null) {
+		        	existingCertificate.setDescription(editCertificate.getDescription());
+		        }
+		        
+		        if(editCertificate.getIssuedby() != null) {
+		        	existingCertificate.setIssuedby(editCertificate.getIssuedby());
+		        }
+		        
 		        String newcertficate = existingCertificate.getCertificate();
 		     // Save the updated user data back to the repository
 		        certificaterepository.save(existingCertificate);

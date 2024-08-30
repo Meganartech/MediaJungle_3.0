@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import "../css/Sidebar.css";
@@ -61,13 +61,76 @@ const AddCategory = () => {
     });
   };
   
+  /* edit mode */
+const [isEditMode, setIsEditMode] = useState(false);
+
+const categoryId = localStorage.getItem('items');
+console.log("categoryId",categoryId);
+
+
+useEffect(() => {
+  if (categoryId) {
+    setIsEditMode(true);
+
+    // Fetch the video details based on videoId
+    fetch(`${API_URL}/api/v2/GetCategoryById/${categoryId}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Video Details:', data); // Log the video details
+        setCategoryName(data.categories);
+      })
+      .catch(error => console.error('Error fetching video details:', error));
+  }
+}, [categoryId]);
+
+const handleUpdate = (e) => {
+  e.preventDefault();
+  // Create the data object
+  const data = {
+    categories: categoryName
+  };
+
+  fetch(`${API_URL}/api/v2/editCategory/${categoryId}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  .then((response) => {
+    if (response.ok) {
+      console.log('Category updated successfully');
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Category details successfully updated',
+      });
+    } else {
+      console.log('Error updating category');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error updating category',
+      });
+    }
+  })
+  .catch((error) => {
+    console.log('Error updating category:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred while updating the category',
+    });
+  });
+};
 
   return (
     
     <div className='container3 mt-20'>
    <ol className="breadcrumb mb-4 d-flex my-0">
     <li className="breadcrumb-item"><Link to="/admin/ViewCategory">Categories</Link></li>
-    <li className="breadcrumb-item active text-white">Add Categories</li>
+    <li className="breadcrumb-item active text-white">{isEditMode ? 'Edit Category' : 'Add Category'}</li>
   </ol>
   
   {/* <div className="container mt-3"> */}
@@ -97,8 +160,8 @@ const AddCategory = () => {
     <div className="row py-3 my-5 w-100">
       <div className="col-md-8 ms-auto text-end">
       <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg ">Cancel</button>
-        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={handleSubmit} style={{backgroundColor:'blue'}}
-        >Submit</button>
+        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode? handleUpdate : handleSubmit} style={{backgroundColor:'blue'}}
+        >{isEditMode ? 'Edit' : 'Submit'}</button>
       </div>
     </div>
   </div>

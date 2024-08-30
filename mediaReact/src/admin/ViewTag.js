@@ -9,6 +9,7 @@ const ViewTag = () => {
   const [Tag, setTag] = useState([]);
   const token = sessionStorage.getItem('tokenn')
   const handleClick = (link) => {
+    localStorage.removeItem('items'); // Clear the stored videoId
     navigate(link);
   }
   useEffect(() => {
@@ -51,7 +52,7 @@ const handleDeleteTag = (tagId) => {
           throw new Error('Network response was not ok');
         }
         // If the response status is OK, don't attempt to parse JSON from an empty response
-        return response.status === 204 ? null : response.json();
+        return response.status <= 204 ? null : response.json();
       })
       .then(data => {
         if (data) {
@@ -82,7 +83,7 @@ const handleDeleteTag = (tagId) => {
 
   const handlEdit = async (tagId) => {
     localStorage.setItem('items', tagId);
-    navigate('/admin/EditTag');
+    navigate('/admin/AddTag');
   };
 
 
@@ -118,17 +119,17 @@ const handleDeleteTag = (tagId) => {
           </thead>
           <tbody>
             {Tag.map((tag, index) => (
-              <tr key={tag.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+              <tr key={tag.tag_id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
                 <td>
                   <input type="checkbox" />
                 </td>
                 <td>{index + 1}</td>
                 <td>{tag.tag}</td>
                 <td>
-                  <button onClick={() => handlEdit(tag.id)} className="btn btn-primary me-2">
+                  <button onClick={() => handlEdit(tag.tag_id)} className="btn btn-primary me-2">
                     <i className="fas fa-edit" aria-hidden="true"></i> Edit
                   </button>
-                  <button onClick={() => handleDeleteTag(tag.id)}className="btn btn-danger">
+                  <button onClick={() => handleDeleteTag(tag.tag_id)}className="btn btn-danger">
                     <i className="fa fa-trash" aria-hidden="true"></i> Delete
                   </button>
                 </td>
