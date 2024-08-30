@@ -210,7 +210,7 @@ public class PlanDetailsController {
 
             planrepository.save(existingplan);
             
-            String heading = newplan + " plan upadted ";
+            String heading = newplan + " plan updated ";
  	        Long notifyId = notificationservice.createNotification(username, email, heading);
              if (notifyId != null) {
                  Set<String> notiUserSet = new HashSet<>();
