@@ -190,10 +190,10 @@
                             <button className="flex-grow-1" style={{ textAlign: "left" }}>
                               {feature.features}
                             </button>
-                            <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'yes')}>
+                            <button className={`btn ms-2 ${feature.active === 'yes' ? 'btn-success' : 'btn-info'}`} onClick={() => handleSetActive(feature.id, 'yes')}>
                               Active
                             </button>
-                            <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'no')}>
+                            <button className={`btn ms-2 ${feature.active === 'no' ? 'btn-danger' : 'btn-info'}`} onClick={() => handleSetActive(feature.id, 'no')}>
                               Inactive
                             </button>
                           </div>

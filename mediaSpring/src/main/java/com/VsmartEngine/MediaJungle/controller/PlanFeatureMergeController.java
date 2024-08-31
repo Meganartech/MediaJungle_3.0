@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.VsmartEngine.MediaJungle.model.PlanFeatureMerge;
 import com.VsmartEngine.MediaJungle.service.PlanFeatureMergeService;
 
@@ -37,24 +38,22 @@ public class PlanFeatureMergeController {
         }
     }
 
-
     @PatchMapping("/planfeaturemerge")
     public ResponseEntity<List<PlanFeatureMerge>> patchPlanFeatureMerge(
             @RequestBody List<PlanFeatureMerge> planFeatureMerges) {
         try {
             if (!planFeatureMerges.isEmpty()) {
                 Long planId = planFeatureMerges.get(0).getPlanId();
-                // First delete existing records
-                service.deleteFeaturesByPlanId(planId);
-                
-                // Then add new records
-                List<PlanFeatureMerge> updatedRecords = service.updatePlanFeatureMerges(planFeatureMerges);
+
+                // Delete existing records and insert new ones in a single transaction
+                List<PlanFeatureMerge> updatedRecords = service.saveUpdatedPlanFeatures(planId, planFeatureMerges);
+
                 return new ResponseEntity<>(updatedRecords, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Replace with proper logging
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
