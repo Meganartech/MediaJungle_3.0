@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
@@ -56,12 +56,78 @@ const handleSubmit = (e) => {
   });
 };
 
+
+ /* edit mode */
+ const [isEditMode, setIsEditMode] = useState(false);
+
+ const tagId = localStorage.getItem('items');
+ console.log("tagId",tagId);
+ 
+ useEffect(() => {
+   if (tagId) {
+     setIsEditMode(true);
+ 
+     // Fetch the video details based on videoId
+     fetch(`${API_URL}/api/v2/GetTagById/${tagId}`)
+       .then(response => response.json())
+       .then(data => {
+         console.log('Video Details:', data); // Log the video details
+         setTagName(data.tag);
+       })
+       .catch(error => console.error('Error fetching video details:', error));
+   }
+ }, [tagId]);
+ 
+
+ const handleUpdate = (e) => {
+  e.preventDefault();
+
+  const data = {
+    tag: tagName
+  };
+ 
+  fetch(`${API_URL}/api/v2/editTag/${tagId}`, {
+    method: 'PATCH',
+    headers: {
+       Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  .then((response) => {
+    if (response.ok) {
+      console.log('Tag updated successfully');
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Tag details successfully updated',
+      });
+    } else {
+      console.log('Error updating Tag');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error updating tag',
+      });
+    }
+  })
+  .catch((error) => {
+    console.log('Error updating tag:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred while updating the tag',
+    });
+  });
+};
+
+
   return (
 
 <div className='container3 mt-20'>
   <ol className="breadcrumb mb-4">
     <li className="breadcrumb-item"><Link to="/admin/ViewTag">Tags</Link></li>
-    <li className="breadcrumb-item active  text-white">Add Tag</li>
+    <li className="breadcrumb-item active  text-white">{isEditMode ? 'Edit Tag' : 'Add Tag' }</li>
   </ol>
   <div className="container mt-3">
     <div className="row py-3 my-3 align-items-center">
@@ -87,7 +153,7 @@ const handleSubmit = (e) => {
     <div className="row py-3 my-5">
       <div className="col-md-8 ms-auto text-end">
       <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
-        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={handleSubmit} style={{backgroundColor:'blue'}}
+        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode ? handleUpdate : handleSubmit} style={{backgroundColor:'blue'}}
         >Submit</button>
       </div>
     </div>

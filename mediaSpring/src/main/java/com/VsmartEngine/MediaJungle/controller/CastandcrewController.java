@@ -114,10 +114,12 @@ public class CastandcrewController {
 
     public ResponseEntity<CastandCrew> getcast(@PathVariable Long id) {
         try {
-            Optional<CastandCrew> castDetail = castandcrewrepository.findById(id);
-            if (castDetail.isPresent()) {
-            	// Assuming decompressImage returns the raw thumbnail data
-                return new ResponseEntity<>(castDetail.get(), HttpStatus.OK);
+            Optional<CastandCrew> castDetailOpt = castandcrewrepository.findById(id);
+            if (castDetailOpt.isPresent()) {
+                CastandCrew castDetail = castDetailOpt.get();
+                byte[] images = ImageUtils.decompressImage(castDetail.getImage());
+                castDetail.setImage(images); // Set the decompressed image
+                return new ResponseEntity<>(castDetail, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -125,6 +127,7 @@ public class CastandcrewController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 	
 
     public ResponseEntity<List<byte[]>> getcastthumbnail() {

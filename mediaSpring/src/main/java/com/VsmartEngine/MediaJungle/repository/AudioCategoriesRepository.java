@@ -14,5 +14,7 @@ public interface AudioCategoriesRepository extends JpaRepository<AudioCategories
 	
 	 @Query("SELECT Categories_id  FROM AudioCategories a WHERE audio_id.id = :audio_id")
 	    List<AddNewCategories> findByCategorie_Id(@Param("audio_id") long audio_id);
+	 
+	
 
 }

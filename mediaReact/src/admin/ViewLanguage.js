@@ -9,7 +9,9 @@ const ViewLanguage = () => {
   const navigate = useNavigate();
   const [language, setlanguage] = useState([]);
   const token = sessionStorage.getItem('tokenn')
+
   const handleClick = (link) => {
+    localStorage.removeItem('items'); // Clear the stored videoId
     navigate(link);
   }
 
@@ -94,7 +96,7 @@ const handleDeleteLanguage = (languageId) => {
 
   const handlEdit = async (languageId) => {
     localStorage.setItem('items', languageId);
-    navigate('/admin/Editlanguage');
+    navigate('/admin/Addlanguage');
   };
   
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -87,16 +87,73 @@ const AddCastCrew = () => {
     }
   };
 
+  /* edit mode */
+const [isEditMode, setIsEditMode] = useState(false);
+
+const castId = localStorage.getItem('items');
+console.log("castId",castId);
+
+
+useEffect(() => {
+  if (castId) {
+    setIsEditMode(true);
+
+    // Fetch the video details based on videoId
+    fetch(`${API_URL}/api/v2/getcast/${castId}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Video Details:', data); // Log the video details
+        setName(data.name);
+        setDescription(data.description);
+        setImage(data.image);
+
+      })
+      .catch(error => console.error('Error fetching video details:', error));
+  }
+}, [castId]);
+
+
+const handleUpdate = async (e) => {
+  e.preventDefault();
+  try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('description', description);
+      formData.append('image', image);
+
+      const response = await axios.patch(`${API_URL}/api/v2/updatecastandcrew/${castId}`, formData, {
+          headers: {
+              Authorization:token,
+              'Content-Type': 'multipart/form-data'
+          }
+      });
+      Swal.fire({
+          icon: 'success',
+          title: 'Updated successfully!',
+          text: response.data.message, // Replace with your response message
+          showConfirmButton: 'OK',
+      });
+  } catch (error) {
+      console.error('Error updating:', error);
+      Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to update. Please try again later.', // Customize your error message
+          showConfirmButton: true
+      });
+  }
+};
+
   return (
     <div className='container3 mt-20'>
       <ol className="breadcrumb mb-4 d-flex my-0">
         <li className="breadcrumb-item">
           <Link to="/admin/Viewcastandcrew">Cast and Crews</Link>
         </li>
-        <li className="breadcrumb-item active text-white">Add Cast and Crew</li>
+        <li className="breadcrumb-item active text-white">{isEditMode ? 'Edit Cast and Crew' : 'Add Cast and Crew'}</li>
       </ol>
 
-      <form onSubmit={handleSubmit} method="post">
+      <form onSubmit={isEditMode?handleUpdate:handleSubmit} method="post">
         <div className="outer-container">
           <div className="table-container">
             <div className="row py-3 my-3 align-items-center w-100">
@@ -141,7 +198,7 @@ const AddCastCrew = () => {
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
                   style={{
-                    backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
+                    backgroundImage: !isEditMode ?  `url(${imageUrl})` : `url(data:image/png;base64,${image})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                   }}
@@ -151,7 +208,7 @@ const AddCastCrew = () => {
                   ) : (
                     <span>Drag and drop</span>
                   )} */}
-                  {!imageUrl && <span>Drag and drop</span>}
+                  {!imageUrl && !isEditMode && <span>Drag and drop</span>}
                 </div>
                 <div className="col-md-4">
        <span style={{ whiteSpace: 'nowrap' }}>please choose png format only*</span>
@@ -190,7 +247,7 @@ const AddCastCrew = () => {
                   type="submit"
                   style={{ backgroundColor: 'blue' }}
                 >
-                  Submit
+                  {isEditMode?'Edit':'Submit'}
                 </button>
               </div>
             </div>

@@ -9,6 +9,7 @@ const ViewCertificate= () => {
   const navigate = useNavigate();
   const token = sessionStorage.getItem('tokenn')
   const handleClick = (link) => {
+    localStorage.removeItem('items'); // Clear the stored videoId
     navigate(link);
   }
   useEffect(() => {
@@ -88,11 +89,20 @@ const handleDeleteCertificate = (certificateId) => {
 };
 
 
-  const handlEdit = async (certificateId) => {
-    localStorage.setItem('items', certificateId);
-    navigate('/admin/EditCertificate');
-  };
+  // const handlEdit = async (certificateId) => {
+  //   localStorage.setItem('items', certificateId);
+  //   navigate('/admin/EditCertificate');
+  // };
   
+  const handlEdit = async (certificateId) => {
+    if (certificateId) {
+        localStorage.setItem('items', certificateId);
+        console.log(certificateId);
+        navigate('/admin/AddCertificate');
+    } else {
+        console.error("categoryId is undefined or null");
+    }
+  };
   
 return (
  
