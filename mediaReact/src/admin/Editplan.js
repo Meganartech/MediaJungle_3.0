@@ -7,6 +7,7 @@ import "../css/Sidebar.css";
 
 const EditPlan = () => {
   const id = localStorage.getItem('items');
+  const [validity, setvalidity] = useState('30');
   const [plan, setPlan] = useState({
     planname: '',
     amount: '',
@@ -15,6 +16,7 @@ const EditPlan = () => {
   const [features, setFeatures] = useState([]);
   const [featureStates, setFeatureStates] = useState([]);
   const token = sessionStorage.getItem("tokenn");
+  console.log(token);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,28 +25,33 @@ const EditPlan = () => {
         // Fetch plan details
         const planResponse = await axios.get(`${API_URL}/api/v2/GetPlanById/${id}`);
         setPlan(planResponse.data);
-    
+
         // Fetch features
         const featuresResponse = await axios.get(`${API_URL}/api/v2/GetAllFeatures`);
-        const updatedFeatures = featuresResponse.data.map((feature) => ({
-          ...feature,
-          active: feature.active === undefined || feature.active === null ? 'no' : feature.active
-        }));
-        console.log('Fetched features:', updatedFeatures);
-        setFeatures(updatedFeatures);
-    
+        const allFeatures = featuresResponse.data;
+
         // Fetch existing feature states for the plan
         const featureStatesResponse = await axios.get(`${API_URL}/api/v2/GetFeaturesByPlanId?planId=${id}`);
-        console.log('Fetched feature states:', featureStatesResponse.data);
-        setFeatureStates(featureStatesResponse.data);
+        const existingFeatureStates = featureStatesResponse.data;
+
+        // Map through all features and match with existing feature states to prefill the active values
+        const updatedFeatures = allFeatures.map((feature) => {
+          const matchedFeature = existingFeatureStates.find(state => state.featureId === feature.id);
+          return {
+            ...feature,
+            active: matchedFeature ? matchedFeature.active : 'no'  // Default to 'no' if not found
+          };
+        });
+
+        setFeatures(updatedFeatures);
+        setFeatureStates(existingFeatureStates);
       } catch (error) {
         console.error('Error fetching plan or features:', error);
       }
     };
-  
+
     fetchPlanAndFeatures();
   }, [id]);
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,46 +62,43 @@ const EditPlan = () => {
   };
 
   const handleSetActive = (featureId, active) => {
-    // Update the state for featureStates
-    const updatedFeatureStates = featureStates.map((feature) =>
-      feature.featureId === featureId ? { ...feature, active } : feature
-    );
-    console.log('Updated featureStates:', updatedFeatureStates);
-    setFeatureStates(updatedFeatureStates);
+    console.log('Before Update:', features);
   
-    // Update the state for features
     const updatedFeatures = features.map((feature) =>
       feature.id === featureId ? { ...feature, active } : feature
     );
-    console.log('Updated features:', updatedFeatures);
     setFeatures(updatedFeatures);
+  
+    console.log('After Update:', updatedFeatures);
   };
+  
   
 
   const handleSubmit = async (e) => {
     e.preventDefault();
   
     try {
-      // Prepare plan data
-      const planResponse = await axios.patch(`${API_URL}/api/v2/editPlans/${id}`, plan, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      // Update plan data
+      await axios.patch(`${API_URL}/api/v2/editPlans/${id}`, plan, {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json'
+        }
       });
-  
+      
       // Collect feature data
       const featuresData = featureStates.map(feature => ({
         planId: id,
         featureId: feature.featureId,
-        active: feature.active === 'yes', // Assuming 'yes' indicates active
+        active: feature.active === 'yes',
       }));
-      console.log("Features Data:", featuresData);
   
-      // Send request to update features
+      // Update feature states
       await axios.put(`${API_URL}/api/v2/planfeaturemerge`, featuresData, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       });
   
       Swal.fire({ icon: 'success', title: 'Success', text: 'Plan details and features updated successfully' });
-  
       navigate('/admin/PlanDetailsList');
     } catch (error) {
       console.error('Error updating plan details:', error.response ? error.response.data : error.message);
@@ -138,18 +142,6 @@ const EditPlan = () => {
                 />
                 <br />
               </div>
-              {/* <div className='col-lg-12'>
-                <label htmlFor="validity">Validity</label>
-                <input
-                  type="text"
-                  name="validity"
-                  id="validity"
-                  className="form-control"
-                  value={plan.validity || ''}
-                  onChange={handleChange}
-                  required
-                />
-              </div> */}
             </div>
 
             <div className="col-lg-2 d-flex align-items-center justify-content-center">
@@ -165,28 +157,27 @@ const EditPlan = () => {
               <div className="col-lg-6 w-100 d-flex flex-column align-items-center justify-content-center">
                 <div className="w-100 d-flex">
                   <div className="w-100">
-                    {features.length > 0 ? (
-                      features.map((feature, index) => (
-                        <div key={index} className="mb-2 d-flex align-items-center">
-                        <span style={{ width: '20px', textAlign: 'center' }}>
-                          {feature.active === 'yes' && <span>&#10003;</span>}
-                          {feature.active === 'no' && <span>&#10007;</span>}
-                        </span>
-                        <button className="flex-grow-1" style={{ textAlign: "left" }}>
-                          {feature.features}
-                        </button>
-                        <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'yes')}>
-                          Active
-                        </button>
-                        <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'no')}>
-                          Inactive
-                        </button>
-                      </div>
-                      
-                      ))
-                    ) : (
-                      <div>No features available</div>
-                    )}
+                  {features.length > 0 ? (
+  features.map((feature, index) => (
+    <div key={index} className="mb-2 d-flex align-items-center">
+      <span style={{ width: '20px', textAlign: 'center' }}>
+        {feature.active === 'yes' ? <span>&#10003;</span> : <span>&#10007;</span>}
+      </span>
+      <button className="flex-grow-1" style={{ textAlign: "left" }}>
+        {feature.features}
+      </button>
+      <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'yes')}>
+        Active
+      </button>
+      <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'no')}>
+        Inactive
+      </button>
+    </div>
+  ))
+) : (
+  <div>No features available</div>
+)}
+
                   </div>
                 </div>
               </div>
