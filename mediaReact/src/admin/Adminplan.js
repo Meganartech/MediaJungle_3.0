@@ -8,7 +8,7 @@
   const Adminplan = () => {
     const [planname, setplanname] = useState('');
     const [amount, setamount] = useState('');
-    const [validity, setvalidity] = useState('1');
+    const [validity, setvalidity] = useState('30');
     const [getall, setgetall] = useState();
     const [features, setfeatures] = useState([]);
     const navigate = useNavigate();
@@ -107,6 +107,8 @@
         setplanname(''); 
         setamount(''); 
         setvalidity('30');
+            // Redirect to PlanDetailsList page after successful save
+    navigate('/admin/PlanDetailsList');
         // setfeatures([]); // Clear the features array
       } catch (error) {
         console.error('Error uploading plan details:', error.response ? error.response.data : error.message);
