@@ -135,7 +135,7 @@ const PlanDetailsList = () => {
                         <th>Amount</th>
                         {/* <th>Validity</th> */}
                         <th>Action</th>
-                        <th>Features</th>
+                        {/* <th>Features</th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -153,11 +153,11 @@ const PlanDetailsList = () => {
                             <button onClick={() => handleDelete(plan.id)}>
                               <i className="fa fa-trash" aria-hidden="true"></i>
                             </button></td>
-                          <td>
+                          {/* <td>
                             <button  onClick={() => handleClick("/admin/PlanFeatures")} className="btn btn-secondary ml-2" >
                                 View
                             </button>
-                          </td>
+                          </td> */}
                           </tr>
                       )))}
                     </tbody>

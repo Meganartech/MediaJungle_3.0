@@ -93,6 +93,7 @@ const TenureList = () => {
                 <button className='btn btn-custom' onClick={() => navigate("/admin/AddTenure")}>Add Tenure</button>
             </div>
             <br />
+            
             <div className='container2'>
                 <ol className="breadcrumb mb-4">
                     <li className="breadcrumb-item text-white">

@@ -2530,5 +2530,13 @@ margin-top: 12rem;
   border-radius: 2px;
 }
 
+.table-hover .hover-column {
+  position: relative;
+}
+
+.table-hover .hover-column-hovered:hover {
+  background-color: #e0e0e0; /* Light gray background */
+  
+}
 
 

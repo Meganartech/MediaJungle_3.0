@@ -381,22 +381,22 @@ const [Getall,setGetall] = useState('');
 
 
     // }, []);
-  useEffect(() => {
-    if (getalldata) {
-      setaudio_title(getalldata.audioTitle); // Update the audio_title state with the value from getalldata
-      setMovie_name(getalldata.movie_name);
-      setCertificate_name(getalldata.certificate_name);
-      setRating(getalldata.rating); 
-      setCertificate_no(getalldata.certificate_no); 
-      setaudio_Duration(getalldata.audio_Duration);
-      setSelectedOption(getalldata.paid="false"?'free':'paid');
-      setProduction_Company(getalldata.production_company);
-      setDescription(getalldata.description); 
-      handleCheckboxChangecategory(getalldata.category);
+  // useEffect(() => {
+  //   if (getalldata) {
+  //     setaudio_title(getalldata.audioTitle); // Update the audio_title state with the value from getalldata
+  //     setMovie_name(getalldata.movie_name);
+  //     setCertificate_name(getalldata.certificate_name);
+  //     setRating(getalldata.rating); 
+  //     setCertificate_no(getalldata.certificate_no); 
+  //     setaudio_Duration(getalldata.audio_Duration);
+  //     setSelectedOption(getalldata.paid="false"?'free':'paid');
+  //     setProduction_Company(getalldata.production_company);
+  //     setDescription(getalldata.description); 
+  //     handleCheckboxChangecategory(getalldata.category);
 
 
-    }
-  }, [getalldata]); // Dependency on getalldata
+  //   }
+  // }, [getalldata]); // Dependency on getalldata
 
 
 const handleCheckboxChange = (option) => (e) => {
@@ -491,7 +491,7 @@ const handleCheckboxChange = (option) => (e) => {
     setIsOpentag(!isOpentag);
   };
   const handleCheckboxChangecategory = (option) => (e) => {
-    console.log(e);
+    console.log();
     const isChecked = e.target.checked;
     const id = (option.category_id);
     const name= (option.categories);// Convert ID to number
