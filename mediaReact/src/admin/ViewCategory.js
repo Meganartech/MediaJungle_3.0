@@ -11,8 +11,6 @@ const ViewCategory = () => {
   const navigate = useNavigate();
   const token = sessionStorage.getItem('tokenn')
 
-
-
   useEffect(() => {
     // fetch category data from the backend
     fetch(`${API_URL}/api/v2/GetAllCategories`)
@@ -29,7 +27,9 @@ const ViewCategory = () => {
         console.error('Error fetching data:', error);
       });
   }, []);
+
   const handleClick = (link) => {
+    localStorage.removeItem('items'); // Clear the stored videoId
     navigate(link);
   }
 
@@ -86,10 +86,15 @@ const handleDeleteCategory = (categoryId) => {
   });
 };
 
-  const handlEdit = async (categoryId) => {
-    localStorage.setItem('items', categoryId);
-    navigate('/admin/EditCategory');
-  };
+const handlEdit = async (categoryId) => {
+  if (categoryId) {
+      localStorage.setItem('items', categoryId);
+      console.log(categoryId);
+      navigate('/admin/AddCategory');
+  } else {
+      console.error("categoryId is undefined or null");
+  }
+};
   
 
   return (
@@ -123,26 +128,29 @@ const handleDeleteCategory = (categoryId) => {
               <th style={{border: 'none' }}>ACTION</th>
             </tr>
           </thead>
-          <tbody>
-            {categories.map((category, index) => (
-              <tr key={category.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                <td>
-                  <input type="checkbox" />
-                </td>
-                <td>{index + 1}</td>
-                <td>{category.categories ? category.categories : 'No category available'}</td>
-                <td>
-                  <button onClick={() => handlEdit(category.id)} className="btn btn-primary me-2">
-                    <i className="fas fa-edit" aria-hidden="true"></i> Edit
-                  </button>
-                  
-                  <button onClick={() => handleDeleteCategory(category.id)} className="btn btn-danger">
-                    <i className="fa fa-trash" aria-hidden="true"></i> Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          {categories && categories.length > 0 ? (
+      <tbody>
+        {categories.map((category, index) => (
+          <tr key={category.category_id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+            <td>
+              <input type="checkbox" />
+            </td>
+            <td>{index + 1}</td>
+            <td>{category.categories ? category.categories : 'No category available'}</td>
+            <td>
+              <button onClick={() => handlEdit(category.category_id)} className="btn btn-primary me-2">
+                <i className="fas fa-edit" aria-hidden="true"></i> Edit
+              </button>
+              <button onClick={() => handleDeleteCategory(category.category_id)} className="btn btn-danger">
+                <i className="fa fa-trash" aria-hidden="true"></i> Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    ) : (
+      <p>No categories available</p>
+    )}
         </table>
       </div>
     </div>

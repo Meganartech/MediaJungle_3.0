@@ -1,5 +1,8 @@
 package com.VsmartEngine.MediaJungle.repository;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +16,9 @@ public interface PlanFeatureMergeRepository extends JpaRepository<PlanFeatureMer
 	   @Modifying
 	    @Transactional
 	    @Query("DELETE FROM PlanFeatureMerge pfm WHERE pfm.planId = :planId")
-	    void deleteByPlanId(@Param("planId") Long planId);
+	   void deleteByPlanId(Long planId);
+	    List<PlanFeatureMerge> findByPlanId(Long planId);
 	   
+	   Optional<PlanFeatureMerge> findByPlanIdAndFeatureId(Long planId, Long featureId);
+
 }

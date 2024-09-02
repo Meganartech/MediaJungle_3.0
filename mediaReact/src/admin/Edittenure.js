@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import API_URL from '../Config';
 
 const EditTenure = () => {
     const id = localStorage.getItem('items');
+    const navigate = useNavigate(); 
     const [selectedMonths, setSelectedMonths] = useState('');
     const [updatedTenure, setupdatedTenure] = useState({
         tenure_name: '',
@@ -68,30 +69,25 @@ const EditTenure = () => {
             },
             body: JSON.stringify(updatedTenure),
         })
-        .then(response => {
-            console.log('Response status:', response.status);
-            return response.json(); // Parse JSON response
-        })
+        .then(response => response.json())
         .then(responseData => {
             console.log('Response Data:', responseData);
-    
-            // Check if the response indicates success
-            if (responseData.success) {
+            
+            // Assuming `responseData` is the updated `Tenure` object
+            if (responseData && responseData.tenure_name === updatedTenure.tenure_name) {
                 Swal.fire({
                     icon: 'success',
-
                     title: 'Success',
                     text: 'Tenure details successfully updated',
                 });
+                navigate("/admin/TenureList");
             } else {
-                // If there's an error message from the backend
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: responseData.message || 'Error updating tenure',
+                    text: 'Error updating tenure',
                 });
-            }
-        })
+            }})
         .catch(error => {
             console.error('Fetch error:', error);
             Swal.fire({
@@ -102,17 +98,14 @@ const EditTenure = () => {
         });
     };
     
+    
     return (
-        <div className="container-fluid con-flu">
-            <div className="container2">
-                <ol className="breadcrumb mb-4">
-                    <li className="breadcrumb-item">
-                        <Link to="/admin/TenureList">Tenures</Link>
-                    </li>
-                    <li className="breadcrumb-item active text-white">Edit Tenure</li>
-                </ol>
-
-                <div className="card-body">
+        <div className='container3 mt-20'>
+        <ol className="breadcrumb mb-4">
+          <li className="breadcrumb-item"><Link to="/admin/TenureList">Tenures</Link></li>
+          <li className="breadcrumb-item active text-white">Edit Tenures</li>
+        </ol>
+        <div className="container mt-3">
                     <form onSubmit={handleSubmit}>
                         <div className="modal-body">
                             <div className="temp">
@@ -183,7 +176,7 @@ const EditTenure = () => {
                     </form>
                 </div>
             </div>
-        </div>
+     
     );
 };
 

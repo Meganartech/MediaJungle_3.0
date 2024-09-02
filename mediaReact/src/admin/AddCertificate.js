@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState,useEffect} from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
@@ -58,7 +58,75 @@ const AddCertificate = () => {
     }
   };
   
-  
+  /* edit mode */
+const [isEditMode, setIsEditMode] = useState(false);
+
+const certificateId = localStorage.getItem('items');
+console.log("certificateId",certificateId);
+
+useEffect(() => {
+  if (certificateId) {
+    setIsEditMode(true);
+
+    // Fetch the video details based on videoId
+    fetch(`${API_URL}/api/v2/GetCertificateById/${certificateId}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Video Details:', data); // Log the video details
+        setCertificateName(data.certificate);
+        setdescription(data.description)
+        setissuedby(data.issuedby)
+        
+      })
+      .catch(error => console.error('Error fetching video details:', error));
+  }
+}, [certificateId]);
+
+const handleUpdate = async (e) => {
+  e.preventDefault();
+
+  try {
+    const data = {
+      certificate: certificateName,
+      description: description,
+      issuedby: issuedby,
+    };
+    console.log(data);
+
+    const response = await axios.patch(`${API_URL}/api/v2/editCertificate/${certificateId}`, data, {
+      headers: {
+        Authorization: token, // Pass the token in the Authorization header
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log(response.data);
+    if (response.data) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Certificate updated successfully!',
+      });
+    } else {
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error occurred while updating certificate.',
+      });
+    }
+    setCertificateName('');
+    setdescription('');
+    setissuedby('');
+  } catch (error) {
+    console.error('File upload failed:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'File upload failed. Please try again later.',
+    });
+  }
+};
 
 
   return (
@@ -66,7 +134,7 @@ const AddCertificate = () => {
     <div className='container3 mt-20'>
       <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item"><Link to="/admin/ViewCertificate">Certificates</Link></li>
-        <li className="breadcrumb-item active text-white">Add Certificate</li>
+        <li className="breadcrumb-item active text-white">{isEditMode ? 'Edit Certificate' : 'Add Certificate'}</li>
       </ol>
       <div className="container mt-3">
     <div className="row py-3 my-3 align-items-center">
@@ -129,8 +197,8 @@ const AddCertificate = () => {
     <div className="row py-3 my-5">
       <div className="col-md-8 ms-auto text-end">
       <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
-        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={handleSubmit} style={{backgroundColor:'blue'}}
-        >Submit</button>
+        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode ? handleUpdate :handleSubmit} style={{backgroundColor:'blue'}}
+        >{isEditMode ? 'Edit' : 'Submit'}</button>
       </div>
     </div>
   </div>

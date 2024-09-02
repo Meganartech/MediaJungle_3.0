@@ -34,7 +34,6 @@ public class VideoDescription {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
-	
 	private String videoTitle;
 	private String mainVideoDuration;
 	private String trailerDuration;

@@ -887,10 +887,10 @@ public class FrontController {
 		 }
 		 
 		 @GetMapping("/videoimage/{id}")
-			@Transactional
-			public ResponseEntity<Map<String, byte[]>> getVideoImagesByVideoId(@PathVariable Long id) {
-					return videoImageController.getVideoImagesByVideoId(id);
-			}
+		 @Transactional
+		 public ResponseEntity<Map<String, byte[]>> getVideoImagesByVideoId(@PathVariable Long id) {
+		 	return videoImageController.getVideoImagesByVideoId(id);
+		 }
 		 
 		 @GetMapping("/{videofilename}/videofile")
 		 public ResponseEntity<?> getVideo(@PathVariable String videofilename, HttpServletRequest request) {	

@@ -1,234 +1,256 @@
 import React, { useState, useEffect } from 'react';
 import Layout from './Layout/Layout';
 import API_URL from '../Config';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 const PlanDetails = () => {
-
-  const [getall,setgetall] = useState('');
-  const [GetAll,setGetAll] = useState('');
-  const [getfea,setgetfea] = useState('');
+  const [plans, setPlans] = useState([]);
+  const [features, setFeatures] = useState([]);
+  const [featuresByPlan, setFeaturesByPlan] = useState({});
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [hoveredPlan, setHoveredPlan] = useState(null);
+  const [tenures, setTenures] = useState([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/v2/GetsiteSettings`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
+    fetch(`${API_URL}/api/v2/tenures`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTenures(data);
+        console.log('Fetched Tenures:', data);
       })
-      .then(data => {
-        setGetAll(data);
-        console.log(data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+      .catch((error) => console.error('Error fetching tenures:', error));
   }, []);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllPlans`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
+      .then((response) => response.json())
+      .then((data) => {
+        setPlans(data);
+        console.log('Fetched Plans:', data);
+        const planIds = data.map(plan => plan.id);
+        fetchFeaturesForPlans(planIds);
       })
-      .then(data => {
-        setgetall(data);
-       
-        
-      })
-      
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-     
+      .catch((error) => console.error('Error fetching plans:', error));
   }, []);
-  console.log("**********")
-  console.log(getall);
-// Printing the data in a for loop
-for (let i = 0; i < getall.length; i++) {
-  console.log(getall[i].id);
-}
+
+  const fetchFeaturesForPlans = (planIds) => {
+    planIds.forEach((planId) => {
+      fetch(`${API_URL}/api/v2/GetFeaturesByPlanId?planId=${planId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setFeaturesByPlan((prev) => ({ ...prev, [planId]: data }));
+          console.log(`Fetched Features for Plan ${planId}:`, data);
+        })
+        .catch((error) => console.error(`Error fetching features for plan ${planId}:`, error));
+    });
+  };
+
   useEffect(() => {
-    fetch(`${API_URL}/api/v2/GetFeatures`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
+    fetch(`${API_URL}/api/v2/GetAllFeatures`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFeatures(data);
+        console.log('Fetched Features:', data);
       })
-      .then(data => {
-      setgetfea(data);
-
-        console.log(data)
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+      .catch((error) => console.error('Error fetching all features:', error));
   }, []);
-  const userId = sessionStorage.getItem('userId')
-  console.log(userId)
 
+  const userId = sessionStorage.getItem('userId');
 
-const handlesubmit = async (amount, userId, planname, validity) => {
+  const calculateDiscountedAmount = (monthlyAmount, totalMonths, discountedMonths) => {
+    const validMonthlyAmount = Number(monthlyAmount) || 0;
+    const validTotalMonths = Number(totalMonths) || 1;
+    const validDiscountedMonths = Number(discountedMonths) || 0;
+    const totalAmount = validMonthlyAmount * validTotalMonths;
+    const discountAmount = validMonthlyAmount * validDiscountedMonths;
+    const finalAmount = totalAmount - discountAmount;
+    return finalAmount;
+  };
 
-
-  try {
-    const response = await fetch(`${API_URL}/api/v2/payment`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        amount: amount,
-        userId: userId,
-        planname: planname
-      })
-    });
-    const order = await response.text(); // Get the order ID from the response
-
-    if (order.startsWith("You have already paid")) {
-      // Handle the case where the user has already paid for the plan
-      console.log(order);
-      Swal.fire('Info', order, 'info');
-      return; // Exit the function
+  const handlePayment = async (tenure) => {
+    if (!userId) {
+      Swal.fire('Error', 'You are not logged in.', 'error');
+      return;
     }
-
-    const options = {
-      order_id: order, // Pass the order ID obtained from the server
-      name: "Megnar",
-      description: "This is for testing",
-      handler: async function (response) {
-        // Send the payment ID and signature to the server
-        await sendPaymentIdToServer(response.razorpay_payment_id, order, response.status_code, planname, userId, validity, response.razorpay_signature);
-        // Handle success response
-        console.log("Payment successful:", response);
-        Swal.fire('Success', 'Payment successful!', 'success');
-      },
-      theme: {
-        color: "#3399cc"
-      },
-      modal: {
-        ondismiss: function () {
-          // Handle payment dismissal if needed
-          console.log("Payment form closed");
-          Swal.fire('Info', 'Payment form closed', 'info');
-        }
+  
+    if (!selectedPlan) {
+      Swal.fire('Error', 'Please select a plan.', 'error');
+      return;
+    }
+  
+    // Calculate the discounted amount
+    const discountedAmount = calculateDiscountedAmount(
+      selectedPlan.amount,
+      tenure.months,
+      tenure.discount
+    );
+  
+    console.log('Selected Plan Amount:', selectedPlan.amount);
+    console.log('Tenure Discounted Amount:', discountedAmount);
+  
+    try {
+      const response = await fetch(`${API_URL}/api/v2/payment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          amount: discountedAmount,  // Ensure this is the discounted amount
+          userId: userId,
+          planname: selectedPlan.planname
+        })
+      });
+      const order = await response.text();
+      console.log('Order Response:', order);
+  
+      if (order.startsWith("You have already paid")) {
+        Swal.fire('Info', order, 'info');
+        return;
       }
-    };
+  
+      const options = {
+        order_id: order,
+        name: "Megnar",
+        description: "This is for testing",
+        handler: async function (response) {
+          console.log('Payment Response:', response);
+          await sendPaymentIdToServer(response.razorpay_payment_id, order, response.status_code, selectedPlan.planname, userId, tenure.id, response.razorpay_signature);
+          Swal.fire('Success', 'Payment successful!', 'success');
+        },
+        theme: {
+          color: "#3399cc"
+        },
+        modal: {
+          ondismiss: function () {
+            Swal.fire('Info', 'Payment form closed', 'info');
+          }
+        }
+      };
+  
+      var pay = new window.Razorpay(options);
+  
+      pay.on('payment.failed', function (response) {
+        Swal.fire('Error', `Payment failed: ${response.error.description}`, 'error');
+      });
+  
+      pay.open();
+    } catch (error) {
+      Swal.fire('Error', 'Error creating order', 'error');
+    }
+  };
+  
 
-    var pay = new window.Razorpay(options);
+  const sendPaymentIdToServer = async (paymentId, order, status_code, planname, userId, tenureId, signature) => {
+    try {
+      await fetch(`${API_URL}/api/v2/buy`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          paymentId: paymentId,
+          orderId: order,
+          status_code: status_code,
+          planname: planname,
+          userId: userId,
+          tenureId: tenureId,
+          signature: signature
+        })
+      });
+      Swal.fire('Success', 'Payment ID and signature sent to server', 'success');
+    } catch (error) {
+      Swal.fire('Error', 'Error sending payment ID to server', 'error');
+    }
+  };
 
-    pay.on('payment.failed', function (response) {
-      // Handle payment failure
-      console.error("Payment failed:", response.error);
-      Swal.fire('Error', `Payment failed: ${response.error.description}`, 'error');
-    });
+  const handlePlanSelect = (plan) => {
+    setSelectedPlan(plan);
+  };
 
-    pay.open();
-  } catch (error) {
-    console.error('Error creating order:', error);
-    Swal.fire('Error', 'Error creating order', 'error');
-  }
-};
+  const handleTenureSelect = (tenure) => {
+    handlePayment(tenure);
+  };
 
-const sendPaymentIdToServer = async (paymentId, order, status_code, planname, userId, validity, signature) => {
-  try {
-    const response = await fetch(`${API_URL}/api/v2/buy`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        paymentId: paymentId,
-        orderId: order,
-        status_code: status_code,
-        planname: planname,
-        userId: userId,
-        validity: validity,
-        signature: signature
-      })
-    });
-    // Handle response from the server if needed
-    console.log('Payment ID and signature sent to server:', response);
-    Swal.fire('Success', 'Payment ID and signature sent to server', 'success');
-  } catch (error) {
-    console.error('Error sending payment ID to server:', error);
-    Swal.fire('Error', 'Error sending payment ID to server', 'error');
-  }
-};
+  return (
+    <Layout className='container mx-auto min-h-screen overflow-y-auto bg-black'>
+      <div className='flex justify-center py-10'>
+        <div className='overflow-x-auto max-w-4xl w-full'>
+         <table className='w-full table-hover border rounded-lg shadow-lg'>
+  <thead className='rounded-t-2xl'>
+    <tr>
+      <th className='py-4 px-6 text-white font-bold uppercase text-sm text-left w-3/12'>Features</th>
+      {plans.map((plan) => (
+        <th
+          key={plan.id}
+          className={`py-4 px-6 font-bold uppercase text-sm text-center cursor-pointer transition-colors ${
+            selectedPlan?.id === plan.id ? 'text-white bg-blue-700 rounded-t-xl' : 'text-gray-300'
+          } ${hoveredPlan === plan.id ? 'bg-gray-600 rounded-t-xl' : ''}`}
+          onClick={() => handlePlanSelect(plan)}
+          onMouseEnter={() => setHoveredPlan(plan.id)}
+          onMouseLeave={() => setHoveredPlan(null)}
+        >
+          {plan.planname} (&#8377;{plan.amount})
+        </th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {features.map((feature) => (
+      <tr key={feature.id} className='border-t border-gray-700'>
+        <td className='py-3 px-4 border-r-2 text-white font-medium text-sm'>{feature.features}</td>
+        {plans.map((plan) => (
+          <td
+            key={plan.id}
+            className={`py-3 px-4 text-center ${
+              selectedPlan?.id === plan.id ? 'bg-blue-700 text-white' : 'text-gray-300'
+            } ${hoveredPlan === plan.id ? 'bg-gray-600 text-white' : ''}`}
+          >
+            {featuresByPlan[plan.id] && featuresByPlan[plan.id].some(f => f.featureId === feature.id && f.active) ? (
+              <i className="fa-solid fa-check text-green-400 text-lg"></i>
+            ) : (
+              <i className="fa-solid fa-times text-red-500 text-lg"></i>
+            )}
+          </td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td className='py-3 px-4 text-white font-medium text-sm w-3/12'></td>
+      <td colSpan={plans.length} className='py-4 px-6 text-center'>
+        {selectedPlan && (
+          <div className='mt-4 flex flex-wrap justify-center'>
+            {tenures.map((tenure) => {
+              const discountedAmount = calculateDiscountedAmount(
+                selectedPlan.amount,
+                tenure.months,
+                tenure.discount
+              );
 
-const handleSubscribeClick = (amount, planname, validity) => {
-  if (!userId) {
-    Swal.fire('Error', 'You are not logged in.', 'error');
-  } else {
-    handlesubmit(amount, userId, planname, validity);
-  }
-};
-    
-return (
-  <Layout className='container mx-auto min-h-screen overflow-y-auto'>
-  <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8' style={{ marginLeft: '75px' }}>
-    {getall && getall.length > 0 && getall.map((plan, index) => (
-      <div key={index} className='w-full mb-8 flex'>
-        <div className='flex flex-col justify-between p-8 sm:p-14 bg-dry rounded-lg border border-border w-full'>
-          {plan.logo ? (
-            <img
-              src={`data:image/png;base64,${plan.logo}`}
-              alt='logo'
-              className='w-full h-12 object-contain'  
-            />
-          ) : (
-            <div></div>
-          )}
-          <br />
-          <form className='flex flex-col flex-grow justify-between' style={{ fontFamily: 'Arial, sans-serif', maxWidth: '400px', margin: 'auto', height: '100%' }}>
-            <h2 className='text-3xl mb-10 font-semibold text-center text-white'>{plan.planname}(&#8377;{plan.amount})</h2>
-            <div className='flex-1'>
-              {plan.descriptions && plan.descriptions.length > 0 ? (
-                <div>
-                  {plan.descriptions.map((desc, descIndex) => (
-                    <div key={descIndex} className="flex items-center mb-6">
-                      <span className="inline-block mr-4">
-                        {desc.active === 'yes' ? (
-                          <i className="fa-solid fa-check text-yellow-600 text-lg"></i>
-                        ) : desc.active === 'no' ? (
-                          <i className="fa-solid fa-times text-red-600 text-lg"></i>
-                        ) : (
-                          null
-                        )}
-                      </span>
-                      <span className='text-lg font-medium text-gray-500'>{desc.description}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="h-32"></div> // Add a fixed height placeholder if no descriptions are present
-              )}
-            </div>
-            <div className="mt-10">
-              <span className='text-lg font-medium text-center text-white'> &#8377;{plan.amount}</span><br></br>
-              <div className="mt-12">
-                <a
-                  className="bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-6 rounded-lg w-full transition duration-300 ease-in-out"
-                  onClick={() => handleSubscribeClick(plan.amount, plan.planname, plan.validity)}
+              return (
+                <button
+                  key={tenure.id}
+                  className='bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-8 rounded-lg mr-2 mb-2 transition-transform transform hover:scale-105 hover:shadow-xl hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50 relative'
+                  onClick={() => handlePayment(tenure)}
                 >
-                  Subscribe
-                </a>
-                
-              </div>
-            </div>
-          </form>
+                  <span className='block text-lg font-semibold'>{tenure.tenure_name}</span>
+                  <span className='block text-xl font-extrabold'>&#8377;{Math.round(discountedAmount)}</span>
+                  <div className='absolute inset-0 bg-blue-800 opacity-10 rounded-lg'></div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
         </div>
       </div>
-    ))}
-  </div>
-</Layout>
-
-
-  )
+    </Layout>
+  );
 }
 
 export default PlanDetails;

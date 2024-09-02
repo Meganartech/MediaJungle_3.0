@@ -8,7 +8,7 @@
   const Adminplan = () => {
     const [planname, setplanname] = useState('');
     const [amount, setamount] = useState('');
-    const [validity, setvalidity] = useState('1');
+    const [validity, setvalidity] = useState('30');
     const [getall, setgetall] = useState();
     const [features, setfeatures] = useState([]);
     const navigate = useNavigate();
@@ -106,7 +106,9 @@
         // Clear form fields and feature states
         setplanname(''); 
         setamount(''); 
-        setvalidity('1');
+        setvalidity('30');
+            // Redirect to PlanDetailsList page after successful save
+    navigate('/admin/PlanDetailsList');
         // setfeatures([]); // Clear the features array
       } catch (error) {
         console.error('Error uploading plan details:', error.response ? error.response.data : error.message);
@@ -188,10 +190,10 @@
                             <button className="flex-grow-1" style={{ textAlign: "left" }}>
                               {feature.features}
                             </button>
-                            <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'yes')}>
+                            <button className={`btn ms-2 ${feature.active === 'yes' ? 'btn-success' : 'btn-info'}`} onClick={() => handleSetActive(feature.id, 'yes')}>
                               Active
                             </button>
-                            <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'no')}>
+                            <button className={`btn ms-2 ${feature.active === 'no' ? 'btn-danger' : 'btn-info'}`} onClick={() => handleSetActive(feature.id, 'no')}>
                               Inactive
                             </button>
                           </div>

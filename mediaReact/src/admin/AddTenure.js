@@ -84,16 +84,17 @@ const AddTenure = () => {
     };
 
     return (
-        <div className="container-fluid con-flu">
-            <div className="container2">
-                <ol className="breadcrumb mb-4">
-                    <li className="breadcrumb-item">
-                        <Link to="/admin/TenureList">Tenures</Link>
-                    </li>
-                    <li className="breadcrumb-item active text-white">Add Tenure</li>
-                </ol>
+        <div className='container3 mt-20'>
+      <ol className="breadcrumb mb-4">
+        <li className="breadcrumb-item"><Link to="/admin/TenureList">Tenures</Link></li>
+        <li className="breadcrumb-item active text-white">Add Tenures</li>
+      </ol>
+      <div className="container mt-3">
+        {/* <div className="row py-3 my-3 align-items-center"> */}
+          {/* <div className="col-md-3">
+            <label className="custom-label">Tenure Name</label>
+          </div> */}
 
-                <div className='card-body'>
                     <form className='form-container' onSubmit={handleSubmit}>
                         <div className='modal-body'>
                             <div className='temp'>
@@ -161,7 +162,9 @@ const AddTenure = () => {
                     </form>
                 </div>
             </div>
-        </div>
+       
+
+    
     );
 };
 

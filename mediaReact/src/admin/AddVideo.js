@@ -1242,11 +1242,11 @@ const [trailerfile,setTrailerfile] = useState(null);
 
 const handletrailerFileChange = (event) => {
   const file = event.target.files[0];
-  setTrailerfile(event.target.files[0]);
+  setTrailerfile(file);
   console.log('File selected:', file);
   if (file) {
     const trailerUrl = URL.createObjectURL(file);
-    console.log('Video URL:', videoUrl);
+    console.log('Video URL:', trailerUrl);
     settrailerUrl(trailerUrl);
   }
 };
@@ -1280,8 +1280,8 @@ const handletrailerDrop = (event) => {
   const file = event.dataTransfer.files[0];
   setTrailerfile(file);
   if (file) {
-    const videoUrl = URL.createObjectURL(file);
-    settrailerUrl(videoUrl);
+    const trailerUrl = URL.createObjectURL(file);
+    settrailerUrl(trailerUrl);
   }
 };
 
@@ -1405,8 +1405,14 @@ const [isEditMode, setIsEditMode] = useState(false);
 const [getvideothumbnail,setgetvideothumbnail] = useState('');
 const [gettrailerthumbnail,setgettrailerthumbnail] = useState('');
 const [getuserbanner,setgetuserbanner] = useState('');
+const [videofilename,setvideofilename] = useState('');
+const [trailervideofilename,settrailervideofilename] = useState('');
+const [movievideo,setmovievideo] = useState('');
+const [trailervideo,settrailervideo] = useState('');
+
 const videoId = localStorage.getItem('items');
 console.log("videoId",videoId);
+
 useEffect(() => {
   if (videoId) {
     setIsEditMode(true);
@@ -1415,7 +1421,7 @@ useEffect(() => {
     fetch(`${API_URL}/api/v2/GetvideoDetail/${videoId}`)
       .then(response => response.json())
       .then(data => {
-        // console.log('Video Details:', data); // Log the video details
+        console.log('Video Details:', data); // Log the video details
         setVideoTitle(data.videoTitle);
         setMainVideoDuration(data.mainVideoDuration);
         setTrailerDuration(data.trailerDuration);
@@ -1428,6 +1434,8 @@ useEffect(() => {
         setcastandcrewlist(data.castandcrewlist);
         settaglist(data.taglist);
         setCategory(data.categorylist);
+        setvideofilename(data.vidofilename)
+        settrailervideofilename(data.videotrailerfilename);
       })
       .catch(error => console.error('Error fetching video details:', error));
 
@@ -1441,9 +1449,105 @@ useEffect(() => {
         setgetuserbanner(data.userBanner);
       })
       .catch(error => console.error('Error fetching video images:', error));
+
   }
 }, [videoId]);
 
+
+useEffect(() => {
+  const fetchVideo = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/api/v2/${videofilename}/videofile`,
+        {
+          responseType: 'arraybuffer', // Set the response type to arraybuffer for binary data
+        }
+      );
+
+      // Use the response data directly as arraybuffer
+      const videoData = response.data;
+      setmovievideo(videoData);
+      console.log('Fetched Video Data:', videoData);
+
+      // Optionally, convert the ArrayBuffer to a Blob and generate a URL to display the video
+      // const videoBlob = new Blob([videoData], { type: 'video/mp4' }); // Adjust MIME type as necessary
+      // const videoUrl = URL.createObjectURL(videoBlob);
+      // console.log('Generated Video URL:', videoUrl);
+      // setmovievideo(videoUrl);
+
+      // // Clean up the created URL when the component unmounts
+      // return () => {
+      //   URL.revokeObjectURL(videoUrl);
+      // };
+    } catch (error) {
+      console.error('Error fetching video file:', error);
+    }
+  };
+
+  if (videofilename) {
+    fetchVideo();
+  }
+}, [videofilename]);
+
+const handleUpdate = () => {
+  // Collect all the updated data from the state
+  const updatedData = {
+    videoTitle,
+    mainVideoDuration,
+    trailerDuration,
+    rating,
+    certificateNumber,
+    videoAccessType,
+    description,
+    productionCompany,
+    certificateName,
+    castandcrewlist,
+    taglist,
+    category,
+    getvideothumbnail,
+    gettrailerthumbnail,
+    getuserbanner,
+    // Add any other fields you need to update
+  };
+
+  // Send the updated data to the server using a PUT or PATCH request
+  fetch(`${API_URL}/api/v2/updateVideoDescription/${videoId}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: token, // Pass the token in the Authorization header
+      'Content-Type': 'multipart/form-data',
+    },
+    body: JSON.stringify(updatedData),
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to update video details');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Update successful:', data);
+
+      // Show a success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'The video details have been updated successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    })
+    .catch(error => {
+      console.error('Error updating video details:', error);
+
+      // Show an error message
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error updating the video details. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    });
+};
 
   return (
 <div className='container3 mt-2'>
@@ -1968,19 +2072,24 @@ useEffect(() => {
                   backgroundPosition: 'center'
                 }}
               >
-             {videoUrl ? (
-                <video
-                  src={videoUrl}
-                  controls
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                  }}
-                />
-              ) : (
-                <span>Drag and drop</span>
-              )}
+                {/* {videoUrl ? ( */}
+                {movievideo ? (
+             
+             
+            <video
+              // src={videoUrl}
+              // src = {movievideo}
+              src={URL.createObjectURL(new Blob([movievideo], { type: 'video/mp4' }))}
+              controls
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
+          ) : (
+            <span>Drag and drop</span>
+          )}
               </div>
               <button
                 type="button"
@@ -2071,7 +2180,7 @@ useEffect(() => {
               >
                 {trailerUrl ? (
                 <video
-                  src={videoUrl}
+                  src={trailerUrl}
                   controls
                   style={{
                     width: '100%',
@@ -2318,7 +2427,7 @@ useEffect(() => {
                   className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
                   type="submit"
                   style={{ backgroundColor: 'blue' }}
-                  onClick={save}
+                  onClick={isEditMode ? handleUpdate : save}
                   
                 >
                   {isEditMode ? 'Update' : 'Submit'}
