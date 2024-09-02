@@ -189,7 +189,7 @@ public class AudioController1 {
 //    }
 	
 
-	public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
+	public ResponseEntity<Resource> getAudioFile(@PathVariable String filename, HttpServletRequest request) {
 	    if (filename != null) {
 	        Path filePath = Paths.get(audioStorageDirectory, filename);
 	        System.out.println("filePath" + filePath);
@@ -432,16 +432,16 @@ public class AudioController1 {
     public ResponseEntity<List> getaudioThumbnailsById(@PathVariable Long id) {
         try {
         	
-        	Optional<Audioimages> audioThumbnail = audioI.findByAudioId(id);
+        	Optional<Audioimages> audioThumbnail = audioI.findById(id);
 //            Optional<Addaudio1> audioOptional = audiorepository.findById(id);
-        	System.out.println(audioThumbnail);
+//        	System.out.println(audioThumbnail);
 
             if (audioThumbnail !=null) {
             	
             	Audioimages audioImage = audioThumbnail.get() ;
 
                 // Assuming decompressImage returns the raw thumbnail data
-                byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getBannerthumbnail());
+                byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getAudio_thumbnail());
      
                 // Assuming decompressImage returns the raw thumbnail data
 //                byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getAudio_thumbnail());
@@ -450,7 +450,7 @@ public class AudioController1 {
                 String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);
 
                 // Return a list with a single Base64-encoded thumbnail
-                return ResponseEntity.ok(Collections.singletonList(audioThumbnail));
+                return ResponseEntity.ok(Collections.singletonList(base64Thumbnail));
             } else {
                 return ResponseEntity.notFound().build();
             }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.PlanDescription;
-import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.repository.PlanDescriptionRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
