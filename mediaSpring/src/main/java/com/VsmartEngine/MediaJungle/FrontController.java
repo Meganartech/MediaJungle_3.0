@@ -65,11 +65,7 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
-
-import com.VsmartEngine.MediaJungle.video.VideoImage;
 import com.VsmartEngine.MediaJungle.video.VideoImageController;
-import com.VsmartEngine.MediaJungle.video.Videos;
-
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -194,9 +190,9 @@ public class FrontController {
 	}
 
 	@GetMapping("/{filename}/file")
-	public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
+	public ResponseEntity<Resource> getAudioFile(@PathVariable String filename, HttpServletRequest request) {
 
-		return AudioController.getAudioFi(filename, request);
+		return AudioController.getAudioFile(filename, request);
 	}
 
 	@GetMapping("/audio/{id}")

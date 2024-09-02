@@ -1,7 +1,9 @@
-package com.VsmartEngine.MediaJungle;
+package com.VsmartEngine.MediaJungle.test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -9,6 +11,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +32,6 @@ import com.VsmartEngine.MediaJungle.model.AudioCastAndCrew;
 import com.VsmartEngine.MediaJungle.model.Audiodescription;
 import com.VsmartEngine.MediaJungle.model.AudiodetailsDTO;
 import com.VsmartEngine.MediaJungle.model.Audioimages;
-import com.VsmartEngine.MediaJungle.model.AudioimagesDTO;
 import com.VsmartEngine.MediaJungle.model.AudiolistdetailsDTO;
 import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
@@ -68,6 +72,14 @@ public class test {
 	@Autowired
 	private AudioCastandCrewRepository Audiocastandcrewrepository;
 	
+	
+	@Autowired
+	private testRepo testRepo;
+	
+	@Autowired
+	private JavaMailSender sender ;
+	
+	
     
   
 	
@@ -88,7 +100,15 @@ public class test {
 		    	  String audioFilePath = fileService.saveAudioFile(audioFile);
 			         data.setAudio_file_name(audioFilePath);
 	         Audiodescription savedData = audio.save(data);
-	         castandcrew.saveAudioCastAndCrew(savedData.getId(), castAndCrewIds);
+//	         castandcrew.saveAudioCastAndCrew(savedData.getId(), castAndCrewIds);
+	         
+	         
+	         AudioCastAndCrew AudioCastAndCrew = new AudioCastAndCrew();;
+	         AudioCastAndCrew.setAudio_id(savedData.getId());
+	         AudioCastAndCrew.setCastandcrewlist(castAndCrewIds);
+         
+
+           Audiocastandcrewrepository.save(AudioCastAndCrew);
 	         Category.saveCategories(savedData.getId(), category);
 	         Category.savetags(savedData.getId(), tag);
 	         byte[] audiothumbnailBytes = ImageUtils.compressImage(audio_thumbnail.getBytes());
@@ -121,6 +141,12 @@ public class test {
 	        Optional<Audioimages>audioImage=audioI.findById(id);
 	        Optional<AudioCastAndCrew>audioCastandCrew=Audiocastandcrewrepository.findById(id);
 	        
+	        AudioCastAndCrew castandcrew= audioCastandCrew.get();
+	        List<Long> sam=castandcrew.getCastandcrewlist();
+	        sam.forEach(System.out::println);
+	        
+	        
+	       
 	        AudiolistdetailsDTO dto = new AudiolistdetailsDTO();
 	        if (audioList.isPresent()) {
 	            Audiodescription audio = audioList.get();
@@ -140,7 +166,7 @@ public class test {
 	            dto.setCertificate_no(audio.getCertificate_no());
 	            dto.setTag(audioTag);
 	            dto.setCategory(audioCategorie);
-	            dto.setCastandCrew(audioCastandCrew);
+	            dto.setCastandCrew(sam);
 //	            return ResponseEntity.ok(dto);
 	        } else {
 	            return ResponseEntity.notFound().build();
@@ -169,40 +195,42 @@ public class test {
 	    }
 	 
 
-	 @GetMapping("/getaudiohomedto")
-	 public ResponseEntity<  Optional<Audioimages>> getAudiohomedto() {
-	     // Fetch all audio descriptions from the database
-		 long a=1;
-	     List<Audiodescription> audioList = audio.findAll();
-	     Optional<Audioimages>audioImage=audioI.findById(a);
-	     AudioimagesDTO dto = new AudioimagesDTO();
-	     
-	     if (audioImage.isPresent()) {
-	    	 
-	    	 Audioimages audio = audioImage.get();
-	    	 
-	    	 dto.setThumbnail(audio.getAudio_thumbnail());
-	    	 
-	    	 
-	     }
-	     
-	     
-//	     Optional<byte[]> sam=audioI.findBannerByaudio_Id(a);
-//	     List<Audioimages> findByaudio_Id(@Param("audioId") long audioId);
-	     // Map to DTOs
-//	     List<AudiodetailsDTO> dtoList = audioList.stream()
-//	    	        .map(a -> new AudiodetailsDTO(a.getId(), a.getAudio_title()) )
-//	    	        .collect(Collectors.toList());
-
-	    	    // Print the list to the console (for debugging purposes)
-//	    	    dtoList.forEach(System.out::println);
-//		        System.out.println("Audio Title: "+audioImage);
-
-	    	    
-//	    	    audioImage.forEach(System.out::println);
-	     // Return the list in the response body
-	     return ResponseEntity.ok(audioImage);
-	 }
+//	 @GetMapping("/getaudiohomedto")
+//	 public ResponseEntity<  List<CastandCrewDTO>   > getAudiohomedto() {
+//	     // Fetch all audio descriptions from the database
+//		 long a=4l;
+////		  List<CastandCrewDTO> findByAudio_Id
+//		 List<CastandCrewDTO> audioList1= Audiocastandcrewrepository.findByAudio_Id(a);
+////	     List<Audiodescription> audioList = audio.findAll();
+////	     Optional<Audioimages>audioImage=audioI.findById(a);
+////	     AudioimagesDTO dto = new AudioimagesDTO();
+////	     
+////	     if (audioImage.isPresent()) {
+////	    	 
+////	    	 Audioimages audio = audioImage.get();
+////	    	 
+////	    	 dto.setThumbnail(audio.getAudio_thumbnail());
+////	    	 
+////	    	 
+////	     }
+//	     
+//	     
+////	     Optional<byte[]> sam=audioI.findBannerByaudio_Id(a);
+////	     List<Audioimages> findByaudio_Id(@Param("audioId") long audioId);
+//	     // Map to DTOs
+////	     List<AudiodetailsDTO> dtoList = audioList.stream()
+////	    	        .map(a -> new AudiodetailsDTO(a.getId(), a.getAudio_title()) )
+////	    	        .collect(Collectors.toList());
+//
+//	    	    // Print the list to the console (for debugging purposes)
+////	    	    dtoList.forEach(System.out::println);
+////		        System.out.println("Audio Title: "+audioImage);
+//
+//	    	    
+////	    	    audioImage.forEach(System.out::println);
+//	     // Return the list in the response body
+//	     return ResponseEntity.ok(audioList1);
+//	 }
 	 
 	 @GetMapping("/getaudiodetailsdto")
 	 public ResponseEntity<List<AudiodetailsDTO>> getAudio() {
@@ -250,8 +278,115 @@ public class test {
 	     return ResponseEntity.ok(test);
 	 }
 	 
+//	 @PostMapping("/afliater")
+//	 public ResponseEntity<Map<String, Object>> getAfliater(@RequestBody testModel data) {
+//	     testModel savedData = testRepo.save(data);
+//	     System.out.println(data);
+//	     System.out.println(savedData.getId());
+//	     String UseremailID=savedData.getEmailId();
+//	     long id=savedData.getId();
+//	     String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+//	        Random random = new Random();
+//	        StringBuilder sb = new StringBuilder();
+//	        StringBuilder sb1 = new StringBuilder();
+//	        StringBuilder sb2 = new StringBuilder();
+//	        for (int i = 0; i < 4; i++) {
+//	            int index = random.nextInt(characters.length());
+//	            sb.append(characters.charAt(index));
+//	            int index1 = random.nextInt(characters.length());
+//	            sb1.append(characters.charAt(index1));
+//	            int index2 = random.nextInt(characters.length());
+//	            sb2.append(characters.charAt(index2));
+//	        }
+//	        String randomAlphanumeric = sb.toString();
+//	        String randomAlphanumeric10 = sb1.toString();
+//	        String randomAlphanumeric20 = sb2.toString();
+//	        String idStr = String.format("%02d", id % 100);
+//	        String combinedtoken = randomAlphanumeric + idStr;
+//	        String combinedtoken10 = randomAlphanumeric10 + "10";
+//	        String combinedtoken20 = randomAlphanumeric20 + "20";
+//	        Optional<testModel> editdata=testRepo.findById(id);
+//	        if (editdata.isPresent()) {
+//	        	testModel testdata=editdata.get();
+//	        	testdata.setCoupon10(combinedtoken10);
+//	        	testdata.setCoupon20(combinedtoken20);
+//	        	testdata.setReferalid(combinedtoken);
+//	        	testRepo.save(testdata);
+//	        }
+//	        this.mail(UseremailID,combinedtoken,combinedtoken10,combinedtoken20 );
+//	       
+//	     Map<String, Object> response = new HashMap<>();
+//	     response.put("message", "Data saved successfully");
+//	     return ResponseEntity.ok(response); // Returning JSON response
+//	 }
+//	 public void  mail(String UseremailID,String combinedtoken,String combinedtoken10,String combinedtoken20 ) {	 
+//		 SimpleMailMessage message = new SimpleMailMessage();
+//		 message.setTo(UseremailID);
+//		 message.setText("token \t"+combinedtoken+"\n"+"10 % coupon \t"+combinedtoken10+"\n"+"20 % coupone \t"+combinedtoken20);
+//		 message.setSubject("Learnhub");
+//		 sender.send(message); 
+//	 }
 	 
-	 
+
+@PostMapping("/afliater")
+public ResponseEntity<Map<String, Object>> getAfliater(@RequestBody testModel data) {
+    testModel savedData = testRepo.save(data);
+    System.out.println(data);
+    System.out.println(savedData.getId());
+    String UseremailID = savedData.getEmailId();
+    long id = savedData.getId();
+
+    // Random generation logic
+    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    Random random = new Random();
+    StringBuilder sb = new StringBuilder();
+    StringBuilder sb1 = new StringBuilder();
+    StringBuilder sb2 = new StringBuilder();
+
+    for (int i = 0; i < 4; i++) {
+        sb.append(characters.charAt(random.nextInt(characters.length())));
+        sb1.append(characters.charAt(random.nextInt(characters.length())));
+        sb2.append(characters.charAt(random.nextInt(characters.length())));
+    }
+
+    String randomAlphanumeric = sb.toString();
+    String randomAlphanumeric10 = sb1.toString();
+    String randomAlphanumeric20 = sb2.toString();
+
+    String idStr = String.format("%02d", id % 100);
+    String combinedtoken = randomAlphanumeric + idStr;
+    String combinedtoken10 = randomAlphanumeric10 + "10";
+    String combinedtoken20 = randomAlphanumeric20 + "20";
+
+//    // Update the record using custom query
+//    testRepo.updateCoupons(id, combinedtoken10, combinedtoken20, combinedtoken);
+    
+    Optional<testModel> editdata=testRepo.findById(id);
+    if (editdata.isPresent()) {
+    	testModel testdata=editdata.get();
+    	testdata.setCoupon10(combinedtoken10);
+    	testdata.setCoupon20(combinedtoken20);
+    	testdata.setReferalid(combinedtoken);
+    	testRepo.save(testdata);
+    }
+
+    // Send email asynchronously
+    this.mail(UseremailID, combinedtoken, combinedtoken10, combinedtoken20);
+
+    // Prepare response
+    Map<String, Object> response = new HashMap<>();
+    response.put("message", "Data saved successfully");
+    return ResponseEntity.ok(response);
+}
+
+@Async
+public void mail(String UseremailID, String combinedtoken, String combinedtoken10, String combinedtoken20) {
+    SimpleMailMessage message = new SimpleMailMessage();
+    message.setTo(UseremailID);
+    message.setText("token \t" + combinedtoken + "\n" + "10 % coupon \t" + combinedtoken10 + "\n" + "20 % coupon \t" + combinedtoken20);
+    message.setSubject("Learnhub");
+    sender.send(message);
+}
 	 
 	 
 	 

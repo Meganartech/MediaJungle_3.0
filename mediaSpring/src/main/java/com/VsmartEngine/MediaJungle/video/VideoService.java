@@ -3,22 +3,14 @@ package com.VsmartEngine.MediaJungle.video;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.exception.ResourceNotFoundException;
-import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.UpdateModel;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 import com.VsmartEngine.MediaJungle.service.FileServiceImplementation;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 
 @Service
 public class VideoService implements VideoInterface   {

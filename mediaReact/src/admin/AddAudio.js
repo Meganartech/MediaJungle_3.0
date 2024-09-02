@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 // import '../csstemp/addAudio.css';
+import ReactPlayer from 'react-player';
 import API_URL from '../Config';
 import { Link } from 'react-router-dom';
 import "../css/Sidebar.css";
@@ -220,11 +221,12 @@ const AddAudio = () => {
   // ===================================================
 
   const prevStep = () => {
-    setCurrentStep(currentStep - 1);
+
+    currentStep==1?setCurrentStep(currentStep):setCurrentStep(currentStep - 1);
   };
   
   const nextStep = () => {
-    setCurrentStep(currentStep + 1);
+    currentStep==4?setCurrentStep(currentStep):setCurrentStep(currentStep + 1);
   };
 
   const [selectedCastAndCrew, setSelectedCastAndCrew] = useState([]);
@@ -355,7 +357,7 @@ const [Getall,setGetall] = useState('');
   }, []);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/v2/getaudio`)
+    fetch(`${API_URL}/api/v2/getaudio/7`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -371,6 +373,54 @@ const [Getall,setGetall] = useState('');
       });
   }, []);
 
+  // useEffect(() => {
+  //   const fetchThumbnail = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:8080/api/v2/getaudiothumbnailsbyid/7');
+        
+  //       // Assuming response.data contains the base64 image data
+  //       const base64Thumbnail = response.data;
+
+  //       // Set the thumbnail state to the base64 image
+  //       setThumbnail(base64Thumbnail);
+
+  //       // Update the image preview with the base64 data
+  //       if (base64Thumbnail) {
+  //         setThumbnailimageUrl(`data:image/jpeg;base64,${base64Thumbnail}`);
+  //       } else {
+  //         setThumbnailimageUrl(null);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching thumbnail:', error);
+  //     }
+  //   };
+
+  //   fetchThumbnail();
+  // }, []);
+  // useEffect(() => {
+  //   const fetchBannerThumbnail = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:8080/api/v2/getbannerthumbnailsbyid/7');
+        
+  //       // Assuming response.data contains the base64 image data
+  //       const base64Thumbnail = response.data;
+  //       // Set the thumbnail state to the base64 image
+  //       setBannerthumbnail(base64Thumbnail);
+
+  //       // Update the image preview with the base64 data
+  //       if (base64Thumbnail) {
+  //         setBannerimageUrl(`data:image/jpeg;base64,${base64Thumbnail}`);
+  //       } else {
+  //         setBannerimageUrl(null);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching thumbnail:', error);
+  //     }
+  //   };
+
+  //   fetchBannerThumbnail();
+  // }, []);
+
   // _______________________________________set all values______________________________________________________
 
     // useEffect(() => {
@@ -381,22 +431,61 @@ const [Getall,setGetall] = useState('');
 
 
     // }, []);
-  // useEffect(() => {
-  //   if (getalldata) {
-  //     setaudio_title(getalldata.audioTitle); // Update the audio_title state with the value from getalldata
-  //     setMovie_name(getalldata.movie_name);
-  //     setCertificate_name(getalldata.certificate_name);
-  //     setRating(getalldata.rating); 
-  //     setCertificate_no(getalldata.certificate_no); 
-  //     setaudio_Duration(getalldata.audio_Duration);
-  //     setSelectedOption(getalldata.paid="false"?'free':'paid');
-  //     setProduction_Company(getalldata.production_company);
-  //     setDescription(getalldata.description); 
-  //     handleCheckboxChangecategory(getalldata.category);
+//   useEffect(() => {
+//     if (getalldata) {
+//       setaudio_title(getalldata.audioTitle); // Update the audio_title state with the value from getalldata
+//       setMovie_name(getalldata.movie_name);
+//       setCertificate_name(getalldata.certificate_name);
+//       setRating(getalldata.rating); 
+//       setCertificate_no(getalldata.certificate_no); 
+//       setaudio_Duration(getalldata.audio_Duration);
+//       setSelectedOption(getalldata.paid="false"?'free':'paid');
+//       setProduction_Company(getalldata.production_company);
+//       setDescription(getalldata.description); 
+//       setcategorylist(getalldata.category);
+//      if (getalldata && getalldata.category) {
+//          getalldata.category.forEach(category => {
+//     const id = (category.category_id);
+//     const name= (category.categories);// Convert ID to number
+//     setcategorylistName((prevList) => [...prevList, `${name},`]);
+//     setcategorylist((prevList) => [...prevList, id]);
+//   });
+// } else {
+//   console.log('Category data is undefined or null');
+// }
+// settaglist(getalldata.tag);
+//      if (getalldata && getalldata.tag) {
+//       getalldata.tag.forEach(tag => {
+//     const id = (tag.tag_id);
+//     const name= (tag.tag);// Convert ID to number
+//     settaglistName((prevList) => [...prevList, `${name},`]);
+//     settaglist((prevList) => [...prevList, id]);
 
+//   });
+// } else {
+//   console.log('Tag data is undefined or null');
+// }
+// // console.log(getalldata.castandCrew);
+// // if (getalldata && getalldata.tag) {
+// //   getalldata.tag.forEach(tag => {
+// // const id = (tag.tag_id);
+// // const name= (tag.tag);// Convert ID to number
+// // settaglistName((prevList) => [...prevList, `${name},`]);
+// // settaglist((prevList) => [...prevList, id]);
 
-  //   }
-  // }, [getalldata]); // Dependency on getalldata
+// // });
+// // } else {
+// // console.log('Tag data is undefined or null');
+// // }
+// if (getalldata && getalldata.tag) {
+
+// setcastandcrewlist(getalldata.castandCrew);
+// } else {
+//   console.log('Tag data is undefined or null');
+// }
+
+//     }
+//   }, [getalldata]); // Dependency on getalldata
 
 
 const handleCheckboxChange = (option) => (e) => {
@@ -495,6 +584,7 @@ const handleCheckboxChange = (option) => (e) => {
     const isChecked = e.target.checked;
     const id = (option.category_id);
     const name= (option.categories);// Convert ID to number
+    
   
     if (isChecked) {
       setcategorylist((prevList) => [...prevList, id]);
@@ -682,6 +772,7 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
 }
   // Use the function to get the names
   const nameList = mapIdsToNames(castandcrewlist, Getall);
+  const audioUrlt = 'http://localhost:8080/api/v2/1725080679905_file_example_MP3_1MG.mp3/file'; 
 
 
 
@@ -696,7 +787,7 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
   </ol>
   
   <div className="outer-container">
-    <div className="table-container">
+    <div className="table-container" style={{ height: '63vh' }} >
     {currentStep === 1 && (
             <>
       <div className="row py-3 my-3 align-items-center w-100">
@@ -1199,10 +1290,10 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
     {/* First Instance */}
     <div className="col-md-6">
     <div className="d-flex align-items-center">
-          <div className="label-width">
+          <div className="label-width col-md-4" >
             <label className="custom-label">Audio Thumbnail</label>
           </div>
-          <div className="flex-grow-1">
+          <div className="flex-grow-1 col-md-7">
             <div className="d-flex align-items-center">
               <div
                 className="drag-drop-area border border-dark border-2 text-center"
@@ -1215,12 +1306,26 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
                   backgroundImage: ThumbnailimageUrl ? `url(${ThumbnailimageUrl})` : 'none',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
+                  height: '10rem',
                   
                 }}
               >
                 {!ThumbnailimageUrl && <span>Drag and drop</span>}
               </div>
-              <button
+              <br></br>
+              
+            </div>
+            <div className="mt-2">
+              <span style={{ whiteSpace: 'nowrap' }}>Please choose PNG format only*</span>
+            </div>
+            <div className="mt-2">
+              
+            <button
+
+            style={{
+              marginTop:'5px',
+              marginLeft:'0px !Important',
+            }}
                 type="button"
                 className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
                 onClick={() => document.getElementById('Thumbnail').click()}
@@ -1234,11 +1339,12 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
                 // onChange={handleFileChange}
                 onChange={handleThumbnailimageChange}
               />
-            </div>
-            <div className="mt-2">
-              <span style={{ whiteSpace: 'nowrap' }}>Please choose PNG format only*</span>
+
             </div>
           </div>
+                <br></br>
+          
+
           {/* ----------------------------------------------------------------------------------------
         */}
 
@@ -1246,16 +1352,18 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
 
           
         </div>
+        
+
       </div>
 
 
       {/* Second Instance */}
       <div className="col-md-6">
         <div className="d-flex align-items-center">
-          <div className="label-width">
+          <div className="label-width col-md-4">
             <label className="custom-label">User Banner</label>
           </div>
-          <div className="flex-grow-1">
+          <div className="flex-grow-1 col-md-7">
             <div className="d-flex align-items-center">
               <div
                 className="drag-drop-area border border-dark border-2 text-center"
@@ -1268,115 +1376,114 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
                   backgroundImage: BannerimageUrl ? `url(${BannerimageUrl})` : 'none',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
+                  height: '10rem',
                   
                 }}
               >
                 {!BannerimageUrl && <span>Drag and drop</span>}
               </div>
-              <button
-                type="button"
-                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
-                onClick={() => document.getElementById('Banner').click()}
-              >
-                Choose File
-              </button>
-              <input
-                type="file"
-                id="Banner"
-                style={{ display: 'none' }}
-                // onChange={handleFileChange}
-                onChange={handleBannerImageChange}
-              />
+              
             </div>
             <div className="mt-2">
               <span style={{ whiteSpace: 'nowrap' }}>Please choose PNG format only*</span>
             </div>
+            <div className="mt-2">
+              
+              <button
+  
+              style={{
+                marginTop:'5px',
+                marginLeft:'0px !Important',
+              }}
+                  type="button"
+                  className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                  onClick={() => document.getElementById('Banner').click()}
+                >
+                  Choose File
+                </button>
+                <input
+                  type="file"
+                  id="Banner"
+                  style={{ display: 'none' }}
+                  // onChange={handleFileChange}
+                  onChange={handleBannerImageChange}
+                />
+  
+              </div>
           </div>
         </div>
       </div>
     </div>
 
 
-    <div className="row py-3 my-3 align-items-center w-100">
-    {/* First Instance */}
+    <div className="row py-3 align-items-center w-100 ">
     <div className="col-md-6">
     <div className="d-flex align-items-center">
-          <div className="label-width">
+          <div className="label-width col-md-4" >
             <label className="custom-label">Original Audio</label>
           </div>
-          <div className="flex-grow-1">
+          <div className="flex-grow-1 col-md-7">
             <div className="d-flex align-items-center">
-              <div
-                className="drag-drop-area border border-dark border-2 text-center"
-                // onDrop={handleVideoDrop}
-                // onDragOver={handleDragOver}
-                style={{
-                  // backgroundVideo: videoUrl ? `url(${videoUrl})` : 'none',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
-                }}
-              >
-                {audioUrl ? (
-                <video
-                  src={audioUrl}
-                  controls
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                  }}
-                />
-              ) : (
-                <span>Drag and drop</span>
-              )}
+               <div 
+             
+    >
+      
+<ReactPlayer
+                // `http://localhost:8080/api/v2/1725080679905_file_example_MP3_1MG.mp3/file`
+  url={audioUrl} // Example URL, replace it with your video URL
+  // playing={true}
+  controls={true}
+  width="280px"
+  height="40px"
+  config={{
+        file: {
+          attributes: {
+            controlsList: 'nodownload'
+          }
+        }
+      }}
+/>
               </div>
-              <button
-                type="button"
-                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
-                onClick={() => document.getElementById('fileInput1').click()}
-              >
-                Choose File
-              </button>
-              <input
-                type="file"
-                accept="audio/*"
-                id="fileInput1"
-                style={{ display: 'none' }}
-                name='audioFile'
-                onChange={handleVideoFileChange}
-              />
+              <br></br>
+              
             </div>
             <div className="mt-2">
-              {/* <span style={{ whiteSpace: 'nowrap' }}>Please choose PNG format only*</span> */}
+              <span style={{ whiteSpace: 'nowrap' }}>Please choose PNG format only*</span>
+            </div>
+            <div className="mt-2">
+              
+            <button
+            style={{
+              marginTop:'5px',
+              marginLeft:'0px !Important',
+            }}
+            type="button"
+            className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+            onClick={() => document.getElementById('fileInput1').click()}
+          >
+            Choose File
+          </button>
+          <input
+            type="file"
+            accept="audio/*"
+            id="fileInput1"
+            style={{ display: 'none' }}
+            name='audioFile'
+            onChange={handleVideoFileChange}
+          />
+
             </div>
           </div>
+
+          {/* ----------------------------------------------------------------------------------------
+        */}
+
         </div>
+
+
       </div>
-
+   
     </div>
-
-
-
-{/* <div className="row py-1 my-1 w-100">
-              <div className="col-md-8 ms-auto text-end">
-              
-                <button
-                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
-                  type="button"
-                  onClick={prevStep}
-                >
-                  Back
-                </button>
-                <button
-                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
-                  type="submit"
-                  style={{ backgroundColor: 'blue' }}
-                  onClick={nextStep}
-                >
-                  Next
-                </button>
-              </div>
-            </div> */}
 
 
   </>
@@ -1384,93 +1491,111 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
 
 {currentStep === 4 && (
             <>
-            <div className="preview-container d-flex justify-content-center align-items-center">
-        <div className="d-flex">
+            <div className="row p-2  align-items-center w-100">
+            <div className="col-md-6">
+            <div className="d-flex">
           <div className="flex-grow-1">
             <div className='text-black'>Movie Name : {Movie_name}</div>
-            <div
-                className="drag-drop-area border border-dark border-2 text-center"
-                // onDrop={handleDrop}
-                // onDragOver={handleDragOver}
-                style={{
-                  // backgroundVideo: imageUrl ? `url(${imageUrl})` : 'none',
-                  // backgroundSize: 'cover',
-                  // backgroundPosition: 'center'
-                  backgroundImage: ThumbnailimageUrl ? `url(${ThumbnailimageUrl})` : 'none',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  
-                }}
-              >
-                </div>
-            <div className="video-container mt-3">
 
-              <video  controls>
-                <source src={audioUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <div style={{
+      position: 'relative',
+      width: '500px',
+      height: '300px',
+      backgroundImage: `url(${ThumbnailimageUrl})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      borderRadius: '10px',
+      overflow: 'hidden',
+    }}>
+
+<ReactPlayer
+                // `http://localhost:8080/api/v2/1725080679905_file_example_MP3_1MG.mp3/file`
+  url={audioUrl} // Example URL, replace it with your video URL
+  // playing={true}
+  controls={true}
+  width="100%"
+  height="100%"
+  config={{
+        file: {
+          attributes: {
+            controlsList: 'nodownload'
+          }
+        }
+      }}
+/>
+
+    </div>
+
+
             </div>
-          </div>
-          <div className="details-box ml-4 p-3 border border-dark border-2">
-          
-          <div class="row">
-            <div class="col-6">
-              <div className='text-black'>Audio Title: -- :{audio_title}</div>
-              <div className='text-black'>Audio Duration:-- :{Audio_Duration}</div>
-              <div className='text-black'>Cast and Crew: {castandcrewlistName}</div>
-              <div className='text-black'>Certificate No:  -- {Certificate_no}</div>
-              <div className='text-black'>Certificate name:  -- {Certificate_name}</div>
-              <div className='text-black'>Audio access type:   -- {selectedOption}</div>
-              <div className='text-black'>Category:{categorylistName}</div>
-              <div className='text-black'>Tag:{taglistName}</div>
-              <div className='text-black'>Production Company:  -- {Production_Company}</div>
-              <div className='text-black'>Description:   -- {Description}</div>
-              <div className='text-black'>Rating:   --  {Rating}</div>
             </div>
-            {/* <div class="col-6">
-              <p>{audio_title}</p>
-              <p>2hrs</p>
-              <p>2mins</p>
-              <p>Suriya, Tamana, Prabu</p>
-              <p>91234467</p>
-              <p>U/A</p>
-              <p>{selectedOption}</p>
-              <p>Action</p>
-              <p>#aayan, #suriya, #tamana, #harris jeyaraj</p>
-              <p>{Production_Company}</p>
-              <p>{Description}</p>
-              <p>{Rating}</p>
-            </div> */}
-          </div>
-        </div>
-      </div>
-    
-        </div>
-
-
-  <div className="row py-1 my-1 w-100">
-              <div className="col-md-8 ms-auto text-end">
-            
-                <button
-                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
-                  type="button"
-                  onClick={prevStep}
-                >
-                  Back
-                </button>
-       
-                <button
-                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
-                  type="submit"
-                  style={{ backgroundColor: 'blue' }}
-                  onClick={save}
-                  
-                >
-                  Submit
-                </button>
-          
+            </div>
               </div>
-            </div>       
+              <div className="col-md-6" style={{height: '390px' }}>
+
+              <div className="details-box ml-4 p-3 border border-dark border-2">
+          
+          {/* <div class="row"> */}
+            <div class="col-md-12">
+            <div style={{ maxHeight: '400px', overflowY: 'scroll' }}>
+      <table className="table table-bordered"  style={{ width: '400px',border:'none'}}>
+        <tbody>
+          <tr  style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Audio Title </td>
+            <td style={{border: 'none' }}>{audio_title}</td>
+          </tr>
+          <tr style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Audio Duration</td>
+            <td style={{border: 'none' }}>{Audio_Duration}</td>
+          </tr>
+          <tr style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Cast and Crew</td>
+            <td style={{border: 'none' }}>{castandcrewlistName}</td>
+          </tr>
+          <tr style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Certificate No</td>
+            <td style={{border: 'none' }}>{Certificate_no}</td>
+          </tr>
+          <tr style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Certificate Name</td>
+            <td style={{border: 'none' }}>{Certificate_name}</td>
+          </tr>
+          <tr style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Audio Access Type</td>
+            <td style={{border: 'none' }}>{selectedOption}</td>
+          </tr>
+          <tr style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Category</td>
+            <td style={{border: 'none' }}>{categorylistName}</td>
+          </tr>
+          <tr style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Tag</td>
+            <td style={{border: 'none' }}>{taglistName}</td>
+          </tr>
+          <tr style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Production Company</td>
+            <td style={{border: 'none' }}>{Production_Company}</td>
+          </tr>
+          <tr style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Description</td>
+            <td style={{border: 'none' }}>{Description}</td>
+          </tr>
+          <tr style={{border: 'none' }}>
+            <td style={{border: 'none' }}>Rating</td>
+            <td style={{border: 'none' }}>{Rating}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+            
+            </div>
+        
+        </div>
+              </div>
+
+            </div>
+     
 
         
    
@@ -1481,7 +1606,7 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
     </div>
     <div className="row py-1 my-1 w-100">
               <div className="col-md-8 ms-auto text-end">
-              
+              {currentStep<=3?<>
                 <button
                   className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                   type="button"
@@ -1489,7 +1614,6 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
                 >
                   Back
                 </button>
-               
                 <button
                   className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
                   type="submit"
@@ -1497,8 +1621,25 @@ function mapIdsToNames(castandcrewlist, GetAllCategory) {
                   onClick={nextStep}
                 >
                   Next
+                </button></>:<>
+                <button
+                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  type="button"
+                  onClick={prevStep}
+                >
+                  Back
                 </button>
-               
+                <button
+                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  type="submit"
+                  style={{ backgroundColor: 'blue' }}
+                  onClick={save}
+                  
+                >
+                  Submit
+                </button>
+                </>}
+                
               </div>
             </div>
   </div>

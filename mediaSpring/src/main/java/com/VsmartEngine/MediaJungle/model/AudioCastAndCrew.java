@@ -1,13 +1,11 @@
 package com.VsmartEngine.MediaJungle.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table
@@ -15,17 +13,10 @@ public class AudioCastAndCrew {
 	
 	@Id
 	private long audio_id;
-	
 
-	 @ManyToOne
-	 @JoinColumn(name = "castandcrew_id")
-	 @JsonManagedReference
-	 private CastandCrew castandcrew_id;
+	private List<Long> castandcrewlist = new ArrayList<>();
 	 
-//	 @Transient
-//	 private String castAndCrewImage;
-
-
+	
 	public long getAudio_id() {
 		return audio_id;
 	}
@@ -34,21 +25,14 @@ public class AudioCastAndCrew {
 		this.audio_id = audio_id;
 	}
 
-	public CastandCrew getCastandcrew_id() {
-		return castandcrew_id;
+	public List<Long> getCastandcrewlist() {
+		return castandcrewlist;
 	}
 
-	public void setCastandcrew_id(CastandCrew castandcrew_id) {
-		this.castandcrew_id = castandcrew_id;
+	public void setCastandcrewlist(List<Long> castandcrewlist) {
+		this.castandcrewlist = castandcrewlist;
 	}
 
-//	public String getCastAndCrewImage() {
-//		return castAndCrewImage;
-//	}
-//
-//	public void setCastAndCrewImage(String castAndCrewImage) {
-//		this.castAndCrewImage = castAndCrewImage;
-//	}
 
 
 	 

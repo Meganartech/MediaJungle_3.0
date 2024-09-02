@@ -84,7 +84,6 @@ import TenureList from './admin/TenureList';
 import AddTenure from './admin/AddTenure';
 import SiteSetting from './admin/SiteSetting';
 import Edittenure from './admin/Edittenure';
-
 import PlanFeatures from './admin/PlanFeatures';
 import AddFeature from './admin/AddFeature';
 import EditFeature from './admin/EditFeature';
@@ -276,6 +275,8 @@ const App = () => {
             </Route> 
            </Route>
           <Route path='licence' element={<Licence/>} />
+          <Route path='playertest' element= {<AddAud/>} />
+      
         </Routes>
       {/* </Router> */}
     </div>
