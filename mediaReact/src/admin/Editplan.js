@@ -25,33 +25,34 @@ const EditPlan = () => {
         // Fetch plan details
         const planResponse = await axios.get(`${API_URL}/api/v2/GetPlanById/${id}`);
         setPlan(planResponse.data);
-
-        // Fetch features
+  
+        // Fetch all features
         const featuresResponse = await axios.get(`${API_URL}/api/v2/GetAllFeatures`);
         const allFeatures = featuresResponse.data;
-
+  
         // Fetch existing feature states for the plan
         const featureStatesResponse = await axios.get(`${API_URL}/api/v2/GetFeaturesByPlanId?planId=${id}`);
         const existingFeatureStates = featureStatesResponse.data;
-
-        // Map through all features and match with existing feature states to prefill the active values
+  
+        // Map through all features and match with existing feature states to prefill the active/inactive values
         const updatedFeatures = allFeatures.map((feature) => {
           const matchedFeature = existingFeatureStates.find(state => state.featureId === feature.id);
           return {
             ...feature,
-            active: matchedFeature ? matchedFeature.active : 'no'  // Default to 'no' if not found
+            active: matchedFeature ? matchedFeature.active === true ? 'yes' : 'no' : 'no'  // Default to 'no' if not found
           };
         });
-
+  
         setFeatures(updatedFeatures);
         setFeatureStates(existingFeatureStates);
       } catch (error) {
         console.error('Error fetching plan or features:', error);
       }
     };
-
+  
     fetchPlanAndFeatures();
   }, [id]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -78,26 +79,32 @@ const EditPlan = () => {
     e.preventDefault();
   
     try {
-      // Update plan data
+      // Step 1: Update the plan data
       await axios.patch(`${API_URL}/api/v2/editPlans/${id}`, plan, {
         headers: {
           Authorization: token,
           'Content-Type': 'application/json'
         }
       });
-      
-      // Collect feature data
-      const featuresData = featureStates.map(feature => ({
+  
+      // Step 2: Delete existing feature states for the plan
+      await axios.delete(`${API_URL}/api/v2/planfeaturemerge?planId=${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+  
+      // Step 3: Prepare the updated feature states
+      const featuresData = features.map(feature => ({
         planId: id,
-        featureId: feature.featureId,
-        active: feature.active === 'yes',
+        featureId: feature.id,
+        active: feature.active === 'yes',  // Ensure proper boolean conversion
       }));
   
-      // Update feature states
+      // Step 4: Insert the updated feature states
       await axios.put(`${API_URL}/api/v2/planfeaturemerge`, featuresData, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       });
   
+      // Success message and redirect
       Swal.fire({ icon: 'success', title: 'Success', text: 'Plan details and features updated successfully' });
       navigate('/admin/PlanDetailsList');
     } catch (error) {
@@ -105,6 +112,8 @@ const EditPlan = () => {
       Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to update plan details. Please try again later.' });
     }
   };
+  
+  
   
 
   return (
@@ -158,25 +167,31 @@ const EditPlan = () => {
                 <div className="w-100 d-flex">
                   <div className="w-100">
                   {features.length > 0 ? (
-  features.map((feature, index) => (
-    <div key={index} className="mb-2 d-flex align-items-center">
-      <span style={{ width: '20px', textAlign: 'center' }}>
-        {feature.active === 'yes' ? <span>&#10003;</span> : <span>&#10007;</span>}
-      </span>
-      <button className="flex-grow-1" style={{ textAlign: "left" }}>
-        {feature.features}
-      </button>
-      <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'yes')}>
-        Active
-      </button>
-      <button className="btn btn-info ms-2" onClick={() => handleSetActive(feature.id, 'no')}>
-        Inactive
-      </button>
-    </div>
-  ))
-) : (
-  <div>No features available</div>
-)}
+          features.map((feature, index) => (
+            <div key={index} className="mb-2 d-flex align-items-center">
+              <span style={{ width: '20px', textAlign: 'center' }}>
+                {feature.active === 'yes' ? <span>&#10003;</span> : <span>&#10007;</span>}
+              </span>
+              <button className="flex-grow-1" style={{ textAlign: "left" }}>
+                {feature.features}
+              </button>
+              <button
+                className={`btn ms-2 ${feature.active === 'yes' ? 'btn-success' : 'btn-info'}`}
+                onClick={() => handleSetActive(feature.id, 'yes')}
+              >
+                Active
+              </button>
+              <button
+                className={`btn ms-2 ${feature.active === 'no' ? 'btn-danger' : 'btn-info'}`}
+                onClick={() => handleSetActive(feature.id, 'no')}
+              >
+                Inactive
+              </button>
+            </div>
+          ))
+        ) : (
+          <div>No features available</div>
+        )}
 
                   </div>
                 </div>
