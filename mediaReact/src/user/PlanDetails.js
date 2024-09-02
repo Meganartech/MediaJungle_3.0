@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from './Layout/Layout';
 import API_URL from '../Config';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate for redirection
 
 const PlanDetails = () => {
   const [plans, setPlans] = useState([]);
@@ -10,6 +11,8 @@ const PlanDetails = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [hoveredPlan, setHoveredPlan] = useState(null);
   const [tenures, setTenures] = useState([]);
+
+  const navigate = useNavigate();  // Initialize navigate
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/tenures`)
@@ -68,8 +71,12 @@ const PlanDetails = () => {
   };
 
   const handlePayment = async (tenure) => {
+    const userId = sessionStorage.getItem('userId');
+    
     if (!userId) {
-      Swal.fire('Error', 'You are not logged in.', 'error');
+      Swal.fire('Error', 'You are not logged in. Redirecting to login page...', 'error').then(() => {
+        window.location.href = '/UserLogin'; // Redirect to login page
+      });
       return;
     }
   
@@ -139,7 +146,6 @@ const PlanDetails = () => {
     }
   };
   
-
   const sendPaymentIdToServer = async (paymentId, order, status_code, planname, userId, tenureId, signature) => {
     try {
       await fetch(`${API_URL}/api/v2/buy`, {
@@ -189,6 +195,15 @@ const PlanDetails = () => {
           onMouseEnter={() => setHoveredPlan(plan.id)}
           onMouseLeave={() => setHoveredPlan(null)}
         >
+          <div className='mb-2'>
+                      <input
+                        type='radio'
+                        name='plan'
+                        checked={selectedPlan?.id === plan.id}
+                        onChange={() => handlePlanSelect(plan)}
+                        className='form-radio text-blue-500 h-4 w-4'
+                      />
+                    </div>
           {plan.planname} (&#8377;{plan.amount})
         </th>
       ))}
@@ -221,25 +236,25 @@ const PlanDetails = () => {
       <td colSpan={plans.length} className='py-4 px-6 text-center'>
         {selectedPlan && (
           <div className='mt-4 flex flex-wrap justify-center'>
-            {tenures.map((tenure) => {
-              const discountedAmount = calculateDiscountedAmount(
-                selectedPlan.amount,
-                tenure.months,
-                tenure.discount
-              );
+           {tenures.map((tenure) => {
+  const discountedAmount = calculateDiscountedAmount(
+    selectedPlan.amount,
+    tenure.months,
+    tenure.discount
+  );
 
-              return (
-                <button
-                  key={tenure.id}
-                  className='bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-8 rounded-lg mr-2 mb-2 transition-transform transform hover:scale-105 hover:shadow-xl hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50 relative'
-                  onClick={() => handlePayment(tenure)}
-                >
-                  <span className='block text-lg font-semibold'>{tenure.tenure_name}</span>
-                  <span className='block text-xl font-extrabold'>&#8377;{Math.round(discountedAmount)}</span>
-                  <div className='absolute inset-0 bg-blue-800 opacity-10 rounded-lg'></div>
-                </button>
-              );
-            })}
+  return (
+    <button
+      key={tenure.id}
+      className='relative bg-blue-800 text-white py-2 px-8 rounded-lg mr-2 mb-2 transition-transform transform hover:bg-green-900 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50'
+      onClick={() => handlePayment(tenure)}
+    >
+      <span className='block text-lg font-semibold'>{tenure.tenure_name}</span>
+      <span className='block text-xl font-extrabold'>&#8377;{Math.round(discountedAmount)}</span>
+    </button>
+  );
+})}
+
           </div>
         )}
       </td>

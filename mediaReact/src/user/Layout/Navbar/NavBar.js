@@ -75,6 +75,9 @@ const NavBar = () => {
         if (response.ok) {
           // Clear token from session storage after successful logout
           sessionStorage.removeItem("token");
+          sessionStorage.removeItem("userId");
+          sessionStorage.removeItem("name");
+          // sessionStorage.removeItem("initialsignup");
           localStorage.clear();
           // Redirect to login page
           window.location.href = "/UserLogin";
