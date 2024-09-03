@@ -7,8 +7,6 @@ import API_URL from '../../../Config';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import UserNotification from '../../Screens/UserNotification';
-
-
 const NavBar = () => {
     const hover = 'hover:text-subMain transitions text-white'
     const Hover =({isActive}) =>(isActive ? 'text-subMain':hover);
@@ -153,93 +151,89 @@ useEffect(() => {
 
     return (
         <>
-            <div className='bg-main shadow-md sticky top-0 z-20' >
-                <div className='container mx-auto py-6 px-2 lg:grid gap-10 grid-cols-7 justify-between items-center'style={{height: "93px", zIndex:"20",position: "sticky",marginTop: "-1px"}}>
-                <div className='col-span-1 lg:block hidden'>
-                {getall.length > 0 && getall[0].logo ? (
-                      <Link to="/">
-                        <img src={`data:image/png;base64,${getall[0].logo}`} alt='logo' className='w-full object-contain'/>
-                      </Link>
-                    ) : (
-                      <div></div>
-                    )}
-                  </div>
+            <div className='bg-custom-color shadow-md sticky z-20'  >
+            <div className='con5 mx-auto lg:grid gap-20 grid-cols-7 justify-between items-center' style={{ height: "93px", zIndex: "20", position: "sticky", marginTop: "-1px" }}>
+  <div className='col-span-1 lg:block hidden'>
+    {getall.length > 0 && getall[0].logo ? (
+      <Link to="/">
+        <img src={`data:image/png;base64,${getall[0].logo}`} alt='logo' className='w-full object-contain' />
+      </Link>
+    ) : (
+      <div></div>
+    )}
+  </div>
 
-                    {/* Search Form */}
-                    <div className='col-span-3'>
-                        <form className='w-full text-sm bg-dryGray rounded flex-btn gap-4'>
-                            <button type='submit' className='bg-subMain w-12 flex-colo h-12 rounded text-white'>
-                                <FaSearch />
-                            </button>
-                            <input type='text'placeholder='Search Movie Name from here' className='font-medium placeholder:text-border text-sm w-11/12 h-12 bg-transparent border-none px-2 text-black' />
-                        </form>
-                    </div>
-                    {/* Menus */}
-                    <div className='col-span-3 font-medium text-sm hidden xl:gap-14 2xl:gap-10 justify-between lg:flex xl:justify-end items-center'>
-                        <NavLink to='/PlanDetails' className="bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-6 rounded-lg w-full transition duration-300 ease-in-out" style={{width:"120px"}}>
-                            SUBSCRIBE
-                        </NavLink>
-                        <NavLink to='/MoviesPage' className={Hover}>
-                            Movies
-                        </NavLink>
-                        <NavLink to='/AboutUs' className={Hover}>
-                            AboutUs
-                        </NavLink>
-                        <NavLink to='/Contactus' className={Hover}>
-                            ContactUs
-                        </NavLink>
+  {/* Centered Search Form */}
+  <div className='col-span-5 flex justify-center items-center'>
+    <form className='w-full max-w-md text-sm bg-dryGray rounded flex gap-4 items-center'>
+      <button type='submit' className=' w-12 flex-colo h-12 rounded text-black'>
+        <FaSearch />
+      </button>
+      <input
+        type='text'
+        placeholder='Search...'
+        className='font-medium placeholder:text-border text-sm w-full h-12 bg-transparent border-none px-2 text-black'
+      />
+    </form>
+  </div>
 
+  {/* Menus */}
+  <div className='col-span-1 font-medium text-sm hidden xl:gap-14 2xl:gap-10 justify-between lg:flex xl:justify-end items-center'>
+    <div className="relative cursor-pointer mr-2" onClick={() => { setisopen(!isopen); }}>
+      <div className="relative">
+        {count > 0 && (
+          <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            {count}
+          </span>
+        )}
+        <a onClick={() => { setisopen(!isopen); }} href="#">
+          <FaBell className='w-6 h-6 text-white hover:text-red-900 transition duration-300 ease-in-out' />
+        </a>
+      </div>
+    </div>
+    {token !== null ? (
+      <div className="relative">
+        <div className="flex items-center gap-2" onClick={toggleDropdown}>
+          <CgUser className='w-8 h-8' />
+        </div>
+        {showDropdown && (
+          <div className="absolute right-0 mt-2 bg-red-600 rounded shadow-lg">
+            <button className="block w-full py-2 px-4 text-left text-white" onClick={handleprofile}>Profile</button>
+            <button className="block btn-danger w-full py-2 px-4 text-left text-white" onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+      </div>
+    ) : (
+      <NavLink to='/UserLogin' className={Hover}>
+        <CgUser className='w-8 h-8' />
+      </NavLink>
+    )}
+  </div>
+</div>
 
-                        {token!==null ? (
-                            <div className="relative">
-                            <div className="flex items-center gap-2" onClick={toggleDropdown}>
-                                <CgUser className='w-8 h-8' /> 
-                            </div>
-                            
-                            {showDropdown && (
-                                <div className="absolute right-0 mt-2 bg-yellow-600 rounded shadow-lg">
-                                  <button className="block w-full py-2 px-4 text-left text-white" onClick={handleprofile}>profile</button>
-                                  
-                                <button className="block btn-danger w-full py-2 px-4 text-left text-white" onClick={handleLogout}>Logout</button>
-                               
-                                 
-                              
-                                </div>
-                                 
-                            )}
-                            
-                         
-                      </div>
-                     
-                 
-                        ) : (
-                            <>
-                            <NavLink to='/UserLogin' className={Hover}>
-                               <CgUser className='w-8 h-8' />
-                            </NavLink>
-                            
-                            </>
-                        )}
-
-                        
-                            <div className="relative cursor-pointer mr-2"  onClick={() => { setisopen(!isopen); }}>
-                                <div className="relative">
-                                {count > 0 && (
-                                    <span className="absolute -top-2 -right-3 bg-yellow-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                       {count}
-                                    </span>
-                                    )}
-                                    <a onClick={() => { setisopen(!isopen); }} href="#">
-                                    <FaBell className='w-6 h-6 text-white hover:text-yellow-600 transition duration-300 ease-in-out' /> {/* Adjusted size */}
-                                    </a>
-                                </div>
-                            </div>
-                        
-                    </div>
-                </div>
+               
                 {isopen && <div>
                   <UserNotification setisopen={setisopen} isopen={isopen} setcount={setcount} handlemarkallasRead={handlemarkallasRead}/>
                   </div>}
+            </div>
+            <div className='con5' style={{ background: 'linear-gradient(to top, #141335, #0c0d1a)'}}> 
+            <NavLink to='/MoviesPage' className={Hover}>
+                            Movies
+                        </NavLink>
+                        <NavLink to='/MusicPage' className={Hover}>
+                            Music
+                        </NavLink>
+                        <NavLink to='/Library' className={Hover}>
+                            Library
+                        </NavLink>
+                        <div style={{padding:'50px'}}>
+                        <NavLink 
+  to='/PlanDetails' 
+  className="bg-new hover:bg-red-900 text-white py-2 px-8 rounded-lg w-full transition duration-300 ease-in-out"
+>
+  SUBSCRIBE
+</NavLink>
+</div>
             </div>
         </>
     )

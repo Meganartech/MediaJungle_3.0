@@ -69,18 +69,19 @@ const UserNotification = ({ setisopen, isopen, setcount, handlemarkallasRead }) 
 
 <div
   id="notipanel"
-  className="shadow-md p-4 bg-blue-950 text-yellow-500 rounded-md fixed top-0 right-0 w-400px h-400px mt-24 mr-2 custom-scrollbar"
+  className="shadow-md p-4 bg-blue-950 text-red-500 rounded-md fixed top-0 right-0 w-600px h-600px mt-24 mr-6 custom-scrollbar"
+  style={{width:"500px",height:"250"}}
 >
-  <div className="flex justify-between items-center mb-4">
-    <a href='#' onClick={handleClearAll} className="text-yellow-500 hover:underline" style={{color:'#FBC740',fontSize:'15px'}} >Clear All</a>&nbsp;
-    <a href='#' onClick={() => handlemarkallasRead()} className="text-yellow-500 hover:underline" style={{color:'#FBC740',fontSize:'15px'}}>Mark All as Read</a>
-    <i className="fa-solid fa-xmark cursor-pointer p-1 text-yellow-500" onClick={() => setisopen(false)}></i>
+  <div className="flex justify-between items-center mb-8">
+    <a href='#' onClick={handleClearAll} className="text-main hover:underline"  >Clear All</a>&nbsp;
+    <a href='#' onClick={() => handlemarkallasRead()} className="text-main hover:underline" >Mark All as Read</a>
+    <i className="fa-solid fa-xmark  cursor-pointer text-white" style={{marginTop:"0px",paddingTop:"0px"}} onClick={() => setisopen(false)}></i>
   </div>
   <div className="overflow-y-auto pr-2 max-h-64">
     {filteredNotifications && filteredNotifications.length > 0 ? (
       filteredNotifications.map((group, index) => (
         <div key={index} className="mb-4">
-          <h6 className="text-left text-yellow-500">
+          <h6 className="text-left text-red-500">
             {group.date === new Date().toLocaleDateString('en-US') ? 'Today' :
               group.date === new Date(new Date().getTime() - (1 * 24 * 60 * 60 * 1000)).toLocaleDateString('en-US') ? 'Yesterday' :
                 group.date}
@@ -99,18 +100,18 @@ const UserNotification = ({ setisopen, isopen, setcount, handlemarkallasRead }) 
                 />
               )}
               <div className='p-1'>
-                <p className="text-yellow-500">{notification.heading}</p>
-                <small className="text-yellow-500" style={{ whiteSpace: 'pre-line', overflowWrap: 'break-word' }}>
+                <p className="text-red-500">{notification.heading}</p>
+                <small className="text-red-500" style={{ whiteSpace: 'pre-line', overflowWrap: 'break-word' }}>
                 {notification.description && notification.description.length > 50 ? `${notification.description.substring(0, 50)}...` : notification.description}
                 </small>
-                <p className="text-yellow-500">{notification.detail}</p>
+                <p className="text-red-500">{notification.detail}</p>
               </div>
             </div>
           ))}
         </div>
       ))
     ) : (
-      <div className='text-center mt-5'> No Notification Found</div>
+      <div className='text-center mt-5 text-white'> No Notification Found</div>
     )}
   </div>
 </div>
