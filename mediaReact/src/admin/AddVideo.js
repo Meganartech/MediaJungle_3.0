@@ -868,6 +868,7 @@ import "../App.css"
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import React, { useState, useEffect, useRef } from 'react';
+import ReactPlayer from 'react-player';
 
 
 const AddVideo = () => {
@@ -1409,6 +1410,7 @@ const [videofilename,setvideofilename] = useState('');
 const [trailervideofilename,settrailervideofilename] = useState('');
 const [movievideo,setmovievideo] = useState('');
 const [trailervideo,settrailervideo] = useState('');
+const [getcategory,setgetcategory] = useState([]);
 
 const videoId = localStorage.getItem('items');
 console.log("videoId",videoId);
@@ -1435,7 +1437,10 @@ useEffect(() => {
         settaglist(data.taglist);
         setCategory(data.categorylist);
         setvideofilename(data.vidofilename)
+        setVideoUrl(`${API_URL}/api/v2/${videofilename}/videofile`);
         settrailervideofilename(data.videotrailerfilename);
+        settrailerUrl(`${API_URL}/api/v2/${trailervideofilename}/trailerfile`)
+
       })
       .catch(error => console.error('Error fetching video details:', error));
 
@@ -1444,50 +1449,15 @@ useEffect(() => {
       .then(response => response.json())
       .then(data => {
         // console.log('Video Images:', data); // Log the video images
-        setgetvideothumbnail(data.videoThumbnail);
-        setgettrailerthumbnail(data.trailerThumbnail);
-        setgetuserbanner(data.userBanner);
+        setvideothumbnailUrl(`data:image/png;base64,${data.videoThumbnail}`);
+        settrailerthumbnailUrl(`data:image/png;base64,${data.trailerThumbnail}`);
+        setuserbannerUrl(`data:image/png;base64,${data.userBanner}`);
       })
       .catch(error => console.error('Error fetching video images:', error));
-
   }
 }, [videoId]);
 
 
-useEffect(() => {
-  const fetchVideo = async () => {
-    try {
-      const response = await axios.get(
-        `${API_URL}/api/v2/${videofilename}/videofile`,
-        {
-          responseType: 'arraybuffer', // Set the response type to arraybuffer for binary data
-        }
-      );
-
-      // Use the response data directly as arraybuffer
-      const videoData = response.data;
-      setmovievideo(videoData);
-      console.log('Fetched Video Data:', videoData);
-
-      // Optionally, convert the ArrayBuffer to a Blob and generate a URL to display the video
-      // const videoBlob = new Blob([videoData], { type: 'video/mp4' }); // Adjust MIME type as necessary
-      // const videoUrl = URL.createObjectURL(videoBlob);
-      // console.log('Generated Video URL:', videoUrl);
-      // setmovievideo(videoUrl);
-
-      // // Clean up the created URL when the component unmounts
-      // return () => {
-      //   URL.revokeObjectURL(videoUrl);
-      // };
-    } catch (error) {
-      console.error('Error fetching video file:', error);
-    }
-  };
-
-  if (videofilename) {
-    fetchVideo();
-  }
-}, [videofilename]);
 
 const handleUpdate = () => {
   // Collect all the updated data from the state
@@ -2072,24 +2042,25 @@ const handleUpdate = () => {
                   backgroundPosition: 'center'
                 }}
               >
-                {/* {videoUrl ? ( */}
-                {movievideo ? (
-             
-             
-            <video
-              // src={videoUrl}
-              // src = {movievideo}
-              src={URL.createObjectURL(new Blob([movievideo], { type: 'video/mp4' }))}
-              controls
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-          ) : (
-            <span>Drag and drop</span>
-          )}
+           {videoUrl ? (
+  <ReactPlayer
+    url={videoUrl}
+    controls
+    width="100%"
+    height="100%"
+    config={{
+      file: {
+        attributes: {
+          controlsList: 'nodownload'
+        }
+      }
+    }}
+  />
+) : (
+  <span>Drag and drop</span>
+)}
+
+
               </div>
               <button
                 type="button"
@@ -2125,14 +2096,12 @@ const handleUpdate = () => {
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 style={{
-                  backgroundImage: !isEditMode
-                    ? `url(${videothumbnailUrl})`
-                    : `url(data:image/png;base64,${getvideothumbnail})`,
+                  backgroundImage: `url(${videothumbnailUrl})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
               >
-                {!isEditMode && !videothumbnailUrl && <span>Drag and drop</span>}
+                {!videothumbnailUrl && <span>Drag and drop</span>}
               </div>
               <button
                 type="button"
@@ -2179,18 +2148,22 @@ const handleUpdate = () => {
                 }}
               >
                 {trailerUrl ? (
-                <video
-                  src={trailerUrl}
-                  controls
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                  }}
-                />
-              ) : (
-                <span>Drag and drop</span>
-              )}
+  <ReactPlayer
+    url={trailerUrl}
+    controls
+    width="100%"
+    height="100%"
+    config={{
+      file: {
+        attributes: {
+          controlsList: 'nodownload'
+        }
+      }
+    }}
+  />
+) : (
+  <span>Drag and drop</span>
+)}
               </div>
               <button
                 type="button"
@@ -2226,14 +2199,12 @@ const handleUpdate = () => {
                 onDrop={handleDroptrailerthumbnail}
                 onDragOver={handleDragOver}
                 style={{
-                  backgroundImage: !isEditMode
-                    ? `url(${trailerthumbnailUrl})`
-                    : `url(data:image/png;base64,${gettrailerthumbnail})`,
+                  backgroundImage:`url(${trailerthumbnailUrl})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
               >
-             {!isEditMode && !trailerthumbnailUrl && <span>Drag and drop</span>}
+             {!trailerthumbnailUrl && <span>Drag and drop</span>}
               </div>
               <button
                 type="button"
@@ -2273,14 +2244,12 @@ const handleUpdate = () => {
                 onDrop={handleDropuserbanner}
                 onDragOver={handleDragOver}
                 style={{
-                  backgroundImage: !isEditMode
-                    ? `url(${userbannerUrl})`
-                    : `url(data:image/png;base64,${getuserbanner})`,
+                  backgroundImage: `url(${userbannerUrl})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
               >
-                {!isEditMode && !userbannerUrl && <span>Drag and Drop</span>}
+                {!userbannerUrl && <span>Drag and Drop</span>}
               </div>
               <button
                 type="button"
@@ -2394,7 +2363,7 @@ const handleUpdate = () => {
           </tr>
           <tr>
             <th>Category:</th>
-            <td>{categoriesvaluelist.join(', ')}</td>
+            <td>{isEditMode ? getcategory : categoriesvaluelist.join(', ')}</td>
           </tr>
           <tr>
             <th>Tag:</th>

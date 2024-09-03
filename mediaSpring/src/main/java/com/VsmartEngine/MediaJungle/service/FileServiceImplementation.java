@@ -156,10 +156,17 @@ public class FileServiceImplementation implements FileService {
 			return inputStream ;
 		}
 		
-		public InputStream getVideotrailerFIle(String path, String trailerfileName, long id) throws  FileNotFoundException {
-			String fullPath = path+File.separator+trailerfileName ;
-			InputStream inputStream = new FileInputStream(fullPath);
-			return inputStream ;
+//		@Override
+//		public InputStream getVideotrailerFIle(String path, String trailerfileName, long id) throws  FileNotFoundException {
+//			String fullPath = path+File.separator+trailerfileName ;
+//			InputStream inputStream = new FileInputStream(fullPath);
+//			return inputStream ;
+//		}
+		
+		@Override
+		public InputStream getVideotrailerFIle(String path, String trailerfileName, long id) throws FileNotFoundException {
+		    Path fullPath = Paths.get(path, trailerfileName);
+		    return new FileInputStream(fullPath.toFile());
 		}
 		
 		@Override
