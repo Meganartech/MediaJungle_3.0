@@ -327,7 +327,7 @@ td{
 
 
 .drag-drop-area {
-  padding: 1rem;
+  /* padding: 1rem; */
   border: 2px solid;
   border-radius: 4px;
   text-align: center;

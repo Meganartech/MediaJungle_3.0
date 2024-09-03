@@ -16,6 +16,8 @@ public interface FileService {
 	
 	InputStream getVideoFIle(String path,String fileName , long id) throws FileNotFoundException ;
 	
+	InputStream getVideotrailerFIle(String path, String trailerfileName, long id) throws  FileNotFoundException ;
+	
 	boolean deletetrailerFile(String fileName) throws IOException;
 	
 	boolean deleteVideoFile(String fileName) throws IOException;
