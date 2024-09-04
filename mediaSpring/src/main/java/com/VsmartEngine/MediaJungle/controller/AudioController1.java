@@ -429,28 +429,41 @@ public class AudioController1 {
     
 //    -------------------------------------NEW AUDIO TUMBNAIL API--------------------------------------------------
     
-    public ResponseEntity<List> getaudioThumbnailsById(@PathVariable Long id) {
+    public ResponseEntity<?> getaudioThumbnailsById(@PathVariable Long id) {
         try {
         	
         	Optional<Audioimages> audioThumbnail = audioI.findById(id);
 //            Optional<Addaudio1> audioOptional = audiorepository.findById(id);
 //        	System.out.println(audioThumbnail);
 
-            if (audioThumbnail !=null) {
-            	
-            	Audioimages audioImage = audioThumbnail.get() ;
-
+        	
+        	if (audioThumbnail.isPresent()) {
+        		Audioimages audioImage = audioThumbnail.get();
+                
                 // Assuming decompressImage returns the raw thumbnail data
                 byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getAudio_thumbnail());
-     
+
+                // Convert the byte array to Base64
+                String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);
+                
+                // Return the Base64-encoded thumbnail in a JSON response
+                return ResponseEntity.ok(Collections.singletonMap("thumbnail", base64Thumbnail));
+
+//            if (audioThumbnail !=null) {
+//            	
+//            	Audioimages audioImage = audioThumbnail.get() ;
+//
+//                // Assuming decompressImage returns the raw thumbnail data
+//                byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getAudio_thumbnail());
+//     
                 // Assuming decompressImage returns the raw thumbnail data
 //                byte[] thumbnailData = ImageUtils.decompressImage(audioImage.getAudio_thumbnail());
 
                 // Convert the byte array to Base64
-                String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);
+//                String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);
 
                 // Return a list with a single Base64-encoded thumbnail
-                return ResponseEntity.ok(Collections.singletonList(base64Thumbnail));
+//                return ResponseEntity.ok(Collections.singletonList(base64Thumbnail));
             } else {
                 return ResponseEntity.notFound().build();
             }

@@ -1,37 +1,53 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+// import '../csstemp/VideoStyle.css';
+import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import "../css/Sidebar.css";
 import API_URL from '../Config';
-import Swal from 'sweetalert2';
+// import '../csstemp/VideoStyle.css';
+import "../css/Sidebar.css";
 
 const ListAudio = () => {
 
-  const [getall, setGetall] = useState(null);
+  // ------------------------------ Admin Functions  -----------------------------------------
+  const [videos, setVideos] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const userid = parseInt(sessionStorage.getItem('id'), 10); // Get user ID from session storage
   const name = sessionStorage.getItem('username');
+  const [Audiodata, setAudiodata] = useState([]);
+  let Id;
   const navigate = useNavigate();
-  const token = sessionStorage.getItem('tokenn');
+  const [dataToSend, setDataToSend] = useState('');
+  const [paid, setpaid] = useState('');
+  const token= sessionStorage.getItem('tokenn')
+  localStorage.setItem('audioId', null);
+ 
   const handleClick = (link) => {
+    localStorage.removeItem('items'); // Clear the stored videoId
     navigate(link);
   }
-
+ 
+ 
+ 
   useEffect(() => {
-    fetch(`${API_URL}/api/v2/GetAll`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setGetall(data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+    // Fetch videos from the backend API
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/v2/getaudiodetailsdto`);
+        setAudiodata(response.data); 
+        console.log(response.data) 
+      } catch (error) {
+        console.log('Error fetching users:', error);
+      }
+    };
+    
+    fetchUsers();
   }, []);
-
-  const handleDelete = (audioId) => {
+  console.log('Audiodata')
+  console.log(Audiodata)
+ 
+  const handleDelete = async (audioid) => {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -39,122 +55,139 @@ const ListAudio = () => {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, keep it'
-    }).then((result) => {
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        fetch(`${API_URL}/api/v2/audiodelete/${audioId}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: token,
-        }
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.status === 200 ? {} : response.json();
-        })
-        .then(data => {
-          if (data) {
-            console.log('Audio deleted successfully', data);
+        try {
+          const response = 1;
+          await fetch(`${API_URL}/api/v2/testaudio/${audioid}`, {
+            method: 'DELETE',
+            // headers: {
+            //   Authorization: token,
+            // }
+          });
+  
+          if (response==1) {
+            const updatedData = Audiodata.filter(audio => audio.id !== audioid);
+            setAudiodata(updatedData);
+  
+            Swal.fire(
+              'Deleted!',
+              'The video has been deleted.',
+              'success'
+            );
           } else {
-            console.log('Audio deleted successfully (no content)');
+            Swal.fire(
+              'Error!',
+              'There was a problem deleting the video.',
+              'error'
+            );
           }
-          setGetall(prevCategories => prevCategories.filter(audio => audio.id !== audioId));
-          Swal.fire(
-            'Deleted!',
-            'Your audio has been deleted.',
-            'success'
-          );
-        })
-        .catch(error => {
-          console.error('Error deleting audio:', error);
+        } catch (error) {
+          console.error('Error:', error);
           Swal.fire(
             'Error!',
-            'There was a problem deleting your audio. Please try again later.',
+            'There was a problem deleting the video.',
             'error'
           );
-        });
-      } else {
-        Swal.fire(
-          'Cancelled',
-          'Your audio is safe :)',
-          'error'
-        );
+        }
       }
     });
   };
-
-  const handlEdit = async (audioId) => {
-    localStorage.setItem('items', audioId);
-    navigate('/admin/Editaudio');
+  
+  const handlEdit = async (audioid) => {
+    localStorage.setItem('audioId', audioid);
+    navigate('/admin/addAudio');
   };
   
-  return (
-    <div className="marquee-container">
-          <div className='AddArea'>
-          <button className='btn btn-custom' onClick={() => handleClick("/admin/AddAudio")}>Add Audio</button>
-        </div><br/>
-        <div className='container2'>
-          <ol className="breadcrumb mb-4">
-            <li className="breadcrumb-item text-white">
-            Audios
-            </li>
-            {/* <li className="breadcrumb-item active">Audios</li> */}
-          </ol>
-{/* 
-          <h1 className="mt-4 text-white">{name === "admin" ? "Admin-Audios" : "User-Audios"}</h1>
-
-          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}> */}
-            
-              {/* <div className="card-1 mb-4" style={{ height: "auto" }}> */}
-                {/* <div className="card-header">
-                  <i className="fas fa-table me-1"></i>
-                  Audio List
-                </div> */}
-                <div className="card-body profile-card-body">
-                  <table id="datatablesSimple">
-                    <thead>
-                      <tr>
-                        <th>S.No</th>
-                        <th>songname</th>
-                        <th>category</th>
-                        <th>Paid</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {getall && getall.length > 0 && (
-                      getall.map((audio, index) => (
-                        <tr key={audio.id}>
-                          <td>{index + 1}</td>
-                          <td>{audio.fileName.replace(/^.*[\\\/]/, '').replace(/^.*_/, '').replace(/\.mp3$/, '')}</td>
-                          <td>{audio.category.categories}</td>
-                          <td>{audio.paid===true?1:0}</td>
-                          <td>
-                            <button onClick={() => handlEdit(audio.id)}>
-                              <i className="fas fa-edit" aria-hidden="true"></i>
-                            </button>
-              
-                            <button onClick={() => handleDelete(audio.id)}>
-                              <i className="fa fa-trash" aria-hidden="true"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      )) )}
-                      
-                     
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-          
-          </div>
-        // </div>
-      // </div>
   
+ // ------------------------------ User Functions ----------------------------------------------
+ 
+ 
+  return (
+ 
+    <div className="marquee-container">
+        <div className='AddArea'>
+          <button className='btn btn-custom' onClick={() => handleClick("/admin/addAudio")}>Add Audio</button>
+        </div><br/>
+      <div className='container3'>
+      <ol className="breadcrumb mb-4 d-flex my-0">
+        <li className="breadcrumb-item text-white">Audio
+        </li>
+        <li className="ms-auto text-end text-white">
+        Bulk Action
+        <button className="ms-2">
+          <i className="bi bi-chevron-down"></i>
+        </button>
+      </li>
+       
+      </ol>
+    
+         
+      <div class="outer-container">
+    <div className="table-container">
+      <table className="table table-striped ">
+        <thead>
+          <tr className='table-header'>
+            <th style={{border: 'none' }}>
+              <input type="checkbox" />
+            </th>
+            <th style={{border: 'none' }}>S.No</th>
+            <th style={{border: 'none' }}>Audio TITLE</th>
+            <th style={{border: 'none' }}>CATEGORY</th>
+            <th style={{border: 'none' }}>PRODUCTION</th>
+            <th style={{border: 'none' }}>RATING</th>
+            <th style={{border: 'none' }}>VIDEO ACCESS TYPE</th>
+            <th style={{border: 'none' }}>ACTION</th>
+                    
+          </tr>
+        </thead>
+        <tbody>
+          {Audiodata.map((Audiodata, index) => (
+            <tr key={Audiodata.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+              <td>
+                <input type="checkbox" />
+              </td>
+              <td>{index + 1}</td>
+              <td>{Audiodata.audioTitle}</td>
+               <td>{Audiodata.categories} ...</td>
+              <td>{Audiodata.production_company}</td>
+              <td>{Audiodata.rating}/10</td>
+              <td>{Audiodata.paid===true ? "Paid" : "Free"}</td>
+
+              {/* <th style={{border: 'none' }}>S.No</th>
+            <th style={{border: 'none' }}>Audio TITLE</th>
+            <th style={{border: 'none' }}>CATEGORY</th>
+            <th style={{border: 'none' }}>PRODUCTION</th>
+            <th style={{border: 'none' }}>RATING</th>
+            <th style={{border: 'none' }}>VIDEO ACCESS TYPE</th>
+            <th style={{border: 'none' }}>ACTION</th>
+ */}
+
+
+
+              <td>
+                
+                <button onClick={() => handlEdit(Audiodata.id)} className="btn btn-primary me-2">
+                  <i className="fas fa-edit" aria-hidden="true"></i>
+                </button>
+                <button onClick={() => handleDelete(Audiodata.id)} className="btn btn-danger">
+                  <i className="fa fa-trash" aria-hidden="true"></i> 
+                </button>
+                
+              </td>
+            </tr>
+          ))}
+                </tbody>
+              </table>
+            </div> 
+          
+        </div>
+    </div>
+    </div>
+    
+ 
   );
-};
+ };
 
 export default ListAudio;

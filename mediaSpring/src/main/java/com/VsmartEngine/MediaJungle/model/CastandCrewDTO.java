@@ -1,33 +1,23 @@
 package com.VsmartEngine.MediaJungle.model;
 
 public class CastandCrewDTO {
-	
+	 private Long id;
+     private String name;
+     
 
-	private long id;
-	
-	private String description;
-	
-	
-	private String name;
+     public CastandCrewDTO(Long id, String name) {
+         this.id = id;
+         this.name = name;
+     }
 
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
-	}
-
-
-	public String getDescription() {
-		return description;
-	}
-
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 
@@ -39,6 +29,7 @@ public class CastandCrewDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
+    
+ 
 }
