@@ -15,13 +15,19 @@ h1:'2.6rem',
       xs:'475px',
     },
   colors: {
-    main: '#001233',      // Dark Slate Gray
+    main:  '#141334',      // Dark Slate Gray
     subMain: '#DF9704',   // Pumpkin
-    dry: '#002255',       // Battleship Gray
+    dry: '#2A2950',       // Battleship Gray
     star: '#FFD700',      // Gold
     text: '#C0C0C0',      // Silver
     border: '#585858',    // Dim Gray
     dryGray: '#E8E8E8',   // Light Gray
+    'custom-color': '#2B2A52',
+    'new':'#C2272D',
+    'body_color':'#09080E'
+  },
+  backgroundImage: {
+    'main-gradient': 'linear-gradient(to bottom, #141334, #0e0d25)',
   },
   },
   },

@@ -45,8 +45,12 @@ function Footer() {
       title: 'Company',
       links: [
         {
-          name: 'Home',
-          link: '/'
+          name: 'Movies',
+          link: '/MoviesPage'
+        },
+        {
+          name: 'Music',
+          link: '/MusicPage'
         },
         {
           name: 'About Us',
@@ -55,11 +59,8 @@ function Footer() {
         {
           name: 'Contact-Us',
           link: '/Contactus'
-        },
-        {
-          name: 'Movies',
-          link: '/MoviesPage'
         }
+       
 
       ]
     },
@@ -101,10 +102,10 @@ function Footer() {
           name: 'Profile',
           link: '/UserProfileScreen'
         },
-        // {
-        //   name: 'Change Password',
-        //   link: '/password'
-        // },
+        {
+          name: 'Privacy Policy',
+          link: '/PrivacyPolicy'
+        }
       ]
     }
   ]
@@ -115,7 +116,7 @@ function Footer() {
       <div className="grid grid-cols-2 md:grid-cols-7 xl:grid-cols-12 gap-5 sm:gap-9 lg:gap-11 xl:gap-7 py-10 justify-between" style={{margin:'0 100px 0 100px'}}>
         {Links.map((link, index) => (
           <div key={index} className='col-span-1 md:col-span-2 lg:col-span-3 pb-3.5 sm:pb-0'>
-            <h3 className='text-md lg:leading-7 font-medium mb-4 sm:mb-5 lg:mb-6 pb-0.5'>{link.title}</h3>
+            <h3 className='text-lg lg:leading-7 font-bold mb-4 sm:mb-5 lg:mb-6 pb-0.5'>{link.title}</h3>
             <ul className='text-sm flex flex-col space-y-3'>
 
               {
@@ -136,7 +137,7 @@ function Footer() {
             <img
               src={`data:image/png;base64,${getall[0].logo}`}
               alt="logo"
-              className="w-2/4 object-contain h-12" />
+              className="w-full h-30" />
           </Link>
            ) : (
             <div></div>
@@ -154,7 +155,33 @@ function Footer() {
           :
           <div></div>
           }
+          
         </div>
+        <div className="flex-col mt-4">
+     
+      <a href="https://play.google.com/store/apps" target="_blank" className='w-full' rel="noopener noreferrer">
+        <button className="bg-black text-white rounded items-center">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/512px-Google_Play_Store_badge_EN.svg.png"
+            alt="Get it on Google Play"
+            className="w-full mr-2"
+          />
+          
+        </button>
+      </a>
+
+      {/* Download on the App Store */}
+      <a href="https://www.apple.com/app-store/" target="_blank" rel="noopener noreferrer">
+        <button className="text-white py-2 px-4 rounded flex items-center">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/App_Store_Badge_EN.svg/512px-App_Store_Badge_EN.svg.png"
+            
+            className="w-24 mr-2"
+          />
+        </button>
+      </a>
+    </div>
+
       </div>
     </div>
   // </div>

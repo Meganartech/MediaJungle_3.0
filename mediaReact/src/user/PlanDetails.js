@@ -23,18 +23,24 @@ const PlanDetails = () => {
       })
       .catch((error) => console.error('Error fetching tenures:', error));
   }, []);
-
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllPlans`)
       .then((response) => response.json())
       .then((data) => {
         setPlans(data);
         console.log('Fetched Plans:', data);
+  
+        // Set the first plan as the selected plan initially
+        if (data.length > 0) {
+          setSelectedPlan(data[0]);  
+        }
+  
         const planIds = data.map(plan => plan.id);
         fetchFeaturesForPlans(planIds);
       })
       .catch((error) => console.error('Error fetching plans:', error));
   }, []);
+  
 
   const fetchFeaturesForPlans = (planIds) => {
     planIds.forEach((planId) => {
@@ -179,17 +185,18 @@ const PlanDetails = () => {
 
   return (
     <Layout className='container mx-auto min-h-screen overflow-y-auto bg-black'>
+      <div className='container bg-gray-500' style={{padding:"20px",margin:"30px"}}>
       <div className='flex justify-center py-10'>
         <div className='overflow-x-auto max-w-4xl w-full'>
          <table className='w-full table-hover border rounded-lg shadow-lg'>
   <thead className='rounded-t-2xl'>
     <tr>
-      <th className='py-4 px-6 text-white font-bold uppercase text-sm text-left w-3/12'>Features</th>
+      <th className='py-4 px-6 text-black font-bold uppercase text-sm text-left w-3/12'>Features</th>
       {plans.map((plan) => (
         <th
           key={plan.id}
           className={`py-4 px-6 font-bold uppercase text-sm text-center cursor-pointer transition-colors ${
-            selectedPlan?.id === plan.id ? 'text-white bg-blue-700 rounded-t-xl' : 'text-gray-300'
+            selectedPlan?.id === plan.id ? 'text-black bg-blue-700 rounded-t-xl' : 'text-black'
           } ${hoveredPlan === plan.id ? 'bg-gray-600 rounded-t-xl' : ''}`}
           onClick={() => handlePlanSelect(plan)}
           onMouseEnter={() => setHoveredPlan(plan.id)}
@@ -211,19 +218,19 @@ const PlanDetails = () => {
   </thead>
   <tbody>
     {features.map((feature) => (
-      <tr key={feature.id} className='border-t border-gray-700'>
-        <td className='py-3 px-4 border-r-2 text-white font-medium text-sm'>{feature.features}</td>
+      <tr key={feature.id} className='border-t border-black'>
+        <td className='py-3 px-4 border-r-2 text-black font-medium text-sm'>{feature.features}</td>
         {plans.map((plan) => (
           <td
             key={plan.id}
             className={`py-3 px-4 text-center ${
-              selectedPlan?.id === plan.id ? 'bg-blue-700 text-white' : 'text-gray-300'
-            } ${hoveredPlan === plan.id ? 'bg-gray-600 text-white' : ''}`}
+              selectedPlan?.id === plan.id ? 'bg-blue-700 text-black' : 'text-gray-300'
+            } ${hoveredPlan === plan.id ? 'bg-gray-600 text-black' : ''}`}
           >
             {featuresByPlan[plan.id] && featuresByPlan[plan.id].some(f => f.featureId === feature.id && f.active) ? (
-              <i className="fa-solid fa-check text-green-400 text-lg"></i>
+              <i className="fa-solid fa-check text-green-900 text-lg"></i>
             ) : (
-              <i className="fa-solid fa-times text-red-500 text-lg"></i>
+              <i className="fa-solid fa-times text-red-900 text-lg"></i>
             )}
           </td>
         ))}
@@ -232,7 +239,7 @@ const PlanDetails = () => {
   </tbody>
   <tfoot>
     <tr>
-      <td className='py-3 px-4 text-white font-medium text-sm w-3/12'></td>
+      <td className='py-3 px-4 text-black font-medium text-sm w-3/12'></td>
       <td colSpan={plans.length} className='py-4 px-6 text-center'>
         {selectedPlan && (
           <div className='mt-4 flex flex-wrap justify-center'>
@@ -246,7 +253,7 @@ const PlanDetails = () => {
   return (
     <button
       key={tenure.id}
-      className='relative bg-blue-800 text-white py-2 px-8 rounded-lg mr-2 mb-2 transition-transform transform hover:bg-green-900 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50'
+      className='relative bg-blue-800 text-black py-2 px-8 rounded-lg mr-2 mb-2 transition-transform transform hover:bg-green-900 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50'
       onClick={() => handlePayment(tenure)}
     >
       <span className='block text-lg font-semibold'>{tenure.tenure_name}</span>
@@ -263,6 +270,7 @@ const PlanDetails = () => {
 </table>
 
         </div>
+      </div>
       </div>
     </Layout>
   );
