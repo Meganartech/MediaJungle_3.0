@@ -1,119 +1,95 @@
-import React, { useState, useRef } from 'react';
+// import React, { useState, useRef } from 'react';
 import ReactPlayer from 'react-player';
+
+import screenfull from 'screenfull'; // For
+import React, { useState, useEffect } from 'react';
+import API_URL from '../Config';
+
+
 // import screenfull from 'screenfull'; // For
 
+
 const AddAud = () => {
-  const audioUrl = 'http://localhost:8080/api/v2/1725080679905_file_example_MP3_1MG.mp3/file'; 
+  const [imageSrc, setImageSrc] = useState(null);
+  const [isEdited, setIsEdited] = useState(false);
+  useEffect(() => {
+    // Fetch the image from the backend
+  //   fetch(`${API_URL}/api/v2/getaudiothumbnailsbyid/8`)
+  //     .then(response => response.json())
+  //     .then(imageBlob => {
+  //       const imageObjectURL = URL.createObjectURL(imageBlob.thumbnail);
+  //       setImageSrc(imageObjectURL);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching image:', error);
+  //     });
+  // }, [API_URL, 8]);
+
+  fetch(`${API_URL}/api/v2/getaudiothumbnailsbyid/8`)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+
+    const base64Thumbnail = data.thumbnail;
+    console.log(base64Thumbnail)
+    // setThumbnail(base64Thumbnail);
+    if (base64Thumbnail) {
+      setImageSrc(`data:image/jpeg;base64,${base64Thumbnail}`);
+      // setImageSrc(imageObjectURL);
+    } else {
+      setImageSrc(null);
+    }
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
+}, [API_URL, 8]);
 
 
-  const backgroundImage = 'https://via.placeholder.com/200'; 
+  const handleImageEdit = () => {
+    // Simulate image editing by toggling the isEdited state
+    setIsEdited(true);
+  };
+
+  const handleImageSubmit = () => {
+    // Convert the edited or original image to a Blob
+    fetch(imageSrc)
+      .then(response => response.blob())
+      .then(blob => {
+        const formData = new FormData();
+        formData.append('image', blob, 'image.jpg');
+
+        // Send the image back to the backend
+        fetch(`${API_URL}/api/v2/image/upload`, {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Image uploaded successfully:', data);
+          })
+          .catch(error => {
+            console.error('Error uploading image:', error);
+          });
+      });
+  };
 
   return (
-    <div style={{
-      position: 'relative',
-      width: '200px',
-      height: '200px',
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      borderRadius: '10px',
-      overflow: 'hidden',
-    }}>
-      <ReactPlayer
-        url={audioUrl}
-        width="100%"
-        height="100%"
-        controls={true}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-        }}
-        config={{
-          file: {
-            attributes: {
-              controlsList: 'nodownload'
-            }
-          }
-        }}
-      />
-    </div>
-  );
-};
-
-//   const playerRef = useRef(null);
-//   const backgroundImage = 'https://via.placeholder.com/200'; // Replace with your actual image URL
-
-//   return (
-//     <div style={{
-//       position: 'relative',
-//       width: '200px',
-//       height: '200px',
-//       overflow: 'hidden',
-//       backgroundImage: `url(${backgroundImage})`,
-//       backgroundSize: 'cover',
-//       backgroundPosition: 'center',
-//       display: 'flex',
-//       justifyContent: 'center',
-//       alignItems: 'center',
-//       borderRadius: '10px',
-//     }}>
-//       <ReactPlayer
-//         ref={playerRef}
-//         url={audioUrl}
-//         width="200px"
-//         height="200px"
-//         controls={true}
-//         playing={isPlaying}
-//         onPlay={() => setIsPlaying(true)}
-//         onPause={() => setIsPlaying(false)}
-//         style={{
-//           position: 'absolute',
-//           top: 0,
-//           left: 0,
-//           width: '200px',
-//           height: '200px',
-//         }}
-//         config={{
-//           file: {
-//             attributes: {
-//               controlsList: 'nodownload'
-//             }
-//           }
-//         }}
-//       />
-//       {!isPlaying && (
-//         <img
-//           src={backgroundImage}
-//           alt="Audio Player Background"
-//           style={{
-//             position: 'absolute',
-//             top: 0,
-//             left: 0,
-//             width: '200px',
-//             height: '200px',
-//             objectFit: 'cover',
-//             borderRadius: '10px',
-//           }}
-//         />
-//       )}
-//       <button
-//         onClick={() => setIsPlaying(!isPlaying)}
-//         style={{
-//           position: 'absolute',
-//           bottom: '10px',
-//           right: '10px',
-//           backgroundColor: 'white',
-//           border: 'none',
-//           borderRadius: '5px',
-//           padding: '5px 10px',
-//           cursor: 'pointer',
-//           boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-//         }}
-//       >
-//         {isPlaying ? 'Pause' : 'Play'}
-//       </button>
-//     </div>
-//   );
-// };
+    <div>
+    {imageSrc ? (
+      <div>
+        <img src={imageSrc} alt="Fetched" style={{ maxWidth: '400px' }} />
+        <button onClick={handleImageEdit}>Edit Image</button>
+        <button onClick={handleImageSubmit}>Submit Image</button>
+      </div>
+    ) : (
+      <p>Loading image...</p>
+    )}
+  </div>
+);
+}
 export default AddAud;
