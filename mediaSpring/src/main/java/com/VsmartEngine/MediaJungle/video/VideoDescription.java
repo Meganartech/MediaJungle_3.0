@@ -1,6 +1,7 @@
 package com.VsmartEngine.MediaJungle.video;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class VideoDescription {
 	private List<Long> castandcrewlist = new ArrayList<>();
 	private List<Long> taglist = new ArrayList<>();
 	private List<Long> categorylist = new ArrayList<>();
+	private LocalDate date ;
 	
 	public VideoDescription() {
 		super();
@@ -60,7 +62,7 @@ public class VideoDescription {
 	public VideoDescription(long id, String videoTitle, String mainVideoDuration, String trailerDuration, String rating,
 			String certificateNumber, boolean videoAccessType, String description, String productionCompany,
 			String certificateName, String vidofilename, String videotrailerfilename, List<Long> castandcrewlist,
-			List<Long> taglist, List<Long> categorylist) {
+			List<Long> taglist, List<Long> categorylist,LocalDate date) {
 		super();
 		this.id = id;
 		this.videoTitle = videoTitle;
@@ -77,7 +79,8 @@ public class VideoDescription {
 		this.castandcrewlist = castandcrewlist;
 		this.taglist = taglist;
 		this.categorylist = categorylist;
-	}
+		this.date = date;
+		}
 
 
 
@@ -191,6 +194,18 @@ public class VideoDescription {
 
 	public void setVideotrailerfilename(String videotrailerfilename) {
 		this.videotrailerfilename = videotrailerfilename;
+	}
+
+
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+
+
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 	
 	

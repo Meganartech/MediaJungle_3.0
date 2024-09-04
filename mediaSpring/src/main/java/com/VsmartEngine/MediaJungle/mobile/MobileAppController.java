@@ -33,6 +33,7 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 import com.VsmartEngine.MediaJungle.video.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 
@@ -164,14 +165,17 @@ public class MobileAppController {
 //                existingUser.setPassword(encryptedPassword);
 //                existingUser.setConfirmPassword(encryptedPassword); // Assuming this is required
 //            }
-            
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             if (password != null) {
-	            existingUser.setPassword(password);
+            	String encodedPassword = passwordEncoder.encode(password);
+	            existingUser.setPassword(encodedPassword);
 	        }
 
 	        if (confirmPassword!= null) {
-	            existingUser.setConfirmPassword(confirmPassword);
+	        	String confirmencodedPassword = passwordEncoder.encode(confirmPassword);
+	            existingUser.setConfirmPassword(confirmencodedPassword);
 	        }
+	        
             if (profile != null && !profile.isEmpty()) {
                 byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
                 existingUser.setProfile(thumbnailBytes);

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.Tag;
@@ -198,6 +199,16 @@ public class TagController {
 		    }
 	}
 		   
+	
+	public ResponseEntity<List<String>> gettagNamesByIds(@RequestParam List<Long> tagIds) {
+	    List<String> tagNames = tagrepository.findtagByIds(tagIds);
+
+	    if (tagNames.isEmpty()) {
+	        return ResponseEntity.notFound().build();
+	    } else {
+	        return new ResponseEntity<>(tagNames, HttpStatus.OK);
+	    }
+	}
 
 
 }

@@ -1403,9 +1403,6 @@ const handleClick = () => {
 
 /* edit mode */
 const [isEditMode, setIsEditMode] = useState(false);
-const [getvideothumbnail,setgetvideothumbnail] = useState('');
-const [gettrailerthumbnail,setgettrailerthumbnail] = useState('');
-const [getuserbanner,setgetuserbanner] = useState('');
 const [videofilename,setvideofilename] = useState('');
 const [trailervideofilename,settrailervideofilename] = useState('');
 const [movievideo,setmovievideo] = useState('');
@@ -1429,17 +1426,70 @@ useEffect(() => {
         setTrailerDuration(data.trailerDuration);
         setRating(data.rating);
         setCertificateNumber(data.certificateNumber);
-        setVideoAccessType(data.videoAccessType);
+        setVideoAccessType(data.videoAccessType ? 'paid' : 'free');
         setdescription(data.description);
         setProductionCompany(data.productionCompany);
         setCertificateName(data.certificateName);
         setcastandcrewlist(data.castandcrewlist);
+        console.log(data.castandcrewlist);
         settaglist(data.taglist);
         setCategory(data.categorylist);
-        setvideofilename(data.vidofilename)
-        setVideoUrl(`${API_URL}/api/v2/${videofilename}/videofile`);
-        settrailervideofilename(data.videotrailerfilename);
-        settrailerUrl(`${API_URL}/api/v2/${trailervideofilename}/trailerfile`)
+        console.log('Category List:', data.categorylist);
+
+        const videoFile = data.vidofilename;
+        const trailerFile = data.videotrailerfilename;
+
+        if (videoFile) {
+          setVideoUrl(`${API_URL}/api/v2/${videoFile}/videofile`);
+        }
+
+        if (trailerFile) {
+          settrailerUrl(`${API_URL}/api/v2/${trailerFile}/trailerfile`);
+        }
+        console.log('Video Filename:', videoFile);
+        console.log('Trailer Filename:', trailerFile);
+
+        // Now fetch the category names by IDs
+        if (data.categorylist && data.categorylist.length > 0) {
+          const categoryIds = data.categorylist.join(','); // Convert array to comma-separated string
+          fetch(`${API_URL}/api/v2/categorylist/category?categoryIds=${categoryIds}`)
+            .then(response => response.json())
+            .then(categoryNames => {
+              console.log('Category Names:', categoryNames);
+              setcategoriesvaluelist(categoryNames);
+              // Handle the category names as needed
+            })
+            .catch(error => console.error('Error fetching category names:', error));
+        }
+
+        // Now fetch the cast and crew names by IDs
+if (data.castandcrewlist && data.castandcrewlist.length > 0) {  // Corrected condition
+  const castIds = data.castandcrewlist.join(','); // Convert array to comma-separated string
+  console.log("castIds:", castIds);
+
+  fetch(`${API_URL}/api/v2/castlist/castandcrew?castIds=${castIds}`)
+    .then(response => response.json())
+    .then(castNames => {
+      console.log('Cast and Crew Names:', castNames); // Updated logging
+      setcastandcrewlistvalue(castNames); // Ensure this function exists and handles the data correctly
+    })
+    .catch(error => console.error('Error fetching cast and crew names:', error));
+}
+
+// Now fetch the cast and crew names by IDs
+if (data.taglist && data.taglist.length > 0) {  // Corrected condition
+  const tagIds = data.taglist.join(','); // Convert array to comma-separated string
+  console.log("tagIds:", tagIds);
+
+  fetch(`${API_URL}/api/v2/taglist/tag?tagIds=${tagIds}`)
+    .then(response => response.json())
+    .then(tagNames => {
+      console.log('tag Names:', tagNames); // Updated logging
+      settaglistvalue(tagNames); // Ensure this function exists and handles the data correctly
+    })
+    .catch(error => console.error('Error fetching tag names:', error));
+}
+
 
       })
       .catch(error => console.error('Error fetching video details:', error));
@@ -1448,7 +1498,6 @@ useEffect(() => {
     fetch(`${API_URL}/api/v2/videoimage/${videoId}`)
       .then(response => response.json())
       .then(data => {
-        // console.log('Video Images:', data); // Log the video images
         setvideothumbnailUrl(`data:image/png;base64,${data.videoThumbnail}`);
         settrailerthumbnailUrl(`data:image/png;base64,${data.trailerThumbnail}`);
         setuserbannerUrl(`data:image/png;base64,${data.userBanner}`);
@@ -1459,65 +1508,113 @@ useEffect(() => {
 
 
 
-const handleUpdate = () => {
-  // Collect all the updated data from the state
-  const updatedData = {
-    videoTitle,
-    mainVideoDuration,
-    trailerDuration,
-    rating,
-    certificateNumber,
-    videoAccessType,
-    description,
-    productionCompany,
-    certificateName,
-    castandcrewlist,
-    taglist,
-    category,
-    getvideothumbnail,
-    gettrailerthumbnail,
-    getuserbanner,
-    // Add any other fields you need to update
-  };
+const handleUpdate = async (e) => {
+  e.preventDefault();
 
-  // Send the updated data to the server using a PUT or PATCH request
-  fetch(`${API_URL}/api/v2/updateVideoDescription/${videoId}`, {
-    method: 'PATCH',
-    headers: {
-      Authorization: token, // Pass the token in the Authorization header
-      'Content-Type': 'multipart/form-data',
-    },
-    body: JSON.stringify(updatedData),
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to update video details');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Update successful:', data);
+  // Show the initial progress Swal
+  const swalWithProgress = Swal.mixin({
+    toast: false, // Disable toast mode to use modal
+    position: 'center', // Center position for the modal
+    showConfirmButton: false,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    }
+  });
 
-      // Show a success message
-      Swal.fire({
-        title: 'Success!',
-        text: 'The video details have been updated successfully.',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-    })
-    .catch(error => {
-      console.error('Error updating video details:', error);
+  const progressSwal = swalWithProgress.fire({
+    icon: 'info',
+    title: 'Uploading...',
+    text: 'Please wait while the video is being uploaded',
+    timer: 0, // Keep open while uploading
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading(); // Show the loading spinner
+    }
+  });
 
-      // Show an error message
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error updating the video details. Please try again.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+  try {
+    // Check if the upload limit has been reached
+    const response = await fetch(`${API_URL}/api/v2/count`, {
+      method: 'GET',
     });
+
+    if (response.ok) {
+      // Prepare FormData for upload
+      const formData = new FormData();
+      formData.append('videoTitle', videoTitle);
+      formData.append('mainVideoDuration', mainVideoDuration);
+      formData.append('trailerDuration', trailerDuration);
+      formData.append('rating', rating);
+      formData.append('certificateNumber', certificateNumber);
+      formData.append('videoAccessType', videoAccessType === 'free' ? 0 : 1);
+      formData.append('description', description);
+      formData.append('productionCompany', productionCompany);
+      formData.append('certificateName', certificateName);
+      formData.append('videoThumbnail', videothumbnail);
+      formData.append('trailerThumbnail', trailerthumbnail);
+      formData.append('userBanner', userbanner);
+      formData.append('castandcrewlist', castandcrewlist);
+      formData.append('taglist', taglist);
+      formData.append('categorylist', category);
+      formData.append('video', videofile);
+      formData.append('trailervideo', trailerfile);
+
+      // Upload video description with progress updates
+      await axios.patch(`${API_URL}/api/v2/updateVideoDescription/${videoId}`, formData, {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress: (progressEvent) => {
+          const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+          swalWithProgress.update({
+            title: 'Uploading...',
+            text: `Progress: ${progress}%`,
+            icon: 'info',
+            timer: 0 // Keep it open while uploading
+          });
+        }
+      });
+
+      // If we get here, the upload was successful
+      await swalWithProgress.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Video updated successfully',
+        timer: 2000,
+        didOpen: () => {
+          Swal.showLoading(); // Show the loading spinner
+        }
+      });
+
+    } else {
+      // Handle upload limit reached
+      await swalWithProgress.fire({
+        icon: 'warning',
+        title: 'Limit Reached',
+        text: 'The upload limit has been reached',
+        timer: 2000,
+        didOpen: () => {
+          Swal.showLoading(); // Show the loading spinner
+        }
+      });
+    }
+  } catch (error) {
+    // Handle other errors
+    await swalWithProgress.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'An error occurred',
+      timer: 2000,
+      didOpen: () => {
+        Swal.showLoading(); // Show the loading spinner
+      }
+    });
+  }
 };
+
 
   return (
 <div className='container3 mt-2'>
@@ -2309,14 +2406,25 @@ const handleUpdate = () => {
             <div className='text-black'>Movie Name : {videoTitle}</div>
             <div className="video-container mt-3 text-center">
       {showVideo ? (
-        <video controls autoPlay style={{ width: '100%', borderRadius: '8px' }}>
-          <source src={videoUrl} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <ReactPlayer
+        url={videoUrl}
+        controls
+        width='100%'
+        height='100%'
+        borderRadius='8px'
+        // light={videothumbnailUrl}  // Set the thumbnail image URL here
+        config={{
+          file: {
+            attributes: {
+              controlsList: 'nodownload'
+            }
+          }
+        }}
+      />
       ) : (
         <div className="thumbnail-container" onClick={handleClick}>
           <img
-            src={isEditMode && getvideothumbnail ? `data:image/png;base64,${getvideothumbnail}` : videothumbnailUrl}
+            src={videothumbnailUrl}
             alt="Video Thumbnail"
             className="thumbnail-image"
           />
@@ -2363,7 +2471,7 @@ const handleUpdate = () => {
           </tr>
           <tr>
             <th>Category:</th>
-            <td>{isEditMode ? getcategory : categoriesvaluelist.join(', ')}</td>
+            <td>{categoriesvaluelist.join(', ')}</td>
           </tr>
           <tr>
             <th>Tag:</th>
