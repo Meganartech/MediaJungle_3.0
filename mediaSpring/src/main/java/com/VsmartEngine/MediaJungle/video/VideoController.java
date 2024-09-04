@@ -5,10 +5,14 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +36,7 @@ import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.service.FileService;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
+import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -99,6 +104,7 @@ public class VideoController {
 	        @RequestParam("userBanner") MultipartFile userBanner,
 	        @RequestParam("video") MultipartFile video,
 	        @RequestParam("trailervideo") MultipartFile trailervideo,
+//	        @RequestParam("date") String date, // Add this line to accept the date as a string
 	        @RequestHeader("Authorization") String token) {
 		
 
@@ -112,11 +118,15 @@ public class VideoController {
 
 	        if (opUser.isPresent()) {
 	            AddUser user = opUser.get();
+	            String username = user.getUsername();
 	            
 	            FileModel upload= fileSevice.uploadVideo(path, video);
 	        	String videoname=upload.getVideoFileName();
 	        	FileModel uploadtrailervideo = fileSevice.uploadTrailerVideo(trailervideoPath,trailervideo);
-	        	String trailervideoname = uploadtrailervideo.getVideotrailerfilename();        
+	        	String trailervideoname = uploadtrailervideo.getVideotrailerfilename();   
+	        	 // Parse the date string into a LocalDate object
+	            LocalDate parsedDate = LocalDate.now();
+	            
 	            // Create and save VideoDescription
 	            VideoDescription newVideo = new VideoDescription();
 	            newVideo.setVideoTitle(videoTitle);
@@ -133,6 +143,7 @@ public class VideoController {
 	            newVideo.setCastandcrewlist(castandcrewlist);
 	            newVideo.setVidofilename(videoname);
 	            newVideo.setVideotrailerfilename(trailervideoname);
+	            newVideo.setDate(parsedDate);
 
 	            // Save and get the generated ID
 	            VideoDescription savedDescription = videodescriptionRepository.save(newVideo);
@@ -155,6 +166,32 @@ public class VideoController {
 	            Map<String, Object> response = new HashMap<>();
 	            response.put("videoDescription", savedDescription);
 	            response.put("videoImage", videoImage);
+	            
+	            
+	            String movieName = savedDescription.getVideoTitle();
+	            String heading = movieName +" New Video Added!";
+	            String Description = savedDescription.getDescription();
+	            String link = "/MoviesPage";
+	            String detail = "Sit back, watch, and enjoy this movie.";
+	            
+	         // Create notification with optional file (thumbnail)
+	            Long notifyId = notificationservice.createNotification(username, email, heading, Description,link,detail,Optional.ofNullable(userBanner));
+	            if (notifyId != null) {
+	                Set<String> notiUserSet = new HashSet<>();
+	                // Fetch all admins from AddUser table
+	                List<AddUser> adminUsers = adduserrepository.findAll();
+	                for (AddUser admin : adminUsers) {
+	                    notiUserSet.add(admin.getEmail());
+	                }
+	                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+	                List<UserRegister> Users = userregisterrepository.findAll();
+	                for (UserRegister userss : Users) {
+	                    notiUserSet.add(userss.getEmail());
+	                }
+	                notificationservice.CommoncreateNotificationUser(notifyId, new ArrayList<>(notiUserSet));
+	                
+	            }
+	
 
 	            return ResponseEntity.ok().body(response);
 	        } else {

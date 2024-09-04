@@ -352,9 +352,11 @@ const Dashboard = () => {
   const [all, setall] = useState(null);
   const [getall, setGetall] = useState(null);
   const [GetUser,setGetUser] = useState(null)
+  const [videos, setVideos] = useState([]);
+  const [thumbnails, setThumbnails] = useState({});
 
   useEffect(() => {
-    fetch(`${API_URL}/api/v2/videogetall`)
+    fetch(`${API_URL}/api/v2/video/getall`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -363,12 +365,45 @@ const Dashboard = () => {
       })
       .then(data => {
         setall(data);
-        // console.log(data)
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
   }, []);
+
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/video/getall`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const lastThreeVideos = data.slice(-3); // Get the last 3 videos
+        setVideos(lastThreeVideos);
+        
+        // Fetch thumbnails for the last 3 videos
+        lastThreeVideos.forEach(video => {
+          fetch(`${API_URL}/api/v2/videoimage/${video.id}`)
+            .then(response => response.json())
+            .then(data => {
+              setThumbnails(prevState => ({
+                ...prevState,
+                [video.id]: `data:image/png;base64,${data.videoThumbnail}`,
+              }));
+            })
+            .catch(error => console.error('Error fetching video images:', error));
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+
+  
 
   const paidVideos = all?.filter(video => video.paid === true) || [];
 
@@ -447,7 +482,7 @@ const Dashboard = () => {
         <img src={usericon} alt="usericon" />
         <span>{GetUser && GetUser.length > 0 ? GetUser.length : 0}</span>
     </div>
-    <a href="#" className="get-more-link">
+    <a href="/admin/SubscriptionPayments" className="get-more-link">
         Get more
         <img src={arrow} alt="icon" className="arrow-icon"/>
     </a>
@@ -461,7 +496,7 @@ const Dashboard = () => {
         <img src={videoicon} alt="icon" />
         <span>{all && all.length > 0 ? all.length:0}</span>
     </div>
-    <a href="#" className="get-more-link">
+    <a href="/admin/Video" className="get-more-link">
         Get more
         <img src={arrow} alt="icon" className="arrow-icon"/>
     </a>
@@ -472,7 +507,7 @@ const Dashboard = () => {
         <img src={music} alt="icon" />
         <span>{getall && getall.length > 0 ? getall.length:0}</span>
     </div>
-    <a href="#" className="get-more-link">
+    <a href="/admin/ListAudio" className="get-more-link">
         Get more
         <img src={arrow} alt="icon" className="arrow-icon"/>
     </a>
@@ -483,7 +518,7 @@ const Dashboard = () => {
         <img src={coin} alt="icon" />
         <span>{GetUser && GetUser.length > 0 ? GetUser.length:0}</span>
     </div>
-    <a href="#" className="get-more-link">
+    <a href="/admin/SubscriptionPayments" className="get-more-link">
         Get more
         <img src={arrow} alt="icon" className="arrow-icon"/>
     </a>
@@ -497,21 +532,16 @@ const Dashboard = () => {
                
             </div>
         </div>
-        <div class="latest-videos">
-            <h4>Latest Videos</h4>
-            <div class="video">
-                <img src="vikram.jpg" alt="Vikram" />
-                <p>Vikram <span>2.45 hours</span></p>
-            </div>
-            <div class="video">
-                <img src="ayan.jpg" alt="Ayan" />
-                <p>Ayan <span>2.45 hours</span></p>
-            </div>
-            <div class="video">
-                <img src="master.jpg" alt="Master" />
-                <p>Master <span>2.45 hours</span></p>
-            </div>
+         <div className="latest-videos">
+      <span style={{fontSize:'25px'}}>Latest Videos</span>
+      {videos.map(video => (
+        <div key={video.id} className="video">
+          <img src={thumbnails[video.id]} alt={video.title} 
+          style={{width:"20%"}}/>
+          <p><span style={{color:'white'}}>{video.videoTitle}</span> <span>{video.mainVideoDuration}</span></p>
         </div>
+      ))}
+    </div>
     </div>
 </div>
 

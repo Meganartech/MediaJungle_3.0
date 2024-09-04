@@ -870,6 +870,7 @@ public class FrontController {
 				@RequestParam("userBanner") MultipartFile userBanner,
 				@RequestParam("video") MultipartFile video,
 		        @RequestParam("trailervideo") MultipartFile trailervideo,
+//		        @RequestParam("date") String date, // Add this line to accept the date as a string
 	            @RequestHeader("Authorization") String token){
 			return VideoController.uploadVideoDescription(videoTitle, mainVideoDuration, trailerDuration, rating, certificateNumber, videoAccessType,
                     description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
@@ -937,6 +938,20 @@ public class FrontController {
 			 return VideoController.deleteVideoDescription(videoId, token);
 		 }
 		 
+		 @GetMapping("/categorylist/category")
+			public ResponseEntity<List<String>> getCategoryNamesByIds(@RequestParam List<Long> categoryIds) {
+                  return CategoryController.getCategoryNamesByIds(categoryIds);
+		 }
+		 
+		 @GetMapping("/castlist/castandcrew")
+			public ResponseEntity<List<String>> getCastNamesByIds(@RequestParam List<Long> castIds) {
+			 return  CastandcrewController.getCastNamesByIds(castIds);
+		 }
+		 
+		 @GetMapping("/taglist/tag")
+		 public ResponseEntity<List<String>> gettagNamesByIds(@RequestParam List<Long> tagIds) {
+			 return  TagController.gettagNamesByIds(tagIds);
+		 }
 		
 //		 @GetMapping("/{filename}/file")
 //			public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
