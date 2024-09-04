@@ -354,6 +354,7 @@ const Dashboard = () => {
   const [GetUser,setGetUser] = useState(null)
   const [videos, setVideos] = useState([]);
   const [thumbnails, setThumbnails] = useState({});
+  const [getuser,setgetuser] = useState([]);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/video/getall`)
@@ -435,6 +436,23 @@ const Dashboard = () => {
     })
     .then(data =>{
       setGetUser(data);
+    })
+    .catch(error =>{
+      console.error('Error fetching data:',error)
+    });
+   },[]);
+
+
+   useEffect(() => {
+    fetch(`${API_URL}/api/v2/registereduserget`)
+    .then(response =>{
+      if (!response.ok){
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data =>{
+      setgetuser(data);
     })
     .catch(error =>{
       console.error('Error fetching data:',error)
@@ -527,10 +545,12 @@ const Dashboard = () => {
     <div class="latest-sections">
         <div class="latest-users">
             <h4>Latest users <span>Last 10 Days</span></h4>
-            <div class="users-list">
-                <div class="user">Ram<br /><span>1 day ago</span></div>
-               
-            </div>
+            {getuser.map(user =>(
+              <div key={user.id} class="users-list">
+              <div class="user">{user.username}<br /><span>1 day ago</span></div>
+             
+          </div>
+            ))}
         </div>
          <div className="latest-videos">
       <span style={{fontSize:'25px'}}>Latest Videos</span>

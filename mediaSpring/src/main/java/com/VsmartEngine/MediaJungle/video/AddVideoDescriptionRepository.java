@@ -9,7 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AddVideoDescriptionRepository extends JpaRepository<VideoDescription,Long> {
 	
-	@Query("SELECT v FROM VideoDescription v ORDER BY v.date DESC")
-    List<VideoDescription> findTop3ByOrderByDateDesc();
 
 }
