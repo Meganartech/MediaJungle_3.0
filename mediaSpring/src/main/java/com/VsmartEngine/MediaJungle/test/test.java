@@ -144,8 +144,8 @@ public class test {
 				String audioFilePath = fileService.saveAudioFile(audioFile);
 				System.out.println("audioFilePath :" + (audioFilePath));
 				audiodata.setAudio_file_name(audioFilePath);
-			} else {
-				audiodata.setAudio_file_name(data.getAudio_file_name());
+			} else if(audioFile == null) {
+				audiodata.setAudio_file_name(audiodata.getAudio_file_name());
 			}
 
 			audio.save(audiodata);

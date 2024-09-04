@@ -77,7 +77,6 @@ const AddAudio = () => {
     }
   };
 
-
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllPlans`)
       .then(response => {
@@ -87,7 +86,6 @@ const AddAudio = () => {
         return response.json();
       })
       .then(data => {
-      
         setgetallplan(data);
         console.log(data)
       })
@@ -319,6 +317,7 @@ const AddAudio = () => {
       setcastandcrewlistName((prevList) => [...prevList, `${name},`]);
     } else {
       setcastandcrewlist((prevList) => prevList.filter((item) => item !== id));
+      setcastandcrewlistName((prevList) => prevList.filter((item) => item !== `${name},`));
 
     }
 
@@ -406,7 +405,6 @@ const AddAudio = () => {
     const id = (option.category_id);
     const name = (option.categories);// Convert ID to number
 
-
     if (isChecked) {
       setcategorylist((prevList) => [...prevList, id]);
       setcategorylistName((prevList) => [...prevList, `${name},`]);
@@ -414,6 +412,7 @@ const AddAudio = () => {
       console.log(name);
     } else {
       setcategorylist((prevList) => prevList.filter((item) => item !== id));
+      setcategorylistName((prevList) => prevList.filter((item) => item !== `${name},`));
     }
   };
 
@@ -470,13 +469,15 @@ const AddAudio = () => {
 
   const handleCheckboxChangetag = (option) => (e) => {
     const isChecked = e.target.checked;
-    const id = (option.tag_id); // Convert ID to number
-    const name = (option.tag);
+    const id = option.tag_id; // ID is already a number
+    const name = option.tag;
+
     if (isChecked) {
       settaglist((prevList) => [...prevList, id]);
-      settaglistName((prevList) => [...prevList, `${name},`]);
+      settaglistName((prevList) => [...prevList,`${name},`]);
     } else {
       settaglist((prevList) => prevList.filter((item) => item !== id));
+      settaglistName((prevList) => prevList.filter((item) => item !== `${name},`));
     }
   };
 
@@ -484,11 +485,20 @@ const AddAudio = () => {
     if (getalldata) {
       setaudio_title(getalldata.audioTitle); 
       setMovie_name(getalldata.movie_name);
-      setCertificate_name(getalldata.certificate_name);
+
+      const selectedCertificate = Certificate.find(cert => cert.certificate === getalldata.certificate_name);
+      
+      if (selectedCertificate) {
+        setCertificateid(selectedCertificate.id); // Set the ID for the select box
+        setCertificate_name(selectedCertificate.certificate); // Set the name as well
+      }
+
+
+      // setCertificate_name(getalldata.certificate_name);
       setRating(getalldata.rating);
       setCertificate_no(getalldata.certificate_no);
       setaudio_Duration(getalldata.audio_Duration);
-      setSelectedOption(getalldata.paid = "false" ? 'free' : 'paid');
+      setSelectedOption(getalldata.paid === "false" ? 'free' : 'paid');
       setProduction_Company(getalldata.production_company);
       setDescription(getalldata.description);
       const audioUrl1 = `${API_URL}/api/v2/${audiofilename}/file`;
@@ -850,7 +860,8 @@ const AddAudio = () => {
                         <div className="form-check form-check-inline ms-3">
                           <div
                             className={`radio-button${selectedOption === 'paid' ? ' selected' : ''}`}
-                            onMouseEnter={handlePaidRadioHover}
+                           
+                            disabled={!hasPaymentPlan()}
                             onClick={() => {
                               if (hasPaymentPlan()) {
                                 setSelectedOption('paid');
@@ -869,7 +880,17 @@ const AddAudio = () => {
                             }}
 
                           />
-                          <label className="form-check-label" htmlFor="free">Paid</label>
+                           <label className={`form-check-label ${selectedOption === 'paid' ? ' selected' : ''}`}
+                   htmlFor="Paid"
+                   onMouseEnter={handlePaidRadioHover}
+                            onClick={() => {
+                                if (hasPaymentPlan()) {
+                                  setSelectedOption('paid');
+                                }
+                            }}
+                            >
+                              Paid</label>
+                          {/* <label className="form-check-label" htmlFor="free">Paid</label> */}
                         </div>
                       </div>
                     </div>
@@ -933,8 +954,7 @@ const AddAudio = () => {
                           <label>Selected:</label>
                           {castandcrewlist.map(id => (
                             <div key={id}>
-                              {Array.isArray(Getall) && Getall.find(option => option.id === id)?.name}  {/* Display name based on ID */}
-                              {/* {Getall.find(option => option.id === id)?.name} Display name based on ID */}
+                              {Array.isArray(Getall) && Getall.find(option => option.id === id)?.name}  
                             </div>
                           ))}
                         </div>
