@@ -5424,6 +5424,7 @@ textarea.form-control-lg {
   border-radius: 0.25rem;
   opacity: 0.5;
 }
+
 .btn-close:hover {
   color: #000;
   text-decoration: none;
@@ -11776,6 +11777,13 @@ nav {
   align-items: center;
   margin-left: 200px;
 }
+.con5 {
+  justify-content: flex-end;
+  display:flex;
+  align-items: center;
+  gap:70px;
+
+}
 .contain {
   margin: 50px;
   justify-content: center;
@@ -12030,4 +12038,7 @@ font-weight: 900;
 .profile-card-body td:last-child {
   white-space: normal; /* Allow line wrapping in the last column */
 }
-
+ .con2
+ {
+  margin-bottom:0px;
+ }

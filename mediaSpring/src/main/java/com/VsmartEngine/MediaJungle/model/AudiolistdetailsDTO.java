@@ -1,7 +1,6 @@
 package com.VsmartEngine.MediaJungle.model;
 
 import java.util.List;
-import java.util.Optional;
 
 public class AudiolistdetailsDTO {
 	private Long id;
@@ -18,7 +17,7 @@ public class AudiolistdetailsDTO {
 	
 	 private List<AddNewCategories> Category;
 	 private List<Tag> Tag;
-	 private  List<Long> CastandCrew;
+	 private  List<CastandCrewDTO> CastandCrew;
 	public Long getId() {
 		return id;
 	}
@@ -97,12 +96,13 @@ public class AudiolistdetailsDTO {
 	public void setTag(List<Tag> tag) {
 		Tag = tag;
 	}
-	public List<Long> getCastandCrew() {
+	public List<CastandCrewDTO> getCastandCrew() {
 		return CastandCrew;
 	}
-	public void setCastandCrew(List<Long> castandCrew) {
+	public void setCastandCrew(List<CastandCrewDTO> castandCrew) {
 		CastandCrew = castandCrew;
 	}
+	
 	
 	 
 	 
