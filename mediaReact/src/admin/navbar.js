@@ -26,11 +26,14 @@ const [userImage, setUserImage] = useState(null);
 
   const handleLogout = async () => {
     try {
+      // Ensure you're getting the correct token key
+      const token = sessionStorage.getItem("tokenn");
+  
       if (!token) {
         console.error("Token not found");
         return;
       }
-
+  
       const confirmLogout = await Swal.fire({
         title: "Are you sure?",
         text: "You are about to logout.",
@@ -41,21 +44,25 @@ const [userImage, setUserImage] = useState(null);
         confirmButtonText: "Yes, logout",
         cancelButtonText: "Cancel",
       });
-
+  
       if (confirmLogout.isConfirmed) {
         const response = await fetch(`${API_URL}/api/v2/logout/admin`, {
           method: "POST",
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`, // Assuming Bearer token authentication
             "Content-Type": "application/json",
           },
         });
-
+  
         if (response.ok) {
+          // Clear session and local storage
           sessionStorage.removeItem("tokenn");
+          sessionStorage.removeItem("adminId");
           sessionStorage.removeItem("username");
           localStorage.clear();
           sessionStorage.setItem('name', false);
+  
+          // Redirect to the admin page
           navigate('/admin');
           console.log("Logged out successfully");
         } else {
@@ -76,7 +83,7 @@ const [userImage, setUserImage] = useState(null);
       });
     }
   };
-
+  
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };

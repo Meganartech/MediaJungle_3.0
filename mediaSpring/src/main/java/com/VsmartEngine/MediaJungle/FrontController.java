@@ -896,7 +896,11 @@ public class FrontController {
 		 public ResponseEntity<?> getVideo(@PathVariable String videofilename, HttpServletRequest request) {	
 			return VideoController.getVideo(videofilename, request);
 		}
-		 
+		 @GetMapping("/{trailerfilename}/trailerfile")
+		 public ResponseEntity<?> getVideotrailer(@PathVariable String trailerfilename, HttpServletRequest request) {
+			 return VideoController.getVideotrailer(trailerfilename, request);
+		 }
+
 		
 		 @PatchMapping("/updateVideoDescription/{videoId}")
 		 @Transactional

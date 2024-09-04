@@ -90,7 +90,7 @@ const Userforgetpassword = () => {
           required
         />
         <Input
-          label="Password"
+          label="New Password"
           placeholder="************"
           type='password'
           bg={true}

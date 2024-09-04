@@ -302,7 +302,85 @@ public class VideoController {
      }
      
  }
+	 
+	 
+//	 
 
+	 public ResponseEntity<?> getVideotrailer(@PathVariable String trailerfilename, HttpServletRequest request) {
+		    try {
+		        if (trailerfilename != null) {
+		            Path filePath = Paths.get(trailervideoPath, trailerfilename);
+		            System.out.println("filePath: " + filePath);
+		            if (Files.exists(filePath) && Files.isRegularFile(filePath)) {
+		                Resource resource = new UrlResource(filePath.toUri());
+		                if (resource.exists() && resource.isReadable()) {
+		                    HttpHeaders headers = new HttpHeaders();
+
+		                    // Set the Content-Type based on the file's extension
+		                    String mimeType = Files.probeContentType(filePath);
+		                    if (mimeType == null) {
+		                        mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+		                    }
+		                    headers.add(HttpHeaders.CONTENT_TYPE, mimeType);
+
+		                    // Set Content-Disposition to "inline" to stream the video inline
+		                    headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline");
+
+		                    // Define the initial chunk size (5 MB)
+		                    final long INITIAL_CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB
+		                    long fileSize = Files.size(filePath);
+
+		                    // Get the Range header from the request
+		                    String rangeHeader = request.getHeader(HttpHeaders.RANGE);
+
+		                    long rangeStart = 0;
+		                    long rangeEnd = Math.min(INITIAL_CHUNK_SIZE - 1, fileSize - 1);
+		                    if (rangeHeader != null) {
+		                        // Handle range request from the client
+		                        String[] ranges = rangeHeader.replace("bytes=", "").split("-");
+		                        rangeStart = Long.parseLong(ranges[0]);
+		                        rangeEnd = ranges.length > 1 ? Long.parseLong(ranges[1]) : fileSize - 1;
+		                    }
+		                    long contentLength = rangeEnd - rangeStart + 1;
+
+		                    System.out.println("Range Start: " + rangeStart + ", Range End: " + rangeEnd + ", Content Length: " + contentLength);
+
+		                    // Create a RandomAccessFile to read the specified range
+		                    try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
+		                        file.seek(rangeStart);
+		                        byte[] buffer = new byte[(int) contentLength];
+		                        file.readFully(buffer);
+
+		                        // Create a ByteArrayResource to hold the requested range of bytes
+		                        ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+
+		                        // Set the Content-Range header
+		                        headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
+
+		                        // Return a 206 Partial Content response
+		                        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+		                                .headers(headers)
+		                                .contentLength(contentLength)
+		                                .body(byteArrayResource);
+		                    }
+		                }
+		            } else {
+		                System.out.println("File not found or is not a regular file.");
+		            }
+		            // Return a 404 Not Found response if the file does not exist
+		            return ResponseEntity.notFound().build();
+		        } else {
+		            return ResponseEntity.ok("Filename is null.");
+		        }
+		    } catch (Exception e) {
+		        // Log the exception
+		        e.printStackTrace();
+		        // Return an internal server error response
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		    }
+		}
+	 
+	 
 	 public ResponseEntity<?> updateVideoDescription(
 	         @PathVariable("videoId") Long videoId,
 	         @RequestParam(value = "videoTitle", required = false) String videoTitle,

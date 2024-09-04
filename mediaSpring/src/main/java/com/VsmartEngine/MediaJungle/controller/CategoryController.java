@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AddUser;
@@ -309,8 +310,8 @@ public class CategoryController {
 		    }
 	}
 		   
-	@PostMapping("/categorylist/category")
-	public ResponseEntity<List<String>> getCategoryNamesByIds(@RequestBody List<Long> categoryIds) {
+	@GetMapping("/categorylist/category")
+	public ResponseEntity<List<String>> getCategoryNamesByIds(@RequestParam List<Long> categoryIds) {
 	    List<String> categoryNames = addnewcategoriesrepository.findcategoryByIds(categoryIds);
 
 	    if (categoryNames.isEmpty()) {
@@ -319,5 +320,6 @@ public class CategoryController {
 	        return new ResponseEntity<>(categoryNames, HttpStatus.OK);
 	    }
 	}
+
 
 }
