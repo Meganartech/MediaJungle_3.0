@@ -498,7 +498,7 @@ const AddAudio = () => {
       setRating(getalldata.rating);
       setCertificate_no(getalldata.certificate_no);
       setaudio_Duration(getalldata.audio_Duration);
-      setSelectedOption(getalldata.paid === "false" ? 'free' : 'paid');
+      setSelectedOption(getalldata.paid === false ? 'free' : 'paid');
       setProduction_Company(getalldata.production_company);
       setDescription(getalldata.description);
       const audioUrl1 = `${API_URL}/api/v2/${audiofilename}/file`;
