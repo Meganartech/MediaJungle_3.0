@@ -1,7 +1,7 @@
 // import React, { useState, useRef } from 'react';
 import ReactPlayer from 'react-player';
 
-import screenfull from 'screenfull'; // For
+// import screenfull from 'screenfull'; // For
 import React, { useState, useEffect } from 'react';
 import API_URL from '../Config';
 
