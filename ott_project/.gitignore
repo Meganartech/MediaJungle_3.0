@@ -66,3 +66,34 @@ ios/Flutter/Flutter.framework
 ios/Flutter/Flutter.podspec
 
 
+# Flutter/Dart/Pub related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Obfuscation related
+app.*.symbols
+
+# Android/IntelliJ related
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+
+# iOS related
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+
+# Images (avoiding images)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
