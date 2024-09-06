@@ -1,5 +1,6 @@
 package com.VsmartEngine.MediaJungle.fileservice;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,6 +26,11 @@ public class AudioFileService {
         String filePath = Paths.get(audioUploadDirectory).resolve(uniqueFileName).toString();
         String modifiedPath = filePath.replace("Audio\\", "");
         System.out.println(modifiedPath);
+        System.out.println(filePath);
+        File f = new File(audioUploadDirectory);
+        if (!f.exists()) {
+            f.mkdir();
+        }
 
 
         // Save the file to the server

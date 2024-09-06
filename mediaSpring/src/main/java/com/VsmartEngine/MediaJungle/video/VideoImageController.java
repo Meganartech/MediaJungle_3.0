@@ -18,8 +18,6 @@ public class VideoImageController {
 	
 	@Autowired
 	private VideoImageRepository videoimagerepository;
-	
-	
 		
 //	public ResponseEntity<Map<String, byte[]>> getVideoImagesByVideoId(@PathVariable Long id) {
 //	    try {

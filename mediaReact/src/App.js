@@ -87,6 +87,9 @@ import Edittenure from './admin/Edittenure';
 import PlanFeatures from './admin/PlanFeatures';
 import AddFeature from './admin/AddFeature';
 import EditFeature from './admin/EditFeature';
+import MusicPage from './user/Screens/MusicPage';
+import Library from './user/Screens/Library';
+import PrivacyPolicy from './user/Screens/PrivacyPolicy';
 
 
 
@@ -182,19 +185,23 @@ const App = () => {
 {/*         
             <Route path='/' element={{hasSignedUp ?{navigate("/Home")} : {navigate("/admin/addUser")}} />} /> */}
 
-            <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<Home/>} />} />
-          <Route path='/' element={<Home  />} />
+            <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<MoviesPage/>} />} />
+          <Route path='/' element={<MoviesPage  />} />
 
           {/* <Route path='/' element={<UserPrivateRouter hasSignedUp={hasSignedUp}  element={<Home />} />} /> */}
           {/* <Route path='/AdminSignin' element={<AdminSignin />} /> */}
 
           <Route path='MoviesPage' element={<MoviesPage />} />
+          
+          <Route path='MusicPage' element={<MusicPage />} />
+          <Route path='Library' element={<Library />} />
           <Route path='VideoHomescreen' element={<VideoHomescreen />} />
           {/* <Route path='Homescreen' element={<Videosam />} /> */}
           <Route path='test' element={<Test/>} />
           <Route path='UserLogin' element={<UserLogin />} />
           <Route path='Register' element={<Register />} />
           <Route path='AboutUs' element={<AboutUs />} />
+          <Route path='PrivacyPolicy' element={<PrivacyPolicy />} />
           {/* <Route path='play' element={<Userplayer/>} /> */}
           <Route path='play' element={<UserPrivateRouter isAuthenticated={log} element={<Userplayer />} />} />
           <Route path='PlanDetails' element={<PlanDetails />} />

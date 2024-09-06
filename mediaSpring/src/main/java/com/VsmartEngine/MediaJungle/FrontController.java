@@ -63,6 +63,7 @@ import com.VsmartEngine.MediaJungle.model.Videosettings;
 import com.VsmartEngine.MediaJungle.notification.controller.NotificationController;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
+import com.VsmartEngine.MediaJungle.userregister.UserRegisterDTO;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
 import com.VsmartEngine.MediaJungle.video.VideoImageController;
@@ -250,7 +251,7 @@ public class FrontController {
 	}
 	
 	@GetMapping("/getaudiothumbnailsbyid/{id}")
-	public ResponseEntity<List > getaudioThumbnailsById(@PathVariable Long id) {
+	public ResponseEntity<? > getaudioThumbnailsById(@PathVariable Long id) {
 
 		return AudioController.getaudioThumbnailsById(id);
 	}
@@ -776,6 +777,12 @@ public class FrontController {
 
 		return UserRegisterController.getAllUser();
 	}
+	
+	@GetMapping("/registereduserget")
+	@Transactional
+	public ResponseEntity<List<UserRegisterDTO>> getUsersRegisteredWithinLast15Days() {
+		return UserRegisterController.getUsersRegisteredWithinLast15Days();
+	}
 
 	@GetMapping("/GetUserById/{id}")
 	public ResponseEntity<UserRegister> getUserById(@PathVariable Long id) {
@@ -870,6 +877,7 @@ public class FrontController {
 				@RequestParam("userBanner") MultipartFile userBanner,
 				@RequestParam("video") MultipartFile video,
 		        @RequestParam("trailervideo") MultipartFile trailervideo,
+//		        @RequestParam("date") String date, // Add this line to accept the date as a string
 	            @RequestHeader("Authorization") String token){
 			return VideoController.uploadVideoDescription(videoTitle, mainVideoDuration, trailerDuration, rating, certificateNumber, videoAccessType,
                     description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
@@ -937,6 +945,20 @@ public class FrontController {
 			 return VideoController.deleteVideoDescription(videoId, token);
 		 }
 		 
+		 @GetMapping("/categorylist/category")
+			public ResponseEntity<List<String>> getCategoryNamesByIds(@RequestParam List<Long> categoryIds) {
+                  return CategoryController.getCategoryNamesByIds(categoryIds);
+		 }
+		 
+		 @GetMapping("/castlist/castandcrew")
+			public ResponseEntity<List<String>> getCastNamesByIds(@RequestParam List<Long> castIds) {
+			 return  CastandcrewController.getCastNamesByIds(castIds);
+		 }
+		 
+		 @GetMapping("/taglist/tag")
+		 public ResponseEntity<List<String>> gettagNamesByIds(@RequestParam List<Long> tagIds) {
+			 return  TagController.gettagNamesByIds(tagIds);
+		 }
 		
 //		 @GetMapping("/{filename}/file")
 //			public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {

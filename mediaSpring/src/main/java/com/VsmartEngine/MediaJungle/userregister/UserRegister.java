@@ -1,4 +1,5 @@
 package com.VsmartEngine.MediaJungle.userregister;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,6 +44,9 @@ public class UserRegister {
 	@Column(name="mobnum")
 	private  String mobnum;
 	
+	@Column(name="date")
+	private LocalDate date ;
+	
 	@Lob
 	@Column(name="profile" ,length=1000000)
 	private byte[] profile;
@@ -67,18 +71,8 @@ public class UserRegister {
 		// TODO Auto-generated constructor stub
 	}
 
-	
-
-
-
-	
-
-
-
-
-
 	public UserRegister(long id, String username, String email, String role, String password, String confirmPassword,
-			String mobnum, byte[] profile, Set<Long> favoriteAudioIds, Set<Long> favoriteVideosIds,
+			String mobnum, LocalDate date, byte[] profile, Set<Long> favoriteAudioIds, Set<Long> favoriteVideosIds,
 			PaymentUser paymentId) {
 		super();
 		this.id = id;
@@ -88,21 +82,12 @@ public class UserRegister {
 		this.password = password;
 		this.confirmPassword = confirmPassword;
 		this.mobnum = mobnum;
+		this.date = date;
 		this.profile = profile;
 		this.favoriteAudioIds = favoriteAudioIds;
 		this.favoriteVideosIds = favoriteVideosIds;
 		this.paymentId = paymentId;
 	}
-
-
-
-
-
-
-
-
-
-
 
 	public long getId() {
 		return id;
@@ -126,6 +111,14 @@ public class UserRegister {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getPassword() {
@@ -152,6 +145,14 @@ public class UserRegister {
 		this.mobnum = mobnum;
 	}
 
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
 	public byte[] getProfile() {
 		return profile;
 	}
@@ -160,15 +161,9 @@ public class UserRegister {
 		this.profile = profile;
 	}
 
-	
-
 	public Set<Long> getFavoriteAudioIds() {
 		return favoriteAudioIds;
 	}
-
-
-
-
 
 	public void setFavoriteAudioIds(Set<Long> favoriteAudioIds) {
 		this.favoriteAudioIds = favoriteAudioIds;
@@ -190,16 +185,4 @@ public class UserRegister {
 		this.paymentId = paymentId;
 	}
 
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-	
-
-
-
-	
 }
