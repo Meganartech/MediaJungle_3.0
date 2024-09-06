@@ -1,20 +1,10 @@
-// import React, { useState, useRef } from 'react';
-import ReactPlayer from 'react-player';
+import React, { useState } from "react";
 
-import screenfull from 'screenfull'; // For
-import React, { useState, useEffect } from 'react';
-import API_URL from '../Config';
-
-
-// import screenfull from 'screenfull'; // For
-
-
-const AddAud = () => {
-
+const CustomDropdown = () => {
   const options = [
-    "hores", "romantic", "blockbusters", "best of 2020", "thriller",
-    "Science finction", "mystery", "romantic", "Action", "Drama",
-    "fanatsy", "Documentary", "animation", "historical", "",
+    "Action", "Adventure", "Comedy", "Drama", "Horror",
+    "Science Fiction ", "sci-i", "Option H", "Option I", "Option J",
+    "Option K", "Option L", "Option M", "Option N", "Option O",
     "Option P", "Option Q", "Option R", "Option S", "Option T"
   ];
   
@@ -38,7 +28,7 @@ const AddAud = () => {
   const handleOptionClick = (option) => {
     setInputValue(option);
     setDropdownOpen(false);
-  }; 
+  };
 
   return (
     <div className="dropdown-container" style={styles.dropdownContainer}>
@@ -66,8 +56,9 @@ const AddAud = () => {
         </div>
       )}
     </div>
-);
+  );
 };
+
 const styles = {
   dropdownContainer: {
     width: "100px",
@@ -95,4 +86,5 @@ const styles = {
     cursor: "pointer",
   },
 };
-export default AddAud;
+
+export default CustomDropdown;

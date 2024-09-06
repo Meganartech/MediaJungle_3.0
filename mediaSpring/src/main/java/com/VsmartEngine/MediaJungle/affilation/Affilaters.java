@@ -1,4 +1,4 @@
-package com.VsmartEngine.MediaJungle.test;
+package com.VsmartEngine.MediaJungle.affilation;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,35 +8,33 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="Affilaters")
-public class testModel {
-    
-	
-	
+@Table(name = "Affilaters")
+public class Affilaters {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "emailId")
 	private String emailId;
-	
+
 	@Column(name = "mobilenumber")
 	private String mobilenumber;
-	
+
 	@Column(name = "address")
 	private String address;
-	
+
 	@Column(name = "coupon10")
 	private String coupon10;
-	
+
 	@Column(name = "coupon20")
 	private String coupon20;
-	
-	@Column(name = "referalid")
-	private String referalid;
+
+	@Column(name = "referral id")
+	private String referralid;
 
 	public long getId() {
 		return id;
@@ -46,9 +44,6 @@ public class testModel {
 		this.id = id;
 	}
 
-		
-	
-	
 	public String getCoupon10() {
 		return coupon10;
 	}
@@ -66,11 +61,11 @@ public class testModel {
 	}
 
 	public String getReferalid() {
-		return referalid;
+		return referralid;
 	}
 
-	public void setReferalid(String referalid) {
-		this.referalid = referalid;
+	public void setReferalid(String referralid) {
+		this.referralid = referralid;
 	}
 
 	public String getName() {
@@ -97,7 +92,6 @@ public class testModel {
 		this.mobilenumber = mobilenumber;
 	}
 
-
 	public String getAddress() {
 		return address;
 	}
@@ -106,11 +100,4 @@ public class testModel {
 		this.address = address;
 	}
 
-	@Override
-	public String toString() {
-		return "testModel [id=" + id + ", name=" + name + ", emailId=" + emailId + ", mobilenumber=" + mobilenumber
-				+ ", address=" + address + "]";
-	}
-	
-	
 }
