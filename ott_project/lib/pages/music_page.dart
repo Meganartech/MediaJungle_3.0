@@ -312,158 +312,15 @@ class _MusicPageState extends State<MusicPage> {
                                     ),
                                   )
                                 : Expanded(
-                                    // height: 200,
-                                    // width: double.infinity,
-                                    child:
-                                        FutureBuilder<Map<String, List<Music>>>(
-                                      future: _musicByCategory,
-                                      builder: (context, snapshot) {
-                                        print(
-                                            'Music page FutureBuilder is being called');
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  'Error: ${snapshot.error}',
-                                                  style: TextStyle(
-                                                      color: Colors.white)));
-                                        } else if (!snapshot.hasData ||
-                                            snapshot.data!.isEmpty) {
-                                          return Center(
-                                              child: Text('No audios available',
-                                                  style: TextStyle(
-                                                      color: Colors.white)));
-                                        } else if (!snapshot.hasData ||
-                                            snapshot.data == null) {
-                                          return Center(
-                                              child:
-                                                  Text('No image available'));
-                                        } else {
-                                          debugPrint(
-                                              'Fetched songs:${snapshot.data}');
-                                          print(
-                                              'Fetched ${snapshot.data!.length} categories');
-
-                                          return Expanded(
-                                            // height: 200,
-                                            // width: 500,
-                                            child: ListView.builder(
-                                                scrollDirection: Axis.vertical,
-                                                itemCount:
-                                                    snapshot.data!.length,
-                                                itemBuilder: (context, index) {
-                                                  final categoryName = snapshot
-                                                      .data!.keys
-                                                      .elementAt(index);
-                                                  final musicList = snapshot
-                                                      .data![categoryName]!;
-                                                  print(
-                                                      'Category name: $categoryName');
-                                                  print('Music:$musicList');
-                                                  print(
-                                                      'Fetched ${musicList.length} audios in category $categoryName');
-                                                  snapshot.data!.forEach(
-                                                      (categoryName,
-                                                          musicList) {
-                                                    print(
-                                                        'Fetched ${musicList.length} audios in category $categoryName');
-                                                  });
-                                                  return MusicCategorySection(
-                                                      title: categoryName,
-                                                      audios: musicList,
-                                                      userId: widget.userId,
-                                                      onTap: (audio) =>
-                                                          _playSong(audio,
-                                                              musicList));
-                                                }),
-                                          );
-                                          // return Column(
-                                          //   children: [
-                                          //     ..._categorizeAudios.entries
-                                          //         .map((entry) {
-                                          //       return Column(
-                                          //         children: [
-                                          //           MusicCategorySection(
-                                          //               title: entry.key,
-                                          //               audios: entry.value,
-                                          //               userId: widget.userId,
-                                          //               onTap: _playSong),
-
-                                          //           // SizedBox(
-                                          //           //   height: 10,
-                                          //           // ),
-
-                                          //           //print(object)
-                                          //         ],
-                                          //       );
-                                          //     }).toList(),
-                                          //     RecentlyPlayedSongs(
-                                          //       recentlyPlayed:
-                                          //           _mrecentlyPlayed,
-                                          //       onTap: _playSong,
-                                          //     ),
-                                          //   ],
-                                          // );
-                                          // final categoryCounts = <String, int>{};
-                                          // for (var audio in snapshot.data!) {
-                                          //   categoryCounts[audio.categoryName] =
-                                          //       (categoryCounts[
-                                          //                   audio.categoryName] ??
-                                          //               0) +
-                                          //           1;
-                                          // }
-
-                                          // // Sort categories by the number of songs, in descending order
-                                          // final sortedCategories =
-                                          //     categoryCounts.entries.toList()
-                                          //       ..sort((a, b) =>
-                                          //           b.value.compareTo(a.value));
-
-                                          // // Select the top two categories
-                                          // final topCategories = sortedCategories
-                                          //     .take(2)
-                                          //     .map((e) => e.key)
-                                          //     .toList();
-
-                                          // return Column(
-                                          //   children: [
-                                          //     // Iterate over each of the top two categories to create a section
-                                          //     for (String categoryName
-                                          //         in topCategories)
-                                          //       Column(
-                                          //         children: [
-                                          //           AudioCategorySection(
-                                          //             title:
-                                          //                 categoryName, // Fetch the category name from the map
-                                          //             audios: snapshot.data!
-                                          //                 .where((audio) =>
-                                          //                     audio
-                                          //                         .categoryName ==
-                                          //                     categoryName)
-                                          //                 .toList(),
-                                          //             onTap: _playSong,
-                                          //             userId: widget.userId,
-                                          //           ),
-                                          //           SizedBox(height: 20),
-                                          //         ],
-                                          //       ),
-                                          //     // Add the RecentlyPlayedSection
-
-                                          //   ],
-                                          // );
-                                        }
-                                      },
-                                    ),
+                                    child: _buildMusicCategories(),
+                                    
                                   ),
                           ],
                         ),
                         //),
                         // ),
                       ),
+
                       Consumer<AudioProvider>(
                         builder: (context, audioProvider, child) {
                           return audioProvider.musiccurrentlyPlaying != null
@@ -500,6 +357,66 @@ class _MusicPageState extends State<MusicPage> {
         ],
       ),
     );
+  }
+
+  Widget _buildMusicCategories() {
+    return FutureBuilder<Map<String, List<Music>>>(
+      future: _musicByCategory,
+      builder: (context, snapshot) {
+        print('Music page FutureBuilder is being called');
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(
+              child: Text('Error: ${snapshot.error}',
+                  style: TextStyle(color: Colors.white)));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
+              child: Text('No audios available',
+                  style: TextStyle(color: Colors.white)));
+        } else if (!snapshot.hasData || snapshot.data == null) {
+          return Center(child: Text('No image available'));
+        } else {
+          debugPrint('Fetched songs:${snapshot.data}');
+          print('Fetched ${snapshot.data!.length} categories');
+
+          return
+              // Expanded(
+              //   // height: 200,
+              //   // width: 500,
+              //   child:
+              ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    final categoryName = snapshot.data!.keys.elementAt(index);
+                    final musicList = snapshot.data![categoryName]!;
+                    print('Category name: $categoryName');
+                    print('Music:$musicList');
+                    print(
+                        'Fetched ${musicList.length} audios in category $categoryName');
+                    snapshot.data!.forEach((categoryName, musicList) {
+                      print(
+                          'Fetched ${musicList.length} audios in category $categoryName');
+                    });
+                    return MusicCategorySection(
+                        title: categoryName,
+                        audios: musicList,
+                        userId: widget.userId,
+                        onTap: (audio) => _playSong(audio, musicList));
+                  });
+
+          //);
+        }
+      },
+    );
+  }
+
+  Widget _buildRecentlyPlayed() {
+    return RecentlyPlayedSongs(
+        recentlyPlayed: _mrecentlyPlayed,
+        onTap: (audio) =>
+            _playSong(audio, _mrecentlyPlayed.getRecentlyPlayed()));
   }
 
   Widget _buildSearchResults() {

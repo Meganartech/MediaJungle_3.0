@@ -480,7 +480,7 @@ class _SampleHomePageState extends State<SampleHomePage> {
                                 //audio.bannerImage,
 
                                 builder: (context, snapshot) {
-                                  print('Thumbnail:${song.thumbnailImage}');
+                                  //print('Thumbnail:${song.thumbnailImage}');
                                   if (snapshot.connectionState ==
                                           ConnectionState.done &&
                                       snapshot.hasData) {

@@ -6,8 +6,8 @@ import 'package:ott_project/pages/app_icon.dart';
 
 class IconService {
   static const String baseUrl = 
- // 'http://localhost:8080/api/v2';
-  'http://192.168.40.165:8080/api/v2';
+  'http://localhost:8080/api/v2';
+  //'http://192.168.40.165:8080/api/v2';
 
   static Future<AppIcon> fetchIcon() async {
     try {

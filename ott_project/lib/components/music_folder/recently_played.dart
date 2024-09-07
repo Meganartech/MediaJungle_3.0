@@ -12,12 +12,15 @@ class RecentlyPlayed extends ChangeNotifier {
   final List<Music> _mrecentlyPlayed = [];
   static const int maxRecentSongs = 5;
 
-  void addRecentlyPlayed(Music audio) {
-    _mrecentlyPlayed.removeWhere((a) => a.id == audio.id);
-    _mrecentlyPlayed.insert(0, audio);
+  void addRecentlyPlayed(Music music) {
+    print('Add recently playing:${music.songname}');
+    _mrecentlyPlayed.removeWhere((a) => a.id == music.id);
+    _mrecentlyPlayed.insert(0, music);
     if (_mrecentlyPlayed.length > maxRecentSongs) {
       _mrecentlyPlayed.removeLast();
     }
+    print(
+        "Recently played list: ${_mrecentlyPlayed.map((a) => a.songname).toList()}");
     notifyListeners();
   }
 
@@ -36,6 +39,7 @@ class RecentlyPlayedSongs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Rebuilding RecentlyPlayedSongs");
     return AnimatedBuilder(
       animation: recentlyPlayed,
       builder: (context, child) {
@@ -73,9 +77,6 @@ class RecentlyPlayedSongs extends StatelessWidget {
               itemCount: recentlPlayed.length,
               itemBuilder: (context, index) {
                 final audio = recentlPlayed[index];
-                // final compressedBytes = base64.decode(audio.thumbnail);
-                // final decompressedBytes =
-                //     ZLibDecoder().decodeBytes(compressedBytes);
                 return ListTile(
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
@@ -97,12 +98,6 @@ class RecentlyPlayedSongs extends StatelessWidget {
                         }
                       },
                     ),
-                    // Image.memory(
-                    //   Uint8List.fromList(decompressedBytes),
-                    //   width: 50,
-                    //   height: 50,
-                    //   fit: BoxFit.fill,
-                    // ),
                   ),
                   title: Text(audio.songname,
                       style: TextStyle(color: Colors.white)),
