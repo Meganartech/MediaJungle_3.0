@@ -24,7 +24,10 @@ h1:'2.6rem',
     dryGray: '#E8E8E8',   // Light Gray
     'custom-color': '#2B2A52',
     'new':'#C2272D',
-    'body_color':'#09080E'
+    'body_color':'#09080E',
+    'bgl':'#232224',
+    'cool':"#201E2A",
+    "hard":"#101016"
   },
   backgroundImage: {
     'main-gradient': 'linear-gradient(to bottom, #141334, #0e0d25)',
