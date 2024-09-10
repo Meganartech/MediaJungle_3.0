@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-// import '../App.css';
+import axios from 'axios';
+import { Dropdown } from 'react-bootstrap';
+import "../css/Sidebar.css";
 import Navbar from './navbar';
 import Sidebar from './sidebar';
-import axios from 'axios';
 import Setting_sidebar from './Setting_sidebar';
-import Employee from './Employee'
-import "../css/Sidebar.css";
-import { Dropdown } from 'react-bootstrap';
+import Employee from './Employee';
+
 const Social_setting = () => {
-  const [selectedSetting, setSelectedSetting] = useState("Social Settings"); // Default selected setting
+  const [selectedSetting, setSelectedSetting] = useState("Social Settings");
+  const [FBclientid, setFBclientid] = useState('');
+  const [xurl, setXurl] = useState('');
+  const [linkedinurl, setLinkedInUrl] = useState('');
+  const [youtubeurl, setYouTubeUrl] = useState('');
+  const [id, setId] = useState(null); // To track whether the record exists or not
+  const [isOpen, setIsOpen] = useState(false);
 
   const settingsOptions = [
     { name: "Site Settings", path: "/admin/SiteSetting" },
@@ -20,226 +26,183 @@ const Social_setting = () => {
     { name: "Contact Settings", path: "/admin/Contact_setting" }
   ];
 
-  //===========================================API--G================================================================
-  const [FBclientid, setFBclientid] = useState('');
-  const changeFBclientidHandler = (event) => {
-    const newValue = event.target.value;
-    setFBclientid(newValue); 
-  };
-  const [xurl, setXurl] = useState('');
-  const changeXurl = (event) => {
-    const newValue = event.target.value;
-    setXurl(newValue); 
-    console.log(newValue);
-  };
-  const [linkedinurl, setLinkedInUrl] = useState('');
-  const changeLinkedInUrl = (event) => {
-    const newValue = event.target.value;
-    setLinkedInUrl(newValue); 
-  };
-  const [youtubeurl, setYouTubeUrl] = useState('');
-  const changeYouTubeUrl = (event) => {
-    const newValue = event.target.value;
-    setYouTubeUrl(newValue); 
-  };
-  const [Google_Client_Secret, setGoogle_Client_Secret] = useState('');
-  const changeGoogle_Client_SecretHandler = (event) => {
-    const newValue = event.target.value;
-    setGoogle_Client_Secret(newValue); 
-  };
-  
-  const [isOpen, setIsOpen] = useState(false);
-  const [Google_CallBack, setGoogle_CallBack] = useState('');
-  const changeGoogle_CallBackHandler = (event) => {
-    const newValue = event.target.value;
-    setGoogle_CallBack(newValue); 
-  };
+  // Fetch the existing social settings when the component loads
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/v2/social-settings/12'); // Assuming ID is 1 for this example
+        const data = response.data;
+        
+        if (data) {
+          setFBclientid(data.fbUrl || '');
+          setXurl(data.xurl || '');
+          setLinkedInUrl(data.linkedinUrl || '');
+          setYouTubeUrl(data.youtubeUrl || '');
+          setId(data.id); // Store the ID for update
+        }
+      } catch (error) {
+        console.error('Error fetching social settings:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
+
   const save = (e) => {
     e.preventDefault();
-    let SiteSetting = { 
-        fbUrl: FBclientid, 
-        linkedinUrl: linkedinurl, 
-        youtubeUrl: youtubeurl, 
-        xurl: xurl 
+
+    const siteSetting = { 
+      fbUrl: FBclientid, 
+      linkedinUrl: linkedinurl, 
+      youtubeUrl: youtubeurl, 
+      xurl: xurl 
     };
 
-    console.log('SiteSetting:', SiteSetting); // Inspect the SiteSetting object
+    console.log('SiteSetting:', siteSetting);
 
-    axios.post('http://localhost:8080/api/v2/social-settings', SiteSetting)
+    if (id) {
+      // If the setting already exists, send a PUT request to update it
+      axios.put(`http://localhost:8080/api/v2/social-settings/${id}`, siteSetting)
         .then(response => {
-            console.log('Success:', response.data);
-            // Clear fields
-            setFBclientid('');
-            setLinkedInUrl('');
-            setYouTubeUrl('');
-            setXurl('');
+          console.log('Success:', response.data);
         })
         .catch(error => {
-            console.error('Error:', error);
+          console.error('Error updating settings:', error);
         });
-};
+    } else {
+      // If the setting does not exist, send a POST request to create new data
+      axios.post('http://localhost:8080/api/v2/social-settings', siteSetting)
+        .then(response => {
+          console.log('Success:', response.data);
+          setId(response.data.id); // Store the ID after creating the new setting
+        })
+        .catch(error => {
+          console.error('Error creating new settings:', error);
+        });
+    }
+  };
 
   const handleSettingChange = (setting) => {
     setSelectedSetting(setting.name);
     setIsOpen(false);
-    
   };
 
   return (
     <div className="marquee-container">
-    <div className='AddArea'>
-      {/* Dropdown for settings */}
-      <Dropdown 
-        className="mb-4" 
-        show={isOpen} 
-        onToggle={() => setIsOpen(!isOpen)} // Toggle the dropdown
-      >
-        <Dropdown.Toggle
-          className={`${
-            isOpen ? 'bg-custom-color text-orange-600' : 'bg-custom-color'
-          } hover:bg-custom-color hover:text-orange-600`}
+      <div className='AddArea'>
+        {/* Dropdown for settings */}
+        <Dropdown 
+          className="mb-4" 
+          show={isOpen} 
+          onToggle={() => setIsOpen(!isOpen)}
         >
-          {selectedSetting}
-        </Dropdown.Toggle>
+          <Dropdown.Toggle
+            className={`${
+              isOpen ? 'bg-custom-color text-orange-600' : 'bg-custom-color'
+            } hover:bg-custom-color hover:text-orange-600`}
+          >
+            {selectedSetting}
+          </Dropdown.Toggle>
   
-        <Dropdown.Menu>
-          {settingsOptions.map((setting, index) => (
-            <Dropdown.Item
-              as={Link}
-              to={setting.path}
-              key={index}
-              onClick={() => handleSettingChange(setting)}
-            >
-              {setting.name}
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
-    </div>
-    
-    <br />
-    <div className='container3 mt-2'>
-      <ol className="breadcrumb mb-4 d-flex my-0">
-        <li className="breadcrumb-item">
-          <Link to="/admin/SiteSetting">Settings</Link>
-        </li>
-        <li className="breadcrumb-item active text-white">Social Settings</li>
-      </ol>
-      <div className="table-container">
-        <div className="card-body">
-          <div className="row">
-            {/* Form container, now occupying half the width */}
-            <div className="col-md-6"> 
-              <ul className='breadcrumb-item' style={{ paddingLeft: '0px' }}>
-                <form onSubmit={save} method="post" className="registration-form">
-                  <div className="temp">
-                    {/* FB URL Settings */}
-                    <div className="form-group">
-                      <label style={{paddingRight:"110px"}}>
-                        FB URL
-                      </label>
-                      <input 
-                        type="text" 
-                        placeholder="FB URL" 
-                        name="FB URL" 
-                        value={FBclientid} 
-                        onChange={changeFBclientidHandler} 
-                      />
-                    </div>
-                    
-                    <div className="form-group">
-                      <label  style={{paddingRight:"120px"}}>
-                       X URL
-                      </label>
-                      <input 
-    type="text" 
-    placeholder="X URL" 
-    name="xurl" 
-    value={xurl} 
-    onChange={changeXurl} 
-/>
+          <Dropdown.Menu>
+            {settingsOptions.map((setting, index) => (
+              <Dropdown.Item
+                as={Link}
+                to={setting.path}
+                key={index}
+                onClick={() => handleSettingChange(setting)}
+              >
+                {setting.name}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
 
+      <br />
+      <div className='container3 mt-2'>
+        <ol className="breadcrumb mb-4 d-flex my-0">
+          <li className="breadcrumb-item">
+            <Link to="/admin/SiteSetting">Settings</Link>
+          </li>
+          <li className="breadcrumb-item active text-white">Social Settings</li>
+        </ol>
+
+        <div className="table-container">
+          <div className="card-body">
+            <div className="row">
+              {/* Form container */}
+              <div className="col-md-6"> 
+                <ul className='breadcrumb-item' style={{ paddingLeft: '0px' }}>
+                  <form onSubmit={save} method="post" className="registration-form">
+                    <div className="temp">
+                      {/* FB URL */}
+                      <div className="form-group">
+                        <label style={{paddingRight:"110px"}}>
+                          FB URL
+                        </label>
+                        <input 
+                          type="text" 
+                          placeholder="FB URL" 
+                          value={FBclientid} 
+                          onChange={(e) => setFBclientid(e.target.value)} 
+                        />
+                      </div>
+
+                      {/* X URL */}
+                      <div className="form-group">
+                        <label style={{paddingRight:"120px"}}>
+                          X URL
+                        </label>
+                        <input 
+                          type="text" 
+                          placeholder="X URL" 
+                          value={xurl} 
+                          onChange={(e) => setXurl(e.target.value)} 
+                        />
+                      </div>
+
+                      {/* LinkedIn URL */}
+                      <div className="form-group">
+                        <label style={{paddingRight:"60px"}}>
+                          LinkedIn URL
+                        </label>
+                        <input 
+                          type="text" 
+                          placeholder="LinkedIn URL" 
+                          value={linkedinurl} 
+                          onChange={(e) => setLinkedInUrl(e.target.value)} 
+                        />
+                      </div>
+
+                      {/* YouTube URL */}
+                      <div className="form-group">
+                        <label style={{paddingRight:"60px"}}>
+                          YouTube URL
+                        </label>
+                        <input 
+                          type="text" 
+                          placeholder="YouTube URL" 
+                          value={youtubeurl} 
+                          onChange={(e) => setYouTubeUrl(e.target.value)} 
+                        />
+                      </div><br/>
+<div className='col-md-12'>
+                      <div className="form-group">
+                        <input 
+                          type="submit" 
+                          className="btn btn-info" 
+                          value="Submit" 
+                        />
+                      </div></div>
                     </div>
-                    
-                    <div className="form-group">
-                      <label  style={{paddingRight:"60px"}}>
-                      Linked In URL
-                      </label>
-                      <input 
-                        type="text" 
-                        placeholder="LinkedIn URL" 
-                        name="linkedinurl" 
-                        value={linkedinurl} 
-                        onChange={changeLinkedInUrl} 
-                      />
-                    </div>
-                    
-                    {/* Google Settings */}
-                    {/* <div className="form-group">
-                      <label className="custom-label" style={{ color: 'black' }}>
-                        Google Settings
-                      </label>
-                    </div> */}
-  
-                    <div className="form-group">
-                      <label  style={{paddingRight:"60px"}}>
-                        You Tube URL
-                      </label>
-                      <input 
-                        type="text" 
-                        placeholder="youtubeurl" 
-                        name="youtubeurl" 
-                        value={youtubeurl} 
-                        onChange={changeYouTubeUrl} 
-                      />
-                    </div><br/>
-  
-                    {/* <div className="form-group">
-                      <label className="custom-label">
-                        Google Client Secret
-                      </label>
-                      <input 
-                        type="text" 
-                        placeholder="Google Client Secret" 
-                        name="Google Client Secret" 
-                        value={Google_Client_Secret} 
-                        onChange={changeGoogle_Client_SecretHandler} 
-                      />
-                    </div> */}
-  
-                    {/* <div className="form-group">
-                      <label className="custom-label">
-                        Google CallBack
-                      </label>
-                      <input 
-                        type="text" 
-                        placeholder="Google CallBack" 
-                        name="Google CallBack" 
-                        value={Google_CallBack} 
-                        onChange={changeGoogle_CallBackHandler} 
-                      />
-                    </div> */}
-                    <div className='col-md-12'>
-                    <div className="form-group">
-                      <input 
-                        type="submit" 
-                        className="btn btn-info" 
-                        name="submit" 
-                        value="Submit" 
-                        onClick={save} 
-                      />
-                    </div>
-                    </div>
-                  </div>
-                </form>
-              </ul>
+                  </form>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  
   );
 };
 

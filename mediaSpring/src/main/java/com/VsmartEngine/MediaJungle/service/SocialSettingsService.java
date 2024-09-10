@@ -18,4 +18,17 @@ public class SocialSettingsService {
     public SocialSettings getSocialSettings(Long id) {
         return repository.findById(id).orElse(null);
     }
+    public SocialSettings updateSocialSettings(Long id, SocialSettings settings) {
+        SocialSettings existingSettings = repository.findById(id).orElse(null);
+        
+        if (existingSettings != null) {
+            existingSettings.setFbUrl(settings.getFbUrl());
+            existingSettings.setLinkedinUrl(settings.getLinkedinUrl());
+            existingSettings.setXUrl(settings.getXUrl());
+            existingSettings.setYoutubeUrl(settings.getYoutubeUrl());
+            return repository.save(existingSettings);
+        }
+        return null;
+    }
+
 }
