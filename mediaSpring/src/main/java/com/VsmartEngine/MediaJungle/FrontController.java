@@ -900,13 +900,14 @@ public class FrontController {
 		 	return videoImageController.getVideoImagesByVideoId(id);
 		 }
 		 
-		 @GetMapping("/{videofilename}/videofile")
-		 public ResponseEntity<?> getVideo(@PathVariable String videofilename, HttpServletRequest request) {	
-			return VideoController.getVideo(videofilename, request);
+		 @GetMapping("/{id}/videofile")
+		 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {	
+			return VideoController.getVideo(id, request);
 		}
-		 @GetMapping("/{trailerfilename}/trailerfile")
-		 public ResponseEntity<?> getVideotrailer(@PathVariable String trailerfilename, HttpServletRequest request) {
-			 return VideoController.getVideotrailer(trailerfilename, request);
+		 
+		 @GetMapping("/{id}/trailerfile")
+		 public ResponseEntity<?> getVideotrailer(@PathVariable Long id, HttpServletRequest request) {
+			 return VideoController.getVideotrailer(id, request);
 		 }
 
 		
@@ -959,7 +960,19 @@ public class FrontController {
 		 public ResponseEntity<List<String>> gettagNamesByIds(@RequestParam List<Long> tagIds) {
 			 return  TagController.gettagNamesByIds(tagIds);
 		 }
-		
+
+//		 @GetMapping("/{videoId}/videothumbnail")
+//		 @Transactional
+//		    public ResponseEntity<byte[]> getVideoThumbnail(@PathVariable long videoId) {
+//		    	return videoImageController.getVideoThumbnail(videoId);
+//		    }
+		 
+		    @GetMapping("/{videoId}/videothumbnail")
+			 @Transactional
+		    public ResponseEntity<Map<String, byte[]>> getVideoThumbnail(@PathVariable long videoId) {
+		    	return videoImageController.getVideoThumbnail(videoId);
+		    }
+		    
 //		 @GetMapping("/{filename}/file")
 //			public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
 //

@@ -1440,11 +1440,12 @@ useEffect(() => {
         const trailerFile = data.videotrailerfilename;
 
         if (videoFile) {
-          setVideoUrl(`${API_URL}/api/v2/${videoFile}/videofile`);
+          // setVideoUrl(`${API_URL}/api/v2/${videoFile}/videofile`);
+          setVideoUrl(`${API_URL}/api/v2/${videoId}/videofile`);
         }
 
         if (trailerFile) {
-          settrailerUrl(`${API_URL}/api/v2/${trailerFile}/trailerfile`);
+          settrailerUrl(`${API_URL}/api/v2/${videoId}/trailerfile`);
         }
         console.log('Video Filename:', videoFile);
         console.log('Trailer Filename:', trailerFile);

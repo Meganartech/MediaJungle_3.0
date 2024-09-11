@@ -225,17 +225,17 @@ public class VideoController {
 	    }
 	
 	
-	 public ResponseEntity<?> getVideo(@PathVariable String videofilename, HttpServletRequest request) {
-     try {
+	 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
+	 try {
 
-//         Optional<VideoDescription> optionalLesson = videodescriptionRepository.findById(id);
-//         if (!optionalLesson.isPresent()) {
-//             return ResponseEntity.notFound().build();
-//         }
-//         String filename =optionalLesson.get().getVidofilename();
+         Optional<VideoDescription> optionalLesson = videodescriptionRepository.findById(id);
+         if (!optionalLesson.isPresent()) {
+             return ResponseEntity.notFound().build();
+         }
+         String filename =optionalLesson.get().getVidofilename();
 
-         if (videofilename != null) {
-         	Path filePath = Paths.get(path, videofilename);
+         if (filename != null) {
+         	Path filePath = Paths.get(path, filename);
          	System.out.println("filePath"+ filePath);
  		    try {
  		        if (filePath.toFile().exists() && filePath.toFile().isFile()) {
@@ -329,7 +329,7 @@ public class VideoController {
  		    return ResponseEntity.notFound().build();
 
          } else {
-             return ResponseEntity.ok(videofilename);
+             return ResponseEntity.ok(filename);
          }
      } catch (Exception e) {
          // Log the exception (you can use a proper logging library)
@@ -340,13 +340,16 @@ public class VideoController {
      
  }
 	 
-	 
-//	 
 
-	 public ResponseEntity<?> getVideotrailer(@PathVariable String trailerfilename, HttpServletRequest request) {
+	 public ResponseEntity<?> getVideotrailer(@PathVariable Long id, HttpServletRequest request) {
 		    try {
-		        if (trailerfilename != null) {
-		            Path filePath = Paths.get(trailervideoPath, trailerfilename);
+		    	 Optional<VideoDescription> optionalLesson = videodescriptionRepository.findById(id);
+		         if (!optionalLesson.isPresent()) {
+		             return ResponseEntity.notFound().build();
+		         }
+		         String filename =optionalLesson.get().getVideotrailerfilename();
+		        if (filename != null) {
+		            Path filePath = Paths.get(trailervideoPath, filename);
 		            System.out.println("filePath: " + filePath);
 		            if (Files.exists(filePath) && Files.isRegularFile(filePath)) {
 		                Resource resource = new UrlResource(filePath.toUri());
@@ -591,8 +594,9 @@ public class VideoController {
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	        }
 	    }
-
-	
+	    
+	    
+	    	
 	
 //    public ResponseEntity<VideoDescription> uploadVideoDescription(
 //            @RequestParam("moviename") String moviename,
