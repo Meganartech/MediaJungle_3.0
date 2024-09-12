@@ -34,9 +34,9 @@ class SampleHomePage extends StatefulWidget {
 
 class _SampleHomePageState extends State<SampleHomePage> {
   final TextEditingController _searchController = TextEditingController();
-  late List<Movie> _allMovies = [];
+  late List<Movies> _allMovies = [];
   late List<Music> _music = [];
-  Map<String, List<Movie>> _movieCategory = {};
+  Map<String, List<Movies>> _movieCategory = {};
   late Map<String, List<Music>> _musicCategory = {};
   //Map<String, List<Music>> _audioCategory = {};
   // bool _showSearch = false;
@@ -64,13 +64,15 @@ class _SampleHomePageState extends State<SampleHomePage> {
     // print('Heloooo');
     try {
       // print('Heloooo');
-      final movies = await MovieService.fetchMovies();
-      //print('Movie: $movies');
+      final movies = await MovieService.fetchVideos();
+      print('Movie: $movies');
       final musicByCategory = await AudioService.fetchMusicByCategory();
+      final allMusic = await AudioService.fetchAllMusic();
       //print('Audio: $audios');
       setState(() {
         _allMovies = movies;
         _musicCategory = musicByCategory;
+        _music = allMusic;
         _categorizeMovies();
         // _categorizeAudios();
       });
@@ -95,10 +97,10 @@ class _SampleHomePageState extends State<SampleHomePage> {
   void _categorizeMovies() {
     _movieCategory = {};
     for (var movie in _allMovies) {
-      if (!_movieCategory.containsKey(movie.category)) {
-        _movieCategory[movie.category] = [];
+      if (!_movieCategory.containsKey(movie.categories)) {
+        // _movieCategory[movie.categories] = [];
       }
-      _movieCategory[movie.category]!.add(movie);
+      _movieCategory[movie.categories]!.add(movie);
     }
   }
 
@@ -189,35 +191,57 @@ class _SampleHomePageState extends State<SampleHomePage> {
                                   SizedBox(
                                     height: 5,
                                   ),
-                                  MusicListenAgainSection(
-                                      allAudios: _music,
-                                      categoryPlayList: _music,
-                                      onAudioTap: (Music song) {
-                                        print(
-                                            "onAudioTap called in SampleHomePage for song: ${song.songname}");
+                                  _music.isEmpty
+                                      ? CircularProgressIndicator()
+                                      : MusicListenAgainSection(
+                                          allAudios: _music,
+                                          categoryPlayList: _music,
+                                          onAudioTap: (Music song) {
+                                            print(
+                                                "onAudioTap called in SampleHomePage for song: ${song.songname}");
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SongPlayerPage(
+                                                            music: song,
+                                                            onChange:
+                                                                (newAudio) {
+                                                              setState(() {
+                                                                Provider.of<AudioProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .musicsetCurrentlyPlaying(
+                                                                        newAudio,
+                                                                        _music);
+                                                              });
+                                                            },
+                                                            onDislike:
+                                                                (p0) {})));
+                                            setState(() {});
+                                          }),
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) =>
+                                  //             MusicPlayerPage(
+                                  //                 audio: song,
+                                  //                 onDislike: (p0) {},
+                                  //                 onChange: (newAudio) {
+                                  //                   setState(() {
+                                  //                     Provider.of<AudioProvider>(
+                                  //                             context,
+                                  //                             listen: false)
+                                  //                         .setCurrentlyPlaying(
+                                  //                             newAudio,
+                                  //                             _music); // or whatever list you want to use
+                                  //                   });
+                                  //                 }))).then((_) {
+                                  //   print("Returned from MusicPlayerPage");
+                                  //   setState(() {});
+                                  // });
 
-                                        setState(() {});
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) =>
-                                        //             MusicPlayerPage(
-                                        //                 audio: song,
-                                        //                 onDislike: (p0) {},
-                                        //                 onChange: (newAudio) {
-                                        //                   setState(() {
-                                        //                     Provider.of<AudioProvider>(
-                                        //                             context,
-                                        //                             listen: false)
-                                        //                         .setCurrentlyPlaying(
-                                        //                             newAudio,
-                                        //                             _music); // or whatever list you want to use
-                                        //                   });
-                                        //                 }))).then((_) {
-                                        //   print("Returned from MusicPlayerPage");
-                                        //   setState(() {});
-                                        // });
-                                      }),
                                   SizedBox(
                                     height: 5,
                                   ),
@@ -236,7 +260,7 @@ class _SampleHomePageState extends State<SampleHomePage> {
   Widget _buildMovieSection(String title, String category) {
     if (!_movieCategory.containsKey(category) ||
         _movieCategory[category]!.isEmpty) {
-      print('Category does not exist or empty');
+      //print('Category does not exist or empty');
       print(_movieCategory['BlockBuster']);
       return Container();
     }
@@ -272,20 +296,21 @@ class _SampleHomePageState extends State<SampleHomePage> {
             itemCount: _movieCategory[category]!.length,
             itemBuilder: (context, index) {
               final movie = _movieCategory[category]![index];
-              final compressedBytes = base64.decode(movie.thumbnail);
-              final decompressedBytes =
-                  ZLibDecoder().decodeBytes(compressedBytes);
+              // final compressedBytes = base64.decode(movie.thumbnail);
+              // final decompressedBytes =
+              //     ZLibDecoder().decodeBytes(compressedBytes);
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => VideoPlayerPage(
-                              movies: _allMovies,
-                              initialIndex: _allMovies.indexOf(movie),
-                            )),
-                  ),
+                  onTap: () {},
+                  // => Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => VideoPlayerPage(
+                  //             movies: _allMovies,
+                  //             initialIndex: _allMovies.indexOf(movie),
+                  //           )),
+                  // ),
                   // child: Card(
                   //   color: Colors.transparent,
                   child: Container(
@@ -294,11 +319,16 @@ class _SampleHomePageState extends State<SampleHomePage> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.memory(
-                              Uint8List.fromList(decompressedBytes),
-                              width: 100,
-                              height: 115,
-                              fit: BoxFit.fill),
+                          child: Image.asset(
+                            'assets/icon/media_jungle.png',
+                            width: 100,
+                            height: 115,
+                          ),
+                          // Image.memory(
+                          //     Uint8List.fromList(decompressedBytes),
+                          //     width: 100,
+                          //     height: 115,
+                          //     fit: BoxFit.fill),
                         ),
                         SizedBox(
                           height: 3,
@@ -553,17 +583,17 @@ class _SampleHomePageState extends State<SampleHomePage> {
             subtitle: Text(item is Movie ? 'Movie' : 'Song',
                 style: TextStyle(color: Colors.white70)),
             onTap: () {
-              if (item is Movie) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VideoPlayerPage(
-                      movies: _allMovies,
-                      initialIndex: _allMovies.indexOf(item),
-                    ),
-                  ),
-                );
-              }
+              // if (item is Movie) {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => VideoPlayerPage(
+              //         movies: _allMovies,
+              //         initialIndex: _allMovies.indexOf(item),
+              //       ),
+              //     ),
+              //   );
+              // }
             },
           );
         },

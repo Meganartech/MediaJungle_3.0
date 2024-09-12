@@ -73,7 +73,7 @@ class _VideoPageState extends State<VideoPage> {
   Future<List<Movie>> _fetchMovies() async {
     try {
       final movies = await MovieService.fetchMovies();
-      
+
       setState(() {
         allMovies = movies;
       });

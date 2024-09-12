@@ -1,0 +1,65 @@
+2024-09-11 17:24:58 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:24:58 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getPlanById with arguments: [1]
+2024-09-11 17:24:58 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getPlanById with result: <200 OK OK,com.VsmartEngine.MediaJungle.model.PlanDetails@5bcd1b32,[]>
+2024-09-11 17:24:58 [http-nio-8080-exec-7] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:24:58 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllFeature with arguments: []
+2024-09-11 17:24:58 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@573c4442,[]>
+2024-09-11 17:24:58 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllFeature with result: <200 OK OK,[com.VsmartEngine.MediaJungle.model.PlanFeatures@3b6cdd32, com.VsmartEngine.MediaJungle.model.PlanFeatures@1b4d4df9, com.VsmartEngine.MediaJungle.model.PlanFeatures@461596ef],[]>
+2024-09-11 17:25:03 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:25:03 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllPlanDetails with arguments: []
+2024-09-11 17:25:03 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllPlanDetails with result: <200 OK OK,[com.VsmartEngine.MediaJungle.model.PlanDetails@7c6932a5, com.VsmartEngine.MediaJungle.model.PlanDetails@28bd649a],[]>
+2024-09-11 17:25:03 [http-nio-8080-exec-2] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:25:03 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@3d92d7b0,[]>
+2024-09-11 17:25:05 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:25:05 [http-nio-8080-exec-9] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:25:05 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@42ed7f21,[]>
+2024-09-11 17:25:11 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:25:11 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllFeature with arguments: []
+2024-09-11 17:25:11 [http-nio-8080-exec-7] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllFeature with result: <200 OK OK,[com.VsmartEngine.MediaJungle.model.PlanFeatures@3d95fd40, com.VsmartEngine.MediaJungle.model.PlanFeatures@67d59f09, com.VsmartEngine.MediaJungle.model.PlanFeatures@8a03aad],[]>
+2024-09-11 17:25:11 [http-nio-8080-exec-6] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:25:11 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@35cf32de,[]>
+2024-09-11 17:25:12 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:25:13 [http-nio-8080-exec-4] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:25:13 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@2f5dcf63,[]>
+2024-09-11 17:25:14 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:25:14 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllFeature with arguments: []
+2024-09-11 17:25:14 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllFeature with result: <200 OK OK,[com.VsmartEngine.MediaJungle.model.PlanFeatures@be3e656, com.VsmartEngine.MediaJungle.model.PlanFeatures@5fc1aead, com.VsmartEngine.MediaJungle.model.PlanFeatures@5d3a691],[]>
+2024-09-11 17:25:14 [http-nio-8080-exec-2] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:25:14 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@3aec38dd,[]>
+2024-09-11 17:25:17 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllPlanDetails with arguments: []
+2024-09-11 17:25:17 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:25:17 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllPlanDetails with result: <200 OK OK,[com.VsmartEngine.MediaJungle.model.PlanDetails@70432b2c, com.VsmartEngine.MediaJungle.model.PlanDetails@546497f0],[]>
+2024-09-11 17:25:17 [http-nio-8080-exec-9] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:25:17 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@6f8f6dcb,[]>
+2024-09-11 17:25:27 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllFeature with arguments: []
+2024-09-11 17:25:27 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllFeature with result: <200 OK OK,[com.VsmartEngine.MediaJungle.model.PlanFeatures@3e2474cc, com.VsmartEngine.MediaJungle.model.PlanFeatures@2877dedb, com.VsmartEngine.MediaJungle.model.PlanFeatures@6885538d],[]>
+2024-09-11 17:25:27 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:25:27 [http-nio-8080-exec-8] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:25:27 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@400d705e,[]>
+2024-09-11 17:25:30 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:25:30 [http-nio-8080-exec-2] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:25:30 [http-nio-8080-exec-2] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@528572ac,[]>
+2024-09-11 17:26:04 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllPlanDetails with arguments: []
+2024-09-11 17:26:04 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:26:04 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllPlanDetails with result: <200 OK OK,[com.VsmartEngine.MediaJungle.model.PlanDetails@5e50c42f, com.VsmartEngine.MediaJungle.model.PlanDetails@2d4afa2e],[]>
+2024-09-11 17:26:04 [http-nio-8080-exec-9] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:26:04 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@e533c6d,[]>
+2024-09-11 17:26:21 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getPlanById with arguments: [2]
+2024-09-11 17:26:21 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:26:21 [http-nio-8080-exec-4] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getPlanById with result: <200 OK OK,com.VsmartEngine.MediaJungle.model.PlanDetails@1522b953,[]>
+2024-09-11 17:26:21 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllFeature with arguments: []
+2024-09-11 17:26:21 [http-nio-8080-exec-8] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:26:21 [http-nio-8080-exec-1] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllFeature with result: <200 OK OK,[com.VsmartEngine.MediaJungle.model.PlanFeatures@715be0d9, com.VsmartEngine.MediaJungle.model.PlanFeatures@7603bb5d, com.VsmartEngine.MediaJungle.model.PlanFeatures@12860e59],[]>
+2024-09-11 17:26:21 [http-nio-8080-exec-8] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@75603ac5,[]>
+2024-09-11 17:26:25 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:26:25 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllPlanDetails with arguments: []
+2024-09-11 17:26:25 [http-nio-8080-exec-10] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllPlanDetails with result: <200 OK OK,[com.VsmartEngine.MediaJungle.model.PlanDetails@3f3e399e, com.VsmartEngine.MediaJungle.model.PlanDetails@62998f7],[]>
+2024-09-11 17:26:25 [http-nio-8080-exec-9] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:26:25 [http-nio-8080-exec-9] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@a3e0bec,[]>
+2024-09-11 17:26:28 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getAllUser with arguments: []
+2024-09-11 17:26:28 [http-nio-8080-exec-6] INFO  c.V.M.controller.LicenseController - License is Validtrue
+2024-09-11 17:26:28 [http-nio-8080-exec-6] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getAllUser with result: <200 OK OK,com.VsmartEngine.MediaJungle.controller.UserWithStatus@6f36eb79,[]>
+2024-09-11 17:37:52 [RMI TCP Connection(50)-127.0.0.1] INFO  o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+2024-09-11 17:37:52 [RMI TCP Connection(50)-127.0.0.1] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-09-11 17:37:52 [RMI TCP Connection(50)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-09-11 17:37:52 [RMI TCP Connection(50)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

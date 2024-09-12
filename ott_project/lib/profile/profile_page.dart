@@ -58,10 +58,10 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-            //'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.40.165:8080/api/v2/GetUserById/$userId'
-            //'http://localhost:8080/api/v2/GetUserById/$userId'
-            ),
+            'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+        //'http://192.168.40.165:8080/api/v2/GetUserById/$userId'
+        //'http://localhost:8080/api/v2/GetUserById/$userId'
+        //),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -152,7 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       radius: 50,
                       backgroundImage: base64Image.isNotEmpty
                           ? Image.memory(base64Decode(base64Image)).image
-                          : const AssetImage('assets/images/bg2.jpg'),
+                          : const AssetImage('assets/icon/media_jungle.png'),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -247,19 +247,39 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 8,),
+                  SizedBox(
+                    height: 8,
+                  ),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        _handleLogout(context);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Account Deletion!!'),
+                              content: Text(
+                                  'Are you sure want to delete your account?'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text('Cancel')),
+                                TextButton(
+                                    onPressed: () {
+                                      _handleLogout(context);
+                                    },
+                                    child: Text('Ok'))
+                              ],
+                            );
+                          },
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         backgroundColor: Color.fromARGB(174, 93, 104, 195),
                         foregroundColor: kWhite,
                       ),
-                      
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,

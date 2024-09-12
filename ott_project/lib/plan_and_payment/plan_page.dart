@@ -481,7 +481,7 @@ class _PlanPageState extends State<PlanPage> {
                     Divider(
                       color: Colors.white,
                     ),
-                    _buildQualityIcons(plan),
+                    // _buildQualityIcons(plan),
                     SizedBox(height: 16),
                     _buildDurationButton(
                         '${plan.validity} days', plan.amount, plan.planname),
@@ -495,47 +495,47 @@ class _PlanPageState extends State<PlanPage> {
     );
   }
 
-  Widget _buildQualityIcons(PlanDetails plan) {
-    bool isBasic = plan.planname == 'Basic';
-    bool isStandard = plan.planname == 'Standard';
-    bool isPremium = plan.planname == 'Premium';
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _buildQualityIcon('assets/icon/eSmartphone.png',
-            'TV,\nLaptop &\nMobile', isStandard || isPremium),
-        _buildQualityIcon('assets/icon/e4k.png', 'UHD\n4K', isPremium),
-        _buildQualityIcon('assets/icon/eHD 720p.png',
-            'Standard\nHD 720 p\nvideo', isBasic || isStandard || isPremium),
-        _buildQualityIcon('assets/icon/eHD 1080p.png', 'Full HD\n1080p',
-            isBasic || isStandard || isPremium),
-        _buildQualityIcon('assets/icon/eVector.png', 'UHD 2K', isPremium),
-      ],
-    );
-  }
+  // Widget _buildQualityIcons(PlanDetails plan) {
+  //   bool isBasic = plan.planname == 'Basic';
+  //   bool isStandard = plan.planname == 'Standard';
+  //   bool isPremium = plan.planname == 'Premium';
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //     children: [
+  //       _buildQualityIcon('assets/icon/eSmartphone.png',
+  //           'TV,\nLaptop &\nMobile', isStandard || isPremium),
+  //       _buildQualityIcon('assets/icon/e4k.png', 'UHD\n4K', isPremium),
+  //       _buildQualityIcon('assets/icon/eHD 720p.png',
+  //           'Standard\nHD 720 p\nvideo', isBasic || isStandard || isPremium),
+  //       _buildQualityIcon('assets/icon/eHD 1080p.png', 'Full HD\n1080p',
+  //           isBasic || isStandard || isPremium),
+  //       _buildQualityIcon('assets/icon/eVector.png', 'UHD 2K', isPremium),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildQualityIcon(String assetPath, String label, bool isHighlighted) {
-    return Column(
-      children: [
-        Image.asset(
-          assetPath,
-          height: 24,
-          color: isHighlighted
-              ? const Color.fromARGB(255, 255, 255, 255)
-              : Colors.grey[600],
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        Text(label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: isHighlighted ? Colors.white : Colors.grey[600],
-                fontSize: 12,
-                height: 1.2)),
-      ],
-    );
-  }
+  // Widget _buildQualityIcon(String assetPath, String label, bool isHighlighted) {
+  //   return Column(
+  //     children: [
+  //       Image.asset(
+  //         assetPath,
+  //         height: 24,
+  //         color: isHighlighted
+  //             ? const Color.fromARGB(255, 255, 255, 255)
+  //             : Colors.grey[600],
+  //       ),
+  //       SizedBox(
+  //         height: 4,
+  //       ),
+  //       Text(label,
+  //           textAlign: TextAlign.center,
+  //           style: TextStyle(
+  //               color: isHighlighted ? Colors.white : Colors.grey[600],
+  //               fontSize: 12,
+  //               height: 1.2)),
+  //     ],
+  //   );
+  // }
 
   Widget _buildDurationButton(String validity, double price, String planName) {
     bool isSelected = selectedPlan == planName && selectedDuration == validity;

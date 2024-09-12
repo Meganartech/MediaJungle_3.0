@@ -8,6 +8,7 @@ import 'package:ott_project/components/video_folder/movie.dart';
 import 'package:ott_project/components/video_folder/video_play.dart';
 
 import '../pallete.dart';
+import 'movie_player_page.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;
@@ -47,7 +48,7 @@ class MovieCard extends StatelessWidget {
                   ? Image.memory(
                       Uint8List.fromList(decompressedBytes),
                       width: 100,
-                      height: 115,
+                      height: 100,
                       fit: BoxFit.fill,
                     )
                   : Container(
@@ -73,6 +74,7 @@ class MovieCard extends StatelessWidget {
     );
   }
 }
+
 class MoviesCard extends StatelessWidget {
   final Movies movie;
   final List<Movies> movies;
@@ -86,19 +88,19 @@ class MoviesCard extends StatelessWidget {
       : super(key: key);
 
   Widget build(BuildContext context) {
-    final compressedBytes = base64.decode(movie.thumbnail);
-    final decompressedBytes = ZLibDecoder().decodeBytes(compressedBytes);
+    // final compressedBytes = base64.decode(movie.thumbnail);
+    // final decompressedBytes = ZLibDecoder().decodeBytes(compressedBytes);
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => VideoPlayerPage(
-        //       initialIndex: initialIndex,
-        //       movies: movies,
-        //     ),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MoviePlayerPage(
+              initialIndex: initialIndex,
+              movies: movies,
+            ),
+          ),
+        );
       },
       child: Container(
         width: 100,
@@ -107,18 +109,23 @@ class MoviesCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: decompressedBytes.isNotEmpty
-                  ? Image.memory(
-                      Uint8List.fromList(decompressedBytes),
-                      width: 100,
-                      height: 115,
-                      fit: BoxFit.fill,
-                    )
-                  : Container(
-                      color: Colors.grey,
-                      width: 100,
-                      height: 115,
-                    ),
+              child: FutureBuilder<Uint8List?>(
+                  future: movie.thumbnailImage,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData) {
+                      return Image.memory(snapshot.data!,
+                          width: 164, height: 135, fit: BoxFit.fill);
+                    } else {
+                      return Container(
+                        width: 164,
+                        height: 135,
+                        // fit: BoxFit.fill
+                        color: Colors.grey,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                  }),
             ),
             SizedBox(height: 3),
             Text(

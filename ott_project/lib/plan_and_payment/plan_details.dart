@@ -16,3 +16,19 @@ class PlanDetails {
         validity: json['validity']);
   }
 }
+
+class Tenures {
+  final int id;
+  final String tenureName;
+  Tenures({
+    required this.id,
+    required this.tenureName,
+  });
+
+  factory Tenures.fromJson(Map<String, dynamic> json) {
+    return Tenures(
+      id: json['id'],
+      tenureName: json['tenure_name'],
+    );
+  }
+}

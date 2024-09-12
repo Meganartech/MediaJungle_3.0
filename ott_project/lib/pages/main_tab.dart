@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/library/library_page.dart';
+import 'package:ott_project/pages/movie_page.dart';
 
 // import 'package:ott_project/pages/audio_page.dart';
 // import 'package:ott_project/pages/home_page.dart';
@@ -61,7 +62,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
             body: Expanded(
               child: TabBarView(controller: controller, children: [
                 SampleHomePage(),
-                VideoPage(),
+                MoviePage(),
                 MusicPage(userId: userId),
                 LibraryPage(
                   userId: userId,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/song_player_page.dart';
@@ -46,7 +47,7 @@ class _MoviePageState extends State<MoviePage> {
   void initState() {
     super.initState();
     // _filteredMovies = _allMovies;
-    _allMovies = _fetchMovies();
+    // _allMovies = _fetchMovies();
 
     _loadIcon();
   }
@@ -54,8 +55,8 @@ class _MoviePageState extends State<MoviePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _allMovies = MovieService.fetchVideos();
-    _fetchMovies();
+    _allMovies = MovieService().getMoviesWithCategories();
+    //_fetchMovies();
   }
 
   Future<void> _loadIcon() async {
@@ -70,22 +71,22 @@ class _MoviePageState extends State<MoviePage> {
     }
   }
 
-  Future<List<Movies>> _fetchMovies() async {
-    try {
-      final movies = await MovieService.fetchVideos();
-      
-      setState(() {
-        allMovies = movies;
-      });
-      _categorizeMovies(allMovies);
-      return allMovies;
-    } catch (e) {
-      throw Exception('Failed to load movies');
-    }
-  }
+  // Future<List<Movies>> _fetchMovies() async {
+  //   try {
+  //     final movies = await MovieService.fetchVideos();
+
+  //     setState(() {
+  //       allMovies = movies;
+  //     });
+  //     _categorizeMovies(allMovies);
+  //     return allMovies;
+  //   } catch (e) {
+  //     throw Exception('Failed to load movies');
+  //   }
+  // }
 
   Future<void> _refreshMovies() async {
-    await _fetchMovies();
+    // await _fetchMovies();
   }
 
   void _categorizeMovies(List<Movies> movies) {
@@ -96,21 +97,21 @@ class _MoviePageState extends State<MoviePage> {
       }
       _categorizedMovies[movie.categories]!.add(movie);
     }
-    _filterCategoriesForDisplay();
+    // _filterCategoriesForDisplay();
   }
 
-  void _filterCategoriesForDisplay() {
-    List<String> moviePageDesiredCategories = [
-      'Popular',
-      'Action',
-      'Comedy',
-      'Horror',
-    ];
-    _moviePageCategories = moviePageDesiredCategories.where((category) {
-      return _categorizedMovies.containsKey(category) &&
-          _categorizedMovies[category]!.isNotEmpty;
-    }).toList();
-  }
+  // void _filterCategoriesForDisplay() {
+  //   List<String> moviePageDesiredCategories = [
+  //     'Popular',
+  //     'Action',
+  //     'Comedy',
+  //     'Horror',
+  //   ];
+  //   _moviePageCategories = moviePageDesiredCategories.where((category) {
+  //     return _categorizedMovies.containsKey(category) &&
+  //         _categorizedMovies[category]!.isNotEmpty;
+  //   }).toList();
+  // }
 
   // void _filterMovies(String query) {
   //   setState(() {
@@ -255,43 +256,57 @@ class _MoviePageState extends State<MoviePage> {
                               //               index: index);
                               //         },
                               //       )
-                                  : FutureBuilder<List<Movies>>(
-                                      future: _allMovies,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                            'Error: ${snapshot.error}',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ));
-                                        } else if (!snapshot.hasData ||
-                                            snapshot.data!.isEmpty) {
-                                          return Center(
-                                            child: Text(
-                                              'No movies found',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          );
-                                        } else {
-                                          return ListView(
-                                            children: _moviePageCategories
-                                                .map((category) {
-                                              return MoviesCategorySection(
-                                                  title: '${category} Movies',
-                                                  movies: _categorizedMovies[
-                                                      category]!);
-                                            }).toList(),
-                                          );
-                                        }
-                                      },
-                                    ),
+                              : FutureBuilder<List<Movies>>(
+                                  future: _allMovies,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    } else if (snapshot.hasError) {
+                                      return Center(
+                                          child: Text(
+                                        'Error: ${snapshot.error}',
+                                        style: TextStyle(color: Colors.white),
+                                      ));
+                                    } else if (!snapshot.hasData ||
+                                        snapshot.data!.isEmpty) {
+                                      return Center(
+                                        child: Text(
+                                          'No movies found',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      );
+                                    } else {
+                                      final movie = snapshot.data!;
+                                      final categories = movie
+                                          .expand((movie) => movie.categories)
+                                          .toSet()
+                                          .toList();
+
+                                      return ListView.builder(
+                                          itemCount: categories.length,
+                                          itemBuilder: (context, index) {
+                                            final category = categories[index];
+                                            final categoryMovies = movie
+                                                .where((movie) => movie
+                                                    .categories
+                                                    .contains(category))
+                                                .toList();
+                                            return Column(
+                                              children: [
+                                                MoviesCategorySection(
+                                                    title: category,
+                                                    movies: categoryMovies),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    }
+                                  },
+                                ),
                         ),
                       ],
                     ),

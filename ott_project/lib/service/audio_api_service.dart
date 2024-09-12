@@ -8,8 +8,8 @@ import '../components/music_folder/music.dart';
 
 class AudioApiService with ChangeNotifier {
   static const String baseUrl =
-       'http://localhost:8080/api/v2';
-      //'http://192.168.40.165:8080/api/v2';
+      'http://localhost:8080/api/v2';
+      //'http://192.168.0.6:8080/api/v2';
 
   Future<Audio> fetchAudioDetail(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/audio/$id'));

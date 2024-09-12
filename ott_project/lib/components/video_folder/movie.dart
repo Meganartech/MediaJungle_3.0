@@ -1,3 +1,7 @@
+import 'dart:typed_data';
+
+import 'package:ott_project/service/movie_service_page.dart';
+
 import 'category.dart';
 
 class Movie {
@@ -51,23 +55,44 @@ class Movie {
 class Movies {
   final int id;
   final String moviename;
+  Uint8List? thumbnail;
   //final String year;
-  final String duration;
-  final String thumbnail;
-  final String language;
-  final String description;
+  //final String duration;
+  //final String thumbnail;
+  //final String language;
+  //final String description;
   final List<int> categoryId;
-  List<Category> categories = [];
+  List<String> categories = [];
   //final int categoryId;
+
+  Future<Uint8List?> get thumbnailImage async {
+    if (thumbnail == null) {
+      await fetchImage();
+    }
+    return thumbnail;
+  }
+
+  Future<void> fetchImage() async {
+    try {
+      thumbnail = await MovieService.fetchvideoImage(id);
+      if (thumbnail != null) {
+        print('Thumbnail fetched successfully for video ID: $id');
+      } else {
+        print('Thumbnail not found for video ID: $id');
+      }
+    } catch (e) {
+      print('Error in fetching image:$e');
+    }
+  }
 
   Movies({
     required this.id,
     required this.moviename,
     //required this.year,
-    required this.duration,
-    required this.thumbnail,
-    required this.language,
-    required this.description,
+    // required this.duration,
+    //  required this.thumbnail,
+    // required this.language,
+    //required this.description,
     required this.categoryId,
     //required this.categoryId,
   });
@@ -77,11 +102,11 @@ class Movies {
         id: json['id'],
         moviename: json['videoTitle'],
         // year: json['year'],
-        duration: json['duration'],
-        thumbnail: json['thumbnail'],
-        language: json['language'],
-        description: json['description'],
-        categoryId: List<int>.from(json['categorylist'])
+        // duration: json['duration'],
+        //  thumbnail: json['thumbnail'],
+        //language: json['language'],
+        //description: json['description'],
+        categoryId: List<int>.from(json['categorylist'] ?? [])
         //categoryId: json['category']['id']
         );
   }
@@ -98,8 +123,9 @@ class Movies {
   //^ category.hashCode;
 
   void setCategoryNames(List<Category> allCategories) {
-    categories = allCategories
-        .where((category) => categoryId.contains(category.id))
+    categories = categoryId
+        .map((id) =>
+            allCategories.firstWhere((cat) => cat.id == id).category_name)
         .toList();
   }
 }
