@@ -354,6 +354,7 @@ const Dashboard = () => {
   const [GetUser,setGetUser] = useState(null)
   const [videos, setVideos] = useState([]);
   const [thumbnails, setThumbnails] = useState({});
+  const [getuser,setgetuser] = useState([]);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/video/getall`)
@@ -381,9 +382,11 @@ const Dashboard = () => {
         return response.json();
       })
       .then(data => {
-        const lastThreeVideos = data.slice(-3); // Get the last 3 videos
+        // Get the last 3 videos from the list
+        const lastThreeVideos = data.slice(-3);
+  
         setVideos(lastThreeVideos);
-        
+  
         // Fetch thumbnails for the last 3 videos
         lastThreeVideos.forEach(video => {
           fetch(`${API_URL}/api/v2/videoimage/${video.id}`)
@@ -401,6 +404,7 @@ const Dashboard = () => {
         console.error('Error fetching data:', error);
       });
   }, []);
+  
 
 
   
@@ -441,6 +445,42 @@ const Dashboard = () => {
     });
    },[]);
 
+
+   useEffect(() => {
+    fetch(`${API_URL}/api/v2/registereduserget`)
+    .then(response =>{
+      if (!response.ok){
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data =>{
+      setgetuser(data);
+    })
+    .catch(error =>{
+      console.error('Error fetching data:',error)
+    });
+   },[]);
+
+   const getTimeAgo = (userDate) => {
+    const currentDate = new Date();
+    const givenDate = new Date(userDate);
+    
+    // Get the time difference in days between the current date and the given date
+    const timeDiff = Math.floor((currentDate - givenDate) / (1000 * 60 * 60 * 24));
+  
+    if (timeDiff === 0) {
+      return 'Today';  // Same date as today
+    } else if (timeDiff === 1) {
+      return 'Yesterday';  // Date was yesterday
+    } else {
+      // Return actual date in "D/M/YYYY" format
+      return `${givenDate.getDate()}/${givenDate.getMonth() + 1}/${givenDate.getFullYear()}`;
+    }
+  };
+  
+  
+
   // const [videothumbnail,setvideothumbnail] = useState(null);
 
   //  useEffect(() => {
@@ -463,7 +503,7 @@ const Dashboard = () => {
 
   return (
     // <div className="container-fluid">
-    <div className="marquee-container">
+  <div>
       <div className="marquee-content">
         {/* Your scrolling content goes here */}
         {!isvalid?<a
@@ -525,15 +565,28 @@ const Dashboard = () => {
 </div>
     </div>
     <div class="latest-sections">
-        <div class="latest-users">
-            <h4>Latest users <span>Last 10 Days</span></h4>
-            <div class="users-list">
-                <div class="user">Ram<br /><span>1 day ago</span></div>
-               
+
+    <div className="latest-users">
+    <h4>Latest users <span>Last 15 Days</span></h4>
+    <div className="users-list">
+        {getuser.map(user => (
+            <div key={user.id} className="user-container">
+                <div className="user-icon">
+                    <i className="fas fa-user"></i> {/* Person icon */}
+                </div>
+                <div className="user-info">
+                    <span className="username">{user.username}</span> {/* Username */}
+                    <span className="time-ago">{getTimeAgo(user.date)}</span> {/* Time */}
+                </div>
             </div>
-        </div>
+        ))}
+    </div>
+</div>
+
+
+
          <div className="latest-videos">
-      <span style={{fontSize:'25px'}}>Latest Videos</span>
+      <h4>Latest Videos</h4>
       {videos.map(video => (
         <div key={video.id} className="video">
           <img src={thumbnails[video.id]} alt={video.title} 

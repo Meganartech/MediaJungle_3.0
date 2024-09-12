@@ -19,7 +19,6 @@ const AddUser = () => {
     compname: '',
     country: '',
     password: '',
-   
   });
   const [errors, setErrors] = useState({});
   const token = sessionStorage.getItem("tokenn")
@@ -180,14 +179,16 @@ const AddUser = () => {
   return (
    
     
-<div className='container2 mt-20'>
+<div className='container3 mt-4'>
       
-          <ol className="breadcrumb mb-4">
+          <ol className="breadcrumb mb-4 d-flex my-0">
           <li className="breadcrumb-item"><Link to="/admin/Profile">Sub Admin</Link>
           </li>
             <li className="breadcrumb-item active  text-white">Add Sub Admin</li>
           </ol>
    
+          <div className="outer-container">
+          <div className="table-container">
       <form onSubmit={submitForm} method="post" className="registration-form">
         <h1 className='text-center' style={{ maxWidth: '400px', margin: '0 auto', padding: '20px',color:'#1D0F6E', borderRadius: '5px', backgroundColor: '#f9f9f9',textAlign: 'center', marginBottom: '20px', fontFamily: 'Poppins', fontWeight: 'bold' }}>Registration Form</h1>
         <div className="temp">
@@ -334,6 +335,8 @@ const AddUser = () => {
         </div>
       </form>
    
+      </div>
+      </div>
       </div>
       
     

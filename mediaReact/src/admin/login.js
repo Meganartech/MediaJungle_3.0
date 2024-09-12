@@ -130,14 +130,16 @@ const handleSubmit = async (e) => {
         const name = data.UserName; // Use the correct key based on your API response
         const userId = data.AdminId; // Use the correct key based on your API response
         const message = data.message;
+        const role = data.Role;
 
         // Store token in session storage
         sessionStorage.setItem("username", name);
         sessionStorage.setItem('tokenn', jwtToken);
         sessionStorage.setItem('adminId', userId);
         sessionStorage.setItem('name', true);
+        sessionStorage.setItem('role', role);
 
-        console.log(name, jwtToken, userId);
+        console.log(name, jwtToken, userId,role);
 
         // Navigate to the dashboard after successful login
         navigate('/admin/Dashboard');

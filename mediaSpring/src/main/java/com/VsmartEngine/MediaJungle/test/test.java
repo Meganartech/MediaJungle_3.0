@@ -1,23 +1,17 @@
 package com.VsmartEngine.MediaJungle.test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,11 +73,6 @@ public class test {
 	@Autowired
 	private CastandcrewRepository CastandcrewRepository;
 
-	@Autowired
-	private testRepo testRepo;
-
-	@Autowired
-	private JavaMailSender sender;
 
 	@PostMapping("/test")
 	public ResponseEntity<?> testaudio(@RequestBody Audiodescription data,
@@ -144,29 +133,28 @@ public class test {
 				String audioFilePath = fileService.saveAudioFile(audioFile);
 				System.out.println("audioFilePath :" + (audioFilePath));
 				audiodata.setAudio_file_name(audioFilePath);
-			} else {
-				audiodata.setAudio_file_name(data.getAudio_file_name());
+			} else if (audioFile == null) {
+				audiodata.setAudio_file_name(audiodata.getAudio_file_name());
 			}
 
 			audio.save(audiodata);
 
 			List<Tag> audioTag = AudioTagRepository.findByAudio_Id(id);
-			List<Long> audioTagIds = audioTag.stream().map(Tag::getTag_id) 
-					.collect(Collectors.toList());
+			List<Long> audioTagIds = audioTag.stream().map(Tag::getTag_id).collect(Collectors.toList());
 
 			List<Long> newTags = tag.stream().filter(tagId -> !audioTagIds.contains(tagId))
 					.collect(Collectors.toList());
 //		    	 	       missingTags.forEach(System.out::println);
-			
+
 			List<Long> removeTags = audioTagIds.stream().filter(tagId -> !tag.contains(tagId))
 					.collect(Collectors.toList());
-			
+
 			if (!removeTags.isEmpty()) {
 				removeTags.forEach(tagId -> {
-				    AudioTagRepository.deletetagBytagId(tagId, id);
+					AudioTagRepository.deletetagBytagId(tagId, id);
 				});
 			}
-			
+
 			System.out.println("!missingTags.isEmpty() :" + !newTags.isEmpty());
 			if (!newTags.isEmpty()) {
 				Category.savetags(id, newTags);
@@ -179,11 +167,11 @@ public class test {
 					.collect(Collectors.toList());
 			List<Long> missingCategory = category.stream().filter(categoryId -> !CategoryIds.contains(categoryId))
 					.collect(Collectors.toList());
-			
+
 			List<Long> removeCategory = CategoryIds.stream().filter(categoryId -> !category.contains(categoryId))
 					.collect(Collectors.toList());
 			removeTags.forEach(System.out::println);
-			
+
 			if (!removeCategory.isEmpty()) {
 				removeCategory.forEach(tagId -> {
 					AudioCategoriesRepository.deletetagBycategotiesId(tagId, id);
@@ -274,8 +262,6 @@ public class test {
 		return ResponseEntity.ok(dto);
 	}
 
-
-
 	@GetMapping("/getaudiodetailsdto")
 	public ResponseEntity<List<AudiodetailsDTO>> getAudio() {
 		List<Audiodescription> audioList = audio.findAll();
@@ -293,8 +279,7 @@ public class test {
 	@DeleteMapping("/testaudio/{id}")
 	public ResponseEntity<String> deleteAudio(@PathVariable Long id) {
 		try {
-			
-			
+
 			AudioTagRepository.deletetagByAudioId(id);
 			AudioCategoriesRepository.deletecategoriesByAudioId(id);
 			Audiocastandcrewrepository.deleteById(id);
@@ -312,62 +297,96 @@ public class test {
 		}
 	}
 
-	@PostMapping("/afliater")
-	public ResponseEntity<Map<String, Object>> getAfliater(@RequestBody testModel data) {
-		testModel savedData = testRepo.save(data);
-		System.out.println(data);
-		System.out.println(savedData.getId());
-		String UseremailID = savedData.getEmailId();
-		long id = savedData.getId();
+//	@PostMapping("/afliater")
+//	public ResponseEntity<Map<String, Object>> getAfliater(@RequestBody testModel data) {
+//		testModel savedData = testRepo.save(data);
+//		System.out.println(data);
+//		System.out.println(savedData.getId());
+//		String UseremailID = savedData.getEmailId();
+//		long id = savedData.getId();
+//
+//		// Random generation logic
+//		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+//		Random random = new Random();
+//		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb1 = new StringBuilder();
+//		StringBuilder sb2 = new StringBuilder();
+//
+//		for (int i = 0; i < 4; i++) {
+//			sb.append(characters.charAt(random.nextInt(characters.length())));
+//			sb1.append(characters.charAt(random.nextInt(characters.length())));
+//			sb2.append(characters.charAt(random.nextInt(characters.length())));
+//		}
+//
+//		String randomAlphanumeric = sb.toString();
+//		String randomAlphanumeric10 = sb1.toString();
+//		String randomAlphanumeric20 = sb2.toString();
+//
+//		String idStr = String.format("%02d", id % 100);
+//		String combinedtoken = randomAlphanumeric + idStr;
+//		String combinedtoken10 = randomAlphanumeric10 + "10";
+//		String combinedtoken20 = randomAlphanumeric20 + "20";
+//
+//		Optional<testModel> editdata = testRepo.findById(id);
+//		if (editdata.isPresent()) {
+//			testModel testdata = editdata.get();
+//			testdata.setCoupon10(combinedtoken10);
+//			testdata.setCoupon20(combinedtoken20);
+//			testdata.setReferalid(combinedtoken);
+//			testRepo.save(testdata);
+//		}
+//
+//		// Send email asynchronously
+//		this.mail(UseremailID, combinedtoken, combinedtoken10, combinedtoken20);
+//
+//		// Prepare response
+//		Map<String, Object> response = new HashMap<>();
+//		response.put("message", "Data saved successfully");
+//		return ResponseEntity.ok(response);
+//	}
 
-		// Random generation logic
-		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		Random random = new Random();
-		StringBuilder sb = new StringBuilder();
-		StringBuilder sb1 = new StringBuilder();
-		StringBuilder sb2 = new StringBuilder();
-
-		for (int i = 0; i < 4; i++) {
-			sb.append(characters.charAt(random.nextInt(characters.length())));
-			sb1.append(characters.charAt(random.nextInt(characters.length())));
-			sb2.append(characters.charAt(random.nextInt(characters.length())));
-		}
-
-		String randomAlphanumeric = sb.toString();
-		String randomAlphanumeric10 = sb1.toString();
-		String randomAlphanumeric20 = sb2.toString();
-
-		String idStr = String.format("%02d", id % 100);
-		String combinedtoken = randomAlphanumeric + idStr;
-		String combinedtoken10 = randomAlphanumeric10 + "10";
-		String combinedtoken20 = randomAlphanumeric20 + "20";
-
-		Optional<testModel> editdata = testRepo.findById(id);
-		if (editdata.isPresent()) {
-			testModel testdata = editdata.get();
-			testdata.setCoupon10(combinedtoken10);
-			testdata.setCoupon20(combinedtoken20);
-			testdata.setReferalid(combinedtoken);
-			testRepo.save(testdata);
-		}
-
-		// Send email asynchronously
-		this.mail(UseremailID, combinedtoken, combinedtoken10, combinedtoken20);
-
-		// Prepare response
-		Map<String, Object> response = new HashMap<>();
-		response.put("message", "Data saved successfully");
-		return ResponseEntity.ok(response);
-	}
-
-	@Async
-	public void mail(String UseremailID, String combinedtoken, String combinedtoken10, String combinedtoken20) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(UseremailID);
-		message.setText("token \t" + combinedtoken + "\n" + "10 % coupon \t" + combinedtoken10 + "\n" + "20 % coupon \t"
-				+ combinedtoken20);
-		message.setSubject("Learnhub");
-		sender.send(message);
+//	@Async
+//	public void mail(String UseremailID, String combinedtoken, String combinedtoken10, String combinedtoken20) {
+//		SimpleMailMessage message = new SimpleMailMessage();
+//
+//		String htmlContent = generateHtmlContent(combinedtoken, combinedtoken10, combinedtoken20);
+//		MimeMessage mimeMessage = sender.createMimeMessage();
+////	        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+////		 
+////		message.setTo(UseremailID);
+////		message.setText("token \t" + combinedtoken + "\n" + "10 % coupon \t" + combinedtoken10 + "\n" + "20 % coupon \t"
+////				+ combinedtoken20);
+////		message.setSubject("Learnhub");
+////		sender.send(message);
+////		 MimeMessage mimeMessage = sender.createMimeMessage();
+//		try {
+//			// Create a MIME message
+//
+//			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+//
+//			// Set email details
+//			helper.setTo(UseremailID);
+//			helper.setSubject("Learnhub");
+//			helper.setText(htmlContent, true); // true for HTML
+//
+//			// Send the email
+//			sender.send(mimeMessage);
+//		} catch (MessagingException e) {
+//			// Handle the exception
+//			e.printStackTrace();
+//			// You can log the error or rethrow it as a runtime exception, depending on your
+//			// needs
+//			throw new RuntimeException("Failed to send email", e);
+//		}
+//
+//	}
+	
+	@GetMapping("/getaudiocat")
+	public ResponseEntity<List<Audiodescription>> AudiolistdetailsBycategoryids() {
+		long id=1l;
+		 List<Audiodescription> audiocat= AudioCategoriesRepository.findaudiobyCategorie_Id(id);
+				
+		 return ResponseEntity.ok(audiocat);
 	}
 
 }
