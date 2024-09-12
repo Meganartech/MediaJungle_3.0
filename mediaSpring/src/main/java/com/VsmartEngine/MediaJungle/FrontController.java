@@ -63,6 +63,7 @@ import com.VsmartEngine.MediaJungle.model.Videosettings;
 import com.VsmartEngine.MediaJungle.notification.controller.NotificationController;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
+import com.VsmartEngine.MediaJungle.userregister.UserRegisterDTO;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
 import com.VsmartEngine.MediaJungle.video.VideoImageController;
@@ -775,6 +776,12 @@ public class FrontController {
 	public ResponseEntity<List<UserRegister>> getAllUserRegester() {
 
 		return UserRegisterController.getAllUser();
+	}
+	
+	@GetMapping("/registereduserget")
+	@Transactional
+	public ResponseEntity<List<UserRegisterDTO>> getUsersRegisteredWithinLast15Days() {
+		return UserRegisterController.getUsersRegisteredWithinLast15Days();
 	}
 
 	@GetMapping("/GetUserById/{id}")

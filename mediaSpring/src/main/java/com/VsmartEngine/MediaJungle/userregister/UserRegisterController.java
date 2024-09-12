@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -54,6 +55,7 @@ public class UserRegisterController {
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		    String encodedPassword = passwordEncoder.encode(password);
 		    String encodedconfirmPassword = passwordEncoder.encode(confirmPassword);
+		    LocalDate parsedDate = LocalDate.now();
 			
 			UserRegister newRegister = new UserRegister();
 			newRegister.setUsername(username);
@@ -62,6 +64,7 @@ public class UserRegisterController {
 			newRegister.setConfirmPassword(encodedconfirmPassword);
 			newRegister.setMobnum(mobnum);
 			newRegister.setRole("USER");
+			newRegister.setDate(parsedDate);
 			
 			if (profile != null && !profile.isEmpty()) {
 			byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
@@ -72,8 +75,19 @@ public class UserRegisterController {
 			return ResponseEntity.ok(savedUser);
 			}
 
-    
 
+    public ResponseEntity<List<UserRegisterDTO>> getUsersRegisteredWithinLast15Days() {
+        LocalDate startDate = LocalDate.now().minusDays(15);
+        List<UserRegisterDTO> users  = userregisterrepository.findUsersRegisteredWithinLast15Days(startDate);
+        if (!users.isEmpty()) {
+            return ResponseEntity.ok(users);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+    
+    
+	
     public ResponseEntity<List<UserRegister>> getAllUser() {
         List<UserRegister> getUser = userregisterrepository.findAll();
         return new ResponseEntity<>(getUser, HttpStatus.OK);

@@ -144,6 +144,7 @@ const ListAudio = () => {
         </thead>
         <tbody>
           {Audiodata.map((Audiodata, index) => (
+
             <tr key={Audiodata.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
               <td>
                 <input type="checkbox" />
@@ -155,14 +156,7 @@ const ListAudio = () => {
               <td>{Audiodata.rating}/10</td>
               <td>{Audiodata.paid===true ? "Paid" : "Free"}</td>
 
-              {/* <th style={{border: 'none' }}>S.No</th>
-            <th style={{border: 'none' }}>Audio TITLE</th>
-            <th style={{border: 'none' }}>CATEGORY</th>
-            <th style={{border: 'none' }}>PRODUCTION</th>
-            <th style={{border: 'none' }}>RATING</th>
-            <th style={{border: 'none' }}>VIDEO ACCESS TYPE</th>
-            <th style={{border: 'none' }}>ACTION</th>
- */}
+             
 
 
 

@@ -608,14 +608,20 @@ td{
   font-size: 20px;
 }
 
+
+
+
+
+
 .latest-users span {
   font-size: 14px;
   color: #888;
 }
 
 .users-list {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
 }
 
 .user {
