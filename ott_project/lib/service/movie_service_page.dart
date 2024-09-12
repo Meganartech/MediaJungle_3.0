@@ -7,6 +7,7 @@ import 'package:ott_project/components/video_folder/movie.dart';
 
 class MovieService {
   static const String baseUrl = 'http://localhost:8080/api/v2';
+  // 'http://192.168.183.129:8080/api/v2';
   //'https://testtomcat.vsmartengine.com/media/api/v2/videogetall';
   static Future<List<Movie>> fetchMovies() async {
     final response = await http.get(Uri.parse('$baseUrl/video/getall'));
@@ -40,7 +41,7 @@ class MovieService {
     }
   }
 
-    static Future<Uint8List?> fetchvideoImage(int videoId) async {
+  static Future<Uint8List?> fetchvideoImage(int videoId) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/$videoId/videothumbnail'));
@@ -48,9 +49,9 @@ class MovieService {
       print(response.statusCode);
 
       if (response.statusCode == 200) {
-        final Map<String,dynamic> responseBody = jsonDecode(response.body);
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
         //print(responseBody);
-        
+
         if (responseBody.isNotEmpty) {
           String base64Image = responseBody.values.first;
           return base64Decode(base64Image);
