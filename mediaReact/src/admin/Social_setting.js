@@ -14,7 +14,7 @@ const Social_setting = () => {
   const [xurl, setXurl] = useState('');
   const [linkedinurl, setLinkedInUrl] = useState('');
   const [youtubeurl, setYouTubeUrl] = useState('');
-  const [id, setId] = useState(null); // To track whether the record exists or not
+  const [id, setId] = useState(null); // To store the ID of the first record
   const [isOpen, setIsOpen] = useState(false);
 
   const settingsOptions = [
@@ -26,13 +26,12 @@ const Social_setting = () => {
     { name: "Contact Settings", path: "/admin/Contact_setting" }
   ];
 
-  // Fetch the existing social settings when the component loads
+  // Fetch the first social settings when the component loads
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/v2/social-settings/12'); // Assuming ID is 1 for this example
+        const response = await axios.get('http://localhost:8080/api/v2/social-settings/first'); // Adjusted endpoint
         const data = response.data;
-        
         if (data) {
           setFBclientid(data.fbUrl || '');
           setXurl(data.xurl || '');
@@ -56,8 +55,6 @@ const Social_setting = () => {
       youtubeUrl: youtubeurl, 
       xurl: xurl 
     };
-
-    console.log('SiteSetting:', siteSetting);
 
     if (id) {
       // If the setting already exists, send a PUT request to update it
@@ -119,90 +116,91 @@ const Social_setting = () => {
       </div>
 
       <br />
-      <div className='container3 mt-2'>
-        <ol className="breadcrumb mb-4 d-flex my-0">
-          <li className="breadcrumb-item">
-            <Link to="/admin/SiteSetting">Settings</Link>
-          </li>
-          <li className="breadcrumb-item active text-white">Social Settings</li>
-        </ol>
+      <div className="container3 mt-2">
+  <ol className="breadcrumb mb-4 d-flex my-0">
+    <li className="breadcrumb-item">
+      <Link to="/admin/SiteSetting">Settings</Link>
+    </li>
+    <li className="breadcrumb-item active text-white">Social Settings</li>
+  </ol>
 
-        <div className="table-container">
-          <div className="card-body">
-            <div className="row">
-              {/* Form container */}
-              <div className="col-md-6"> 
-                <ul className='breadcrumb-item' style={{ paddingLeft: '0px' }}>
-                  <form onSubmit={save} method="post" className="registration-form">
-                    <div className="temp">
-                      {/* FB URL */}
-                      <div className="form-group">
-                        <label style={{paddingRight:"110px"}}>
-                          FB URL
-                        </label>
-                        <input 
-                          type="text" 
-                          placeholder="FB URL" 
-                          value={FBclientid} 
-                          onChange={(e) => setFBclientid(e.target.value)} 
-                        />
-                      </div>
-
-                      {/* X URL */}
-                      <div className="form-group">
-                        <label style={{paddingRight:"120px"}}>
-                          X URL
-                        </label>
-                        <input 
-                          type="text" 
-                          placeholder="X URL" 
-                          value={xurl} 
-                          onChange={(e) => setXurl(e.target.value)} 
-                        />
-                      </div>
-
-                      {/* LinkedIn URL */}
-                      <div className="form-group">
-                        <label style={{paddingRight:"60px"}}>
-                          LinkedIn URL
-                        </label>
-                        <input 
-                          type="text" 
-                          placeholder="LinkedIn URL" 
-                          value={linkedinurl} 
-                          onChange={(e) => setLinkedInUrl(e.target.value)} 
-                        />
-                      </div>
-
-                      {/* YouTube URL */}
-                      <div className="form-group">
-                        <label style={{paddingRight:"60px"}}>
-                          YouTube URL
-                        </label>
-                        <input 
-                          type="text" 
-                          placeholder="YouTube URL" 
-                          value={youtubeurl} 
-                          onChange={(e) => setYouTubeUrl(e.target.value)} 
-                        />
-                      </div><br/>
-<div className='col-md-12'>
-                      <div className="form-group">
-                        <input 
-                          type="submit" 
-                          className="btn btn-info" 
-                          value="Submit" 
-                        />
-                      </div></div>
-                    </div>
-                  </form>
-                </ul>
+  <div className="table-container">
+    <div className="card-body">
+    
+        {/* Form container */}
+        <div className="col-md-10">
+          <form onSubmit={save} method="post" className="registration-form">
+        
+              {/* FB URL */}
+              <div className="form-group">
+                <label style={{ paddingRight: "110px" }}>
+                  FB URL
+                </label>
+                <input 
+                  type="text" 
+                  placeholder="FB URL" 
+                  value={FBclientid} 
+                  onChange={(e) => setFBclientid(e.target.value)} 
+                />
               </div>
-            </div>
-          </div>
+
+              {/* X URL */}
+              <div className="form-group">
+                <label style={{ paddingRight: "120px" }}>
+                  X URL
+                </label>
+                <input 
+                  type="text" 
+                  placeholder="X URL" 
+                  value={xurl} 
+                  onChange={(e) => setXurl(e.target.value)} 
+                />
+              </div>
+
+              {/* LinkedIn URL */}
+              <div className="form-group">
+                <label style={{ paddingRight: "60px" }}>
+                  LinkedIn URL
+                </label>
+                <input 
+                  type="text" 
+                  placeholder="LinkedIn URL" 
+                  value={linkedinurl} 
+                  onChange={(e) => setLinkedInUrl(e.target.value)} 
+                />
+              </div>
+
+              {/* YouTube URL */}
+              <div className="form-group">
+                <label style={{ paddingRight: "60px" }}>
+                  YouTube URL
+                </label>
+                <input 
+                  type="text" 
+                  placeholder="YouTube URL" 
+                  value={youtubeurl} 
+                  onChange={(e) => setYouTubeUrl(e.target.value)} 
+                />
+              </div>
+
+              {/* Form Footer */}
+           
+            
+          </form>
+     
         </div>
       </div>
+      <div className='button-container'>
+                <input 
+                  type="submit" 
+                  className="btn btn-info" 
+                  value={id ? "Update" : "Submit"} 
+                />
+              </div>
     </div>
+  </div>
+</div>
+
   );
 };
 
