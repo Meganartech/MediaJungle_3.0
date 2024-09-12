@@ -94,8 +94,8 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
     setState(() {
       banner = image;
     });
-    print('Image:$image');
-    print('Banner image:$banner');
+    // print('Image:$image');
+    // print('Banner image:$banner');
   }
 
   Future<void> _getCurrentUserId() async {

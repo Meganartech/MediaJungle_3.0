@@ -92,7 +92,6 @@ ios/Flutter/Flutter.framework
 ios/Flutter/Flutter.podspec
 
 # Images (avoiding images)
-*.png
 *.jpg
 *.jpeg
 *.gif

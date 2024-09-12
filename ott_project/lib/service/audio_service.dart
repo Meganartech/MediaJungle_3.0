@@ -8,8 +8,8 @@ import 'package:ott_project/service/audio_api_service.dart';
 
 class AudioService {
   static const String baseUrl =
-     //  'http://localhost:8080/api/v2';
-      'http://192.168.40.165:8080/api/v2';
+   'http://localhost:8080/api/v2';
+  // 'http://192.168.40.165:8080/api/v2';
   static Future<List<Audio>> fetchAudio() async {
     final response = await http.get(Uri.parse('$baseUrl/getaudiodetailsdto'));
     //print(response.statusCode);
@@ -49,14 +49,13 @@ class AudioService {
       print(response.statusCode);
 
       if (response.statusCode == 200) {
-        final List<dynamic> responseBody = jsonDecode(response.body);
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
         //print(responseBody);
 
-        if (responseBody.isNotEmpty) {
-          String base64Image = responseBody[0] as String;
+        if (responseBody.containsKey('thumbnail')) {
+          String base64Image = responseBody['thumbnail'] as String;
           return base64Decode(base64Image);
         }
-        //return null;
       }
     } catch (e) {
       print("Error fetching thumbnail for music $id: $e");
@@ -73,16 +72,13 @@ class AudioService {
       print(response.statusCode);
 
       if (response.statusCode == 200) {
-        Uint8List imagebytes = response.bodyBytes;
-        return imagebytes;
-        // final List<dynamic> responseBody = jsonDecode(response.body);
-        // //print(responseBody);
+        final List<dynamic> responseBody = jsonDecode(response.body);
+        //print(responseBody);
 
-        // if (responseBody.isNotEmpty) {
-        //   Uint8List? bannerurl = responseBody[0] as Uint8List?;
-        //   return bannerurl;
-        // }
-        //return null;
+        if (responseBody.isNotEmpty) {
+          String base64Image = responseBody[0] as String;
+          return base64Decode(base64Image);
+        }
       }
     } catch (e) {
       print("Error fetching banner for music $id: $e");

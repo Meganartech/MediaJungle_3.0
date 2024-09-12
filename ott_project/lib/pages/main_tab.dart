@@ -122,45 +122,45 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                     ),
                     Tab(
                       text: "MOVIE",
-                      // icon: Icon(
-                      //   Icons.movie_rounded,
-                      //   size: 27,
-                      //   color: selectTab == 2 ? Colors.green : Colors.white,
-                      // ),
-                      icon: Image.asset(
-                        "assets/images/movie.png",
-                        width: 20,
-                        height: 20,
+                      icon: Icon(
+                        Icons.movie_rounded,
+                        size: 27,
                         color: selectTab == 1 ? Colors.green : Colors.white,
                       ),
+                      // icon: Image.asset(
+                      //   "assets/images/movie.png",
+                      //   width: 20,
+                      //   height: 20,
+                      //   color: selectTab == 1 ? Colors.green : Colors.white,
+                      // ),
                     ),
                     Tab(
                       text: "MUSIC",
-                      // icon: Icon(
-                      //   Icons.music_note_rounded,
-                      //   size: 27,
-                      //   color: selectTab == 2 ? Colors.green : Colors.white,
-                      // )
-                      icon: Image.asset(
-                        "assets/images/music.png",
-                        width: 20,
-                        height: 20,
+                      icon: Icon(
+                        Icons.music_note_sharp,
+                        size: 27,
                         color: selectTab == 2 ? Colors.green : Colors.white,
                       ),
+                      // icon: Image.asset(
+                      //   "assets/images/music.png",
+                      //   width: 20,
+                      //   height: 20,
+                      //   color: selectTab == 2 ? Colors.green : Colors.white,
+                      // ),
                     ),
                     Tab(
                       text: "LIBRARY",
-                      // icon: Icon(
-                      //   Icons.person_outline_rounded,
-                      //   size: 27,
-                      //   color: selectTab == 2 ? Colors.green : Colors.white,
-                      // ),
-                      icon: Image.asset(
-                        "assets/images/library.png",
-                        width: 20,
-                        height: 20,
+                      icon: Icon(
+                        Icons.library_music_rounded,
+                        size: 27,
                         color: selectTab == 3 ? Colors.green : Colors.white,
                       ),
+                      // icon: Image.asset(
+                      //   "assets/images/library.png",
+                      //   width: 20,
+                      //   height: 20,
+                      //   color: selectTab == 3 ? Colors.green : Colors.white,
+                      // ),
                     ),
                   ],
                 ),

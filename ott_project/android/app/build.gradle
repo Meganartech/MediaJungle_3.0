@@ -22,11 +22,11 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
+// def keystoreProperties = new Properties()
+// def keystorePropertiesFile = rootProject.file('key.properties')
+// if (keystorePropertiesFile.exists()) {
+//     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+// }
 
 android {
     namespace "com.ott_project.media_play"
@@ -56,14 +56,14 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
-    signingConfigs {
-       debug {
-           keyAlias 'upload'
-           keyPassword 'android'
-           storeFile file('upload-keystore.jks')
-           storePassword 'android'
-       }  
-   }
+//     signingConfigs {
+//        debug {
+//            keyAlias 'upload'
+//            keyPassword 'android'
+//            storeFile file('upload-keystore.jks')
+//            storePassword 'android'
+//        }  
+//    }
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
