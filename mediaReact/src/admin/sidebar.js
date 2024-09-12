@@ -472,7 +472,7 @@ const handlePlanClick = () => {
             <span>Sub Admin</span>
           </Link>
       </li>
-      <li className={`nav-item  ${activeLink === "/admin/SubscriptionPayments" ? 'active' : ''}`} onClick={() => handleClick("/admin/SubscriptionPayments")}>
+      <li className={`nav-item  ${activeLink === "/admin/users" ? 'active' : ''}`} onClick={() => handleClick("/admin/users")}>
           <Link className="nav-link" >
           <i class="bi bi-person-circle"></i>
             <span>  User</span>

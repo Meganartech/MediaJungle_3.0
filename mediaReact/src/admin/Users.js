@@ -4,7 +4,7 @@ import axios from 'axios';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
 
-const SubscriptionPayments = () => {
+const Users = () => {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
@@ -46,11 +46,11 @@ const SubscriptionPayments = () => {
   };
 
   return (
-    
-    <div className='container3  mt-20'>
+
+    <div className='container3 mt-20'>
           <ol className="breadcrumb mb-4 d-flex my-0">
              <li className="breadcrumb-item text-white">
-            <Link to="/admin/SubscriptionPayments">Manage Users</Link>
+            <Link to="/admin/Users">Manage Users</Link>
           </li>
           <li className="ms-auto text-end text-white">
         Bulk Action
@@ -103,10 +103,9 @@ const SubscriptionPayments = () => {
           </div>
         </div>
       </div>
-    
-   
+  
   );
 };
 
-export default SubscriptionPayments;
+export default Users;
 

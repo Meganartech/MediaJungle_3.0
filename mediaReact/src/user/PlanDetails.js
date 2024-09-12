@@ -228,6 +228,7 @@
         </div>
       </th>
       {plans.map((plan) => (
+        
         <th
           key={plan.id}
           className={`py-4 px-6 font-bold uppercase text-sm text-center cursor-pointer transition-colors ${
