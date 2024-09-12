@@ -1,20 +1,14 @@
 package com.VsmartEngine.MediaJungle.test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,8 +40,6 @@ import com.VsmartEngine.MediaJungle.repository.Audioimage;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 
 @CrossOrigin()
 @RestController
@@ -81,10 +73,6 @@ public class test {
 	@Autowired
 	private CastandcrewRepository CastandcrewRepository;
 
-
-
-	@Autowired
-	private JavaMailSender sender;
 
 	@PostMapping("/test")
 	public ResponseEntity<?> testaudio(@RequestBody Audiodescription data,
@@ -392,5 +380,13 @@ public class test {
 //		}
 //
 //	}
+	
+	@GetMapping("/getaudiocat")
+	public ResponseEntity<List<Audiodescription>> AudiolistdetailsBycategoryids() {
+		long id=1l;
+		 List<Audiodescription> audiocat= AudioCategoriesRepository.findaudiobyCategorie_Id(id);
+				
+		 return ResponseEntity.ok(audiocat);
+	}
 
 }

@@ -10,11 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AudioCategories;
+import com.VsmartEngine.MediaJungle.model.Audiodescription;
 
 public interface AudioCategoriesRepository extends JpaRepository<AudioCategories, Long> {
 
 	@Query("SELECT Categories_id  FROM AudioCategories a WHERE audio_id.id = :audio_id")
 	List<AddNewCategories> findByCategorie_Id(@Param("audio_id") long audio_id);
+	
+	
+	@Query("SELECT audio_id  FROM AudioCategories a WHERE Categories_id.id = :categorie_id")
+	List<Audiodescription> findaudiobyCategorie_Id(@Param("categorie_id") long categorie_id);
 
 	@Modifying
 	@Transactional
