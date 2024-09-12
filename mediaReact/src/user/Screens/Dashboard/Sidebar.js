@@ -79,13 +79,13 @@ const SideBar = ({children}) => {
             icon: RiLockPasswordLine,
         },
         {
-            name: "Mobile Settings",
-            link: "/Mobile_Settings",
+            name: "Banner Settings",
+            link: "/Banner_Settings",
             icon: RiLockPasswordLine,
         },
         {
-            name: "SEO Settings",
-            link: "/SEO_Settings",
+            name: "Footer Settings",
+            link: "/Footer_Settings",
             icon: RiLockPasswordLine,
         },
         {

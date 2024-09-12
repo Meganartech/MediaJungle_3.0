@@ -7,7 +7,8 @@ import axios from 'axios';
 import Setting_sidebar from './Setting_sidebar';
 import Employee from './Employee'
 import "../css/Sidebar.css";
-const SEO_setting = () => {
+import { Dropdown } from 'react-bootstrap';
+const Footer_setting = () => {
 
   
     // ---------------------Admin functions -------------------------------
@@ -52,23 +53,73 @@ const SEO_setting = () => {
     
 }
 
+const [isOpen, setIsOpen] = useState(false);
+const [selectedSetting, setSelectedSetting] = useState("Footer Settings"); // Default selected setting
+
+const settingsOptions = [
+  { name: "Site Settings", path: "/admin/SiteSetting" },
+  { name: "Social Settings", path: "/admin/Social_setting" },
+  { name: "Payment Settings", path: "/admin/Payment_setting" },
+  { name: "Banner Settings", path: "/admin/Banner_setting" },
+  { name: "Footer Settings", path: "/admin/Footer_setting" },
+  { name: "Contact Settings", path: "/admin/Contact_setting" }
+];
+
+const handleSettingChange = (setting) => {
+  setSelectedSetting(setting.name);
+  setIsOpen(false);
+  
+};
+
 
   return (
 
-  
-    <div className='container2 mt-20'>
-        <ol className="breadcrumb mb-4">
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* Dropdown for settings */}
+      <Dropdown 
+      className="mb-4" 
+      show={isOpen} 
+      onToggle={() => setIsOpen(!isOpen)} // Toggle the dropdown
+    >
+      <Dropdown.Toggle
+     
+        className={`${
+          isOpen ? 'bg-custom-color text-orange-600' : 'bg-custom-color'
+        } hover:bg-custom-color hover:text-orange-600`}
+      >
+        {selectedSetting}
+      </Dropdown.Toggle>
+
+      <Dropdown.Menu>
+        {settingsOptions.map((setting, index) => (
+          <Dropdown.Item
+            as={Link}
+            to={setting.path}
+            key={index}
+            onClick={() => handleSettingChange(setting)}
+          >
+            {setting.name}
+          </Dropdown.Item>
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
+    </div>
+    <br />
+    <div className='container2 mt-2'>
+        <ol className="breadcrumb mb-4 d-flex my-0">
           <li className="breadcrumb-item">
-            <Link to="/admin/Setting">Settings</Link>
+            <Link to="/admin/SiteSetting">Settings</Link>
           </li>
-          <li className="breadcrumb-item active  text-white">SEO Settings</li>
+          <li className="breadcrumb-item active  text-white">Footer Settings</li>
         </ol>
-        <div className="card md-8" style={{maxWidth: '91rem',paddingLeft: '0px'}}>           
-          <div className="container card-body">
-          <div class="temp">
-          <div class="col col-lg-2">
+        <div className="table-container">           
+        <div className="card-body">
+        <div class="temp">
+        
+          {/* <div class="col col-lg-2">
         <Setting_sidebar />
-        </div>
+        </div> */}
         <div class="col col-lg-9">
         <ul className='breadcrumb-item' style={{paddingLeft: '0px'}}>
         <form onSubmit="" method="post" className="registration-form">
@@ -118,13 +169,14 @@ const SEO_setting = () => {
         </form>
         </ul>
         </div>
-        </div>
-        </div>
+        
+    
         </div>
       </div>
-     
-  
+     </div>
+     </div>
+     </div>
   );
 };
 
-export default SEO_setting;
+export default Footer_setting;

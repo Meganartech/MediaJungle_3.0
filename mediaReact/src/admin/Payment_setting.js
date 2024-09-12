@@ -5,6 +5,7 @@ import Setting_sidebar from './Setting_sidebar';
 import "../css/Sidebar.css";
 import API_URL from '../Config';
 import Swal from 'sweetalert2'
+import { Dropdown } from 'react-bootstrap';
 
 const Payment_setting = () => {
   const [razorpay_key, setRazorpayKey] = useState('');
@@ -15,8 +16,17 @@ const Payment_setting = () => {
   const [getall, setGetAll] = useState([]);
   const [id, setId] = useState('');
   const [error,setErrors] = useState('');
-  const token = sessionStorage.getItem('tokenn')
-
+  const token = sessionStorage.getItem('tokenn');
+  const [selectedSetting, setSelectedSetting] = useState("Payment Settings"); 
+  const [isOpen, setIsOpen] = useState(false);
+  const settingsOptions = [
+    { name: "Site Settings", path: "/admin/SiteSetting" },
+    { name: "Social Settings", path: "/admin/Social_setting" },
+    { name: "Payment Settings", path: "/admin/Payment_setting" },
+    { name: "Banner Settings", path: "/admin/Banner_setting" },
+    { name: "Footer Settings", path: "/admin/Footer_setting" },
+    { name: "Contact Settings", path: "/admin/Contact_setting" }
+  ];
   useEffect(() => {
     fetch(`${API_URL}/api/v2/getrazorpay`)
       .then(response => {
@@ -59,7 +69,11 @@ const Payment_setting = () => {
     setErrors(newErrors);
     return isValid;
   };
-  
+  const handleSettingChange = (setting) => {
+    setSelectedSetting(setting.name);
+    setIsOpen(false);
+    
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -172,24 +186,55 @@ const Payment_setting = () => {
   };
 
   return (
-   
-    <div className='container2 mt-20'>
-          <ol className="breadcrumb mb-4">
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* Dropdown for settings */}
+      <Dropdown 
+      className="mb-4" 
+      show={isOpen} 
+      onToggle={() => setIsOpen(!isOpen)} // Toggle the dropdown
+    >
+      <Dropdown.Toggle
+     
+        className={`${
+          isOpen ? 'bg-custom-color text-orange-600' : 'bg-custom-color'
+        } hover:bg-custom-color hover:text-orange-600`}
+      >
+        {selectedSetting}
+      </Dropdown.Toggle>
+
+      <Dropdown.Menu>
+        {settingsOptions.map((setting, index) => (
+          <Dropdown.Item
+            as={Link}
+            to={setting.path}
+            key={index}
+            onClick={() => handleSettingChange(setting)}
+          >
+            {setting.name}
+          </Dropdown.Item>
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
+    </div>
+    <br />
+    <div className='container3 mt-2'>
+          <ol className="breadcrumb mb-4 d-flex my-0">
             <li className="breadcrumb-item">
-              <Link to="/admin/Setting">Settings</Link>
+              <Link to="/admin/SiteSetting">Settings</Link>
             </li>
             <li className="breadcrumb-item active  text-white">Payment Settings</li>
           </ol>
-          <div className="card md-8"  style={{ maxWidth: '91rem', paddingLeft: '0px' }}>
-            <div className="container card-body">
+          <div className="table-container">
+            <div className="card-body">
               <div className="temp">
-                <div className="col col-lg-2">
+                {/* <div className="col col-lg-2">
                   <Setting_sidebar />
-                </div>
-                <div className="col col-lg-9">
-                  <ul className='breadcrumb-item' style={{ paddingLeft: '0px' }}>
+                </div> */}
+                <div className="col col-lg-9" style={{alignItems:'center'}}>
+                  <ul className=' breadcrumb-item' style={{ paddingLeft: '0px' }}>
                     <form onSubmit={handleFormSubmit} method="post" className="registration-form" style={{ height: '44rem' }}>
-                      <div className="temp">
+             
                         <div className="col-md-12">
                           <div className="form-group">
                             <label className="custom-label" style={{ color: 'black' }}>
@@ -234,7 +279,7 @@ const Payment_setting = () => {
                             </button>
                           </div>
                         </div>
-                      </div>
+                     
                     </form>
                   </ul>
                 </div>
@@ -243,7 +288,7 @@ const Payment_setting = () => {
           </div>
         </div>
      
-    
+    </div>
   );
 };
 

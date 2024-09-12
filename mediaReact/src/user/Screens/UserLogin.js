@@ -84,7 +84,7 @@ const UserLogin = () => {
           <img
             src={`data:image/png;base64,${getall[0].logo}`}
             alt='logo'
-            className='mx-auto h-25 object-contain'
+            className='mx-auto h-20 object-contain'
           />
         ) : (
           <div></div>

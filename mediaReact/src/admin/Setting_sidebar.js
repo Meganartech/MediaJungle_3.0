@@ -36,7 +36,7 @@ const Setting = () => {
       {/* <i className="fas fa-tachometer-alt"></i> */}
     <span>Company Site Url's</span>
   </Link>
-  <Link className="nav-link text-info" to="/admin/Mobile_setting"  style={{paddingLeft: '8px'}}>
+  <Link className="nav-link text-info" to="/admin/_setting"  style={{paddingLeft: '8px'}}>
       {/* <i className="fas fa-tachometer-alt"></i> */}
     <span> Mobile Settings</span>
   </Link>
@@ -47,7 +47,8 @@ const Setting = () => {
   <Link className="nav-link text-info" to="/admin/Contact_setting"  style={{paddingLeft: '8px'}}>
       {/* <i className="fas fa-tachometer-alt"></i> */}
     <span> Contact Settings</span>
-  </Link><Link className="nav-link text-info" to="/admin/Other_setting"  style={{paddingLeft: '8px'}}>
+  </Link>
+  <Link className="nav-link text-info" to="/admin/Other_setting"  style={{paddingLeft: '8px'}}>
       {/* <i className="fas fa-tachometer-alt"></i> */}
     <span> Other Settings</span>
   </Link>

@@ -699,7 +699,7 @@ const handlePlanClick = () => {
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Settings</div>
       </div> */}
-      <li className={`nav-item  ${activeLink === "/admin/Setting" ? 'active' : ''}`} onClick={() => handleClick("/admin/Setting")}>
+      <li className={`nav-item  ${activeLink === "/admin/SiteSetting" ? 'active' : ''}`} onClick={() => handleClick("/admin/SiteSetting")}>
           <Link className="nav-link" >
           <i class="bi bi-gear-fill"></i>
             <span> Settings</span>

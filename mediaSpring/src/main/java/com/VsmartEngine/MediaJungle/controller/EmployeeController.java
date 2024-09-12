@@ -26,7 +26,7 @@ import com.VsmartEngine.MediaJungle.model.Mobilesettings;
 import com.VsmartEngine.MediaJungle.model.Othersettings;
 import com.VsmartEngine.MediaJungle.model.Seosettings;
 import com.VsmartEngine.MediaJungle.model.Sitesetting;
-import com.VsmartEngine.MediaJungle.model.Socialsettings;
+import com.VsmartEngine.MediaJungle.model.SocialSettings;
 import com.VsmartEngine.MediaJungle.model.Videosettings;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
@@ -37,7 +37,7 @@ import com.VsmartEngine.MediaJungle.repository.MobilesettingRepository;
 import com.VsmartEngine.MediaJungle.repository.OthersettingRepository;
 import com.VsmartEngine.MediaJungle.repository.PaymentsettingRepository;
 import com.VsmartEngine.MediaJungle.repository.SeosettingsRepository;
-import com.VsmartEngine.MediaJungle.repository.SocialsettingRepository;
+import com.VsmartEngine.MediaJungle.repository.SocialSettingsRepository;
 import com.VsmartEngine.MediaJungle.repository.siteSettingRepository;
 import com.VsmartEngine.MediaJungle.repository.videoSettingRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
@@ -51,7 +51,7 @@ public class EmployeeController {
 	@Autowired
 	private videoSettingRepository videosetting;
 	@Autowired
-	private SocialsettingRepository socialsetting;
+	private SocialSettingsRepository socialsetting;
 	@Autowired
 	private CompanysiteurlRepository companysiteurl;
 	@Autowired
@@ -554,7 +554,7 @@ public ResponseEntity<?> addVideosettings(@RequestBody Videosettings data) {
 	}
 //	--------------------working
 
-public ResponseEntity<?> addSocialsettings(@RequestBody Socialsettings data) {
+public ResponseEntity<?> addSocialsettings(@RequestBody SocialSettings data) {
 
 		socialsetting.save(data);
 		return ResponseEntity.ok("Success");
@@ -562,8 +562,8 @@ public ResponseEntity<?> addSocialsettings(@RequestBody Socialsettings data) {
 }
 	
 
-	public ResponseEntity<List<Socialsettings>> getsocialsettings(){
-		List<Socialsettings> socialsettingss = socialsetting.findAll();
+	public ResponseEntity<List<SocialSettings>> getsocialsettings(){
+		List<SocialSettings> socialsettingss = socialsetting.findAll();
 		return new ResponseEntity<>(socialsettingss, HttpStatus.OK);
 	}
 	
