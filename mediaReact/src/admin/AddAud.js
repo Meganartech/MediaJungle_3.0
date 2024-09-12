@@ -6,21 +6,23 @@ import React, { useState, useEffect } from 'react';
 import API_URL from '../Config';
 
 
+
 // import screenfull from 'screenfull'; // For
 
 
 const AddAud = () => {
 
   const options = [
-    "hores", "romantic", "blockbusters", "best of 2020", "thriller",
-    "Science finction", "mystery", "romantic", "Action", "Drama",
-    "fanatsy", "Documentary", "animation", "historical", "",
-    "Option P", "Option Q", "Option R", "Option S", "Option T"
+    "hores", "romantic", "blockbusters", "Best of 2020", "thriller",
+    "Science finction", "mystery", "Rushhours", "Action", "drama",
+    "fanatsy", "Documentary", "animation", "Historical", "Fiction",
+    "elegante", "Extrodinory", "Top10", "top20", "Mithical"
   ];
   
   const [filteredOptions, setFilteredOptions] = useState(options);
   const [inputValue, setInputValue] = useState("");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [castandcrewlistName, setcastandcrewlistName] = useState([]);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -38,9 +40,19 @@ const AddAud = () => {
   const handleOptionClick = (option) => {
     setInputValue(option);
     setDropdownOpen(false);
+
+    // const isChecked = e.target.checked;
+    // const id = (option.id); // Convert ID to number
+    const name = (option);
+
+      // setcastandcrewlist((prevList) => [...prevList, id]);
+      setcastandcrewlistName((prevList) => [...prevList, `${name},`]);
+   
   }; 
 
+
   return (
+    <div className= "row"> 
     <div className="dropdown-container" style={styles.dropdownContainer}>
       <input
         type="text"
@@ -65,7 +77,13 @@ const AddAud = () => {
           ))}
         </div>
       )}
+
+
+      <br></br>
     </div>
+     <div>
+     {castandcrewlistName}
+     </div></div>
 );
 };
 const styles = {

@@ -271,8 +271,18 @@ public class AffilationController {
 		return ResponseEntity.ok(response);
 	}
 
+//	
+	
+//	@GetMapping("/test")
 	@Async
-	public void mail(String UseremailID, String referralid, String coupon10, String coupon20) {
+	public void mail(String UseremailID, String referralid, String coupon10, String coupon20)
+//	public void mail()
+	
+	{
+//		String UseremailID="cheziangowtham@gmail.com";
+//		String referralid="hjjhjjk";
+//		String coupon10="ghjhj";
+//		String coupon20="oiujh";
 
 		String htmlContent = generateHtmlContent(referralid, coupon10, coupon20);
 		MimeMessage mimeMessage = sender.createMimeMessage();
