@@ -168,9 +168,12 @@ public class FrontController {
 	}
 
 	@DeleteMapping("/DeleteUser/{UserId}")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long UserId) {
+	 public ResponseEntity<String> deleteUser(
+			    @RequestHeader("Authorization") String token, 
+			    @PathVariable Long UserId
+			){
 
-		return AddUserController.deleteUser(UserId);
+		return AddUserController.deleteUser(token,UserId);
 
 	}
 

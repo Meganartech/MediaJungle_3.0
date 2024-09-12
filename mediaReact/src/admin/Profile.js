@@ -9,6 +9,9 @@ const Profile = () => {
   // ---------------------Admin functions -------------------------------
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("tokenn");
+  const role = sessionStorage.getItem("role");
+  console.log(role)
 
   useEffect(() => {
 
@@ -29,57 +32,71 @@ const Profile = () => {
 
 
 
-    const handleDeleteUser = (userId) => {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you really want to delete this user?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'No, keep it',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Perform the actual deletion logic here
-          console.log(`Deleting user with ID: ${userId}`);
-    
-          // Make an API call to delete the user
-          fetch(`${API_URL}/api/v2/DeleteUser/${userId}`, {
-            method: 'DELETE',
-          })
-            .then((response) => {
-              if (response.ok) {
-                console.log('User deleted successfully');
-                Swal.fire({
-                  title: 'Deleted!',
-                  text: 'User has been deleted.',
-                  icon: 'success',
-                  confirmButtonText: 'OK',
+        const handleDeleteUser = (userId) => {
+          Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to delete this user?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it',
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              console.log(`Deleting user with ID: ${userId}`);
+        
+              try {
+                // Check if token is available
+                if (!token) {
+                  throw new Error('Authorization token is missing');
+                }
+        
+                // API call to delete the user
+                const response = await fetch(`${API_URL}/api/v2/DeleteUser/${userId}`, {
+                  method: 'DELETE',
+                  headers: {
+                    Authorization: token,
+                  }
                 });
-    
-                // Remove the deleted user from the local state
-                setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-              } else {
-                console.log('Error deleting user');
+        
+                // Handle successful deletion
+                if (response.ok) {
+                  // Attempt to parse the JSON response
+                  const resBody = await response.json().catch(() => null);
+        
+                  Swal.fire({
+                    title: 'Deleted!',
+                    text: resBody?.message || 'User deleted successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                  });
+        
+                  // Update local state to remove the deleted user
+                  setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+                } else {
+                  // Handle unsuccessful deletion and parse response
+                  const resBody = await response.json().catch(() => null);
+        
+                  Swal.fire({
+                    title: 'Error!',
+                    text: resBody?.message || 'An error occurred while deleting the user.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                  });
+                }
+              } catch (error) {
+                console.error('Error deleting user:', error);
                 Swal.fire({
                   title: 'Error!',
-                  text: 'Error deleting user',
+                  text: error.message || 'An error occurred. Please try again later.',
                   icon: 'error',
                   confirmButtonText: 'OK',
                 });
               }
-            })
-            .catch((error) => {
-              console.log('Error deleting user:', error);
-              Swal.fire({
-                title: 'Error!',
-                text: 'An error occurred while deleting user. Please try again.',
-                icon: 'error',
-                confirmButtonText: 'OK',
-              });
-            });
-        }
-      });
-    };
+            }
+          });
+        };
+        
+        
     const handlEdit = async (userId) => {
       localStorage.setItem('items',userId);
       navigate('/admin/EditComponent');
@@ -141,10 +158,19 @@ const Profile = () => {
               <td>{user.compname}</td>
               <td>{user.country}</td>
               <td>
-                <button onClick={() => handlEdit(user.id)} className="btn btn-primary me-2">
+                <button 
+                  onClick={() => handlEdit(user.id)} 
+                  className={`btn btn-primary me-2 ${role !== "ADMIN" ? "disabled" : ""}`}
+                  disabled={role !== "ADMIN"} // Disable for subadmin
+                >
                   <i className="fas fa-edit" aria-hidden="true"></i>
-                </button>
-                <button onClick={() => handleDeleteUser(user.id)} className="btn btn-danger">
+                </button>              
+                
+                <button 
+                  onClick={() => handleDeleteUser(user.id)} 
+                  className={`btn btn-danger ${role !== "ADMIN" ? "disabled" : ""}`}
+                  disabled={role !== "ADMIN"} // Disable for subadmin
+                >
                   <i className="fa fa-trash" aria-hidden="true"></i>
                 </button>
               </td>

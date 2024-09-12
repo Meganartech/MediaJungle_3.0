@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -106,31 +107,6 @@ public class AddUserController {
         }
     }
 	
-	
-//	@PostMapping("/login/admin")
-//	public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
-//	    try {
-//	        String username = loginRequest.get("username");
-//	        String password = loginRequest.get("password");
-//	        Optional<AddUser> userOptional = adduserrepository.findByUsername(username);
-//	        if (userOptional.isEmpty()) {
-//	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-//	        }
-//	        AddUser user = userOptional.get();
-//	        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//	        if (!passwordEncoder.matches(password, user.getPassword())) {
-//	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
-//	        }
-//	        // Here you can generate a JWT token or session management logic
-//	        // Example: String token = jwtTokenUtil.generateToken(user);
-//	        
-//	        return ResponseEntity.ok("Login successful");
-//	    } catch (Exception e) {
-//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during login");
-//	    }
-//	}
-	
-	
 
 	public ResponseEntity<?> loginadmin(@RequestBody Map<String, String> loginRequest) {
 	    try {
@@ -157,6 +133,7 @@ public class AddUserController {
 	        responseBody.put("UserName", user.getUsername());
 	        responseBody.put("Email", user.getEmail());
 	        responseBody.put("AdminId", user.getId());
+	        responseBody.put("Role", role); // Add role to the response body
 
 	        // Logging user information
 	        System.out.println("Username: " + user.getUsername());
@@ -183,102 +160,6 @@ public class AddUserController {
         return ResponseEntity.ok().body("Logged out successfully");
     }
 
-
-		
-//		adduserrepository.save(data);
-//		return "success";
-//	}
-	
-//	@GetMapping("/GetAllUser")
-//	public ResponseEntity<UserListWithStatus> getAllUser() {
-//	    List<AddUser> getUser = adduserrepository.findAll();
-//	    String name=getUser.getUsername();
-//	    Iterable<License> licenseIterable = licenseRepository.findAll();
-//    	List<License> licenseList = StreamSupport.stream(licenseIterable.spliterator(), false)
-//    	                                         .collect(Collectors.toList());
-//	    boolean isEmpty = licenseList.isEmpty();
-//	    boolean valid =this.getall();
-//	   
-//	    
-//	    UserListWithStatus userListWithStatus = new UserListWithStatus(getUser, isEmpty, valid);
-//	   
-//	    return new ResponseEntity<>(userListWithStatus,HttpStatus.OK);
-//	}
-//	
-//	 public boolean getall(){
-//	    	
-//	    	Iterable<License> licenseIterable = licenseRepository.findAll();
-//	    	List<License> licenseList = StreamSupport.stream(licenseIterable.spliterator(), false)
-//	    	                                         .collect(Collectors.toList());
-//	    	LocalDate currentDate = LocalDate.now();
-//            java.util.Date Datecurrent = java.sql.Date.valueOf(currentDate);
-//            long milliseconds = Datecurrent.getTime(); // Get the time in milliseconds
-//            java.sql.Timestamp timestamp = new java.sql.Timestamp(milliseconds);
-//	    	for (License license : licenseList) {
-//	    		 System.out.println("---------------------------------------------------");
-//	    	    System.out.println("ID: " + license.getId());
-//	    	    System.out.println("Company Name: " + license.getCompany_name());
-//	    	    System.out.println("Product Name: " + license.getProduct_name());
-//	    	    System.out.println("key " + license.getKey());
-//	    	    System.out.println("start_date: " + license.getStart_date());
-//	    	    System.out.println("end_date: " + license.getEnd_date());
-////	            java.util.Date licenseStartDateUtil = java.sql.Date.valueOf(license.getStart_date().toLocaleString());
-//	    	    System.out.println(" start date :"+license.getStart_date()+" present date :"+Datecurrent+" is equal"+license.getEnd_date().equals(timestamp));
-//	    	    // Print other fields as needed
-//	    	}
-//	    	 boolean valid = false; // Initialize valid to false
-//	    	
-//	    	 System.out.println("out of the loop"+valid);
-//	    	    for (License license : licenseList) {
-//	    	        // Check the validity condition
-//	    	        if (license.getEnd_date().equals(timestamp)) {
-////	    -------------------------------------testarea-----------------------------
-////	    	        	  if (license.getStart_date().equals(timestamp)) {  
-//	    	        	
-//	    	            valid =  false; // Set valid to true if at least one license is valid
-//	    	            System.out.println("inside of the loop"+valid);
-//	    	            break; // No need to continue checking, we already found a valid license
-//	    	        }
-//	    	        else
-//	    	        {
-//	    	        	valid=true;
-//	    	        	 System.out.println("inside of the loop"+valid);
-//	    	        }
-//	    	    }
-//
-////	    	  List<Addaudio1> allAudio = audiorepository.findAll();
-//	    	
-//	    	return valid;
-//	    }
-	
-//	@GetMapping("/GetAllUser")
-//	public ResponseEntity<UserListWithStatus> getAllUser() {
-//	    // Retrieve all users
-//	    List<AddUser> getUsers = adduserrepository.findAll();
-//	    
-//	    // Extract usernames from the list of users
-//	    List<String> usernames = getUsers.stream()
-//	                                    .map(AddUser::getUsername)
-//	                                    .collect(Collectors.toList());
-//	    
-//	    // Retrieve all licenses
-//	    Iterable<License> licenseIterable = licenseRepository.findAll();
-//	    List<License> licenseList = StreamSupport.stream(licenseIterable.spliterator(), false)
-//	                                             .collect(Collectors.toList());
-//	    
-//	    // Check if the license list is empty
-//	    boolean isEmpty = licenseList.isEmpty();
-//	    
-//	    // Check license validity
-//	    boolean valid = this.getall();
-//	    
-//	    // Create UserListWithStatus object
-////	    UserListWithStatus userListWithStatus = new UserListWithStatus(usernames, isEmpty, valid);
-//	    UserListWithStatus userListWithStatus = new UserListWithStatus(getUsers, isEmpty, valid);
-//	    
-//	    // Return response entity
-//	    return new ResponseEntity<>(userListWithStatus, HttpStatus.OK);
-//	}
 
 	public boolean getall() {
 	    // Retrieve all licenses
@@ -349,15 +230,75 @@ public class AddUserController {
 	
 	
 
-    public ResponseEntity<Void> deleteUser(@PathVariable Long UserId) {
-        try {
-            // Assuming you have a method to delete a category by ID in your repository
-        	adduserrepository.deleteById(UserId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	 public ResponseEntity<String> deleteUser(
+		        @RequestHeader("Authorization") String token, 
+		        @PathVariable Long UserId
+		) {
+		    try {
+		        // Extract role from the token
+		        String role = jwtUtil.getRoleFromToken(token);
+		        System.out.println("role: " + role);
+
+		        // Check if the role is "ADMIN"
+		        if (!"ADMIN".equals(role)) {
+		            // Return a Forbidden response if the role is not "ADMIN"
+		            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+		                                 .body("{\"message\": \"Only admin can delete users\"}");
+		        }
+
+		        // Perform the delete operation if the role is "ADMIN"
+		        adduserrepository.deleteById(UserId);
+
+		        // Return a success message with 204 status
+		        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+		                             .body("{\"message\": \"User deleted successfully\"}");
+		    } catch (Exception e) {
+		        // Return an internal server error in case of any exception
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		                             .body("{\"message\": \"An error occurred while deleting the user.\"}");
+		    }
+		}
+	 
+	 
+	 @DeleteMapping("/api/v2/DeleteUsers")
+	    public ResponseEntity<String> deleteMultipleAdmins(
+	            @RequestHeader("Authorization") String token, 
+	            @RequestBody List<Long> userIds // Accept a list of user IDs
+	    ) {
+	        try {
+	            // Extract role from the token
+	            String role = jwtUtil.getRoleFromToken(token);
+	            System.out.println("role: " + role);
+
+	            // Check if the role is "ADMIN"
+	            if (!"ADMIN".equals(role)) {
+	                // Return a Forbidden response if the role is not "ADMIN"
+	                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+	                        .body("{\"message\": \"Only admin can delete users\"}");
+	            }
+
+	            // Perform the delete operation for each user ID
+	            for (Long userId : userIds) {
+	                if (adduserrepository.existsById(userId)) {
+	                    adduserrepository.deleteById(userId);
+	                } else {
+	                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                            .body("{\"message\": \"User with ID " + userId + " not found\"}");
+	                }
+	            }
+
+	            // Return a success message
+	            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+	                    .body("{\"message\": \"Users deleted successfully\"}");
+
+	        } catch (Exception e) {
+	            // Return an internal server error in case of any exception
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                    .body("{\"message\": \"An error occurred while deleting users.\"}");
+	        }
+	    }
+
+
 	
 
 	public ResponseEntity<String> updateUserDetails(@PathVariable Long userId, @RequestBody AddUser updatedUserData) {

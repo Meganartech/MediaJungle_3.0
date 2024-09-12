@@ -503,7 +503,7 @@ const Dashboard = () => {
 
   return (
     // <div className="container-fluid">
-    <div className="marquee-container">
+  <div>
       <div className="marquee-content">
         {/* Your scrolling content goes here */}
         {!isvalid?<a

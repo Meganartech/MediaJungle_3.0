@@ -10576,7 +10576,7 @@ a:focus {
     width: 100%;
     text-align: left;
     padding: 1rem;
-    width: 14rem;
+    /* width: 14rem; */
   }
   .sidebar .nav-item .nav-link i {
     font-size: 0.85rem;
@@ -11409,7 +11409,8 @@ h1 {
   background-repeat:no-repeat;
   background-size:cover;
 padding-top: 20px;
-overflow: auto;
+/* overflow: auto; */
+height: 100vh;
 
 
 }
