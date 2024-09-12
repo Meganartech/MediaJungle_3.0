@@ -1,105 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Setting_sidebar from './Setting_sidebar';
-import API_URL from '../Config';
-import Swal from 'sweetalert2'
-import "../css/Sidebar.css";
+import Navbar from './navbar';
+import Sidebar from './sidebar'; // You can remove this if no longer needed.
 import axios from 'axios';
+import { Dropdown } from 'react-bootstrap'; // Import Bootstrap dropdown component
 
 const Setting = () => {
-  
-  return (
-    <div className='container2 mt-20'>
-        <ol className="breadcrumb mb-4">
-          <li className="breadcrumb-item text-white">
-            <Link to="/admin/Setting">Settings</Link>
-          </li>
-          {/* <li className="breadcrumb-item active  text-white">Site Settings</li> */}
-        </ol>
-        <div className="card md-8" style={{ margin: '0px', maxWidth: '91rem', padding: '0px' }}>
-          <div className="container card-body">
-            <div className="temp">
-              <div className="col col-lg-2">
-                <Setting_sidebar />
-              </div>
-              {/* <div className="col col-lg-9">
-                <ul className='breadcrumb-item' style={{ paddingLeft: '0px' }}>
-                  <form onSubmit={handleFormSubmit} method="post" className="registration-form">
-                    <div className="temp">
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <label className="custom-label">Site Name</label>
-                          <input
-                            type="text"
-                            placeholder={sitenamePlaceholder}
-                            name="sitename"
-                            value={sitename}
-                            onChange={(e) => setsitename(e.target.value)}
-                          />
-                          {error.sitename && <div className="error-message error">{error.sitename}</div>}
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <label className="custom-label">App URL</label>
-                          <input
-                            type="text"
-                            placeholder={appurlPlaceholder}
-                            name="appurl"
-                            value={appurl}
-                            onChange={(e) => setappurl(e.target.value)}
-                          />
-                          {error.appurl && <div className="error-message error">{error.appurl}</div>}
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <label className="custom-label">Logo</label>
-                          {logoUrl && <img src={logoUrl} alt="Logo Preview" style={{ width: '100px', height: '100px', marginTop: '10px' }} />}
-                          <input type="file" name="logo" onChange={changeLogoHandler} /> 
-                          {error.logo && <div className="error-message error">{error.logo}</div>}
-                        </div>
-                      </div>
-                      
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <label className="custom-label">Icon</label>
-                          {iconUrl && <img src={iconUrl} alt="Icon Preview" style={{ width: '100px', height: '100px', marginTop: '10px' }} />}
-                          <input type="file" name="icon" onChange={changeIconHandler} />
-                          {error.icon && <div className="error-message error">{error.icon}</div>}
-                        </div>
-                      </div>
+  const [selectedSetting, setSelectedSetting] = useState("Site Settings"); // Default selected setting
 
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <label className="custom-label">Tag Name</label>
-                          <input
-                            type="text"
-                            placeholder={tagnamePlaceholder}
-                            name="tagname"
-                            value={tagname}
-                            onChange={(e) => settagname(e.target.value)}
-                          />
-                          {error.tagname && <div className="error-message error">{error.tagname}</div>}
-                        </div>
-                      </div>
-                     
-                      <div className='col-lg-12'>
-                        <div className="d-flex justify-content-center" style={{ marginTop: "10px" }}>
-                          <button className='text-center btn btn-info'>
-                            {buttonText}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </ul>
-              </div> */}
-            </div>
-          </div>
+  const settingsOptions = [
+    { name: "Site Settings", path: "/admin/SiteSetting" },
+    { name: "Social Settings", path: "/admin/Social_setting" },
+    { name: "Payment Settings", path: "/admin/Payment_setting" },
+    { name: "Banner Settings", path: "/admin/Banner_setting" },
+    { name: "Footer Settings", path: "/admin/Footer_setting" },
+    { name: "Contact Settings", path: "/admin/Contact_setting" }
+  ];
+
+
+  const handleSettingChange = (setting) => {
+    setSelectedSetting(setting.name);
+  };
+
+  return (
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* Dropdown for settings */}
+      <Dropdown className="mb-4">
+    <Dropdown.Toggle  id="dropdown-basic" className='bg-custom-color hover:bg-custom-color hover:text-orange-600'>
+    {selectedSetting}
+  </Dropdown.Toggle>
+  <Dropdown.Menu>
+          {settingsOptions.map((setting, index) => (
+            <Dropdown.Item as={Link} to={setting.path} key={index} onClick={() => handleSettingChange(setting)}>
+              {setting.name}
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Menu></Dropdown>
+    </div>
+    <br />
+   
+    <div className="container2 mt-20">
+
+      {/* Your container content */}
+      <div className="card md-8" style={{ margin: '0px', maxWidth: '91rem', padding: '0px' }}>
+        <div className="container card-body">
+          {/* Additional content or components can be placed here */}
+          <h2>{selectedSetting} Content</h2>
+          {/* Content for the selected setting */}
         </div>
       </div>
-    
+    </div></div>
   );
 };
+
 export default Setting;

@@ -18,10 +18,10 @@ import Payment_setting from "./admin/Payment_setting";
 import Siteurl_setting from "./admin/Siteurl_setting";
 import Other_setting from "./admin/Other_setting";
 import Contact_setting from "./admin/Contact_setting";
-import SEO_setting from "./admin/SEO_setting";
-import Mobile_setting from "./admin/Mobile_setting";
+// import SEO_setting from "./admin/Footer_setting";
+// import Mobile_setting from "./admin/Mobile_setting";
 import SubscriptionPayments from "./admin/SubscriptionPayments";
-import Setting from "./admin/Setting";
+// import Setting from "./admin/Setting";
 import Setting_sidebar from "./admin/Setting_sidebar";
 import AddCastCrew from "./admin/AddCastCrew";
 import Profile from "./admin/Profile";
@@ -90,6 +90,8 @@ import EditFeature from './admin/EditFeature';
 import MusicPage from './user/Screens/MusicPage';
 import Library from './user/Screens/Library';
 import PrivacyPolicy from './user/Screens/PrivacyPolicy';
+import Banner_setting from './admin/Banner_setting';
+import Footer_setting from './admin/Footer_setting';
 
 
 
@@ -186,12 +188,12 @@ const App = () => {
             <Route path='/' element={{hasSignedUp ?{navigate("/Home")} : {navigate("/admin/addUser")}} />} /> */}
 
             <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<MoviesPage/>} />} />
-          <Route path='/' element={<MoviesPage  />} />
+          <Route path='/' element={<Home  />} />
 
           {/* <Route path='/' element={<UserPrivateRouter hasSignedUp={hasSignedUp}  element={<Home />} />} /> */}
           {/* <Route path='/AdminSignin' element={<AdminSignin />} /> */}
 
-          <Route path='MoviesPage' element={<MoviesPage />} />
+          <Route path='Home' element={<Home />} />
           
           <Route path='MusicPage' element={<MusicPage />} />
           <Route path='Library' element={<Library />} />
@@ -264,8 +266,8 @@ const App = () => {
             <Route path='Editfeature' element={<EditFeature />} />
             <Route path='planfeatures' element={<PlanFeatures />} />
             <Route path='PlanDescription' element={<PlanDescription />} />
-            
-            <Route path='setting' element= {<Setting/>} />
+{/*             
+            <Route path='setting' element= {<Setting/>} /> */}
             
             <Route path='SiteSetting' element= {<SiteSetting/>} />
             <Route path='Video_setting' element= {<Video_setting/>} />
@@ -276,8 +278,8 @@ const App = () => {
             <Route path='Siteurl_setting' element= {<Siteurl_setting/>} />
             <Route path='Other_setting' element= {<Other_setting/>} />
             <Route path='Contact_setting' element= {<Contact_setting/>} />
-            <Route path='SEO_setting' element= {<SEO_setting/>} />
-            <Route path='Mobile_setting' element= {<Mobile_setting/>} />
+            <Route path='Footer_setting' element= {<Footer_setting/>} />
+            <Route path='Banner_setting' element= {<Banner_setting/>} />
             </Route>
             </Route> 
            </Route>

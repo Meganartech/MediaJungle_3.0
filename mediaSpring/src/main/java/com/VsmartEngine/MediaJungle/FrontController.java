@@ -54,7 +54,7 @@ import com.VsmartEngine.MediaJungle.model.PlanDetails;
 import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.model.Seosettings;
 import com.VsmartEngine.MediaJungle.model.Sitesetting;
-import com.VsmartEngine.MediaJungle.model.Socialsettings;
+import com.VsmartEngine.MediaJungle.model.SocialSettings;
 import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.model.UserListWithStatus;
 import com.VsmartEngine.MediaJungle.model.VideoCastAndCrew;
@@ -561,15 +561,15 @@ public class FrontController {
 		return EmployeeController.getvideosettings();
 	}
 
-	@PostMapping("/Socialsettings")
-	public ResponseEntity<?> addSocialsettings(@RequestBody Socialsettings data) {
-		return EmployeeController.addSocialsettings(data);
-	}
-
-	@GetMapping("/GetsocialSettings")
-	public ResponseEntity<List<Socialsettings>> getsocialsettings() {
-		return EmployeeController.getsocialsettings();
-	}
+//	@PostMapping("/Socialsettings")
+//	public ResponseEntity<?> addSocialsettings(@RequestBody SocialSettings data) {
+//		return EmployeeController.addSocialsettings(data);
+//	}
+//
+//	@GetMapping("/GetsocialSettings")
+//	public ResponseEntity<List<SocialSettings>> getsocialsettings() {
+//		return EmployeeController.getsocialsettings();
+//	}
 
 	@PostMapping("/AddLanguage")
 	public ResponseEntity<String> createEmployee(@RequestHeader("Authorization") String token,@RequestBody AddLanguage data) {
