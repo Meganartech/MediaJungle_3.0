@@ -8,8 +8,8 @@ import 'package:ott_project/service/audio_api_service.dart';
 
 class AudioService {
   static const String baseUrl =
-   'http://localhost:8080/api/v2';
-  // 'http://192.168.40.165:8080/api/v2';
+      'http://localhost:8080/api/v2';
+      //'http://192.168.0.6:8080/api/v2';
   static Future<List<Audio>> fetchAudio() async {
     final response = await http.get(Uri.parse('$baseUrl/getaudiodetailsdto'));
     //print(response.statusCode);
@@ -92,7 +92,7 @@ class AudioService {
     print('All Music:$allMusic');
     Map<String, List<Music>> musicByCategory = {};
     for (var music in allMusic) {
-      final image = await music.thumbnailImage;
+      //final image = await music.thumbnailImage;
       print('Music name:${music.songname}');
       //print('Music image:$image');
       print('Categories: ${music.categories}');

@@ -89,8 +89,8 @@ class RecentlyPlayedSongs extends StatelessWidget {
                               width: 50, height: 50, fit: BoxFit.fill);
                         } else {
                           return Container(
-                            width: 164,
-                            height: 155,
+                            width: 50,
+                            height: 50,
                             // fit: BoxFit.fill
                             color: Colors.grey,
                             child: Center(child: CircularProgressIndicator()),

@@ -64,14 +64,14 @@ class _CurrentlyPlayingBarState extends State<CurrentlyPlayingBar> {
               color: Color.fromARGB(255, 190, 104, 105),
               borderRadius: BorderRadius.circular(8),
             ),
-            margin: EdgeInsets.all(8),
-            padding: EdgeInsets.symmetric(horizontal: 12),
+            //margin: EdgeInsets.all(8),
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(25),
                   child: thumbnail != null
-                      ?  Image.memory(
+                      ? Image.memory(
                           //decompressedBytes,
                           // decodedImage,
                           thumbnail!,
@@ -80,48 +80,47 @@ class _CurrentlyPlayingBarState extends State<CurrentlyPlayingBar> {
                           fit: BoxFit.fill,
                         )
                       : Container(),
-                      // FutureBuilder<Uint8List?>(
-                      //   future: musicCurrentlyPlaying!
-                      //       .thumbnailImage, // Ensure this future returns a Uint8List or null
-                      //   builder: (context, snapshot) {
-                      //     if (snapshot.connectionState == ConnectionState.waiting) {
-                      //       return Container(
-                      //         width: 120,
-                      //         height: 135,
-                      //         color: Colors.grey,
-                      //         child: Center(child: CircularProgressIndicator()),
-                      //       );
-                      //     } else if (snapshot.connectionState ==
-                      //         ConnectionState.done) {
-                      //       if (snapshot.hasData && snapshot.data != null) {
-                      //         return Image.memory(
-                      //           snapshot.data!,
-                      //           width: 50,
-                      //           height: 50,
-                      //           fit: BoxFit.fill,
-                      //         );
-                      //       } else {
-                      //         return Center(
-                      //           child: Icon(
-                      //             Icons.music_note_rounded,
-                      //             color: Colors.white,
-                      //             size: 50,
-                      //           ),
-                      //         );
-                      //       }
-                      //     } else {
-                      //       return Container(
-                      //         width: 120,
-                      //         height: 135,
-                      //         color: Colors.grey,
-                      //         child: Center(
-                      //           child: CircularProgressIndicator(),
-                      //         ),
-                      //       );
-                      //     }
-                      //   },
-                      // ),
-                     
+                  // FutureBuilder<Uint8List?>(
+                  //   future: musicCurrentlyPlaying!
+                  //       .thumbnailImage, // Ensure this future returns a Uint8List or null
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.connectionState == ConnectionState.waiting) {
+                  //       return Container(
+                  //         width: 120,
+                  //         height: 135,
+                  //         color: Colors.grey,
+                  //         child: Center(child: CircularProgressIndicator()),
+                  //       );
+                  //     } else if (snapshot.connectionState ==
+                  //         ConnectionState.done) {
+                  //       if (snapshot.hasData && snapshot.data != null) {
+                  //         return Image.memory(
+                  //           snapshot.data!,
+                  //           width: 50,
+                  //           height: 50,
+                  //           fit: BoxFit.fill,
+                  //         );
+                  //       } else {
+                  //         return Center(
+                  //           child: Icon(
+                  //             Icons.music_note_rounded,
+                  //             color: Colors.white,
+                  //             size: 50,
+                  //           ),
+                  //         );
+                  //       }
+                  //     } else {
+                  //       return Container(
+                  //         width: 120,
+                  //         height: 135,
+                  //         color: Colors.grey,
+                  //         child: Center(
+                  //           child: CircularProgressIndicator(),
+                  //         ),
+                  //       );
+                  //     }
+                  //   },
+                  // ),
                 ),
                 SizedBox(width: 12),
                 Expanded(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:ott_project/components/category/music_category_section.dart';
 
@@ -303,18 +304,22 @@ class _MusicPageState extends State<MusicPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            _searchController.text.isNotEmpty &&
-                                    _filteredAudios.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      'No audios found',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  )
-                                : Expanded(
-                                    child: _buildMusicCategories(),
-                                    
-                                  ),
+                            if (_searchController.text.isNotEmpty &&
+                                _filteredAudios.isEmpty)
+                              Center(
+                                child: Text(
+                                  'No audios found',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              )
+                            else ...[
+                              SizedBox(
+                                height: 300,
+                                child: _buildMusicCategories(),
+                              ),
+                              SizedBox(
+                                  height: 150, child: _buildRecentlyPlayed()),
+                            ]
                           ],
                         ),
                         //),
@@ -413,10 +418,12 @@ class _MusicPageState extends State<MusicPage> {
   }
 
   Widget _buildRecentlyPlayed() {
-    return RecentlyPlayedSongs(
-        recentlyPlayed: _mrecentlyPlayed,
-        onTap: (audio) =>
-            _playSong(audio, _mrecentlyPlayed.getRecentlyPlayed()));
+    return SingleChildScrollView(
+      child: RecentlyPlayedSongs(
+          recentlyPlayed: _mrecentlyPlayed,
+          onTap: (audio) =>
+              _playSong(audio, _mrecentlyPlayed.getRecentlyPlayed())),
+    );
   }
 
   Widget _buildSearchResults() {

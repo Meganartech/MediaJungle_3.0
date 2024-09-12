@@ -67,8 +67,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-            //  'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.40.165:8080/api/v2/GetUserById/$userId'),
+              'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+           // 'http://192.168.40.165:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -133,8 +133,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     String? userId = await secureStorage.read(key: 'userId');
     try {
       var url = Uri.parse(
-          // 'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
-          'http://192.168.40.165:8080/api/v2/UpdateUser/mobile/$userId');
+          'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
+          //'http://192.168.40.165:8080/api/v2/UpdateUser/mobile/$userId');
       var request = http.MultipartRequest('PATCH', url);
       //..headers.addAll({'Content-Type': 'application/json'});
       request.fields['username'] = usernameController.text;

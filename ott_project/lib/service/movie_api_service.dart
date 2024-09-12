@@ -6,8 +6,8 @@ import 'package:ott_project/components/video_folder/movie.dart';
 
 class MovieApiService {
   static const String baseUrl =
-      'https://testtomcat.vsmartengine.com/media/api/v2';
-
+      //'https://testtomcat.vsmartengine.com/media/api/v2';
+      'http://localhost:8080/api/v2';
   Future<Movie> fetchVideoDetail(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/GetvideoDetail/$id'));
 
@@ -19,12 +19,22 @@ class MovieApiService {
     }
   }
 
+    Future<Movies> fetchVideoDetails(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/GetvideoDetail/$id'));
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return Movies.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load video details');
+    }
+  }
+
   Future<String> fetchVideoStreamUrl(int id) async {
-    final response = await http.get(
-        Uri.parse('https://mjdemotomcat.vsmartengine.com/media/api/play/1'));
+    final response = await http.get(Uri.parse('$baseUrl/$id/videofile'));
     print(response.statusCode);
     if (response.statusCode == 206 || response.statusCode == 200) {
-      return 'https://mjdemotomcat.vsmartengine.com/media/api/play/1';
+      return '$baseUrl/$id/videofile';
     } else {
       throw Exception('Failed to load video stream');
     }
@@ -40,6 +50,22 @@ class MovieApiService {
       return castData
           .map((json) => CastMember.fromJson(json))
           .where((CastMember) => CastMember.videoId == movieId)
+          .toList();
+    } else {
+      throw Exception('Faild to load cast and crew');
+    }
+  }
+
+  Future<List<CastMember>> fetchCastAndCrewList(List<int> castIds) async {
+    final response = await http
+        .get(Uri.parse('$baseUrl/castlist/castandcrew?castIds=$castIds'));
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      List castData = jsonDecode(response.body);
+      return castData
+          .map((json) => CastMember.fromJson(json))
+          .where((CastMember) => CastMember.videoId == castIds)
           .toList();
     } else {
       throw Exception('Faild to load cast and crew');
