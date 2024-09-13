@@ -838,3 +838,21 @@ td{
   margin: 50px 50px 50px 50px;
 }
 
+/* bulk action dropdown*/
+.position-relative {
+  position: relative;
+}
+
+.bulk-options {
+  position: absolute;
+  top: 100%; /* Positions the dropdown below the button */
+  right: 0; /* Aligns the dropdown to the right */
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  padding: 8px;
+  z-index: 1000; /* Ensure the dropdown appears above other elements */
+}
+
+.bulk-options .btn {
+  width: 100%;
+}
