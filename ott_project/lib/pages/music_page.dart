@@ -317,8 +317,8 @@ class _MusicPageState extends State<MusicPage> {
                                 height: 300,
                                 child: _buildMusicCategories(),
                               ),
-                              SizedBox(
-                                  height: 150, child: _buildRecentlyPlayed()),
+                              // SizedBox(
+                              //     height: 150, child: _buildRecentlyPlayed()),
                             ]
                           ],
                         ),

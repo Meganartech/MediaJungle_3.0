@@ -1142,7 +1142,21 @@ class _PlanPageState extends State<PlanPage> {
                       color: Colors.white,
                     ),
                     // _buildQualityIcons(plan),
+
                     SizedBox(height: 16),
+                    // Wrap(
+                    //   runSpacing: 8.0,
+                    //   spacing: 8.0,
+                    //   children: plan.feature.map((feature) {
+                    //     return FractionallySizedBox(
+                    //       widthFactor: 0.48,
+                    //       child: _buildFeature(feature.feature
+                    //           // plan.feature as String,
+                    //           ),
+                    //     );
+                    //   }).toList(),
+                    // ),
+
                     Wrap(
                       runSpacing: 8.0,
                       spacing: 8.0,
@@ -1153,6 +1167,7 @@ class _PlanPageState extends State<PlanPage> {
                             tenure.tenureName,
                             plan.amount, // Assuming the amount is the same for all tenures for now
                             plan.planname,
+                            // plan.feature as String,
                           ),
                         );
                       }).toList(),
@@ -1169,6 +1184,12 @@ class _PlanPageState extends State<PlanPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildFeature(String feature) {
+    return Container(
+      child: Text(feature),
     );
   }
 
