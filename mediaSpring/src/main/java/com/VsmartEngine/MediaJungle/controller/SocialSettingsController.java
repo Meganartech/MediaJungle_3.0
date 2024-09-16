@@ -1,6 +1,10 @@
 package com.VsmartEngine.MediaJungle.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,30 +15,55 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.VsmartEngine.MediaJungle.model.SocialSettings;
+import com.VsmartEngine.MediaJungle.repository.SocialSettingsRepository;
 import com.VsmartEngine.MediaJungle.service.SocialSettingsService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/v2")
-
+@RequestMapping("/api/v2/social-settings")
 public class SocialSettingsController {
 
     @Autowired
     private SocialSettingsService service;
 
-
-    @PostMapping("/social-settings")
-    public SocialSettings saveSocialSettings(@RequestBody SocialSettings settings) {
-        return service.saveSocialSettings(settings);
-    }
-    @CrossOrigin(origins = "http://localhost:3000")
-    @PutMapping("/social-settings/{id}")
-    public SocialSettings updateSocialSettings(@PathVariable Long id, @RequestBody SocialSettings settings) {
-        return service.updateSocialSettings(id, settings);
+    @Autowired
+    private SocialSettingsRepository repository;
+    // Get all social settings
+    @GetMapping
+    public List<SocialSettings> getAllSettings() {
+        return service.getSocialSettings();
     }
 
-    @GetMapping("/social-settings/{id}")
-    public SocialSettings getSocialSettings(@PathVariable Long id) {
-        return service.getSocialSettings(id);
+    // Get the first social setting
+    @GetMapping("/first")
+    public ResponseEntity<SocialSettings> getFirstSetting() {
+        SocialSettings setting = service.getFirstSetting();
+        if (setting != null) {
+            return ResponseEntity.ok(setting);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
+    // Save or update a social setting
+    @PostMapping
+    public SocialSettings createOrUpdateSetting(@RequestBody SocialSettings setting) {
+        return service.saveOrUpdate(setting);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<SocialSettings> updateSetting(@PathVariable Long id, @RequestBody SocialSettings setting) {
+        try {
+            if (repository.existsById(id)) {
+                setting.setId(id);
+                SocialSettings updatedSetting = repository.save(setting);
+                return ResponseEntity.ok(updatedSetting);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Print stack trace for debugging
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 }

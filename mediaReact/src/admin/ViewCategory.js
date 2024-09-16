@@ -66,14 +66,14 @@ const handleDeleteCategory = (categoryId) => {
         } else {
           console.log('Category deleted successfully (no content)');
         }
-        // Remove the deleted category from the local state
-        setCategories(prevCategories => prevCategories.filter(category => category.id !== categoryId));
+        
         Swal.fire(
           'Deleted!',
           'Your category has been deleted.',
           'success'
         );
       })
+      
       .catch(error => {
         console.error('Error deleting category:', error);
         Swal.fire(
@@ -82,6 +82,8 @@ const handleDeleteCategory = (categoryId) => {
           'error'
         );
       });
+      //Remove the deleted category from the local state
+      setCategories(prevCategories => prevCategories.filter(category => category.id !== categoryId));
     }
   });
 };

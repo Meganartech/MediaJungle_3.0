@@ -176,6 +176,14 @@ public class FrontController {
 		return AddUserController.deleteUser(token,UserId);
 
 	}
+	
+	@DeleteMapping("/DeletemultipleAdmins")
+    public ResponseEntity<String> deleteMultipleAdmins(
+            @RequestHeader("Authorization") String token, 
+            @RequestBody List<Long> userIds // Accept a list of user IDs
+    ) {
+		return AddUserController.deleteMultipleAdmins(token, userIds);
+	}
 
 	@PatchMapping("/UpdateUser/{userId}")
 	public ResponseEntity<String> updateUserDetails(@PathVariable Long userId, @RequestBody AddUser updatedUserData) {
