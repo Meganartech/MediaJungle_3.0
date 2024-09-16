@@ -1,33 +1,38 @@
-// import React, { useState, useRef } from 'react';
-import ReactPlayer from 'react-player';
-
-// import screenfull from 'screenfull'; // For
 import React, { useState, useEffect } from 'react';
 import API_URL from '../Config';
 
-
-
-// import screenfull from 'screenfull'; // For
-
-
 const AddAud = () => {
-
-  const options = [
-    "hores", "romantic", "blockbusters", "Best of 2020", "thriller",
-    "Science finction", "mystery", "Rushhours", "Action", "drama",
-    "fanatsy", "Documentary", "animation", "Historical", "Fiction",
-    "elegante", "Extrodinory", "Top10", "top20", "Mithical"
-  ];
-  
-  const [filteredOptions, setFilteredOptions] = useState(options);
+  const [categories, setCategories] = useState([]);
+  const [filteredOptions, setFilteredOptions] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [castandcrewlistName, setcastandcrewlistName] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  // Fetch categories from the API
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllCategories`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Extract categories from the response
+        const categoryNames = data.map(item => item.categories);
+        setCategories(categoryNames);
+        setFilteredOptions(categoryNames);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-    const filtered = options.filter((option) =>
+    // Filter options based on input
+    const filtered = categories.filter(option =>
       option.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredOptions(filtered);
@@ -40,52 +45,42 @@ const AddAud = () => {
   const handleOptionClick = (option) => {
     setInputValue(option);
     setDropdownOpen(false);
-
-    // const isChecked = e.target.checked;
-    // const id = (option.id); // Convert ID to number
-    const name = (option);
-
-      // setcastandcrewlist((prevList) => [...prevList, id]);
-      setcastandcrewlistName((prevList) => [...prevList, `${name},`]);
-   
-  }; 
-
+    setSelectedCategories(option);
+  };
 
   return (
-    <div className= "row"> 
-    <div className="dropdown-container" style={styles.dropdownContainer}>
-      <input
-        type="text"
-        value={inputValue}
-        onClick={handleDropdownToggle}
-        onChange={handleInputChange}
-        className="dropdown-input"
-        style={styles.dropdownInput}
-        placeholder="Select an option"
-      />
-      {isDropdownOpen && (
-        <div className="dropdown-list" style={styles.dropdownList}>
-          {filteredOptions.map((option, index) => (
-            <div
-              key={index}
-              className="dropdown-item"
-              style={styles.dropdownItem}
-              onClick={() => handleOptionClick(option)}
-            >
-              {option}
-            </div>
-          ))}
-        </div>
-      )}
-
-
-      <br></br>
+    <div className="row">
+      <div className="dropdown-container" style={styles.dropdownContainer}>
+        <input
+          type="text"
+          value={inputValue}
+          onClick={handleDropdownToggle}
+          onChange={handleInputChange}
+          className="dropdown-input"
+          style={styles.dropdownInput}
+          placeholder="Select an option"
+        />
+        {isDropdownOpen && (
+          <div className="dropdown-list" style={styles.dropdownList}>
+            {filteredOptions.map((option, index) => (
+              <div
+                key={index}
+                className="dropdown-item"
+                style={styles.dropdownItem}
+                onClick={() => handleOptionClick(option)}
+              >
+                {option}
+              </div>
+            ))}
+          </div>
+        )}
+        <br />
+      </div>
+      {/* <div>{selectedCategories}</div> Display selected categories */}
     </div>
-     <div>
-     {castandcrewlistName}
-     </div></div>
-);
+  );
 };
+
 const styles = {
   dropdownContainer: {
     width: "100px",
@@ -103,7 +98,7 @@ const styles = {
     left: "0",
     width: "100%",
     maxHeight: "150px", // Maximum height for scrollable dropdown
-    overflowY: "auto",  // Enable scrolling
+    overflowY: "auto", // Enable scrolling
     backgroundColor: "white",
     border: "1px solid #ccc",
     zIndex: 1,
@@ -113,4 +108,5 @@ const styles = {
     cursor: "pointer",
   },
 };
+
 export default AddAud;
