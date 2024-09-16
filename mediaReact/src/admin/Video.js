@@ -159,7 +159,7 @@ const Video = () => {
               <td>{user.videoTitle}</td>
               <td>{user.productionCompany}</td>
               <td>{user.rating}/10</td>
-              <td>{user.videoAccessType===true ? 1 : 0}</td>
+              <td>{user.videoAccessType===true ? 'paid' : 'free'}</td>
               <td>
                 
                 <button onClick={() => handlEdit(user.id)} className="btn btn-primary me-2">

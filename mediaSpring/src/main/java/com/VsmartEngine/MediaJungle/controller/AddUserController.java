@@ -243,7 +243,7 @@ public class AddUserController {
 		        if (!"ADMIN".equals(role)) {
 		            // Return a Forbidden response if the role is not "ADMIN"
 		            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-		                                 .body("{\"message\": \"Only admin can delete users\"}");
+		                                 .body("{\"message\": \"Only admin can delete subadmin\"}");
 		        }
 
 		        // Perform the delete operation if the role is "ADMIN"
@@ -251,16 +251,15 @@ public class AddUserController {
 
 		        // Return a success message with 204 status
 		        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-		                             .body("{\"message\": \"User deleted successfully\"}");
+		                             .body("{\"message\": \"Admin deleted successfully\"}");
 		    } catch (Exception e) {
 		        // Return an internal server error in case of any exception
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-		                             .body("{\"message\": \"An error occurred while deleting the user.\"}");
+		                             .body("{\"message\": \"An error occurred while deleting the admin.\"}");
 		    }
 		}
 	 
 	 
-	 @DeleteMapping("/api/v2/DeleteUsers")
 	    public ResponseEntity<String> deleteMultipleAdmins(
 	            @RequestHeader("Authorization") String token, 
 	            @RequestBody List<Long> userIds // Accept a list of user IDs
@@ -274,7 +273,7 @@ public class AddUserController {
 	            if (!"ADMIN".equals(role)) {
 	                // Return a Forbidden response if the role is not "ADMIN"
 	                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-	                        .body("{\"message\": \"Only admin can delete users\"}");
+	                        .body("{\"message\": \"Only admin can delete subadmins\"}");
 	            }
 
 	            // Perform the delete operation for each user ID
@@ -283,18 +282,18 @@ public class AddUserController {
 	                    adduserrepository.deleteById(userId);
 	                } else {
 	                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                            .body("{\"message\": \"User with ID " + userId + " not found\"}");
+	                            .body("{\"message\": \"Admin with ID " + userId + " not found\"}");
 	                }
 	            }
 
 	            // Return a success message
 	            return ResponseEntity.status(HttpStatus.NO_CONTENT)
-	                    .body("{\"message\": \"Users deleted successfully\"}");
+	                    .body("{\"message\": \"Admins deleted successfully\"}");
 
 	        } catch (Exception e) {
 	            // Return an internal server error in case of any exception
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                    .body("{\"message\": \"An error occurred while deleting users.\"}");
+	                    .body("{\"message\": \"An error occurred while deleting admins.\"}");
 	        }
 	    }
 
