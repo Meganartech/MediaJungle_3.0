@@ -11,8 +11,40 @@ const Profile = () => {
   const navigate = useNavigate();
   const token = sessionStorage.getItem("tokenn");
   const role = sessionStorage.getItem("role");
-  console.log(role)
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [showBulkOptions, setShowBulkOptions] = useState(false);
 
+  const toggleBulkOptions = () => {
+    setShowBulkOptions(prevState => !prevState);
+  };
+
+  // Handle the "select all" checkbox click
+  const handleSelectAll = (e) => {
+    const checked = e.target.checked;
+    setSelectAll(checked);
+
+    if (checked) {
+      // Select all user IDs
+      const allIds = users.map((user) => user.id);
+      setSelectedIds(allIds);
+    } else {
+      // Deselect all
+      setSelectedIds([]);
+    }
+  };
+
+  
+  // Handle individual checkbox click
+  const handleCheckboxChange = (id) => {
+    setSelectedIds((prevSelectedIds) =>
+      prevSelectedIds.includes(id)
+        ? prevSelectedIds.filter((userId) => userId !== id) // Deselect
+        : [...prevSelectedIds, id] // Select
+    );
+  };
+
+  console.log("selectedIds",selectedIds);
   useEffect(() => {
 
     // Fetch user data from the backend
@@ -102,6 +134,51 @@ const Profile = () => {
       navigate('/admin/EditComponent');
     };
 
+    const deleteMultipleUsers = (userIds) => {
+      fetch(`${API_URL}/api/v2/DeletemultipleAdmins`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token, // Ensure the token is formatted correctly
+        },
+        body: JSON.stringify(userIds), // Pass the array directly
+      })
+        .then((response) => {
+          if (response.ok) {
+            // If there's no content, return a default message
+            if (response.status <= 205) {
+              return { message: 'Admins deleted successfully' }; // No content response
+            }
+          } else {
+            throw new Error('Network response was not ok.');
+          }
+
+        })
+        .then((data) => {
+          Swal.fire({
+            title: 'Deleted!',
+            text: data.message || 'Admins deleted successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            
+          });
+          // Optionally, refresh the user list or update the state here
+           // Update local state to remove the deleted users
+      setUsers((prevUsers) => prevUsers.filter((user) => !userIds.includes(user.id)));
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'An error occurred while deleting the users. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+        });
+    };
+    
+    
+    
   return (
 
     <div className="marquee-container">
@@ -113,15 +190,18 @@ const Profile = () => {
   <br/>
   {/* <Sample /> */}
   <div className='container3 '>
-    <ol className="breadcrumb mb-4 d-flex my-0">
-      <li className="breadcrumb-item text-white">
-        Manage SubAdmin
-      </li>
-      <li className="ms-auto text-end text-white">
+  <ol className="breadcrumb mb-4 d-flex my-0">
+      <li className="breadcrumb-item text-white">Manage SubAdmin</li>
+      <li className="ms-auto text-end text-white position-relative">
         Bulk Action
-        <button className="ms-2">
+        <button className="ms-2" onClick={toggleBulkOptions}>
           <i className="bi bi-chevron-down"></i>
         </button>
+        {showBulkOptions && (
+          <div className="bulk-options">
+            <button className="btn btn-danger" style={{color:'black'}} onClick={() => deleteMultipleUsers(selectedIds)}>Delete</button>
+          </div>
+        )}
       </li>
     </ol>
     <div class="outer-container">
@@ -130,7 +210,11 @@ const Profile = () => {
         <thead>
           <tr className='table-header'>
             <th style={{border: 'none' }}>
-              <input type="checkbox" />
+            <input 
+              type="checkbox" 
+              checked={selectAll} 
+              onChange={handleSelectAll} 
+            />
             </th>
             <th style={{border: 'none' }}>S.No</th>
             <th style={{border: 'none' }}>User Name</th>
@@ -147,14 +231,18 @@ const Profile = () => {
           {users.map((user, index) => (
             <tr key={user.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
               <td>
-                <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={selectedIds.includes(user.id)}
+                onChange={() => handleCheckboxChange(user.id)}
+              />
               </td>
               <td>{index + 1}</td>
               <td>{user.username}</td>
               <td>{user.mobnum}</td>
               <td>{user.address}</td>
               <td>{user.pincode}</td>
-              <td>{user.email}</td>
+              <td>{user.email.length > 15 ? user.email.substring(0, 15) + "..." : user.email}</td>
               <td>{user.compname}</td>
               <td>{user.country}</td>
               <td>
