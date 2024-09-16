@@ -47,7 +47,7 @@ const SubscriptionPayments = () => {
 
   return (
     
-    <div className='container3  mt-20'>
+    <div className='container3  mt-10'>
           <ol className="breadcrumb mb-4 d-flex my-0">
              <li className="breadcrumb-item text-white">
             <Link to="/admin/SubscriptionPayments">Manage Users</Link>

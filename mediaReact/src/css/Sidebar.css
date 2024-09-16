@@ -856,3 +856,53 @@ td{
 .bulk-options .btn {
   width: 100%;
 }
+
+
+/* container */
+.toggle {
+  width: 23%;
+  height: 10%;
+  background-color: rgba(43, 42, 82, 0.3);
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.custom-btn {
+  border: none !important;
+  font-weight: bold;
+  font-size: 22px;
+  background-color: transparent !important;
+  color: #2b2a52 !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Active button styles */
+.active-btn {
+  background-color: #2b2a52 !important;
+  color: white !important;
+  border-radius: 10px;
+}
+
+/* Inactive button styles */
+.inactive-btn {
+  background-color: transparent !important;
+  color:  #2b2a52 !important;
+}
+
+.table-wrapper {
+  width: 60%; /* Set width to 60% */
+  height: auto; /* Height will adjust based on the content */
+  margin: 0 auto; /* Center the table container horizontally */
+  border:1px solid #2b2a52;
+  max-height: 400px; /* Set a max height for the container */
+  overflow-y: auto; /* Enable vertical scrolling */
+  /* padding: 10px; */
+}
+
+
+.table-responsive {
+  width: 100%;
+}
+
+
+
