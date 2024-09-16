@@ -122,51 +122,67 @@ const handleSettingChange = (setting) => {
         </div> */}
         <div class="col col-lg-9">
         <ul className='breadcrumb-item' style={{paddingLeft: '0px'}}>
-        <form onSubmit="" method="post" className="registration-form">
-        <div className="temp">
-        <div className="col-md-6">
-        <div className="form-group">
-              <label className="custom-label">
-              Meta Title
-                </label>
-              <input type="text" placeholder="Meta Title" name="Meta Title" value={Meta_Title} onChange={changeMeta_TitleHandler} />
-                       </div>
-          </div>
-          <div className="col-md-6">
-          <div className="form-group">
-              <label className="custom-label">
-              Meta Author
-              </label>
-              <input type="text" placeholder="Meta Author" name="Meta Author" value={Meta_Author} onChange={changeMeta_AuthorHandler} />
-                        </div>
-          </div>
-          <div className="col-md-6">
-        <div className="form-group">
-              <label className="custom-label">
-              Meta Keywords
-                 </label>
-              <input type="text" placeholder="Meta Keywords" name="Meta Keywords" value={Meta_Keywords} onChange={changeMeta_KeywordsHandler} />
-                        </div>
-          </div>
-        
-        <div className="col-md-6">
-        <div className="form-group">
-              <label className="custom-label">
-              Meta Description
-                 </label>
-              <input type="text" placeholder="Meta Description" name="Meta Description" value={Meta_Description} onChange={changeMeta_DescriptionHandler} />
-                        </div>
-          </div>
-         
-          <div className="col-md-12">
-          <div className="form-group" style={{textAlign:'center'}}>
-         
-          <input type="submit" className="btn btn-info" name="submit" value="Submit" onClick={save} />
-               </div>
-              
-          </div>
-        </div>
-        </form>
+        <form onSubmit={save} method="post" className="registration-form">
+                {/* About Us Section */}
+                <h3 style={{fontFamily:"sans-serif",fontSize:"24px",fontWeight:"bolder"}}>About Us</h3>
+                <label style={{fontWeight:"bold"}}>Header Script</label>
+                <input type="text" name="aboutHeading" className="form-control mb-3" />
+                <label style={{fontWeight:"bold"}}>Body Script</label>
+                <input type="text" name="aboutBodyScript" className="form-control mb-3" />
+
+                <h4 style={{fontFamily:"sans-serif",fontWeight:"bolder"}}>Feature Box1</h4>
+                <label style={{fontWeight:"bold"}}>Header Script</label>
+                <input type="text" name="feature1Heading" className="form-control mb-3" />
+                <label style={{fontWeight:"bold"}}>Body Script</label>
+                <input type="text" name="feature1BodyScript" className="form-control mb-3" />
+
+                {/* Feature Box 2 */}
+                <h4 style={{fontFamily:"sans-serif",fontWeight:"bolder"}}>Feature Box2</h4>
+                <label style={{fontWeight:"bold"}}>Header Script</label>
+                <input type="text" name="feature2Heading" className="form-control mb-3" />
+                <label style={{fontWeight:"bold"}}>Body Script</label>
+                <input type="text" name="feature2BodyScript" className="form-control mb-3" />
+                <label style={{fontWeight:"bold"}}>About Us Image</label>
+                <input type="file" name="feature2Image" className="form-control mb-3" />
+
+                {/* Contact Us Section */}
+                <h3 style={{fontFamily:"sans-serif",fontSize:"24px",fontWeight:"bolder"}}>Contact Us</h3>
+                <label style={{fontWeight:"bold"}}>Email</label>
+                <input type="email" name="contactEmail" className="form-control mb-3" />
+                <label style={{fontWeight:"bold"}}>Body Script</label>
+                <input type="text" name="contactEmailScript" className="form-control mb-3" />
+
+                <h4 style={{fontFamily:"sans-serif",fontSize:"24px",fontWeight:"bolder"}}>Call Us</h4>
+                <label style={{fontWeight:"bold"}}>Phone Number</label>
+                <input type="text" name="phoneNumber" className="form-control mb-3" />
+                <label style={{fontWeight:"bold"}}>Body Script</label>
+                <input type="text" name="phoneBodyScript" className="form-control mb-3" />
+
+                <h4 style={{fontFamily:"sans-serif",fontSize:"24px",fontWeight:"bolder"}}>Location</h4>
+                <label style={{fontWeight:"bold"}}>Map URL</label>
+                <input type="text" name="mapUrl" className="form-control mb-3" />
+                <label style={{fontWeight:"bold"}}>Address</label>
+                <input type="text" name="address" className="form-control mb-3" />
+                <label style={{fontWeight:"bold"}}>Contact Us Image</label>
+                <input type="file" name="contactUsImage" className="form-control mb-3" />
+
+                {/* App URLs Section */}
+                <h4 style={{fontFamily:"sans-serif",fontSize:"24px",fontWeight:"bolder"}}>App Url</h4>
+                <label style={{fontWeight:"bold"}}>Playstore URL</label>
+                <input type="url" name="playstoreUrl" className="form-control mb-3" />
+                <label style={{fontWeight:"bold"}}>App Store URL</label>
+                <input type="url" name="appStoreUrl" className="form-control mb-3" />
+
+                {/* Copyright Section */}
+                <h4 style={{fontFamily:"sans-serif",fontSize:"24px",fontWeight:"bolder"}}>Copyright Content</h4>
+                <label style={{fontWeight:"bold"}}>CopyRight Info</label>
+                <input type="text" name="copyrightText" className="form-control mb-3" />
+
+                {/* Submit Button */}
+                <button type="submit" className="btn btn-primary mt-3">
+                  Submit
+                </button>
+              </form>
         </ul>
         </div>
         

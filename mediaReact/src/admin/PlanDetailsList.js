@@ -113,7 +113,7 @@ const PlanDetailsList = () => {
     <div className='AddArea'>
           <button className='btn btn-custom' onClick={() => handleClick("/admin/AdminPlan")}>Add Plan</button>
         </div>  <br/>
-     <div className='container2'>
+     <div className='container3'>
         <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item text-white"><Link to="/admin/PlanDetailsList">Plans</Link>
         </li>

@@ -94,7 +94,7 @@ const TenureList = () => {
             </div>
             <br />
             
-            <div className='container2'>
+            <div className='container3'>
                 <ol className="breadcrumb mb-4">
                     <li className="breadcrumb-item text-white">
                         <Link to="/admin/TenureList">Tenures</Link>
