@@ -15,22 +15,6 @@ import jakarta.persistence.Table;
 @Table
 public class VideoDescription {
 		
-//	private String moviename ;
-//	private String description ;
-//	private String tags ;
-//	private String category ;
-//	private String certificate ;
-//	private String language ;
-//	private String duration ;
-//	private String year; 
-//	private String name; 
-//	private boolean paid;
-//	@OneToMany(mappedBy = "videoDescription", cascade = CascadeType.ALL)
-//	@JsonBackReference
-//	private List<VideoCastAndCrew> videoCastAndCrews;	
-//	@Lob
-//	@Column(name="thumbnail" ,length=1000000)
-//	private byte[] thumbnail;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

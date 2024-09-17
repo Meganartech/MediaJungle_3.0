@@ -24,9 +24,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
@@ -40,10 +44,12 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 //import java.nio.file.Path;
 //import java.nio.file.Paths;
 //import java.nio.file.Files;
+
 
 
 @Controller
@@ -54,6 +60,7 @@ public class VideoController {
 	
 	@Value("${project.videotrailer}")
 	private String trailervideoPath;
+	
 	@Autowired
 	private VideoService videoService;
 
@@ -595,6 +602,73 @@ public class VideoController {
 	        }
 	    }
 	    
+//	    @GetMapping("/images-by-category")
+//	    @Transactional
+//	    public List<byte[]> getVideoImagesByCategory(@RequestParam Long categoryId) {
+//	    	List<byte[]> videoThumbnails = new ArrayList<>();
+//
+//	        // Retrieve all videos from the repository
+//	        List<VideoDescription> videos = videodescriptionRepository.findAll();
+//	        
+//	        // Collect video IDs where the category ID is present
+//	        List<Long> videoIds = new ArrayList<>();
+//	        for (VideoDescription video : videos) {
+//	            if (video.getCategorylist().contains(categoryId)) {
+//	                videoIds.add(video.getId());
+//	            }
+//	        }
+//
+//	        // Retrieve video images by the video IDs
+//	        if (!videoIds.isEmpty()) {
+//	            List<VideoImage> videoImages = videoimagerepository.findByVideoIdIn(videoIds);
+//	            for (VideoImage videoImage : videoImages) {
+//	                videoThumbnails.add(ImageUtils.decompressImage(videoImage.getVideoThumbnail())); // Add videoThumbnail to the list
+//	            }
+//	        }
+//	        return videoThumbnails;
+//	    }
+	    
+	    
+	 
+	    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam Long categoryId) {
+	        List<VideoDescriptionDTO> videoThumbnails = new ArrayList<>();
+	        // Retrieve all videos from the repository
+	        List<VideoDescription> videos = videodescriptionRepository.findAll();
+	        // Collect video IDs where the category ID is present
+	        List<Long> videoIds = new ArrayList<>();
+	        for (VideoDescription video : videos) {
+	            if (video.getCategorylist().contains(categoryId)) {
+	                videoIds.add(video.getId());
+	            }
+	        }
+	        // Retrieve video images by the video IDs
+	        if (!videoIds.isEmpty()) {
+	            List<VideoImage> videoImages = videoimagerepository.findByVideoIdIn(videoIds);
+	            for (VideoImage videoImage : videoImages) {
+	                videoThumbnails.add(new VideoDescriptionDTO(videoImage.getVideoId(), ImageUtils.decompressImage(videoImage.getVideoThumbnail())));
+	            }
+	        }
+	        return videoThumbnails;
+	    }
+
+//	    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam Long categoryId) {
+//	        List<VideoDescriptionDTO> videoThumbnails = new ArrayList<>();
+//
+//	        // Retrieve video IDs where the category ID is present using the repository query
+//	        List<Long> videoIds = videodescriptionRepository.findVideoIdsByCategory(categoryId);
+//
+//	        // Retrieve video images by the video IDs
+//	        if (!videoIds.isEmpty()) {
+//	            List<VideoImage> videoImages = videoimagerepository.findByVideoIdIn(videoIds);
+//	            for (VideoImage videoImage : videoImages) {
+//	                videoThumbnails.add(new VideoDescriptionDTO(videoImage.getVideoId(), 
+//	                    ImageUtils.decompressImage(videoImage.getVideoThumbnail())));
+//	            }
+//	        }
+//
+//	        return videoThumbnails;
+//	    }
+
 	    
 	    	
 	

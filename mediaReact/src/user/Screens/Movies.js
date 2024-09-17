@@ -13,6 +13,7 @@ const MoviesPage = () => {
   const [all, setall] = useState(null);
   const [images, setImages] = useState({}); // Store images with video IDs as keys
   const userid = sessionStorage.getItem('userId');
+  const [videoContainer,setVideoContainer] = useState([]);
 
   const HandleLoadingMore = () => {
     setPage(page + maxPage);
@@ -87,6 +88,17 @@ const MoviesPage = () => {
       });
   }, []);
 
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/getvideocontainer`)
+      .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
+      .then(data => setVideoContainer(data))
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  console.log(videoContainer)
 
   const handlEdit = async (Id) => {
     localStorage.setItem('items', Id);

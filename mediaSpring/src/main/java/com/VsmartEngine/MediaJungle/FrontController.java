@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainer;
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.controller.AddUserController;
 import com.VsmartEngine.MediaJungle.controller.AudioController1;
 import com.VsmartEngine.MediaJungle.controller.CastandcrewController;
@@ -66,6 +68,7 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterDTO;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
+import com.VsmartEngine.MediaJungle.video.VideoDescriptionDTO;
 import com.VsmartEngine.MediaJungle.video.VideoImageController;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -133,6 +136,10 @@ public class FrontController {
 	
 	@Autowired
 	private VideoImageController videoImageController;
+	
+	@Autowired
+	private VideoContainerController videocontainercontroller;
+	
 	
 	@PostMapping("/AdminRegister")
 	public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
@@ -893,15 +900,18 @@ public class FrontController {
                     videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,token);
 		}
 		
+		
 		@GetMapping("/video/getall")
 		public ResponseEntity<List<VideoDescription>> getAllVideo() {
 			return VideoController.getAllVideo();
 		}
 		
+		
 		 @GetMapping("/GetvideoDetail/{id}")
 		 public ResponseEntity<VideoDescription> getVideoDetailById(@PathVariable Long id) {			 
 			 return VideoController.getVideoDetailById(id);
 		 }
+		 
 		 
 		 @GetMapping("/videoimage/{id}")
 		 @Transactional
@@ -909,17 +919,17 @@ public class FrontController {
 		 	return videoImageController.getVideoImagesByVideoId(id);
 		 }
 		 
+		 
 		 @GetMapping("/{id}/videofile")
 		 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {	
 			return VideoController.getVideo(id, request);
 		}
-		 
+		
 		 @GetMapping("/{id}/trailerfile")
 		 public ResponseEntity<?> getVideotrailer(@PathVariable Long id, HttpServletRequest request) {
 			 return VideoController.getVideotrailer(id, request);
 		 }
 
-		
 		 @PatchMapping("/updateVideoDescription/{videoId}")
 		 @Transactional
 		 public ResponseEntity<?> updateVideoDescription(
@@ -970,11 +980,7 @@ public class FrontController {
 			 return  TagController.gettagNamesByIds(tagIds);
 		 }
 
-//		 @GetMapping("/{videoId}/videothumbnail")
-//		 @Transactional
-//		    public ResponseEntity<byte[]> getVideoThumbnail(@PathVariable long videoId) {
-//		    	return videoImageController.getVideoThumbnail(videoId);
-//		    }
+
 		 
 		    @GetMapping("/{videoId}/videothumbnail")
 			 @Transactional
@@ -982,6 +988,23 @@ public class FrontController {
 		    	return videoImageController.getVideoThumbnail(videoId);
 		    }
 		    
+		    @GetMapping("/images-by-category")
+		    @Transactional
+		    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam Long categoryId) {
+		    	return VideoController.getVideoImagesByCategory(categoryId);
+		    }
+		    
+		    
+		    @PostMapping("/videocontainer")
+			public ResponseEntity<String> createVideoContainer(@RequestBody List<VideoContainer> videoContainerRequests) {
+		    	return videocontainercontroller.createVideoContainer(videoContainerRequests);
+		    }
+		    
+		    
+		    @GetMapping("/getvideocontainer")
+		    public ResponseEntity<List<VideoContainer>> getAllVideoContainers() {
+		    	return videocontainercontroller.getAllVideoContainers();
+		    }
 //		 @GetMapping("/{filename}/file")
 //			public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
 //

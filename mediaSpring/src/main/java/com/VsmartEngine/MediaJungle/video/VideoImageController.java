@@ -55,49 +55,8 @@ public class VideoImageController {
 	}
 
 
-//	    public ResponseEntity<byte[]> getVideoThumbnail(@PathVariable long videoId) {
-//	        Optional<byte[]> videoThumbnail = videoimagerepository.findVideoThumbnailByVideoId(videoId);
-//	        try {
-//	        if (videoThumbnail.isPresent()) {
-//	        	byte[] decompressedVideoThumbnail = ImageUtils.decompressImage(videoThumbnail.get());
-//	        	// Return the map as a response
-//	            return ResponseEntity.ok()
-//	                                 .contentType(MediaType.APPLICATION_JSON)
-//	                                 .body(decompressedVideoThumbnail);
-//	        }  else {
-//	            return ResponseEntity.notFound().build();
-//	        }
-//	    } catch (Exception e) {
-//	        e.printStackTrace();  // Replace with proper logging in production
-//	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//	    }
-//	}
 	    
 	    public ResponseEntity<Map<String, byte[]>> getVideoThumbnail(@PathVariable long videoId) {
-//	        try {
-//	            Optional<byte[]> videoThumbnail = videoimagerepository.findVideoThumbnailByVideoId(videoId);
-//
-//	            if (videoThumbnail.isPresent()) {
-//	                // Decompress the image bytes
-//	                byte[] decompressedVideoThumbnail = ImageUtils.decompressImage(videoThumbnail.get());
-//
-//	                // Encode the decompressed image to Base64
-//	                String videoThumbnailBase64 = Base64.getEncoder().encodeToString(decompressedVideoThumbnail);
-//
-//	                Map<String, String> responseMap = new HashMap<>();
-//	                responseMap.put("videoThumbnail", videoThumbnailBase64);
-//
-//	                // Return the map as a response
-//	                return ResponseEntity.ok()
-//	                                     .contentType(MediaType.APPLICATION_JSON)
-//	                                     .body(responseMap);
-//	            } else {
-//	                return ResponseEntity.notFound().build();
-//	            }
-//	        } catch (Exception e) {
-//	            e.printStackTrace();  // Replace with proper logging in production
-//	            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//	        }
 	    	try {
 		        // Fetching the video images from the repository
 		        Optional<VideoImage> videoImageOptional = videoimagerepository.findVideoById(videoId);
@@ -107,14 +66,9 @@ public class VideoImageController {
 
 		            // Decompressing the image bytes
 		            byte[] decompressedVideoThumbnail = ImageUtils.decompressImage(videoImage.getVideoThumbnail());
-//		            byte[] decompressedTrailerThumbnail = ImageUtils.decompressImage(videoImage.getTrailerThumbnail());
-//		            byte[] decompressedUserBanner = ImageUtils.decompressImage(videoImage.getUserBanner());
-
 		            // Prepare a map to hold the decompressed image data
 		            Map<String, byte[]> imageMap = new HashMap<>();
 		            imageMap.put("videoThumbnail", decompressedVideoThumbnail);
-//		            imageMap.put("trailerThumbnail", decompressedTrailerThumbnail);
-//		            imageMap.put("userBanner", decompressedUserBanner);
 
 		            // Return the map as a response
 		            return ResponseEntity.ok()

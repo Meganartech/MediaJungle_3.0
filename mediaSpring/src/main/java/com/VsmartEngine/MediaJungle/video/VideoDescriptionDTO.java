@@ -2,38 +2,29 @@ package com.VsmartEngine.MediaJungle.video;
 
 public class VideoDescriptionDTO {
 	
-	private long videoid;
-	private String category;
-	private String videothumbnailimage;
+	   private Long videoId;
+	   private byte[] thumbnail;
 	public VideoDescriptionDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public VideoDescriptionDTO(long videoid, String category, String videothumbnailimage) {
+	public VideoDescriptionDTO(Long videoId, byte[] thumbnail) {
 		super();
-		this.videoid = videoid;
-		this.category = category;
-		this.videothumbnailimage = videothumbnailimage;
+		this.videoId = videoId;
+		this.thumbnail = thumbnail;
 	}
-	public long getVideoid() {
-		return videoid;
+	public Long getVideoId() {
+		return videoId;
 	}
-	public void setVideoid(long videoid) {
-		this.videoid = videoid;
+	public void setVideoId(Long videoId) {
+		this.videoId = videoId;
 	}
-	public String getCategory() {
-		return category;
+	public byte[] getThumbnail() {
+		return thumbnail;
 	}
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	public String getVideothumbnailimage() {
-		return videothumbnailimage;
-	}
-	public void setVideothumbnailimage(String videothumbnailimage) {
-		this.videothumbnailimage = videothumbnailimage;
+	public void setThumbnail(byte[] thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 	
-	
-
+	   
 }
