@@ -92,6 +92,7 @@ import Library from './user/Screens/Library';
 import PrivacyPolicy from './user/Screens/PrivacyPolicy';
 import Banner_setting from './admin/Banner_setting';
 import Footer_setting from './admin/Footer_setting';
+import AudioContainer_settings from './admin/AudioContainer_settings';
 import Container from './admin/Container';
 
 
@@ -285,8 +286,9 @@ const App = () => {
             </Route>
             </Route> 
            </Route>
-          <Route path='licence' element={<Licence/>} />
-          <Route path='playertest' element= {<AddAud/>} />
+           <Route path='licence' element={<Licence/>} />
+          {/* AudioContainer_settings */}
+          <Route path='playertest' element= {<AudioContainer_settings/>} />
       
         </Routes>
       {/* </Router> */}
