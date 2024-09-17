@@ -117,42 +117,7 @@ public class PlanDetailsController {
             return ResponseEntity.notFound().build();
         }
     }
-    @GetMapping("/calculateDiscount")
-    public ResponseEntity<?> calculateDiscountedAmount(@RequestParam("planId") Long planId, @RequestParam("tenureId") Long tenureId) {
-        try {
-            // Fetch the plan by ID
-            Optional<PlanDetails> planOptional = planrepository.findById(planId);
-            if (planOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plan not found");
-            }
 
-            PlanDetails plan = planOptional.get();
-
-            // Mock tenure data or fetch from the database if needed
-            Tenure tenure = getTenureById(tenureId); // Write logic to fetch tenure by ID
-
-            if (tenure == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tenure not found");
-            }
-
-            // Calculate the discounted amount
-            double monthlyAmount = plan.getAmount();
-            double totalMonths = tenure.getMonths();
-            double discountedMonths = tenure.getDiscount();
-            double totalAmount = monthlyAmount * totalMonths;
-            double discountAmount = monthlyAmount * discountedMonths;
-            double finalAmount = totalAmount - discountAmount;
-
-            return ResponseEntity.ok(Map.of("discountedAmount", finalAmount));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error calculating amount: " + e.getMessage());
-        }
-    }
-
-    private Tenure getTenureById(Long tenureId) {
-        // Replace with logic to fetch tenure from the database
-        return new Tenure(tenureId, "12 Months", 12, 2); // Example tenure
-    }
 
     @DeleteMapping("/plans/{planId}")
     public ResponseEntity<?> deletePlan(@PathVariable Long planId, @RequestHeader("Authorization") String token) {

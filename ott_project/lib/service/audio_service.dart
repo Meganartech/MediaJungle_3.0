@@ -8,8 +8,8 @@ import 'package:ott_project/service/audio_api_service.dart';
 
 class AudioService {
   static const String baseUrl =
-      'http://localhost:8080/api/v2';
-      //'http://192.168.183.129:8080/api/v2';
+     // 'http://localhost:8080/api/v2';
+      'http://192.168.183.129:8080/api/v2';
   static Future<List<Audio>> fetchAudio() async {
     final response = await http.get(Uri.parse('$baseUrl/getaudiodetailsdto'));
     //print(response.statusCode);

@@ -76,7 +76,6 @@ const AddAud = () => {
         )}
         <br />
       </div>
-      {/* <div>{selectedCategories}</div> Display selected categories */}
     </div>
   );
 };
