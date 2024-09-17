@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/app_icon.dart';
+import 'package:ott_project/plan_and_payment/featureList.dart';
 import 'package:ott_project/plan_and_payment/payment_settings.dart';
 import 'package:ott_project/plan_and_payment/plan_details.dart';
 import 'package:ott_project/profile/profile_page.dart';
@@ -744,6 +745,7 @@ class _PlanPageState extends State<PlanPage> {
       setState(() {
         plan = fetchedplans.map((p) {
           return PlanDetails(
+              id: p.id,
               planname: p.planname,
               amount: p.amount,
               tenure: fetchedTenures,
@@ -759,8 +761,8 @@ class _PlanPageState extends State<PlanPage> {
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     PlanDetails selectedPlanDetails = plan.firstWhere(
         (plan) => plan.planname == selectedPlan,
-        orElse: () =>
-            PlanDetails(planname: '', amount: 0, tenure: [], feature: []));
+        orElse: () => PlanDetails(
+            id: 0, planname: '', amount: 0, tenure: [], feature: []));
 
     await _sendPaymentDetailsToServer(
       response.orderId!,
@@ -854,8 +856,8 @@ class _PlanPageState extends State<PlanPage> {
 
     PlanDetails selectedPlanDetails = plan.firstWhere(
         (plan) => plan.planname == selectedPlan,
-        orElse: () =>
-            PlanDetails(planname: '', amount: 0, tenure: [], feature: []));
+        orElse: () => PlanDetails(
+            id: 0, planname: '', amount: 0, tenure: [], feature: []));
 
     try {
       final amount = selectedPlanDetails.amount.toInt().toString();
@@ -1142,7 +1144,7 @@ class _PlanPageState extends State<PlanPage> {
                       color: Colors.white,
                     ),
                     // _buildQualityIcons(plan),
-
+                    FeatureList(planId: plan.id),
                     SizedBox(height: 16),
                     // Wrap(
                     //   runSpacing: 8.0,
@@ -1150,7 +1152,7 @@ class _PlanPageState extends State<PlanPage> {
                     //   children: plan.feature.map((feature) {
                     //     return FractionallySizedBox(
                     //       widthFactor: 0.48,
-                    //       child: _buildFeature(feature.feature
+                    //       child: _buildFeature(feature.featureName
                     //           // plan.feature as String,
                     //           ),
                     //     );
@@ -1184,12 +1186,6 @@ class _PlanPageState extends State<PlanPage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildFeature(String feature) {
-    return Container(
-      child: Text(feature),
     );
   }
 
@@ -1271,8 +1267,8 @@ class _PlanPageState extends State<PlanPage> {
   Widget _buildSelectedPlanDetails() {
     PlanDetails? selectedPlanDetails = plan.firstWhere(
         (plan) => plan.planname == selectedPlan,
-        orElse: () =>
-            PlanDetails(planname: '', amount: 0, tenure: [], feature: []));
+        orElse: () => PlanDetails(
+            id: 0, planname: '', amount: 0, tenure: [], feature: []));
 
     return Column(
       children: [

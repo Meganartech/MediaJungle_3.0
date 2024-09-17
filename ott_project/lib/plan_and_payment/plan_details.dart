@@ -1,5 +1,3 @@
-import 'package:http/http.dart';
-
 // class PlanDetails {
 //   final String planname;
 //   final double amount;
@@ -20,13 +18,13 @@ import 'package:http/http.dart';
 // }
 
 class PlanDetails {
-  //final int id;
+  final int id;
   final String planname;
   final double amount;
   List<Tenures> tenure;
   List<Features> feature;
   PlanDetails({
-    // required this.id,
+    required this.id,
     required this.planname,
     this.tenure = const [],
     this.feature = const [],
@@ -35,8 +33,8 @@ class PlanDetails {
 
   factory PlanDetails.fromJson(Map<String, dynamic> json) {
     return PlanDetails(
-      // id :json['id'],
-      planname: json['planname'],
+      id: json['id'] ?? '2',
+      planname: json['planname'] ?? 'Unkown',
       amount: json['amount'],
       tenure: json['tenure'] != null
           ? (json['tenure'] as List<dynamic>)
@@ -73,14 +71,26 @@ class Tenures {
 
 class Features {
   final int id;
-  final String feature;
+  final int? featureId;
+  String featureName;
+  final bool active;
 
   Features({
     required this.id,
-    required this.feature,
+    this.featureId,
+    this.featureName = 'Unknown',
+    required this.active,
   });
 
   factory Features.fromJson(Map<String, dynamic> json) {
-    return Features(id: json['id'], feature: json['features']);
+    return Features(
+        id: json['id'],
+        featureName: json['features'] ?? 'Unknown',
+        active: json['active'] ?? false);
+  }
+
+  factory Features.fromPlanJson(Map<String, dynamic> json) {
+    return Features(
+        id: json['id'], featureId: json['featureId'], active: json['active']?? false);
   }
 }
