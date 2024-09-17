@@ -93,6 +93,7 @@ import PrivacyPolicy from './user/Screens/PrivacyPolicy';
 import Banner_setting from './admin/Banner_setting';
 import Footer_setting from './admin/Footer_setting';
 import AudioContainer_settings from './admin/AudioContainer_settings';
+import Container from './admin/Container';
 
 
 
@@ -280,6 +281,7 @@ const App = () => {
             <Route path='Contact_setting' element= {<Contact_setting/>} />
             <Route path='Footer_setting' element= {<Footer_setting/>} />
             <Route path='Banner_setting' element= {<Banner_setting/>} />
+            <Route path='container' element ={<Container />} />
             </Route>
             </Route> 
            </Route>
