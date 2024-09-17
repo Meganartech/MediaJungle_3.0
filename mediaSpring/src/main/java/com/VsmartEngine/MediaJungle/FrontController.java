@@ -252,9 +252,7 @@ public class FrontController {
 		return AudioController.getAllThumbnail();
 
 	}
-	
-	
-	
+
 	@GetMapping("/getbannerthumbnailsbyid/{id}")
 	public ResponseEntity<List<String>> getaudiobannerById(@PathVariable Long id) {
 

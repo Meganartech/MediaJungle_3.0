@@ -98,6 +98,7 @@ import Container from './admin/Container';
 
 
 
+
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -285,7 +286,8 @@ const App = () => {
             </Route>
             </Route> 
            </Route>
-          <Route path='licence' element={<Licence/>} />
+           <Route path='licence' element={<Licence/>} />
+
           {/* AudioContainer_settings */}
           <Route path='playertest' element= {<AudioContainer_settings/>} />
       

@@ -9,16 +9,10 @@ import API_URL from '../Config';
 import "../css/Sidebar.css";
 
 const Video = () => {
-  // ------------------------------ Admin Functions  -----------------------------------------
-  const [videos, setVideos] = useState([]);
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const userid = parseInt(sessionStorage.getItem('id'), 10); // Get user ID from session storage
-  const name = sessionStorage.getItem('username');
+  // ------------------------------ Admin Functions  -------------------------------------
   const [users, setUsers] = useState([]);
-  let Id;
+  const [category,setCategory] = useState([]);
   const navigate = useNavigate();
-  const [dataToSend, setDataToSend] = useState('');
-  const [paid, setpaid] = useState('');
   const token= sessionStorage.getItem('tokenn')
 
   const handleClick = (link) => {
@@ -34,6 +28,8 @@ const Video = () => {
       try {
         const response = await axios.get(`${API_URL}/api/v2/video/getall`);
         setUsers(response.data); 
+        setCategory(response.data.categorylist);
+        console.log(category)
         console.log(response.data) 
       } catch (error) {
         console.log('Error fetching users:', error);
@@ -43,18 +39,7 @@ const Video = () => {
     fetchUsers();
   }, []);
 
-  
-  
 
-
-  // const fetchUsers = async () => {
-  //   try {
-  //     const response = await axios.get(`${API_URL}/api/videogetall`);
-  //     setUsers(response.data);
-  //   } catch (error) {
-  //     console.log('Error fetching users:', error);
-  //   }
-  // };
   const handleDelete = async (videoId) => {
     Swal.fire({
       title: 'Are you sure?',
@@ -141,7 +126,7 @@ const Video = () => {
             </th>
             <th style={{border: 'none' }}>S.No</th>
             <th style={{border: 'none' }}>VIDEO TITLE</th>
-            {/* <th style={{border: 'none' }}>BANNER</th> */}
+             {/* <th style={{border: 'none' }}>CATEGORY</th>  */}
             <th style={{border: 'none' }}>PRODUCTION</th>
             <th style={{border: 'none' }}>RATING</th>
             <th style={{border: 'none' }}>VIDEO ACCESS TYPE</th>
@@ -157,6 +142,7 @@ const Video = () => {
               </td>
               <td>{index + 1}</td>
               <td>{user.videoTitle}</td>
+              {/* <td>{user.categorylist}</td> */}
               <td>{user.productionCompany}</td>
               <td>{user.rating}/10</td>
               <td>{user.videoAccessType===true ? 'paid' : 'free'}</td>
