@@ -29,7 +29,7 @@ const SiteSetting = () => {
       .then(response => response.json())
       .then(data => {
         if (data.length > 0) {
-          setButtonText('EDIT');
+          setButtonText('UPDATE');
           setsitenamePlaceholder(data[0].sitename);
           setappurlPlaceholder(data[0].appurl);
           settagnamePlaceholder(data[0].tagName);
@@ -155,7 +155,7 @@ const SiteSetting = () => {
     <div className='AddArea'>
       {/* Dropdown for settings */}
       <Dropdown 
-      className="mb-4" 
+   
       show={isOpen} 
       onToggle={() => setIsOpen(!isOpen)} // Toggle the dropdown
     >
@@ -183,13 +183,14 @@ const SiteSetting = () => {
     </Dropdown>
     </div>
     <br />
-    <div className='container3 mt-2'>
+    <div className='container2'>
     <ol className="breadcrumb mb-4 d-flex my-0">
       <li className="breadcrumb-item">
         <Link to="/admin/SiteSetting">Settings</Link>
       </li>
       <li className="breadcrumb-item active  text-white">SiteSettings</li>
     </ol>
+    <div className='table-container'>
         <div className="card-body">
           {/* <h5 className="card-title text-center">Site Settings</h5> */}
           <form onSubmit={handleSubmit} method="post">
@@ -248,7 +249,7 @@ const SiteSetting = () => {
               </div>
             </div>
 
-            <div className="col-md-12" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <div className="button-container" >
   <button className="btn btn-info" type="submit">
     {buttonText}
   </button>
@@ -257,7 +258,7 @@ const SiteSetting = () => {
           </form>
         </div>
       </div>
-    </div>
+    </div></div>
   );
 };
 

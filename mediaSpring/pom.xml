@@ -9,14 +9,15 @@
 		<version>3.2.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>mediaSpring</artifactId>
+	<groupId>com.VsmartEngine</groupId>
+	<artifactId>MediaJungle</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>mediaSpring</name>
 	<description>Media backend Spring Boot</description>
+	
 	<properties>
-		<start-class>com.example.demo</start-class>
+		<start-class>com.VsmartEngine.MediaJungle</start-class>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
@@ -125,6 +126,13 @@
 	<build>
 		<finalName>media</finalName>
 		<plugins>
+		 <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.VsmartEngine.MediaJungle.MediaSpringApplication</mainClass> <!-- Main class with the main method -->
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -137,6 +145,14 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			 <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 

@@ -20,7 +20,7 @@ import Other_setting from "./admin/Other_setting";
 import Contact_setting from "./admin/Contact_setting";
 // import SEO_setting from "./admin/Footer_setting";
 // import Mobile_setting from "./admin/Mobile_setting";
-import SubscriptionPayments from "./admin/SubscriptionPayments";
+import Users from "./admin/Users";
 // import Setting from "./admin/Setting";
 import Setting_sidebar from "./admin/Setting_sidebar";
 import AddCastCrew from "./admin/AddCastCrew";
@@ -258,7 +258,7 @@ const App = () => {
             <Route path='Viewcastandcrew' element={<Viewcastandcrew />} />
             <Route path='AddTenure' element={<AddTenure />} />
             <Route path='Editcastandcrew' element={<Editcastandcrew />} />
-            <Route path='subscriptionPayments' element= {<SubscriptionPayments/>} />
+            <Route path='users' element= {<Users/>} />
             <Route path='paymentHistory/:userId' element={<PaymentHistory />} />
             <Route path='Adminplan' element= {<Adminplan/>} />
             <Route path='PlanDetailsList' element={<PlanDetailsList/>}/>
@@ -287,6 +287,7 @@ const App = () => {
             </Route> 
            </Route>
            <Route path='licence' element={<Licence/>} />
+
           {/* AudioContainer_settings */}
           <Route path='playertest' element= {<AudioContainer_settings/>} />
       

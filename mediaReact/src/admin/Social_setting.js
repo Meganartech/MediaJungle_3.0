@@ -116,7 +116,7 @@ const Social_setting = () => {
       </div>
 
       <br />
-      <div className="container3 mt-2">
+      <div className="container2">
   <ol className="breadcrumb mb-4 d-flex my-0">
     <li className="breadcrumb-item">
       <Link to="/admin/SiteSetting">Settings</Link>
@@ -184,24 +184,25 @@ const Social_setting = () => {
               </div>
 
               {/* Form Footer */}
-           
-            
-          </form>
-     
-        </div>
-      </div>
-      <div className='button-container'>
+              <div className='button-container'>
                 <input 
                   type="submit" 
                   className="btn btn-info" 
                   value={id ? "Update" : "Submit"} 
                 />
               </div>
+            
+          
+          </form>
+     
+        </div>
+      </div>
+  
     </div>
   </div>
 </div>
 
   );
-};
+};  
 
 export default Social_setting;
