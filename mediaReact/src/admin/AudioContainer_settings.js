@@ -41,134 +41,235 @@ const AudioContainer_settings = () => {
   };
 
 
-  const [audioTitle, setAudioTitle] = useState(0); // Number of rows to generate
-const [tableData, setTableData] = useState([]);  // Data for the table
-const [categories, setCategories] = useState([]);
-const [filteredOptions, setFilteredOptions] = useState([]);
-const [inputValues, setInputValues] = useState([]); // Track input values for each row
-const [dropdownStates, setDropdownStates] = useState([]); // Track dropdown open/close states for each row
+  const [audioTitle, setAudioTitle] = useState(0);  // Actual state used for audioTitle
+  const [inputValue, setInputValue] = useState('');  // Internal input value
+  const [tableData, setTableData] = useState([]);  // Data for the table
+  const [categories, setCategories] = useState([]);
+  const [filteredOptions, setFilteredOptions] = useState([]);
+  const [inputValues, setInputValues] = useState([]); // Track input values for each row
+  const [dropdownStates, setDropdownStates] = useState([]); // Track dropdown open/close states for each row
 
-// Fetch categories from the API
-useEffect(() => {
-  fetch(`${API_URL}/api/v2/GetAllCategories`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+  // Fetch categories from the API
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllCategories`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const categoryNames = data.map(item => item.categories);
+        setCategories(categoryNames);
+        setFilteredOptions(categoryNames);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  // Handle input change for filtering options
+  const handleInputChanget = (e, index) => {
+    const value = e.target.value.toLowerCase();  // Convert the input to lowercase
+    const updatedInputValues = [...inputValues];
+    updatedInputValues[index] = value;
+    setInputValues(updatedInputValues);
+
+    // Separate options that start with the value from those that contain it elsewhere
+    const startsWithValue = categories.filter(option =>
+      option.toLowerCase().startsWith(value)  // Options that start with the input
+    );
+
+    const containsValue = categories.filter(option =>
+      option.toLowerCase().includes(value) && !option.toLowerCase().startsWith(value)  // Options that contain but don't start with the input
+    );
+
+    // Combine the two lists, with starting matches first
+    const filtered = [...startsWithValue, ...containsValue];
+
+    setFilteredOptions(filtered);  // Update the filtered options
+  };
+
+
+  // Toggle dropdown for specific row
+  const handleDropdownToggle = (index) => {
+    const updatedDropdownStates = [...dropdownStates];
+    updatedDropdownStates[index] = !updatedDropdownStates[index];
+    setDropdownStates(updatedDropdownStates);
+  };
+
+  // Handle selecting an option
+  const handleOptionClick = (option, index) => {
+    const updatedInputValues = [...inputValues];
+    updatedInputValues[index] = option;
+    setInputValues(updatedInputValues);
+
+    const updatedDropdownStates = [...dropdownStates];
+    updatedDropdownStates[index] = false;
+    setDropdownStates(updatedDropdownStates);
+    const newValue = option;
+    const updatedData = tableData.map((row, i) => {
+      if (i === index) {
+        return { ...row, categoryName: newValue };  // Dynamically update the field
       }
-      return response.json();
-    })
-    .then(data => {
-      const categoryNames = data.map(item => item.categories);
-      setCategories(categoryNames);
-      setFilteredOptions(categoryNames);
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
+      return row;  // Return other rows unchanged
     });
-}, []);
-
-// Handle input change for filtering options
-const handleInputChanget = (e, index) => {
-  const value = e.target.value.toLowerCase();  // Convert the input to lowercase
-  const updatedInputValues = [...inputValues];
-  updatedInputValues[index] = value;
-  setInputValues(updatedInputValues);
-
-  // Separate options that start with the value from those that contain it elsewhere
-  const startsWithValue = categories.filter(option =>
-    option.toLowerCase().startsWith(value)  // Options that start with the input
-  );
-  
-  const containsValue = categories.filter(option =>
-    option.toLowerCase().includes(value) && !option.toLowerCase().startsWith(value)  // Options that contain but don't start with the input
-  );
-
-  // Combine the two lists, with starting matches first
-  const filtered = [...startsWithValue, ...containsValue];
-
-  setFilteredOptions(filtered);  // Update the filtered options
-};
+    setTableData(updatedData);
 
 
-// Toggle dropdown for specific row
-const handleDropdownToggle = (index) => {
-  const updatedDropdownStates = [...dropdownStates];
-  updatedDropdownStates[index] = !updatedDropdownStates[index];
-  setDropdownStates(updatedDropdownStates);
-};
 
-// Handle selecting an option
-const handleOptionClick = (option, index) => {
-  const updatedInputValues = [...inputValues];
-  updatedInputValues[index] = option;
-  setInputValues(updatedInputValues);
 
-  const updatedDropdownStates = [...dropdownStates];
-  updatedDropdownStates[index] = false;
-  setDropdownStates(updatedDropdownStates);
-  const newValue = option;
-  const updatedData = tableData.map((row, i) => {
-    if (i === index) {
-      return { ...row, categoryName: newValue };  // Dynamically update the field
+
+
+
+
+  };
+
+  // Generate table rows based on the audioTitle count
+  // useEffect(() => {
+  //   const rows = Array.from({ length: audioTitle }, (_, index) => ({
+  //     sno: index + 1,
+  //     container: '',
+  //     categoryName: ''
+  //   }));
+  //   setTableData(rows);
+  //   setDropdownStates(Array(audioTitle).fill(false)); // Initialize dropdown states
+  //   setInputValues(Array(audioTitle).fill("")); // Initialize input values
+  // }, [audioTitle]);
+
+  // Handle input change in the table rows
+  const handleInputChange = (e, index, field) => {
+    const newValue = e.target.value;
+    const updatedData = tableData.map((row, i) => {
+      if (i === index) {
+        return { ...row, [field]: newValue };
+      }
+      return row;
+    });
+    setTableData(updatedData);
+  };
+
+  // Handle form submission
+  const handleSubmit = () => {
+    const jsonData = JSON.stringify(tableData, null, 2); // Convert tableData to JSON
+
+
+
+    console.log('Submitted Data:', jsonData);
+  };
+
+  // Handle row deletion
+  const handleDelete = (index) => {
+    console.log('inside function')
+    console.log(tableData)
+    const updatedData = tableData.filter((_, i) => i !== index);
+
+    const updatedDropdownStates = dropdownStates.filter((_, i) => i !== index);
+    setDropdownStates(updatedDropdownStates);
+
+    // Delete the item at the specific index from inputValues
+    const updatedInputValues = inputValues.filter((_, i) => i !== index);
+    setInputValues(updatedInputValues);
+
+    setTableData(updatedData);
+    setAudioTitle(audioTitle - 1); // Reduce the count
+    setInputValue(updatedData.length);
+  };
+  console.log('outside function')
+  console.log(tableData)
+  console.log(dropdownStates)
+  console.log(inputValues)
+  // Function to handle the value update and check
+  const handleUpdatecontainervalue = () => {
+    const newValue = parseInt(inputValue, 10);
+
+    if (inputValue === '') {
+      alert('Please enter a valid number');
+      return;
     }
-    return row;  // Return other rows unchanged
-  });
-  setTableData(updatedData);
 
+    if (newValue <= audioTitle) {
+      // Alert if the new value is less than the existing audioTitle
+      alert('New value cannot be less than the existing value');
 
+      console.log(" new value  lesser than === audiotitle value")
+      setInputValue(audioTitle);
+    } else {
+      // Update audioTitle only if the new value is valid
+      if (audioTitle <= 0) {
 
+        console.log("audio less than === 0")
+        setAudioTitle(newValue);
+        const rows = Array.from({ length: inputValue }, (_, index) => ({
+          container: '',
+          categoryName: ''
+        }));
+        setTableData(rows);
+        setInputValue(newValue);
+        setAudioTitle(newValue);
+        setDropdownStates(Array(inputValue).fill(false)); // Initialize dropdown states
+        setInputValues(Array(inputValue).fill("")); // Initialize input values
+      }
+      else if (audioTitle >= 0) {
 
+        console.log("audio greater than === 0")
+        setTableData((prevData) => {
+          // Check if the current inputValue exceeds the existing rows in tableData
+          if (inputValue > prevData.length) {
+            // Add new rows while keeping the existing ones intact
+            const newRows = Array.from({ length: inputValue - prevData.length }, () => ({
+              container: '',
+              categoryName: ''
+            }));
+            return [...prevData, ...newRows]; // Combine old rows with new empty rows      
+          }
+          return prevData; // If inputValue is less than or equal, return existing data
+        });
 
+        setDropdownStates((prevDropdownStates) => {
+          // Check if inputValue exceeds the current length of dropdownStates
+          if (inputValue > prevDropdownStates.length) {
+            // Add 'false' values to the end of dropdownStates
+            const extraStates = Array(inputValue - prevDropdownStates.length).fill(false);
+            return [...prevDropdownStates, ...extraStates]; // Combine old states with new 'false' values
+          }
+          return prevDropdownStates; // If inputValue is less than or equal, return existing data
+        });
+        setInputValues((prevInputValues) => {
+          // Check if inputValue exceeds the current length of dropdownStates
+          if (inputValue > prevInputValues.length) {
+            // Add 'false' values to the end of dropdownStates
+            const extraValues = Array(inputValue - prevInputValues.length).fill("");
+            return [...prevInputValues, ...extraValues]; // Combine old states with new 'false' values
+          }
+          return prevInputValues; // If inputValue is less than or equal, return existing data
+        });
 
+        setInputValue(newValue);
+        setAudioTitle(newValue);
 
-
-};
-
-// Generate table rows based on the audioTitle count
-useEffect(() => {
-  const rows = Array.from({ length: audioTitle }, (_, index) => ({
-    sno: index + 1,
-    container: '',
-    categoryName: ''
-  }));
-  setTableData(rows);
-  setDropdownStates(Array(audioTitle).fill(false)); // Initialize dropdown states
-  setInputValues(Array(audioTitle).fill("")); // Initialize input values
-}, [audioTitle]);
-
-// Handle input change in the table rows
-const handleInputChange = (e, index, field) => {
-  const newValue = e.target.value;
-  const updatedData = tableData.map((row, i) => {
-    if (i === index) {
-      return { ...row, [field]: newValue };
+        // setDropdownStates(Array(inputValue).fill(false)); // Initialize dropdown states
+        // setInputValues(Array(inputValue).fill("")); // Initialize input values
+      }
     }
-    return row;
-  });
-  setTableData(updatedData);
-};
 
-// Handle form submission
-const handleSubmit = () => {
-  const jsonData = JSON.stringify(tableData, null, 2); // Convert tableData to JSON
-  console.log('Submitted Data:', jsonData);
-};
 
-// Handle row deletion
-const handleDelete = (index) => {
-  const updatedData = tableData.filter((_, i) => i !== index);
-  setTableData(updatedData);
-  setAudioTitle(audioTitle - 1); // Reduce the count
-};
 
-// return (
-//   <div className='container3 mt-20'>
-//     {/* Your other components */}
-//     <div className='row' style={{ paddingTop: '0px' }} >
-     
-//     </div>
-//   </div>
-// );
+
+  };
+  console.log('audioTitle')
+  console.log(audioTitle)
+  console.log('inputValue')
+  console.log(inputValue)
+
+  // return (
+  //   <div className='container3 mt-20'>
+  //     {/* Your other components */}
+  //     <div className='row' style={{ paddingTop: '0px' }} >
+
+  //     </div>
+  //   </div>
+  // );
 
 
   // const [audioTitle, setAudioTitle] = useState(); // Number of rows to generate
@@ -277,7 +378,7 @@ const handleDelete = (index) => {
                   required
                   className="form-control border border-dark border-2 input-width"
                   placeholder="Enter Number of Containers"
-                  value={audioTitle === 0 ? '' : audioTitle}  // Show empty field when value is 0
+                  value={inputValue === 0 ? '' : inputValue}  // Show empty field when value is 0
                   min="0"  // Prevent negative numbers
                   step="1" // Only allow integers
                   onChange={(e) => {
@@ -286,14 +387,27 @@ const handleDelete = (index) => {
                     // Remove leading zeros
                     const sanitizedValue = value.replace(/^0+(?=\d)/, '');
 
-                    // Allow only digits and empty value (for clearing)
+                    // Allow only digits and empty value
                     if (/^\d*$/.test(sanitizedValue)) {
-                      setAudioTitle(sanitizedValue === '' ? 0 : parseInt(sanitizedValue, 10));
+                      setInputValue(sanitizedValue === '' ? 0 : sanitizedValue);
                     }
                   }}
                 />
               </div>
               </div>
+
+              <div className='col-lg-2'><button
+                className="btn btn-primary"
+                onClick={handleUpdatecontainervalue}  // Using the function here
+              >
+                Create
+              </button>
+              </div>
+
+
+
+
+
             </div>
             <div className='row' style={{ paddingTop: '0px' }} >
               {/* {audioTitle > 0 && (
@@ -357,67 +471,67 @@ const handleDelete = (index) => {
                   </tbody>
                 </table>
               )} */}
-               {audioTitle > 0 && (
-        <table border="1" cellPadding="10" cellSpacing="0" className="mt-3">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Container</th>
-              <th>Category Name</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableData.map((row, index) => (
-              <tr key={index}>
-                <td>{row.sno}</td> {/* Automatically incremented S.No */}
-                <td>
-                  <input
-                    type="text"
-                    name="Container"
-                    className="form-control border border-dark border-2 input-width"
-                    placeholder="Enter Container"
-                    value={row.container}
-                    onChange={(e) => handleInputChange(e, index, 'container')}
-                  />
-                </td>
-                <td>
-                  <div className="dropdown-container" style={styles.dropdownContainer}>
-                    <input
-                      type="text"
-                      value={inputValues[index] || ""}
-                      onClick={() => handleDropdownToggle(index)}
-                      onChange={(e) => handleInputChanget(e, index)}
-                      className="dropdown-input"
-                      style={styles.dropdownInput}
-                      placeholder="Select an option"
-                    />
-                    {dropdownStates[index] && (
-                      <div className="dropdown-list" style={styles.dropdownList}>
-                        {filteredOptions.map((option, idx) => (
-                          <div
-                            key={idx}
-                            className="dropdown-item"
-                            style={styles.dropdownItem}
-                            onClick={() => handleOptionClick(option, index)}
-                          >
-                            {option}
+              {audioTitle > 0 && (
+                <table border="1" cellPadding="10" cellSpacing="0" className="mt-3">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Container</th>
+                      <th>Category Name</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tableData.map((row, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td> {/* Automatically incremented S.No */}
+                        <td>
+                          <input
+                            type="text"
+                            name="Container"
+                            className="form-control border border-dark border-2 input-width"
+                            placeholder="Enter Container"
+                            value={row.container}
+                            onChange={(e) => handleInputChange(e, index, 'container')}
+                          />
+                        </td>
+                        <td>
+                          <div className="dropdown-container" style={styles.dropdownContainer}>
+                            <input
+                              type="text"
+                              value={inputValues[index] || ""}
+                              onClick={() => handleDropdownToggle(index)}
+                              onChange={(e) => handleInputChanget(e, index)}
+                              className="dropdown-input"
+                              style={styles.dropdownInput}
+                              placeholder="Select an option"
+                            />
+                            {dropdownStates[index] && (
+                              <div className="dropdown-list" style={styles.dropdownList}>
+                                {filteredOptions.map((option, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="dropdown-item"
+                                    style={styles.dropdownItem}
+                                    onClick={() => handleOptionClick(option, index)}
+                                  >
+                                    {option}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            <br />
                           </div>
-                        ))}
-                      </div>
-                    )}
-                    <br />
-                  </div>
-                </td>
-                <td>
-                  <button onClick={() => handleDelete(index)} className="btn btn-danger bi bi-trash3">
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+                        </td>
+                        <td>
+                          <button onClick={() => handleDelete(index)} className="btn btn-danger bi bi-trash3">
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>
