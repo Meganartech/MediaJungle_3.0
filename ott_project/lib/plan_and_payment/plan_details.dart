@@ -74,12 +74,14 @@ class Features {
   final int? featureId;
   String featureName;
   final bool active;
+  bool isActiveForPlan;
 
   Features({
     required this.id,
     this.featureId,
     this.featureName = 'Unknown',
     required this.active,
+    this.isActiveForPlan = false,
   });
 
   factory Features.fromJson(Map<String, dynamic> json) {
@@ -91,6 +93,10 @@ class Features {
 
   factory Features.fromPlanJson(Map<String, dynamic> json) {
     return Features(
-        id: json['id'], featureId: json['featureId'], active: json['active']?? false);
+        id: json['id'],
+        featureId: json['featureId'],
+        isActiveForPlan: false,
+        active: json['active'] ?? false);
+      
   }
 }

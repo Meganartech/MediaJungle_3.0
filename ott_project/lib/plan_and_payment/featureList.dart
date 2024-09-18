@@ -34,18 +34,22 @@ class FeatureList extends StatelessWidget {
               runSpacing: 5.0,
               spacing: 6.0,
               children: snapshot.data!.map((feature) {
+                double opacity = feature.isActiveForPlan ? 1.0 : 0.3;
                 return FractionallySizedBox(
                   widthFactor: 0.20,
                   child: Padding(
                     padding: EdgeInsets.only(),
-                    child: Text(feature.featureName,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis),
+                    child: Opacity(
+                      opacity: opacity,
+                      child: Text(feature.featureName,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis),
+                    ),
                   ),
                 );
               }).toList(),
