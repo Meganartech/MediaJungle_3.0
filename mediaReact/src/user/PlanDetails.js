@@ -178,7 +178,6 @@
     const handleTenureSelect = (tenure) => {
       handlePayment(tenure);
     };
-
     return (
       <Layout className='container mx-auto min-h-screen overflow-y-auto bg-black'>
         {/* <div style={{padding:"20px",margin:"30px",  background: 'linear-gradient(to top, #141335, #0c0d1a)'}}> */}
