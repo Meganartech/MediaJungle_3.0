@@ -190,7 +190,7 @@ const App = () => {
             <Route path='/' element={{hasSignedUp ?{navigate("/Home")} : {navigate("/admin/addUser")}} />} /> */}
 
             <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<MoviesPage/>} />} />
-          <Route path='/' element={<Home  />} />
+          {/* <Route path='/' element={<Home  />} /> */}
 
           {/* <Route path='/' element={<UserPrivateRouter hasSignedUp={hasSignedUp}  element={<Home />} />} /> */}
           {/* <Route path='/AdminSignin' element={<AdminSignin />} /> */}

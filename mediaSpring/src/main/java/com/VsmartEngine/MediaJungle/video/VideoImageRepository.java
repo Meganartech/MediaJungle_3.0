@@ -1,5 +1,6 @@
 package com.VsmartEngine.MediaJungle.video;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +19,8 @@ public interface VideoImageRepository extends JpaRepository<VideoImage,Long>{
 	
 	@Query("SELECT u.videoThumbnail FROM VideoImage u WHERE u.videoId = ?1")
 	Optional<byte[]> findVideoThumbnailByVideoId(long videoId);
+	
+	List<VideoImage> findByVideoIdIn(List<Long> videoIds);
 
 
 }
