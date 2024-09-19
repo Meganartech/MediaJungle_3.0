@@ -216,3 +216,110 @@ const MoviesPage = () => {
 };
 
 export default MoviesPage;
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import Layout from '../Layout/Layout';
+// import API_URL from '../../Config';
+
+// const MoviesPage = () => {
+//   const [states, setStates] = useState([]); // Holds the categories and their data
+//   const [videoIds, setVideoIds] = useState([]); // Holds the category-wise image data
+
+//   // Update the state for a specific index
+//   const updateState = (index, field, newValue) => {
+//     const updatedStates = states.map((state, i) =>
+//       i === index ? { ...state, [field]: newValue } : state
+//     );
+//     setStates(updatedStates);
+//     console.log(updatedStates); // Log the updated states to see the changes
+//   };
+
+//   useEffect(() => {
+//     // Fetch the initial video container data
+//     fetch(`${API_URL}/api/v2/getvideocontainer`)
+//       .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
+//       .then(data => {
+//         setStates(data);
+
+//         // Fetch video IDs for each category one by one
+//         const fetchPromises = data.map(state => {
+//           const categoryId = state.category; // Ensure categoryId is defined here
+//           return fetch(`${API_URL}/api/v2/images-by-category?categoryId=${categoryId}`)
+//             .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch video IDs'))
+//             .then(videoIds => {
+//               // Fetch images for each video ID
+//               const imageFetchPromises = videoIds.map(videoId =>
+//                 fetch(`${API_URL}/api/v2/${videoId}/videothumbnail`)
+//                   .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch image'))
+//                   .then(data => ({ videoId, imageData: `data:image/png;base64,${data.videoThumbnail}` })) // Correctly format image data
+//                   .catch(error => {
+//                     console.error(`Error fetching image for videoId ${videoId}:`, error);
+//                     return { videoId, imageData: null }; // Return null image data on error
+//                   })
+//               );
+
+//               // Wait for all image fetch promises to resolve
+//               return Promise.all(imageFetchPromises)
+//                 .then(images => ({ categoryId, images }))
+//                 .catch(error => {
+//                   console.error(`Error fetching images for categoryId ${categoryId}:`, error);
+//                   return { categoryId, images: [] }; // Return empty images array on error
+//                 });
+//             })
+//             .catch(error => {
+//               console.error('Error fetching video IDs:', error);
+//               return { categoryId, images: [] }; // Return empty images array on error
+//             });
+//         });
+
+//         // Wait for all promises to resolve
+//         Promise.all(fetchPromises)
+//           .then(results => {
+//             // Set the state with categoryId and image data pairs
+//             setVideoIds(results); // Directly store the array of objects
+//             console.log('Video IDs and Images Data:', results);
+//           })
+//           .catch(error => {
+//             console.error('Error in fetching video IDs and images:', error);
+//           });
+//       })
+//       .catch(error => {
+//         console.error('Error fetching data:', error);
+//       });
+//   }, []); 
+
+//   return (
+//     <Layout>
+//       <div className="container-list">
+//         {states.map((state) => {
+//           // Find the images corresponding to the current category
+//           const categoryImages = videoIds.find(video => video.categoryId === state.category)?.images || [];
+          
+//           return (
+//             <div key={state.id} className="container">
+//               <h2>{state.value}</h2>
+//               <div className="items" style={{ display: 'flex', flexWrap: 'wrap' }}>
+//                 {categoryImages.map(image => (
+//                   <div key={image.videoId} className="item" style={{ margin: '10px' }}>
+//                     {image.imageData ? (
+//                       <img src={image.imageData} alt={`Thumbnail for ${image.videoId}`} style={{ width: '150px', height: '150px' }} />
+//                     ) : (
+//                       <p>No image available</p>
+//                     )}
+//                   </div>
+//                 ))}
+//               </div>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     </Layout>
+//   );
+// };
+
+// export default MoviesPage;
+
+

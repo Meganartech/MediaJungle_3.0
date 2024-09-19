@@ -630,26 +630,60 @@ public class VideoController {
 	    
 	    
 	 
-	    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam Long categoryId) {
-	        List<VideoDescriptionDTO> videoThumbnails = new ArrayList<>();
+//	    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam Long categoryId) {
+//	        List<VideoDescriptionDTO> videoThumbnails = new ArrayList<>();
+//	        // Retrieve all videos from the repository
+//	        List<VideoDescription> videos = videodescriptionRepository.findAll();
+//	        // Collect video IDs where the category ID is present
+//	        List<Long> videoIds = new ArrayList<>();
+//	       
+//	       
+//	        for (VideoDescription video : videos) {
+//	            if (video.getCategorylist().contains(categoryId)) {
+//	                videoIds.add(video.getId());
+//	            }
+//	        }
+//	        System.out.println(videoIds);
+//	        
+////	         Retrieve video images by the video IDs
+//	        if (!videoIds.isEmpty()) {
+////	            List<VideoImage> videoImages = videoimagerepository.findByVideoIdIn(videoIds);
+////	            for (VideoImage videoImage : videoImages) {
+////	                videoThumbnails.add(new VideoDescriptionDTO(videoImage.getVideoId(), ImageUtils.decompressImage(videoImage.getVideoThumbnail())));
+////	            }
+//	        }
+//	        return videoThumbnails;
+//	    }
+	    
+	    public List<Long> getVideoImagesByCategory(@RequestParam Long categoryId) {
 	        // Retrieve all videos from the repository
 	        List<VideoDescription> videos = videodescriptionRepository.findAll();
 	        // Collect video IDs where the category ID is present
 	        List<Long> videoIds = new ArrayList<>();
+	       
 	        for (VideoDescription video : videos) {
 	            if (video.getCategorylist().contains(categoryId)) {
 	                videoIds.add(video.getId());
 	            }
 	        }
-	        // Retrieve video images by the video IDs
-	        if (!videoIds.isEmpty()) {
-	            List<VideoImage> videoImages = videoimagerepository.findByVideoIdIn(videoIds);
-	            for (VideoImage videoImage : videoImages) {
-	                videoThumbnails.add(new VideoDescriptionDTO(videoImage.getVideoId(), ImageUtils.decompressImage(videoImage.getVideoThumbnail())));
-	            }
-	        }
-	        return videoThumbnails;
+	        System.out.println(videoIds);
+	        return videoIds;
 	    }
+	    
+//	    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam String categoryId) {
+//	        List<VideoDescriptionDTO> videoThumbnails = new ArrayList<>();
+//	       
+//	        List<Long> videoIds = videodescriptionRepository.findVideoIdsByCategoryId(categoryId);
+//	        System.out.println(videoIds);
+//	        // Retrieve video images by the video IDs
+////	        if (!videoIds.isEmpty()) {
+////	            List<VideoImage> videoImages = videoimagerepository.findByVideoIdIn(videoIds);
+////	            for (VideoImage videoImage : videoImages) {
+////	                videoThumbnails.add(new VideoDescriptionDTO(videoImage.getVideoId(), ImageUtils.decompressImage(videoImage.getVideoThumbnail())));
+////	            }
+////	        }
+//	        return videoThumbnails;
+//	    }
 
 //	    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam Long categoryId) {
 //	        List<VideoDescriptionDTO> videoThumbnails = new ArrayList<>();

@@ -93,6 +93,8 @@ const About_us = () => {
          </li>
          {/* <li className="breadcrumb-item active">About_us</li> */}
        </ol>
+       <div className="outer-container">
+    <div className="table-container">
        <div className="card-1 mb-4" style={{height: "auto"}}>
 
        <div style={{ paddingLeft: "3rem", paddingRight: "3rem" }}>
@@ -236,6 +238,8 @@ const About_us = () => {
     
              
                   </div></div>
+     </div>
+     </div>
      </div>
    
   )
