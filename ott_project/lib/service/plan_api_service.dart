@@ -78,12 +78,13 @@ class PlanService {
           features.where((feature) => feature.active == true).toList();
       Map<int, String> idToNameMap = await getFeatureIdToNameMap();
       print('ID to Name Map: $idToNameMap');
-      return activeFeatures.map((feature) {
+      return features.map((feature) {
         return Features(
           id: feature.id,
           featureName:
               idToNameMap[feature.featureId ?? feature.id] ?? 'Unknown',
           active: feature.active,
+          isActiveForPlan: activeFeatures.any((f) => f.id == feature.id),
         );
       }).toList();
       // List<dynamic> body = jsonDecode(response.body);

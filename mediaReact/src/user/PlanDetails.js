@@ -67,19 +67,10 @@
 
     const userId = sessionStorage.getItem('userId');
 
-    const calculateDiscountedAmount = (monthlyAmount, totalMonths, discountedMonths) => {
-      const validMonthlyAmount = Number(monthlyAmount) || 0;
-      const validTotalMonths = Number(totalMonths) || 1;
-      const validDiscountedMonths = Number(discountedMonths) || 0;
-      const totalAmount = validMonthlyAmount * validTotalMonths;
-      const discountAmount = validMonthlyAmount * validDiscountedMonths;
-      const finalAmount = totalAmount - discountAmount;
-      return finalAmount;
-    };
-
+  
     const handlePayment = async (tenure) => {
       const userId = sessionStorage.getItem('userId');
-      
+    
       if (!userId) {
         Swal.fire('Error', 'You are not logged in. Redirecting to login page...', 'error').then(() => {
           window.location.href = '/UserLogin'; // Redirect to login page
@@ -92,29 +83,42 @@
         return;
       }
     
-      // Calculate the discounted amount
-      const discountedAmount = calculateDiscountedAmount(
-        selectedPlan.amount,
-        tenure.months,
-        tenure.discount
-      );
-    
-      console.log('Selected Plan Amount:', selectedPlan.amount);
-      console.log('Tenure Discounted Amount:', discountedAmount);
-    
       try {
-        const response = await fetch(`${API_URL}/api/v2/payment`, {
+        // Step 1: Calculate the discounted amount by sending a POST request
+        const discountResponse = await fetch(`${API_URL}/api/v2/calculateDiscount`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            amount: discountedAmount,  // Ensure this is the discounted amount
+            monthlyAmount: selectedPlan.amount,
+            totalMonths: tenure.months,
+            discountedMonths: tenure.discount
+          })
+        });
+    
+        if (!discountResponse.ok) {
+          throw new Error('Failed to calculate discount');
+        }
+    
+        const discountedAmount = await discountResponse.json();  // Get the calculated amount
+    
+        console.log('Discounted Amount:', discountedAmount);
+    
+        // Step 2: Proceed with payment using the discounted amount
+        const paymentResponse = await fetch(`${API_URL}/api/v2/payment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            amount: discountedAmount,     // Use the discounted amount
             userId: userId,
             planname: selectedPlan.planname
           })
         });
-        const order = await response.text();
+    
+        const order = await paymentResponse.text();
         console.log('Order Response:', order);
     
         if (order.startsWith("You have already paid")) {
@@ -122,12 +126,13 @@
           return;
         }
     
+        // Step 3: Initialize Razorpay payment with order details
         const options = {
           order_id: order,
           name: "Megnar",
           description: "This is for testing",
           handler: async function (response) {
-            console.log('Payment Response:', response);
+            console.log('Payment Success:', response);
             await sendPaymentIdToServer(response.razorpay_payment_id, order, response.status_code, selectedPlan.planname, userId, tenure.id, response.razorpay_signature);
             Swal.fire('Success', 'Payment successful!', 'success');
           },
@@ -148,10 +153,59 @@
         });
     
         pay.open();
+    
       } catch (error) {
-        Swal.fire('Error', 'Error creating order', 'error');
+        Swal.fire('Error', 'Error calculating discount or processing payment', 'error');
       }
     };
+    
+    const [discountedAmounts, setDiscountedAmounts] = useState({}); // Track discounted amounts
+
+useEffect(() => {
+  if (selectedPlan) {
+    // Fetch discounted amounts for each tenure when a plan is selected
+    const fetchDiscounts = async () => {
+      try {
+        const results = await Promise.all(
+          tenures.map(async (tenure) => {
+            const response = await fetch(`${API_URL}/api/v2/calculateDiscount`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                monthlyAmount: selectedPlan.amount,
+                totalMonths: tenure.months,
+                discountedMonths: tenure.discount
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error('Failed to calculate discount');
+            }
+
+            const discountedAmount = await response.json();
+            return { tenureId: tenure.id, amount: discountedAmount };
+          })
+        );
+
+        // Update the state with fetched discounted amounts
+        const amountMap = results.reduce((acc, { tenureId, amount }) => {
+          acc[tenureId] = amount;
+          return acc;
+        }, {});
+        setDiscountedAmounts(amountMap);
+
+      } catch (error) {
+        console.error('Error fetching discounted amounts:', error);
+      }
+    };
+
+    fetchDiscounts();
+  }
+}, [selectedPlan, tenures]);
+
+    
     useEffect(() => {
       fetch(`${API_URL}/api/v2/GetsiteSettings`)
         .then(response => {
@@ -168,9 +222,35 @@
           console.error('Error fetching data:', error);
         });
     }, []);
-    const sendPaymentIdToServer = async (paymentId, order, status_code, planname, userId, tenureId, signature) => {
+    const sendPaymentIdToServer = async (paymentId, orderId, statusCode, planname, userId, tenureId, signature) => {
+      try {
+        const response = await fetch(`${API_URL}/api/v2/confirmPayment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            paymentId: paymentId,
+            orderId: orderId,
+            statusCode: statusCode,
+            planname: planname,
+            userId: userId,
+            tenureId: tenureId,
+            signature: signature
+          })
+        });
+    
+        if (!response.ok) {
+          throw new Error('Failed to confirm payment');
+        }
+    
+        const result = await response.json();
+        console.log('Payment Confirmation:', result);
+      } catch (error) {
+        console.error('Error confirming payment:', error);
+      }
     };
-
+    
     const handlePlanSelect = (plan) => {
       setSelectedPlan(plan);
     };
@@ -178,7 +258,6 @@
     const handleTenureSelect = (tenure) => {
       handlePayment(tenure);
     };
-
     return (
       <Layout className='container mx-auto min-h-screen overflow-y-auto bg-black'>
         {/* <div style={{padding:"20px",margin:"30px",  background: 'linear-gradient(to top, #141335, #0c0d1a)'}}> */}
@@ -288,27 +367,24 @@
         
             <div className='bg-cool p-6 rounded-2xl shadow-lg flex flex-wrap justify-center'>
         
-              {tenures.map((tenure) => {
-                const discountedAmount = calculateDiscountedAmount(
-                  selectedPlan.amount,
-                  tenure.months,
-                  tenure.discount
-                );
+            {tenures.map((tenure) => {
+  const discountedAmount = discountedAmounts[tenure.id] || 0;
 
-                return (
-                  <div>
-                  <button
-                    key={tenure.id}
-                    className='relative bg-cool text-white hover:bg-hard py-2 px-8 rounded-3xl mr-2 mb-2 transition-transform transform hover:bg-hard-900 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50'
-                    onClick={() => handlePayment(tenure)}
-                  > 
-                    <span className='block text-lg font-semibold'>{tenure.tenure_name}</span>
-                    <span className='block text-xl font-extrabold'>
-                      &#8377;{Math.round(discountedAmount)}
-                    </span>
-                  </button></div>
-                );
-              })}
+  return (
+    <div key={tenure.id}>
+      <button
+        className='relative bg-cool text-white hover:bg-hard py-2 px-8 rounded-3xl mr-2 mb-2 transition-transform transform hover:bg-hard-900 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50'
+        onClick={() => handlePayment(tenure)}
+      > 
+        <span className='block text-lg font-semibold'>{tenure.tenure_name}</span>
+        <span className='block text-xl font-extrabold'>
+          &#8377;{Math.round(discountedAmount)}
+        </span>
+      </button>
+    </div>
+  );
+})}
+
             </div>
             {/* End of Tenure Container */}
           </div>

@@ -88,7 +88,7 @@ const Social_setting = () => {
       <div className='AddArea'>
         {/* Dropdown for settings */}
         <Dropdown 
-          className="mb-4" 
+          
           show={isOpen} 
           onToggle={() => setIsOpen(!isOpen)}
         >
