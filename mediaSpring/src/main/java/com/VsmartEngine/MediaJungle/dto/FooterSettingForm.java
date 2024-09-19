@@ -1,4 +1,5 @@
-import java.util.List;
+package com.VsmartEngine.MediaJungle.dto;
+
 
 public class FooterSettingForm {
 
@@ -105,6 +106,4 @@ public class FooterSettingForm {
 		this.copyrightInfo = copyrightInfo;
 	}
 
-    // Getters and setters for each field
-    // (Add getters and setters for all fields)
 }
