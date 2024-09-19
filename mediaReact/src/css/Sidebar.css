@@ -34,7 +34,7 @@
 }
 .container2{
   background:white;
-  height: 80vh;
+  /* height: 80vh; */
   margin-bottom: 60px;
   margin-left: 60px;
   margin-right: 60px;
@@ -47,7 +47,7 @@
   /* padding-bottom: 300px; */
   
   border-radius: 20px;
-  overflow: auto;
+  /* overflow-x: auto; */
 }
 /* Container for centering the form */
 .form-wrapper {
@@ -269,6 +269,11 @@ td{
   overflow-x: auto;
   white-space: nowrap;
   height: 68.70vh;
+}
+.table-container2 {
+  overflow-x: auto;
+  white-space: nowrap;
+  height: 72vh;
 }
 
 .table {

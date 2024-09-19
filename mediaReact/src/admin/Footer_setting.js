@@ -4,47 +4,59 @@ import { Dropdown } from 'react-bootstrap';
 import "../css/Sidebar.css";
 
 const Footer_setting = () => {
-  const [step, setStep] = useState(1); 
-  // Track current step
+  // State to manage all form data
+  const [formData, setFormData] = useState({
+    aboutUsHeaderScript: '',
+    aboutUsBodyScript: '',
+    featureBox1HeaderScript: '',
+    featureBox1BodyScript: '',
+    contactUsEmail: '',
+    contactUsBodyScript: '',
+    callUsPhoneNumber: '',
+    callUsBodyScript: '',
+    locationMapUrl: '',
+    locationAddress: '',
+    contactUsImage: null, // Handle file upload
+    appUrlPlaystore: '',
+    appUrlAppStore: '',
+    copyrightInfo: '',
+  });
+
+  const [step, setStep] = useState(1); // Track current step
+
+  // Handle input change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Handle file input change
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: files[0], // Store the file
+    }));
+  };
+
   const save = async (event) => {
-    
     event.preventDefault();
-    
-    const formData = {
-      aboutUsHeaderScript: document.querySelector('input[name="aboutUsHeaderScript"]').value,
-      aboutUsBodyScript: document.querySelector('input[name="aboutUsBodyScript"]').value,
-      
-      featureBox1HeaderScript: document.querySelector('input[name="featureBox1HeaderScript"]').value,
-      featureBox1BodyScript: document.querySelector('input[name="featureBox1BodyScript"]').value,
-  
-      contactUsEmail: document.querySelector('input[name="contactUsEmail"]').value,
-      contactUsBodyScript: document.querySelector('input[name="contactUsBodyScript"]').value,
-      callUsPhoneNumber: document.querySelector('input[name="callUsPhoneNumber"]').value,
-      callUsBodyScript: document.querySelector('input[name="callUsBodyScript"]').value,
-      locationMapUrl: document.querySelector('input[name="locationMapUrl"]').value,
-      locationAddress: document.querySelector('input[name="locationAddress"]').value,
-      contactUsImage: document.querySelector('input[name="contactUsImage"]').files[0],
-  
-      appUrlPlaystore: document.querySelector('input[name="appUrlPlaystore"]').value,
-      appUrlAppStore: document.querySelector('input[name="appUrlAppStore"]').value,
-      copyrightInfo: document.querySelector('input[name="copyrightInfo"]').value,
-    };
-  
     const formDataToSend = new FormData();
+    
+    // Append form data to FormData object
     for (const key in formData) {
-      if (formData[key] instanceof File) {
-        formDataToSend.append(key, formData[key]);
-      } else {
-        formDataToSend.append(key, formData[key]);
-      }
+      formDataToSend.append(key, formData[key]);
     }
-  
+
     try {
-      const response = await fetch('/api/footer-settings/submit', {
+      const response = await fetch('http://localhost:8080/api/v2/footer-settings/submit', {
         method: 'POST',
         body: formDataToSend,
       });
-  
+
       if (response.ok) {
         alert('Form submitted successfully!');
       } else {
@@ -55,10 +67,11 @@ const Footer_setting = () => {
       alert('Error submitting the form.');
     }
   };
+
+  // State for dropdown
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedSetting, setSelectedSetting] = useState("Footer Settings");
   
-    // State for dropdown
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedSetting, setSelectedSetting] = useState("Footer Settings");
   // Dropdown settings options
   const settingsOptions = [
     { name: "Site Settings", path: "/admin/SiteSetting" },
@@ -68,16 +81,16 @@ const Footer_setting = () => {
     { name: "Footer Settings", path: "/admin/Footer_setting" },
     { name: "Contact Settings", path: "/admin/Contact_setting" }
   ];
+
   // Handle dropdown setting change
   const handleSettingChange = (setting) => {
     setSelectedSetting(setting.name);
     setIsOpen(false);
   };
- 
 
   // Navigation functions
-  const goToNextStep = () => setStep(prev => Math.min(prev + 1, 4));
-  const goToPreviousStep = () => setStep(prev => Math.max(prev - 1, 1));
+  const goToNextStep = () => setStep((prev) => Math.min(prev + 1, 4));
+  const goToPreviousStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
   // Progress bar calculation
   const progress = (step / 4) * 100;
@@ -113,89 +126,80 @@ const Footer_setting = () => {
               <div className="progress-bar" role="progressbar" style={{ width: `${progress}%` }} aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <form onSubmit={save} className="registration-form">
-  {step === 1 && (
-    <>
-      <h3>About Us</h3>
-      <label>Header Script</label>
-      <input type="text" name="aboutUsHeaderScript" className="form-control mb-3" />
-      <label>Body Script</label>
-      <input type="text" name="aboutUsBodyScript" className="form-control mb-3" />
-    </>
-  )}
-  {step === 2 && (
-    <>
-      <h4>Feature Box1</h4>
-      <label>Header Script</label>
-      <input type="text" name="featureBox1HeaderScript" className="form-control mb-3" />
-      <label>Body Script</label>
-      <input type="text" name="featureBox1BodyScript" className="form-control mb-3" />
-    </>
-  )}
-  {step === 3 && (
-    <>
-      <h3>Contact Us</h3>
-      <label>Email</label>
-      <input type="email" name="contactUsEmail" className="form-control mb-3" />
-      <label>Body Script</label>
-      <input type="text" name="contactUsBodyScript" className="form-control mb-3" />
-      <h4>Call Us</h4>
-      <label>Phone Number</label>
-      <input type="text" name="callUsPhoneNumber" className="form-control mb-3" />
-      <label>Body Script</label>
-      <input type="text" name="callUsBodyScript" className="form-control mb-3" />
-      <h4>Location</h4>
-      <label>Map URL</label>
-      <input type="text" name="locationMapUrl" className="form-control mb-3" />
-      <label>Address</label>
-      <input type="text" name="locationAddress" className="form-control mb-3" />
-      <label>Contact Us Image</label>
-      <input type="file" name="contactUsImage" className="form-control mb-3" />
-    </>
-  )}
-  {step === 4 && (
-    <>
-      <h4>App URL</h4>
-      <label>Playstore URL</label>
-      <input type="url" name="appUrlPlaystore" className="form-control mb-3" />
-      <label>App Store URL</label>
-      <input type="url" name="appUrlAppStore" className="form-control mb-3" />
-      <h4>Copyright Content</h4>
-      <label>CopyRight Info</label>
-      <input type="text" name="copyrightInfo" className="form-control mb-3" />
-    </>
-  )}
-  <div className="d-flex justify-content-between">
-    {step > 1 && (
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={goToPreviousStep}
-      >
-        Previous
-      </button>
-    )}
-    {step < 4 && (
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={goToNextStep}
-      >
-        Next
-      </button>
-    )}
-    {step === 4 && (
-      <button type="submit" className="btn btn-primary">
-        Submit
-      </button>
-    )}
-  </div>
-</form>
-
+              {step === 1 && (
+                <>
+                  <h3>About Us</h3>
+                  <label>Header Script</label>
+                  <input type="text" name="aboutUsHeaderScript" className="form-control mb-3" value={formData.aboutUsHeaderScript} onChange={handleInputChange} />
+                  <label>Body Script</label>
+                  <input type="text" name="aboutUsBodyScript" className="form-control mb-3" value={formData.aboutUsBodyScript} onChange={handleInputChange} />
+                </>
+              )}
+              {step === 2 && (
+                <>
+                  <h4>Feature Box1</h4>
+                  <label>Header Script</label>
+                  <input type="text" name="featureBox1HeaderScript" className="form-control mb-3" value={formData.featureBox1HeaderScript} onChange={handleInputChange} />
+                  <label>Body Script</label>
+                  <input type="text" name="featureBox1BodyScript" className="form-control mb-3" value={formData.featureBox1BodyScript} onChange={handleInputChange} />
+                </>
+              )}
+              {step === 3 && (
+                <>
+                  <h3>Contact Us</h3>
+                  <label>Email</label>
+                  <input type="email" name="contactUsEmail" className="form-control mb-3" value={formData.contactUsEmail} onChange={handleInputChange} />
+                  <label>Body Script</label>
+                  <input type="text" name="contactUsBodyScript" className="form-control mb-3" value={formData.contactUsBodyScript} onChange={handleInputChange} />
+                  <h4>Call Us</h4>
+                  <label>Phone Number</label>
+                  <input type="text" name="callUsPhoneNumber" className="form-control mb-3" value={formData.callUsPhoneNumber} onChange={handleInputChange} />
+                  <label>Body Script</label>
+                  <input type="text" name="callUsBodyScript" className="form-control mb-3" value={formData.callUsBodyScript} onChange={handleInputChange} />
+                  <h4>Location</h4>
+                  <label>Map URL</label>
+                  <input type="text" name="locationMapUrl" className="form-control mb-3" value={formData.locationMapUrl} onChange={handleInputChange} />
+                  <label>Address</label>
+                  <input type="text" name="locationAddress" className="form-control mb-3" value={formData.locationAddress} onChange={handleInputChange} />
+                  <label>Contact Us Image</label>
+                  <input type="file" name="contactUsImage" className="form-control mb-3" onChange={handleFileChange} />
+                </>
+              )}
+              {step === 4 && (
+                <>
+                  <h4>App URL</h4>
+                  <label>Playstore URL</label>
+                  <input type="url" name="appUrlPlaystore" className="form-control mb-3" value={formData.appUrlPlaystore} onChange={handleInputChange} />
+                  <label>App Store URL</label>
+                  <input type="url" name="appUrlAppStore" className="form-control mb-3" value={formData.appUrlAppStore} onChange={handleInputChange} />
+                  <h4>Copyright Content</h4>
+                  <label>CopyRight Info</label>
+                  <input type="text" name="copyrightInfo" className="form-control mb-3" value={formData.copyrightInfo} onChange={handleInputChange} />
+                </>
+              )}
+              <div className="d-flex justify-content-between">
+                {step > 1 && (
+                  <button type="button" className="btn btn-primary" style={{backgroundColor: "#007bff"}} onClick={goToPreviousStep}>
+                    Previous
+                  </button>
+                )}
+                {step < 4 && (
+                  <button type="button" className="btn btn-primary" style={{backgroundColor: "#007bff"}} onClick={goToNextStep}>
+                    Next
+                  </button>
+                )}
+                {step === 4 && (
+                  <button type="submit" className="btn btn-primary" style={{backgroundColor: "#007bff"}}>
+                    Submit
+                  </button>
+                )}
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Footer_setting;
