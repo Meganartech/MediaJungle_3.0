@@ -158,3 +158,4 @@ const Banner_setting= () => {
 };
 
 export default Banner_setting;
+

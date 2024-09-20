@@ -94,8 +94,10 @@ const About_us = () => {
          </li>
          {/* <li className="breadcrumb-item active">About_us</li> */}
        </ol>
+
        <div className='outer-container'>
        <div className="table-container"> 
+
                 <div className='row'>
                   <div className='col-6'>
                       <label className='labl' >Product name </label>
@@ -233,10 +235,12 @@ const About_us = () => {
 
 
               </div>
+
               </div>
              </div>
                   </div>
      
+
    
   )
 }

@@ -981,7 +981,6 @@ public class FrontController {
 		 }
 
 
-		 
 		    @GetMapping("/{videoId}/videothumbnail")
 			 @Transactional
 		    public ResponseEntity<Map<String, byte[]>> getVideoThumbnail(@PathVariable long videoId) {
@@ -990,7 +989,7 @@ public class FrontController {
 		    
 		    @GetMapping("/images-by-category")
 		    @Transactional
-		    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam Long categoryId) {
+		    public List<Long> getVideoImagesByCategory(@RequestParam Long categoryId) {
 		    	return VideoController.getVideoImagesByCategory(categoryId);
 		    }
 		    
