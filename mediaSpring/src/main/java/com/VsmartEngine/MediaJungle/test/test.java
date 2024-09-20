@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +71,9 @@ public class test {
 
 	@Autowired
 	private CastandcrewRepository CastandcrewRepository;
+	
+	@Autowired
+	private AudioContainerRepository AudioContainerRepository;
 
 
 	@PostMapping("/test")
@@ -387,6 +389,15 @@ public class test {
 		 List<Audiodescription> audiocat= AudioCategoriesRepository.findaudiobyCategorie_Id(id);
 				
 		 return ResponseEntity.ok(audiocat);
+	}
+	
+	
+	@PostMapping("/audiocontainer")
+	public ResponseEntity<?> Audioconatiner(@RequestParam("AudioContainer") List<AudioContainer> data) {
+		
+//		AudioContainerRepository.save(data);
+			
+		 return ResponseEntity.ok().build();
 	}
 
 }
