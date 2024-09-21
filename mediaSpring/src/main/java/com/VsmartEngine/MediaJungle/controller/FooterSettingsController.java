@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +25,7 @@ public class FooterSettingsController {
     @Autowired
     private FooterSettingsRepository repository;
 
-    private final String UPLOAD_DIR = "./uploads/";
+    private final String UPLOAD_DIR = "/uploads/";
 
     @PostMapping("/submit")
     public ResponseEntity<?> submitFooterSettings(
@@ -32,6 +33,9 @@ public class FooterSettingsController {
         @RequestParam("aboutUsBodyScript") String aboutUsBodyScript,
         @RequestParam("featureBox1HeaderScript") String featureBox1HeaderScript,
         @RequestParam("featureBox1BodyScript") String featureBox1BodyScript,
+        @RequestParam("featureBox2HeaderScript") String featureBox2HeaderScript,
+        @RequestParam("featureBox2BodyScript") String featureBox2BodyScript,
+        @RequestParam("aboutUsImage") MultipartFile aboutUsImage, 
         @RequestParam("contactUsEmail") String contactUsEmail,
         @RequestParam("contactUsBodyScript") String contactUsBodyScript,
         @RequestParam("callUsPhoneNumber") String callUsPhoneNumber,
@@ -56,6 +60,8 @@ public class FooterSettingsController {
             footerSettings.setAboutUsBodyScript(aboutUsBodyScript);
             footerSettings.setFeatureBox1HeaderScript(featureBox1HeaderScript);
             footerSettings.setFeatureBox1BodyScript(featureBox1BodyScript);
+            footerSettings.setFeatureBox2HeaderScript(featureBox2HeaderScript);
+            footerSettings.setFeatureBox2BodyScript(featureBox2BodyScript);
             footerSettings.setContactUsEmail(contactUsEmail);
             footerSettings.setContactUsBodyScript(contactUsBodyScript);
             footerSettings.setCallUsPhoneNumber(callUsPhoneNumber);
@@ -74,7 +80,21 @@ public class FooterSettingsController {
             return ResponseEntity.status(500).body("Error submitting the form: " + e.getMessage());
         }
     }
+    @GetMapping
+    public ResponseEntity<?> getFooterSettings() {
+        try {
+            // Fetch the first footer settings record
+            FooterSettings footerSettings = repository.findFirstFooterSettings();
+            
+            if (footerSettings == null) {
+                return ResponseEntity.status(404).body("No FooterSettings found");
+            }
 
+            return ResponseEntity.ok(footerSettings);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error retrieving footer settings: " + e.getMessage());
+        }
+    }
     // Save image to disk and return file path
     private String saveImage(MultipartFile image) throws Exception {
         Path imagePath = Paths.get(UPLOAD_DIR + image.getOriginalFilename());
