@@ -1,9 +1,19 @@
 package com.VsmartEngine.MediaJungle.model;
 
-import jakarta.persistence.*;
-import lombok.Data;
 import java.time.LocalDateTime;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
+
+
+@CrossOrigin("*")
 @Data
 @Entity
 @Table(name = "footer_settings")
@@ -25,7 +35,30 @@ public class FooterSettings {
     @Column(columnDefinition = "TEXT")
     private String featureBox1BodyScript;
 
-    @Column(length = 255)
+
+    @Column(columnDefinition = "TEXT")
+    private String featureBox2HeaderScript;
+
+    @Column(columnDefinition = "TEXT")
+    private String featureBox2BodyScript;
+    
+    public String getFeatureBox2HeaderScript() {
+		return featureBox2HeaderScript;
+	}
+
+	public void setFeatureBox2HeaderScript(String featureBox2HeaderScript) {
+		this.featureBox2HeaderScript = featureBox2HeaderScript;
+	}
+
+	public String getFeatureBox2BodyScript() {
+		return featureBox2BodyScript;
+	}
+
+	public void setFeatureBox2BodyScript(String featureBox2BodyScript) {
+		this.featureBox2BodyScript = featureBox2BodyScript;
+	}
+
+	@Column(length = 255)
     private String contactUsEmail;
 
     @Column(columnDefinition = "TEXT")
