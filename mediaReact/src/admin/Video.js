@@ -14,6 +14,39 @@ const Video = () => {
   const [category,setCategory] = useState([]);
   const navigate = useNavigate();
   const token= sessionStorage.getItem('tokenn')
+  const [showBulkOptions, setShowBulkOptions] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
+  const toggleBulkOptions = () => {
+    setShowBulkOptions(prevState => !prevState);
+  };
+  // Handle the "select all" checkbox click
+  const handleSelectAll = (e) => {
+    const checked = e.target.checked;
+    setSelectAll(checked);
+
+    if (checked) {
+      // Select all user IDs
+      const allIds = users.map((user) => user.id);
+      setSelectedIds(allIds);
+    } else {
+      // Deselect all
+      setSelectedIds([]);
+    }
+  };
+
+  
+  // Handle individual checkbox click
+  const handleCheckboxChange = (id) => {
+    setSelectedIds((prevSelectedIds) =>
+      prevSelectedIds.includes(id)
+        ? prevSelectedIds.filter((userId) => userId !== id) // Deselect
+        : [...prevSelectedIds, id] // Select
+    );
+  };
+
+  console.log("selectedIds",selectedIds);
 
   const handleClick = (link) => {
     localStorage.removeItem('items'); // Clear the stored videoId
@@ -93,9 +126,62 @@ const Video = () => {
   };
   
   
-// ------------------------------ User Functions ----------------------------------------------
- 
+  const deleteMultipleUsers = (userIds) => {
+    fetch(`${API_URL}/api/v2/deleteMultiplevideos`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token, // Ensure the token is formatted correctly
+      },
+      body: JSON.stringify(userIds), // Pass the array directly
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // Handle non-2xx responses
+          throw new Error('Network response was not ok.');
+        }
+  
+        // Check if there's no content
+        if (response.status === 204) {
+          return { message: 'Admins deleted successfully' }; // Default success message for no content
+        }
+  
+        // Return the parsed JSON response
+        return response.json();
+      })
+      .then((data) => {
+        // Check if the response indicates partial success
+        if (data.notFoundVideoIds && data.notFoundVideoIds.length > 0) {
+          Swal.fire({
+            title: 'Partial Success!',
+            text: `Some videos were not found: ${data.notFoundVideoIds.join(', ')}`,
+            icon: 'info',
+            confirmButtonText: 'OK',
+          });
+        } else {
+          Swal.fire({
+            title: 'Deleted!',
+            text: data.message || 'videos deleted successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+          });
+        }
+  
+        // Update local state to remove the deleted users
+        setUsers((prevUsers) => prevUsers.filter((user) => !userIds.includes(user.id)));
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'An error occurred while deleting the videos. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      });
+  };
 
+  
   return (
 
     <div className="marquee-container">
@@ -104,16 +190,19 @@ const Video = () => {
         </div><br/>
       <div className='container3'>
       <ol className="breadcrumb mb-4 d-flex my-0">
-        <li className="breadcrumb-item text-white">Videos
-        </li>
-        <li className="ms-auto text-end text-white">
+      <li className="breadcrumb-item text-white">Videos</li>
+      <li className="ms-auto text-end text-white position-relative">
         Bulk Action
-        <button className="ms-2">
+        <button className="ms-2" onClick={toggleBulkOptions}>
           <i className="bi bi-chevron-down"></i>
         </button>
+        {showBulkOptions && (
+          <div className="bulk-options">
+            <button className="btn btn-danger" style={{color:'black'}} onClick={() => deleteMultipleUsers(selectedIds)}>Delete</button>
+          </div>
+        )}
       </li>
-       
-      </ol>
+    </ol>
     
          
       <div class="outer-container">
@@ -122,7 +211,11 @@ const Video = () => {
         <thead>
           <tr className='table-header'>
             <th style={{border: 'none' }}>
-              <input type="checkbox" />
+            <input 
+              type="checkbox" 
+              checked={selectAll} 
+              onChange={handleSelectAll} 
+            />
             </th>
             <th style={{border: 'none' }}>S.No</th>
             <th style={{border: 'none' }}>VIDEO TITLE</th>
@@ -138,7 +231,11 @@ const Video = () => {
           {users.map((user, index) => (
             <tr key={user.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
               <td>
-                <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={selectedIds.includes(user.id)}
+                onChange={() => handleCheckboxChange(user.id)}
+              />
               </td>
               <td>{index + 1}</td>
               <td>{user.videoTitle}</td>
