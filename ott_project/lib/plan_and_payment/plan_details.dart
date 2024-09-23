@@ -23,12 +23,14 @@ class PlanDetails {
   final double amount;
   List<Tenures> tenure;
   List<Features> feature;
+
   PlanDetails({
     required this.id,
     required this.planname,
     this.tenure = const [],
     this.feature = const [],
     required this.amount,
+    
   });
 
   factory PlanDetails.fromJson(Map<String, dynamic> json) {
@@ -55,17 +57,22 @@ class PlanDetails {
 class Tenures {
   final int id;
   final String tenureName;
+  final int months;
+  final int discount;
 
   Tenures({
     required this.id,
     required this.tenureName,
+    required this.months,
+    required this.discount,
   });
 
   factory Tenures.fromJson(Map<String, dynamic> json) {
     return Tenures(
-      id: json['id'],
-      tenureName: json['tenure_name'],
-    );
+        id: json['id'],
+        tenureName: json['tenure_name'],
+        months: json['months'],
+        discount: json['discount']);
   }
 }
 
@@ -97,6 +104,5 @@ class Features {
         featureId: json['featureId'],
         isActiveForPlan: false,
         active: json['active'] ?? false);
-      
   }
 }

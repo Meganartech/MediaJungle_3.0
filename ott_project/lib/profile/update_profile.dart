@@ -67,8 +67,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-              'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-           // 'http://192.168.40.165:8080/api/v2/GetUserById/$userId'),
+            //  'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+            'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -81,12 +81,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         var userData = jsonDecode(response.body);
         //print(userData);
         //_image = userData['profile'];
-        setState(() {
-          usernameController.text = userData['username'] ?? '';
-          emailController.text = userData['email'] ?? '';
-          mobilenumberController.text = userData['mobnum'] ?? '';
-          base64Image = userData['profile'];
-        });
+        // setState(() {
+        //   usernameController.text = userData['username'] ?? '';
+        //   emailController.text = userData['email'] ?? '';
+        //   mobilenumberController.text = userData['mobnum'] ?? '';
+        //   base64Image = userData['profile'];
+        // });
         setState(() {});
         //  await fetchProfileImage(userId);
       } else {
@@ -99,42 +99,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     }
   }
 
-  // Future<void> fetchProfileImage(String userId) async {
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(
-  //           //'https://testtomcat.vsmartengine.com/media/api/v2/mobile/GetThumbnailsById/$userId'
-  //           'http://192.168.40.165:8080/api/v2/mobile/GetThumbnailsById/$userId'),
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final List<dynamic> responseBody = jsonDecode(response.body);
-  //       if (responseBody.isNotEmpty) {
-  //         final String base64Thumbnail = responseBody[0];
-  //         //print('Base64 Thumbnail: $base64Thumbnail'); // Debugging print
-
-  //         // Decode the Base64 string
-
-  //         setState(() {
-  //           base64Image = base64Thumbnail;
-  //           print('Image bytes set'); // Debugging print
-  //         });
-  //       }
-  //     } else {
-  //       print('Failed to load profile image: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching profile image: $e');
-  //   }
-  // }
-
   Future<void> _updateUserProfile() async {
     //String? token = await secureStorage.read(key: 'token');
     String? userId = await secureStorage.read(key: 'userId');
     try {
-      var url = Uri.parse(
-          'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
-          //'http://192.168.40.165:8080/api/v2/UpdateUser/mobile/$userId');
+      var url =
+          Uri.parse('http://localhost:8080/api/v2/UpdateUser/mobile/$userId');
+      //'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
+      //'http://192.168.40.165:8080/api/v2/UpdateUser/mobile/$userId');
       var request = http.MultipartRequest('PATCH', url);
       //..headers.addAll({'Content-Type': 'application/json'});
       request.fields['username'] = usernameController.text;
