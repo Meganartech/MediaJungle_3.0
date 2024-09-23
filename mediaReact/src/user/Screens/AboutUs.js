@@ -61,6 +61,7 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../Layout/Layout'
 import Head from '../Components/Head'
+import API_URL from '../../Config';
 
 const AboutUs = () => {
   const [aboutUsData, setAboutUsData] = useState({
@@ -70,6 +71,7 @@ const AboutUs = () => {
     featureBox1BodyScript: '',
     featureBox2HeaderScript: '',
     featureBox2BodyScript: '',
+    aboutUsImage:'null',
     contactUsEmail: '',
     contactUsBodyScript: '',
     callUsPhoneNumber: '',
@@ -81,39 +83,43 @@ const AboutUs = () => {
     appUrlAppStore: '',
     copyrightInfo: '',// default image URL
   });
+  console.log(aboutUsData);
   useEffect(() => {
     const fetchAboutUsData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v2/footer-settings'); // Replace with your actual API URL
+        const response = await fetch('http://localhost:8080/api/v2/footer-settings');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
-        console.log(data);
-        // Step 3: Update state with fetched data
+        console.log(data); // Log the data to check its structure
         setAboutUsData({
-          aboutUsHeaderScript: data.aboutUsHeaderScript,
-          aboutUsBodyScript: data.aboutUsBodyScript,
-          featureBox1HeaderScript: data.featureBox1HeaderScript,
-          featureBox1BodyScript: data.featureBox1BodyScript,
-          featureBox2HeaderScript: data.featureBox2HeaderScript,
-          featureBox2BodyScript: data.featureBox2BodyScript,
-          aboutUsImage:data.aboutUsImage,
-          contactUsEmail: data.contactUsEmail,
-          contactUsBodyScript: data.contactUsBodyScript,
-          callUsPhoneNumber: data.callUsPhoneNumber,
-          callUsBodyScript: data.callUsBodyScript,
-          locationMapUrl: data.locationMapUrl,
-          locationAddress: data.locationAddress,
-          contactUsImage: data.contactUsImage, // Handle file upload
-          appUrlPlaystore: data.appUrlPlaystore,
-          appUrlAppStore: data.appUrlAppStore,
-          copyrightInfo: data.copyrightInfo,// default image URL
+          aboutUsHeaderScript: data.aboutUsHeaderScript || '',
+          aboutUsBodyScript: data.aboutUsBodyScript || '',
+          featureBox1HeaderScript: data.featureBox1HeaderScript || '',
+          featureBox1BodyScript: data.featureBox1BodyScript || '',
+          featureBox2HeaderScript: data.featureBox2HeaderScript || '',
+          featureBox2BodyScript: data.featureBox2BodyScript || '',
+          aboutUsImage: data.aboutUsImage || 'default_image_url', // Provide a default
+          contactUsEmail: data.contactUsEmail || '',
+          contactUsBodyScript: data.contactUsBodyScript || '',
+          callUsPhoneNumber: data.callUsPhoneNumber || '',
+          callUsBodyScript: data.callUsBodyScript || '',
+          locationMapUrl: data.locationMapUrl || '',
+          locationAddress: data.locationAddress || '',
+          contactUsImage: data.contactUsImage || null, 
+          appUrlPlaystore: data.appUrlPlaystore || '',
+          appUrlAppStore: data.appUrlAppStore || '',
+          copyrightInfo: data.copyrightInfo || '',
         });
       } catch (error) {
         console.error('Error fetching About Us data:', error);
       }
     };
-
-    fetchAboutUsData(); // Call the function on component mount
+  
+    fetchAboutUsData();
   }, []);
+  
   return (
     <Layout className='min-height-screen container mx-auto'>
       <div className=' px-2 my-6'>
@@ -151,7 +157,11 @@ const AboutUs = () => {
               </div>
             </div>
             <div className='mt-10 lg:mt-0'>
-          {/* {aboutUsImage} */}
+            <img
+                  src={`${API_URL}/${aboutUsData.aboutUsImage}`} // prepend the base URL
+                  alt="About Us"
+                  className='w-full xl:block hidden h-header rounded-lg object-cover'
+                />
             </div>
           </div>
         </div>

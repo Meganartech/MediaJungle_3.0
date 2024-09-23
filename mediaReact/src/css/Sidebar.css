@@ -1009,4 +1009,46 @@ td{
   width: 100%;
   height: 100%;
   object-fit: cover;
+}.modern-progress-bar {
+  width: 100%;
+  height: 20px;
+  margin-bottom: 50px;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky; /* Make it sticky */
+  top: 0; /* Stick to the top of the viewport */
+  z-index: 10; /* Ensure it appears above other content */
+}
+
+.progress-indicator {
+  height: 100%;
+  background-color: #2196f3;
+  transition: width 0.5s ease;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.step span {
+  display: inline-block;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+.step.completed span {
+  background-color: #e1f5fe;
+  color: #2196f3;
 }

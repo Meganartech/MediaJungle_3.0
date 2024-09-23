@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 
@@ -25,8 +26,9 @@ public class FooterSettings {
     
     @Column(columnDefinition = "TEXT")
     private String aboutUsHeaderScript;
-
+    
     @Column(columnDefinition = "TEXT")
+    @Size(max = 5000)
     private String aboutUsBodyScript;
 
     @Column(columnDefinition = "TEXT")
@@ -41,22 +43,10 @@ public class FooterSettings {
 
     @Column(columnDefinition = "TEXT")
     private String featureBox2BodyScript;
-    
-    public String getFeatureBox2HeaderScript() {
-		return featureBox2HeaderScript;
-	}
+   
+    @Column(length = 255)
+    private String aboutUsImage; // Image file path
 
-	public void setFeatureBox2HeaderScript(String featureBox2HeaderScript) {
-		this.featureBox2HeaderScript = featureBox2HeaderScript;
-	}
-
-	public String getFeatureBox2BodyScript() {
-		return featureBox2BodyScript;
-	}
-
-	public void setFeatureBox2BodyScript(String featureBox2BodyScript) {
-		this.featureBox2BodyScript = featureBox2BodyScript;
-	}
 
 	@Column(length = 255)
     private String contactUsEmail;
@@ -133,7 +123,30 @@ public class FooterSettings {
 	public void setFeatureBox1BodyScript(String featureBox1BodyScript) {
 		this.featureBox1BodyScript = featureBox1BodyScript;
 	}
+    public String getFeatureBox2HeaderScript() {
+		return featureBox2HeaderScript;
+	}
 
+	public void setFeatureBox2HeaderScript(String featureBox2HeaderScript) {
+		this.featureBox2HeaderScript = featureBox2HeaderScript;
+	}
+
+	public String getFeatureBox2BodyScript() {
+		return featureBox2BodyScript;
+	}
+
+	public void setFeatureBox2BodyScript(String featureBox2BodyScript) {
+		this.featureBox2BodyScript = featureBox2BodyScript;
+	}
+	
+	public String getAboutUsImage() {
+		return aboutUsImage;
+	}
+
+	public void setAboutUsImage(String aboutUsImage) {
+		this.aboutUsImage = aboutUsImage;
+	}
+	
 	public String getContactUsEmail() {
 		return contactUsEmail;
 	}

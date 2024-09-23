@@ -7,6 +7,7 @@ import com.VsmartEngine.MediaJungle.model.FooterSettings;
 
 public interface FooterSettingsRepository extends JpaRepository<FooterSettings, Long> {
 	
-	   @Query(value = "SELECT * FROM footer_settings LIMIT 1", nativeQuery = true)
-	    FooterSettings findFirstFooterSettings();
+	@Query("SELECT fs FROM FooterSettings fs")
+	FooterSettings findFirstFooterSettings();
+
 }
