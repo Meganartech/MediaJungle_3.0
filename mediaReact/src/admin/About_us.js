@@ -85,19 +85,19 @@ const About_us = () => {
     // navigate('/admin'); // Uncomment if navigation is needed
   };
   return (
- 
     <div className="marquee-container">
-       <div className="container2 mt-4">
-       <ol className="breadcrumb mb-4">
+    <div className='AddArea' style={{paddingBottom:"50px"}}>
+      </div>
+       <div className="container2">
+       <ol className="breadcrumb mb-4 d-flex my-0">
          <li className="breadcrumb-item text-white "><Link to="/admin/About_us">About Us</Link>
          </li>
          {/* <li className="breadcrumb-item active">About_us</li> */}
        </ol>
-       <div className="outer-container">
-    <div className="table-container">
-       <div className="card-1 mb-4" style={{height: "auto"}}>
 
-       <div style={{ paddingLeft: "3rem", paddingRight: "3rem" }}>
+       <div className='outer-container'>
+       <div className="table-container"> 
+
                 <div className='row'>
                   <div className='col-6'>
                       <label className='labl' >Product name </label>
@@ -235,12 +235,12 @@ const About_us = () => {
 
 
               </div>
-    
-             
-                  </div></div>
-     </div>
-     </div>
-     </div>
+
+              </div>
+             </div>
+                  </div>
+     
+
    
   )
 }

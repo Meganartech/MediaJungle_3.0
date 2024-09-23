@@ -11,7 +11,6 @@ import 'package:ott_project/components/music_folder/recently_played.dart';
 import 'package:ott_project/components/music_folder/recently_played_manager.dart';
 import 'package:ott_project/service/audio_api_service.dart';
 
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum RepeatMode { off, all, one }
@@ -386,7 +385,7 @@ class AudioProvider with ChangeNotifier {
     music_playlist = musicPlaylist;
     currentIndex = music_playlist.indexOf(music);
     final banner = await music.bannerImage;
-   // _musiccurrentlyPlaying = musiccurrentlyPlaying?.copyWith(banner: banner);
+    // _musiccurrentlyPlaying = musiccurrentlyPlaying?.copyWith(banner: banner);
     await _saveMusicCurrentlyPlaying();
     notifyListeners();
     await prepareMusic();
