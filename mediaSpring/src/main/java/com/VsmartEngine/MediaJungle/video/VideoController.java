@@ -27,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -599,6 +600,95 @@ public class VideoController {
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	        }
+	    }
+	    
+	    
+	    public ResponseEntity<?> deleteMultiplevideos(
+	            @RequestHeader("Authorization") String token, 
+	            @RequestBody List<Long> videoIds
+	    ) {
+	        try {
+	            // Validate the JWT token
+	            if (!jwtUtil.validateToken(token)) {
+	                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                        .body("{\"message\": \"Invalid or expired token.\"}");
+	            }
+
+	            String email = jwtUtil.getUsernameFromToken(token);
+	            Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+	            if (opUser.isPresent()) {
+	                AddUser user = opUser.get();
+
+	                // Lists to keep track of operation results
+	                List<Long> notFoundVideoIds = new ArrayList<>();
+	                List<Long> deletedVideoIds = new ArrayList<>();
+
+	                // Process each video ID for deletion
+	                for (Long videoId : videoIds) {
+	                    Optional<VideoDescription> optionalVideoDescription = videodescriptionRepository.findById(videoId);
+	                    if (optionalVideoDescription.isPresent()) {
+	                        VideoDescription videoDescription = optionalVideoDescription.get();
+
+	                        // Delete video file if it exists
+	                        String videoFileName = videoDescription.getVidofilename();
+	                        if (videoFileName != null) {
+	                            try {
+	                                fileSevice.deleteVideoFile(videoFileName);
+	                            } catch (IOException e) {
+	                                // Log and continue deleting other videos
+	                                e.printStackTrace();
+	                                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                                        .body("{\"message\": \"Error deleting video file for video ID " + videoId + ".\"}");
+	                            }
+	                        }
+
+	                        // Delete trailer video file if it exists
+	                        String trailerFileName = videoDescription.getVideotrailerfilename();
+	                        if (trailerFileName != null) {
+	                            try {
+	                                fileSevice.deletetrailerFile(trailerFileName);
+	                            } catch (IOException e) {
+	                                // Log and continue deleting other videos
+	                                e.printStackTrace();
+	                                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                                        .body("{\"message\": \"Error deleting trailer file for video ID " + videoId + ".\"}");
+	                            }
+	                        }
+
+	                        // Delete VideoDescription and related VideoImage
+	                        videodescriptionRepository.deleteById(videoId);
+	                        videoimagerepository.deleteByVideoId(videoId);
+
+	                        // Record successful deletion
+	                        deletedVideoIds.add(videoId);
+	                    } else {
+	                        // Record not found video ID
+	                        notFoundVideoIds.add(videoId);
+	                    }
+	                }
+
+	                // Prepare response based on the results
+	                if (!notFoundVideoIds.isEmpty()) {
+	                    // Partial success: some videos were not found
+	                    return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+	                            .body("{\"message\": \"Some videos not found.\", \"deletedVideoIds\": " 
+	                                  + deletedVideoIds.toString() + ", \"notFoundVideoIds\": " + notFoundVideoIds.toString() + "}");
+	                }
+
+	                // All videos deleted successfully
+	                return ResponseEntity.ok("{\"message\": \"Videos deleted successfully.\", \"deletedVideoIds\": " + deletedVideoIds.toString() + "}");
+	            } else {
+	                // User not found
+	                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                        .body("{\"message\": \"User not authorized.\"}");
+	            }
+	        } catch (Exception e) {
+	            // Handle general exceptions
+	            e.printStackTrace();
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                    .body("{\"message\": \"An error occurred while deleting videos.\"}");
 	        }
 	    }
 	    

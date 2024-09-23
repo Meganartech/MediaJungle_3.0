@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,20 +23,46 @@ public class VideoContainerController {
 	private VideoContainerRepository videocontainerrepository;
 	
 	
+//	public ResponseEntity<String> createVideoContainer(@RequestBody List<VideoContainer> videoContainerRequests) {
+//        // Map the requests to entities
+//        for (VideoContainer request : videoContainerRequests) {
+//            VideoContainer videocontainer = new VideoContainer();
+//            videocontainer.setValue(request.getValue());
+//            videocontainer.setCategory(request.getCategory());
+//            
+//            // Save to the database
+//            videocontainerrepository.save(videocontainer);
+//        }
+//
+//        // Return a response
+//        return ResponseEntity.ok("VideoContainer processed successfully");
+//    }
+	
 	public ResponseEntity<String> createVideoContainer(@RequestBody List<VideoContainer> videoContainerRequests) {
-        // Map the requests to entities
-        for (VideoContainer request : videoContainerRequests) {
-            VideoContainer videocontainer = new VideoContainer();
-            videocontainer.setValue(request.getValue());
-            videocontainer.setCategory(request.getCategory());
-            
-            // Save to the database
-            videocontainerrepository.save(videocontainer);
-        }
+	    try {
+	        // Map the requests to entities
+	        for (VideoContainer request : videoContainerRequests) {
+	            VideoContainer videocontainer = new VideoContainer();
+	            videocontainer.setValue(request.getValue());
+	            videocontainer.setCategory(request.getCategory());
+	            
+	            // Save to the database
+	            videocontainerrepository.save(videocontainer);
+	        }
 
-        // Return a response
-        return ResponseEntity.ok("VideoContainer processed successfully");
-    }
+	        // Return a success response
+	        return ResponseEntity.ok("VideoContainer processed successfully");
+	        
+	    } catch (Exception e) {
+	        // Log the exception (optional)
+	        // logger.error("Error processing video containers", e);
+
+	        // Return an error response
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                             .body("Error processing video containers: " + e.getMessage());
+	    }
+	}
+
 	
 
     public ResponseEntity<List<VideoContainer>> getAllVideoContainers() {

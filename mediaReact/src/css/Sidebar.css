@@ -918,13 +918,95 @@ td{
   flex-direction: column;
 }
 
-.items {
+.customcontainer {
+  max-width: 1998px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+  margin-bottom: 30px; /* Adds more space between containers */
+  padding: 0 30px; 
+}
+
+.customcontainer span {
+  font-size: 25px;
+  font-weight: bolder;
+  display: block; /* Ensure the container name takes a full line */
+  margin-bottom: 10px; /* Space between the title and images */
+}
+
+.navigation {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between; /* Align buttons and images */
+  margin-top: 10px; /* Optional: Space between title and navigation */
+}
+
+.items {
+  display: flex; /* Use flexbox for easier alignment */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+  gap: 15px; /* Adjust this value to control the gap between items */
+  flex-grow: 1; /* Allow items div to take up remaining space */
+}
+
+.navigation-btn {
+  width: 30px; /* Adjust button width */
+  height: 30px; /* Adjust button height */
+  margin: 0 10px; /* Space around buttons */
 }
 
 .item {
-  margin: 10px;
+  display: flex;
+  flex-direction: column; /* Align image and title vertically */
+  align-items: center; /* Center content horizontally */
+  margin: 10px 5px; 
+}
+
+.item img {
+  height: 250px;
+  width: 250px; 
+  border-radius: 10px;
+}
+
+.item p {
+  margin-top: 10px; /* Reduced margin-top for the text below image */
 }
 
 
+/* CSS for banner container and slide */
+.banner-container {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 550px; /* Adjust the height as needed */
+  margin-bottom: 20px;
+  
+  
+}
+
+.banner-items {
+  display: flex;
+  transition: transform 0.10s ease-in-out;
+  
+  
+}
+
+.banner-slide {
+  display: flex;
+}
+
+.banner-item {
+  min-width: 100%; /* Adjust width considering container padding */
+  transition: transform 0.5s ease-in-out;
+  flex: 0 0 auto; /* Width adjustment instead of full flex-basis */
+  padding: 0 15px; /* Padding inside container */
+}
+
+
+
+.banner-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
