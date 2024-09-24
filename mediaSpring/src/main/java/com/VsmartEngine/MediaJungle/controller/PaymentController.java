@@ -27,9 +27,9 @@ import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 
-@CrossOrigin()
 @RestController
 @RequestMapping("/api/v2/")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PaymentController {
 
     @Value("${rzp_currency}")
@@ -56,7 +56,63 @@ public class PaymentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
- 
+    @PostMapping("/confirmPayment")
+    public ResponseEntity<String> confirmPayment(@RequestBody Map<String, String> requestData) {
+        try {
+            // Log received data for debugging
+            System.out.println("Received payment data: " + requestData);
+
+            // Extract data from the request
+            String paymentId = requestData.get("paymentId");
+            String orderId = requestData.get("orderId");
+            int statusCode = Integer.parseInt(requestData.get("statusCode")); // Parse as int
+            System.out.println("*******************" + statusCode); // Ensure this is included in your incoming data
+            String planname = requestData.get("planname");
+            Long amount = Long.parseLong(requestData.get("Amount")); // Ensure this is the correct paid amount
+            Long userId = Long.parseLong(requestData.get("userId"));
+            Long tenureId = Long.parseLong(requestData.get("tenureId")); // Ensure this is formatted correctly
+            String signature = requestData.get("signature");
+
+            // Validate the received payment information
+            boolean isPaymentSuccessful = checkIfPaymentIsSuccessful(statusCode); // Call with int
+
+            // Set status based on payment success
+            String finalStatus = isPaymentSuccessful ? "success" : "failed"; 
+
+            // Log the payment status for debugging
+            System.out.println("Payment Status: " + finalStatus);
+            
+            // Update the user's payment information in the database
+            Optional<PaymentUser> paymentUserOptional = paymentrepository.findByUserId(userId);
+            if (paymentUserOptional.isPresent()) {
+                PaymentUser paymentUser = paymentUserOptional.get();
+                paymentUser.setPaymentId(paymentId);
+                paymentUser.setOrderId(orderId);
+                paymentUser.setStatus(finalStatus); // Set status based on payment success
+                paymentUser.setSubscriptionTitle(planname);
+                paymentUser.setAmount(amount); // Store the correct paid amount
+                
+                // Log the user data being saved for debugging
+                System.out.println("Saving PaymentUser: " + paymentUser);
+                paymentrepository.save(paymentUser);
+
+                return new ResponseEntity<>("Payment confirmed successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<>("Invalid number format", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception
+            return new ResponseEntity<>("An error occurred while confirming the payment", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Helper method to determine payment success based on statusCode
+    private boolean checkIfPaymentIsSuccessful(int statusCode) {
+        // Check if the status code is 200 (HTTP OK)
+        return statusCode == 200;
+    }
 
     public String Payment(@RequestBody Map<String, String> requestData) {
         try {
@@ -75,9 +131,11 @@ public class PaymentController {
                     PaymentUser paym = optionPayment.get();
                     
                     // Check if the existing payment is still valid
-                    if (paym.getExpiryDate().isAfter(LocalDate.now()) && paym.getPaymentId() != null && paym.getStatus().equals("paid")) {
-                        return "You have already paid for the plan. Your subscription is valid until " + paym.getExpiryDate();
-                    }
+                    if (paym.getExpiryDate().isAfter(LocalDate.now()) && 
+                            paym.getPaymentId() != null && 
+                            "paid".equalsIgnoreCase(paym.getStatus())) { // Safe null check
+                            return "You have already paid for the plan. Your subscription is valid until " + paym.getExpiryDate();
+                        }
                 }
 
                 // Fetch Razorpay keys from the payment settings repository
@@ -167,7 +225,7 @@ public class PaymentController {
             // Fetch order details from Razorpay
             Order detailedOrder = client.orders.fetch(orderId);
             String amountPaidString = detailedOrder.get("amount_paid").toString();
-            int amountPaidIn = Integer.parseInt(amountPaidString) / 100;
+            Long amountPaidIn = Long.parseLong(amountPaidString) / 100;
             String status = detailedOrder.get("status").toString();
             System.out.println(detailedOrder);
 

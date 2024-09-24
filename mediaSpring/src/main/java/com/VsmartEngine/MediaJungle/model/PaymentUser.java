@@ -21,7 +21,7 @@ public class PaymentUser {
 	@Column(unique = true)
 	private Long userId;
 	private String paymentId;
-	private double Amount;
+	private Long Amount;
 	private LocalDate expiryDate;
     private String status;
     private String subscriptionTitle;
@@ -31,7 +31,7 @@ public class PaymentUser {
 		// TODO Auto-generated constructor stub
 	}
 
-	public PaymentUser(Long id, String orderId, Long userId, String paymentId, double amount, LocalDate expiryDate,
+	public PaymentUser(Long id, String orderId, Long userId, String paymentId, Long amount, LocalDate expiryDate,
 			String status, String subscriptionTitle) {
 		super();
 		this.id = id;
@@ -76,11 +76,11 @@ public class PaymentUser {
 		this.paymentId = paymentId;
 	}
 
-	public double getAmount() {
+	public Long getAmount() {
 		return Amount;
 	}
 
-	public void setAmount(double amount) {
+	public void setAmount(Long amount) {
 		Amount = amount;
 	}
 
