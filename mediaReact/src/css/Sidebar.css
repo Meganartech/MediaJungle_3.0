@@ -972,6 +972,20 @@ td{
   margin-top: 10px; /* Reduced margin-top for the text below image */
 }
 
+.item .overlay {
+  position: absolute; /* Position overlay over the image */
+  display: flex; /* Use flexbox to center text */
+  flex-direction: column; /* Stack text vertically */
+  /* align-items: center; 
+   justify-content: center;  */
+   margin: 135px;
+   width: 220px;
+  background: rgba(27, 27, 26, 0.5);
+  color: white; /* Text color */
+  /* opacity: 0; Initially hidden */
+  /* transition: opacity 0.3s; Smooth transition for visibility */
+}
+
 
 /* CSS for banner container and slide */
 .banner-container {

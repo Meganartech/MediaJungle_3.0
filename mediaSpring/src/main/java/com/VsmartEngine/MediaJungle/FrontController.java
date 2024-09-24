@@ -25,6 +25,7 @@ import com.VsmartEngine.MediaJungle.Banner.VideoBannerRequest;
 import com.VsmartEngine.MediaJungle.Banner.videoBannerController;
 import com.VsmartEngine.MediaJungle.Container.VideoContainer;
 import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
+import com.VsmartEngine.MediaJungle.Container.VideoContainerDTO;
 import com.VsmartEngine.MediaJungle.controller.AddUserController;
 import com.VsmartEngine.MediaJungle.controller.AudioController1;
 import com.VsmartEngine.MediaJungle.controller.CastandcrewController;
@@ -1001,11 +1002,17 @@ public class FrontController {
 		 }
 
 
-		    @GetMapping("/{videoId}/videothumbnail")
-			 @Transactional
-		    public ResponseEntity<Map<String, byte[]>> getVideoThumbnail(@PathVariable long videoId) {
-		    	return videoImageController.getVideoThumbnail(videoId);
-		    }
+//		    @GetMapping("/{videoId}/videothumbnail")
+//			 @Transactional
+//		    public ResponseEntity<Map<String, byte[]>> getVideoThumbnail(@PathVariable long videoId) {
+//		    	return videoImageController.getVideoThumbnail(videoId);
+//		    }
+		 
+		 @GetMapping("/{videoId}/videothumbnail")
+		 @Transactional
+		 public ResponseEntity<byte[]> getVideoThumbnail(@PathVariable long videoId) {
+			 return videoImageController.getVideoThumbnail(videoId);
+		 }
 		    
 		    @GetMapping("/images-by-category")
 		    @Transactional
@@ -1019,11 +1026,16 @@ public class FrontController {
 		    	return videocontainercontroller.createVideoContainer(videoContainerRequests);
 		    }
 		    
-		    @GetMapping("/getvideocontainer")
-		    public ResponseEntity<List<VideoContainer>> getAllVideoContainers() {
-		    	return videocontainercontroller.getAllVideoContainers();
-		    }
+//		    @GetMapping("/getvideocontainer")
+//		    public ResponseEntity<List<VideoContainer>> getAllVideoContainers() {
+//		    	return videocontainercontroller.getAllVideoContainers();
+//		    }
 		    
+		    @GetMapping("/getvideocontainer")
+		    public ResponseEntity<List<VideoContainerDTO>> getVideoContainersWithDetails() {
+		    	return videocontainercontroller.getVideoContainersWithDetails();
+		    }
+
 		    @PostMapping("/addvideobanner")
 		    public ResponseEntity<String> createVideoBanner(@RequestBody VideoBannerRequest videoBannerRequest) {
 		    	return videobannercontroller.createVideoBanner(videoBannerRequest);
