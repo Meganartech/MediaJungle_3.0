@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import API_URL from '../Config';
+import Swal from 'sweetalert2';
 
 const Container = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +12,7 @@ const Container = () => {
   const [numOfContainers, setNumOfContainers] = useState(0);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
+  const token = sessionStorage.getItem("tokenn")
 
   const settingsOptions = [
     { name: "Site Settings", path: "/admin/SiteSetting" },
@@ -40,11 +42,28 @@ const Container = () => {
   };
 
   const handleNumOfContainersChange = (e) => {
-    const value = e.target.value;
-    setNumOfContainers(value);
-    setContainers(Array(parseInt(value, 10)).fill({ value: '', category: '' }));
-    console.log(containers)
-  };
+    const newValue = parseInt(e.target.value, 10);
+    
+    if (isNaN(newValue) || newValue < 0) {
+      alert("Please enter a valid non-negative number.");
+      setNumOfContainers(0);
+      setContainers([]);
+      return;
+    }
+  
+    if (newValue > 20) {
+      alert("Max 20 containers only.");
+      return;
+    }
+  
+    setNumOfContainers(newValue);
+    setContainers(Array.from({ length: newValue }, (_, index) => ({
+      value: '',
+      category: ''
+    })));
+};
+
+  
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllCategories`)
@@ -56,34 +75,58 @@ const Container = () => {
       });
   }, []);
 
+  console.log(containers)
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     // Perform validation if needed
     if (containers.length === 0) {
-      alert('No containers to submit');
+      Swal.fire({
+        icon: 'warning',
+        title: 'No containers to submit',
+        text: 'Please add at least one container before submitting.',
+      });
       return;
     }
-
+  
     // Submit the data (POST request)
     fetch(`${API_URL}/api/v2/videocontainer`, {
       method: 'POST',
       headers: {
+        Authorization: token, // Ensure token is defined
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ containers }),
+      body: JSON.stringify(containers),
     })
-      .then(response => response.ok ? response.json() : Promise.reject('Error submitting containers'))
+      .then(response => {
+        if (response.ok === 200) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error('Error submitting containers');
+        }
+      })
       .then(data => {
         console.log('Success:', data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Containers submitted successfully.',
+        });
         // Handle success response
       })
       .catch(error => {
         console.error('Error submitting containers:', error);
-        setError(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'There was an error submitting the containers. Please try again.',
+        });
       });
   };
+  
 
   return (
     <div className="marquee-container">
@@ -110,41 +153,66 @@ const Container = () => {
 
         <div className="outer-container">
           <div className="table-container">
-            <div className="d-flex mb-4 mt-10 ml-10 toggle">
-              <button className={`custom-btn px-4 mr-4 ${activeView === 'movie' ? 'active-btn' : 'inactive-btn'}`} onClick={() => handleViewChange('movie')}>
-                Movie
-              </button>
-              <button className={`custom-btn px-4 ${activeView === 'music' ? 'active-btn' : 'inactive-btn'}`} onClick={() => handleViewChange('music')}>
-                Music
-              </button>
-            </div>
+  <div className="row mb-4 mt-4 p-0 m-0">
+    {/* Each button occupies 2 columns */}
+    <div className="col-md-2">
+      <button
+        className={`custom-btn w-100 px-4 ${activeView === 'movie' ? 'active-btn' : 'inactive-btn'}`}
+        onClick={() => handleViewChange('movie')}
+      >
+        Movie
+      </button>
+    </div>
+    <div className="col-md-2">
+      <button
+        className={`custom-btn w-100 px-4 ${activeView === 'music' ? 'active-btn' : 'inactive-btn'}`}
+        onClick={() => handleViewChange('music')}
+      >
+        Music
+      </button>
+    </div>
 
-            {activeView === 'movie' && (
+    {/* No of Container Label and Input */}
+    <div className="col-md-3">
+      <label className="custom-label mt-2">No of Container</label>
+    </div>
+    <div className="col-md-3">
+      
+      <input
+        type="number"
+        id="noOfContainers"
+        required
+        className="form-control border border-dark border-2"
+        value={numOfContainers}
+        onChange={handleNumOfContainersChange}
+        max="20"
+        placeholder="No of Container"
+      />
+      <small className="text-muted d-block mt-2">Max 20 containers only*</small>
+    </div>
+    {/* Create Button */}
+  <div className="col-md-2 mt-1">
+    <button
+      className="custom-btn w-100 px-4"
+      // onClick={handleCreateClick}
+    >
+      Create
+    </button>
+  </div>
+  </div>
+
+
+
+
+                {activeView === 'movie' && (
               <>
-                <div className="row py-3 my-3 align-items-center w-100">
-                  <div className="col-md-3">
-                    <label className="custom-label mt-4">No of Container</label>
-                  </div>
-                  <div className="col-md-4">
-                    <small className="text-muted d-block mt-2">Max 20 containers only*</small>
-                    <input
-                      type='number'
-                      id="noOfContainers"
-                      required
-                      className="form-control border border-dark border-2"
-                      value={numOfContainers}
-                      onChange={handleNumOfContainersChange}
-                      max="20"
-                      placeholder="No of Container"
-                    />
-                  </div>
-                </div>
 
-                <div className="table-wrapper">
-                  <table className="table table-bordered">
+                {/* <div className="table-wrapper mt-4"> */}
+                <div className="w-100 h-auto mt-4 ml-auto mr-auto overflow-auto mb-3 pl-4 pr-4" style={{ maxHeight: '400px' }}>
+                  <table className="table overflow-auto">
                     <thead style={{ backgroundColor: '#2b2a52', color: 'white' }}>
                       <tr>
-                        <th>S.No</th>
+                        <th></th>
                         <th>Container</th>
                         <th>Category Name</th>
                         <th></th>
@@ -177,6 +245,41 @@ const Container = () => {
                               ))}
                             </select>
                           </td>
+
+                          
+
+{/* <td>
+      <div className="position-relative">
+        <input
+          type="text"
+          placeholder="Search and select category..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onFocus={() => setIsDropdownOpen(true)}
+          onBlur={() => setIsDropdownOpen(false)}
+          className="form-control"
+        />
+        {isDropdownOpen && (
+          <ul className="dropdown-menu show">
+            {filteredCategories.length > 0 ? (
+              filteredCategories.map(option => (
+                <li
+                  key={option.category_id}
+                  onClick={() => handleSelect(index,option.category_id)}
+                  className="dropdown-item"
+                >
+                  {option.categories}
+                </li>
+              ))
+            ) : (
+              <li className="dropdown-item disabled">No categories found</li>
+            )}
+          </ul>
+        )}
+      </div>
+    </td>  */}
+                          
+                          
                           <td>
                             <button className="btn btn-danger">
                               <i className="fas fa-trash-alt"></i>

@@ -68,7 +68,6 @@ const Banner_setting= () => {
     <div className='AddArea'>
       {/* Dropdown for settings */}
       <Dropdown 
-      className="mb-4" 
       show={isOpen} 
       onToggle={() => setIsOpen(!isOpen)} // Toggle the dropdown
     >
@@ -96,7 +95,7 @@ const Banner_setting= () => {
     </Dropdown>
     </div>
     <br />
-    <div className='container2 mt-2'>
+    <div className='container2'>
         <ol className="breadcrumb mb-4 d-flex my-0">
           <li className="breadcrumb-item">
             <Link to="/admin/SiteSetting">Settings</Link>
@@ -159,3 +158,4 @@ const Banner_setting= () => {
 };
 
 export default Banner_setting;
+

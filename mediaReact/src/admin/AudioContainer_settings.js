@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import "../App.css"
 import { useRef } from 'react';
 
+
 const AudioContainer_settings = () => {
 
   const styles = {
@@ -48,6 +49,7 @@ const AudioContainer_settings = () => {
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [inputValues, setInputValues] = useState([]); // Track input values for each row
   const [dropdownStates, setDropdownStates] = useState([]); // Track dropdown open/close states for each row
+  const token = sessionStorage.getItem("tokenn")
 
   // Fetch categories from the API
   useEffect(() => {
@@ -60,13 +62,15 @@ const AudioContainer_settings = () => {
       })
       .then(data => {
         const categoryNames = data.map(item => item.categories);
-        setCategories(categoryNames);
+        // setCategories(categoryNames);
+        setCategories(data);
         setFilteredOptions(categoryNames);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
   }, []);
+
 
   // Handle input change for filtering options
   const handleInputChanget = (e, index) => {
@@ -75,12 +79,26 @@ const AudioContainer_settings = () => {
     updatedInputValues[index] = value;
     setInputValues(updatedInputValues);
 
+    const value2=e.target.value;
+    const category = categories.find(cat => cat.categories === value2);
+    const data=category ? category.category_id : null;
+
+
+    const updatedData = tableData.map((row, i) => {
+      if (i === index) {
+        return { ...row, categoryId: data };  // Dynamically update the field
+      }
+      return row;  // Return other rows unchanged
+    });
+    setTableData(updatedData);
+  
+    const categoryNames = categories.map(item => item.categories);
     // Separate options that start with the value from those that contain it elsewhere
-    const startsWithValue = categories.filter(option =>
+    const startsWithValue = categoryNames.filter(option =>
       option.toLowerCase().startsWith(value)  // Options that start with the input
     );
 
-    const containsValue = categories.filter(option =>
+    const containsValue = categoryNames.filter(option =>
       option.toLowerCase().includes(value) && !option.toLowerCase().startsWith(value)  // Options that contain but don't start with the input
     );
 
@@ -89,14 +107,26 @@ const AudioContainer_settings = () => {
 
     setFilteredOptions(filtered);  // Update the filtered options
   };
+  const handleDropdownToggleselect =(index)=>{
+    const updatedDropdownStatesToFalse = dropdownStates.map(() => false);
+    setDropdownStates(updatedDropdownStatesToFalse);
 
+  }
 
   // Toggle dropdown for specific row
   const handleDropdownToggle = (index) => {
-    const updatedDropdownStates = [...dropdownStates];
-    updatedDropdownStates[index] = !updatedDropdownStates[index];
-    setDropdownStates(updatedDropdownStates);
+    // const updatedDropdownStatesToFalse = dropdownStates.map(() => false);
+    // const updatedDropdownStates = [...updatedDropdownStatesToFalse];
+    // updatedDropdownStates[index] = !updatedDropdownStates[index];
+
+    setDropdownStates(prevDropdownStates => 
+      prevDropdownStates.map((state, i) => (i === index ? !state : false))
+    );
+    
+    // setDropdownStates(updatedDropdownStates);
   };
+  console.log("dropdownStates.length")
+  console.log(dropdownStates.length)
 
   // Handle selecting an option
   const handleOptionClick = (option, index) => {
@@ -108,13 +138,20 @@ const AudioContainer_settings = () => {
     updatedDropdownStates[index] = false;
     setDropdownStates(updatedDropdownStates);
     const newValue = option;
+    
+    const category = categories.find(cat => cat.categories === newValue);
+    const data=category ? category.category_id : null;
+
+
     const updatedData = tableData.map((row, i) => {
       if (i === index) {
-        return { ...row, categoryName: newValue };  // Dynamically update the field
+        return { ...row, categoryId: data };  // Dynamically update the field
       }
       return row;  // Return other rows unchanged
     });
     setTableData(updatedData);
+    const categoryNames = categories.map(item => item.categories);
+    setFilteredOptions(categoryNames)
 
 
 
@@ -139,6 +176,8 @@ const AudioContainer_settings = () => {
 
   // Handle input change in the table rows
   const handleInputChange = (e, index, field) => {
+
+   
     const newValue = e.target.value;
     const updatedData = tableData.map((row, i) => {
       if (i === index) {
@@ -153,8 +192,49 @@ const AudioContainer_settings = () => {
   const handleSubmit = () => {
     const jsonData = JSON.stringify(tableData, null, 2); // Convert tableData to JSON
 
+      try {
+        const AudioData = new FormData();
+ 
+        tableData.forEach((id) => {
+          AudioData.append('audiocontainer', id);
+        });
 
-
+        for (let [key, value] of AudioData.entries()) {
+          console.log(key + " :", value);
+        }
+        const saveResponse =axios.post(`${API_URL}/api/v2/audiocontainer`, AudioData, {
+          headers: {
+            Authorization: token, // Pass the token in the Authorization header
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log(AudioData)
+        if (saveResponse.status === 200) {
+         
+          Swal.fire({
+            title: 'Success!',
+            text: 'Containers and Categoryes  data saved successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          Swal.fire({
+            title: 'Error!',
+            text: 'Error saving Containers and Categoryes  data',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      } catch (error) {
+        console.error('Error uploading data:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Error uploading data',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+  
     console.log('Submitted Data:', jsonData);
   };
 
@@ -170,7 +250,7 @@ const AudioContainer_settings = () => {
     // Delete the item at the specific index from inputValues
     const updatedInputValues = inputValues.filter((_, i) => i !== index);
     setInputValues(updatedInputValues);
-
+    
     setTableData(updatedData);
     setAudioTitle(audioTitle - 1); // Reduce the count
     setInputValue(updatedData.length);
@@ -201,25 +281,25 @@ const AudioContainer_settings = () => {
         console.log("audio less than === 0")
         setAudioTitle(newValue);
         const rows = Array.from({ length: inputValue }, (_, index) => ({
-          container: '',
-          categoryName: ''
+          container_name: '',
+          categoryId: ''
         }));
         setTableData(rows);
         setInputValue(newValue);
         setAudioTitle(newValue);
-        setDropdownStates(Array(inputValue).fill(false)); // Initialize dropdown states
-        setInputValues(Array(inputValue).fill("")); // Initialize input values
+        setDropdownStates(Array(newValue).fill(false)); // Initialize dropdown states
+        setInputValues(Array(newValue).fill("")); // Initialize input values
       }
       else if (audioTitle >= 0) {
 
         console.log("audio greater than === 0")
         setTableData((prevData) => {
           // Check if the current inputValue exceeds the existing rows in tableData
-          if (inputValue > prevData.length) {
+          if (newValue > prevData.length) {
             // Add new rows while keeping the existing ones intact
-            const newRows = Array.from({ length: inputValue - prevData.length }, () => ({
-              container: '',
-              categoryName: ''
+            const newRows = Array.from({ length: newValue - prevData.length }, () => ({
+              container_name: '',
+              categoryId: ''
             }));
             return [...prevData, ...newRows]; // Combine old rows with new empty rows      
           }
@@ -228,18 +308,18 @@ const AudioContainer_settings = () => {
 
         setDropdownStates((prevDropdownStates) => {
           // Check if inputValue exceeds the current length of dropdownStates
-          if (inputValue > prevDropdownStates.length) {
+          if (newValue > prevDropdownStates.length) {
             // Add 'false' values to the end of dropdownStates
-            const extraStates = Array(inputValue - prevDropdownStates.length).fill(false);
+            const extraStates = Array(newValue - prevDropdownStates.length).fill(false);
             return [...prevDropdownStates, ...extraStates]; // Combine old states with new 'false' values
           }
           return prevDropdownStates; // If inputValue is less than or equal, return existing data
         });
         setInputValues((prevInputValues) => {
           // Check if inputValue exceeds the current length of dropdownStates
-          if (inputValue > prevInputValues.length) {
+          if (newValue > prevInputValues.length) {
             // Add 'false' values to the end of dropdownStates
-            const extraValues = Array(inputValue - prevInputValues.length).fill("");
+            const extraValues = Array(newValue - prevInputValues.length).fill("");
             return [...prevInputValues, ...extraValues]; // Combine old states with new 'false' values
           }
           return prevInputValues; // If inputValue is less than or equal, return existing data
@@ -491,8 +571,9 @@ const AudioContainer_settings = () => {
                             name="Container"
                             className="form-control border border-dark border-2 input-width"
                             placeholder="Enter Container"
-                            value={row.container}
-                            onChange={(e) => handleInputChange(e, index, 'container')}
+                            value={row.container_name}
+                            onClick={() => handleDropdownToggleselect(index)}
+                            onChange={(e) => handleInputChange(e, index, 'container_name')}
                           />
                         </td>
                         <td>

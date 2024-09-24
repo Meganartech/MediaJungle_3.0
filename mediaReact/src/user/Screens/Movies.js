@@ -216,3 +216,220 @@ const MoviesPage = () => {
 };
 
 export default MoviesPage;
+
+// import React, { useState, useEffect } from 'react';
+// import Layout from '../Layout/Layout';
+// import API_URL from '../../Config';
+// import axios from 'axios'; // Assuming you are using axios for API calls
+// import leftarrowIcon from '../UserIcon/left slide icon.png';
+// import rightarrowIcon from '../UserIcon/right slide icon.png';
+
+// const MoviesPage = () => {
+//   const [states, setStates] = useState([]); // Holds the categories and their data
+//   const [videoIds, setVideoIds] = useState([]); // Holds the category-wise image data
+//   const [all, setAll] = useState([]); // Holds all video data
+//   const [images, setImages] = useState({}); // Holds images with videoId as key
+//   const [currentIndex, setCurrentIndex] = useState({}); // Track the current index for each category
+//   const [videoBanners, setVideoBanners] = useState([]); // State to store banner data
+//   const [bannerIndex, setBannerIndex] = useState(0); // Track banner index for sliding
+
+//   // Fetch banner data from API
+//   const fetchVideoBanners = async () => {
+//     try {
+//       const response = await axios.get(`${API_URL}/api/v2/getallvideobanners`);
+//       setVideoBanners(response.data); // Set fetched banner data to state
+//     } catch (error) {
+//       console.error('Error fetching video banners:', error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     // Fetch video banners when the component mounts
+//     fetchVideoBanners();
+//   }, []);
+
+//   // Automatically update the bannerIndex every 3 seconds
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setBannerIndex((prevIndex) => (prevIndex + 1) % videoBanners.length);
+//     }, 3000); // Change slide every 3 seconds
+
+//     return () => clearInterval(interval); // Clear interval on component unmount
+//   }, [videoBanners.length]);
+
+//   useEffect(() => {
+//     fetch(`${API_URL}/api/v2/getvideocontainer`)
+//       .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
+//       .then(data => {
+//         setStates(data);
+//         const fetchPromises = data.map(state => {
+//           const categoryId = state.category;
+//           return fetch(`${API_URL}/api/v2/images-by-category?categoryId=${categoryId}`)
+//             .then(response => response.ok ? response.json() : Promise.reject('Failed to fetch video IDs'))
+//             .then(videoIds => ({ categoryId, videoIds }))
+//             .catch(error => {
+//               console.error('Error fetching video IDs:', error);
+//               return { categoryId, videoIds: [] };
+//             });
+//         });
+
+//         Promise.all(fetchPromises)
+//           .then(results => {
+//             setVideoIds(results);
+//             const initialIndex = {};
+//             results.forEach(result => {
+//               initialIndex[result.categoryId] = 0; // Initialize index for each category
+//             });
+//             setCurrentIndex(initialIndex);
+//           })
+//           .catch(error => {
+//             console.error('Error in fetching video IDs:', error);
+//           });
+//       })
+//       .catch(error => {
+//         console.error('Error fetching data:', error);
+//       });
+//   }, []);
+
+//   useEffect(() => {
+//     fetch(`${API_URL}/api/v2/video/getall`)
+//       .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
+//       .then(data => {
+//         setAll(data);
+//         data.forEach(video => {
+//           const id = video.id;
+//           fetch(`${API_URL}/api/v2/${id}/videothumbnail`)
+//             .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
+//             .then(imageData => {
+//               const imageBase64 = imageData.videoThumbnail;
+//               const imageUrl = `data:image/png;base64,${imageBase64}`;
+//               setImages(prevImages => ({
+//                 ...prevImages,
+//                 [id]: imageUrl
+//               }));
+//             })
+//             .catch(error => {
+//               console.error('Error fetching image:', error);
+//             });
+//         });
+//       })
+//       .catch(error => {
+//         console.error('Error fetching data:', error);
+//       });
+
+//   }, []);
+
+//   const handleNext = (categoryId) => {
+//     setCurrentIndex(prevIndex => {
+//       const newIndex = prevIndex[categoryId] + 1;
+//       return { ...prevIndex, [categoryId]: newIndex };
+//     });
+//   };
+
+//   const handlePrevious = (categoryId) => {
+//     setCurrentIndex(prevIndex => {
+//       const newIndex = Math.max(0, prevIndex[categoryId] - 1); // Prevent going below 0
+//       return { ...prevIndex, [categoryId]: newIndex };
+//     });
+//   };
+
+//   return (
+//     <Layout>
+//       {/* Banner Section Displayed at the Top */}
+//       <div className="banner-container">
+//         {videoBanners.length > 0 && (
+//           <div className="banner-items" style={{ transform: `translateX(-${bannerIndex * 100}%)` }}>
+//             {videoBanners.map((banner, index) => {
+//               const bannerImageUrl = images[banner.videoId];
+//               return (
+//                 bannerImageUrl && (
+//                   <div key={index} className="banner-item">
+//                     <img src={bannerImageUrl} alt={`Banner ${index}`} />
+//                   </div>
+//                 )
+//               );
+//             })}
+//           </div>
+//         )}
+//       </div>
+
+//       <div className="container-list">
+//         {states.length === 0 ? (
+//           <div>No content available</div>
+//         ) : (
+//           states.map((state) => {
+//             const categoryImages =
+//               videoIds.find((video) => video.categoryId === state.category)
+//                 ?.videoIds || [];
+//             const start = currentIndex[state.category] || 0;
+//             const displayedImages = categoryImages.slice(start, start + 6);
+
+//             return (
+//               <div key={state.id}>
+//                 {/* Main Container Section */}
+//                 <div className="customcontainer">
+//                   <span>{state.value}</span>
+//                   <div className="navigation">
+//                     {/* Left Button */}
+//                     <button
+//                       onClick={() => handlePrevious(state.category)}
+//                       disabled={start === 0}
+//                     >
+//                       <img
+//                         src={leftarrowIcon} // Replace with your left arrow icon path
+//                         alt="left arrow icon"
+//                         style={{ width: "30px", height: "30px" }}
+//                       />
+//                     </button>
+
+//                     <div className="items">
+//                       {displayedImages.length === 0 ? (
+//                         <div>No images available</div>
+//                       ) : (
+//                         displayedImages.map((videoId) => {
+//                           const imageUrl = images[videoId];
+//                           const videoData = all.find(
+//                             (video) => video.id === videoId
+//                           );
+//                           const videoTitle = videoData?.videoTitle;
+
+//                           return (
+//                             imageUrl && (
+//                               <div key={videoId} className="item">
+//                                 <img src={imageUrl} alt={`Video ${videoId}`} />
+//                                 <p>{videoTitle}</p>
+//                               </div>
+//                             )
+//                           );
+//                         })
+//                       )}
+//                     </div>
+
+//                     {/* Right Button */}
+//                     <button
+//                       onClick={() => handleNext(state.category)}
+//                       disabled={start + 6 >= categoryImages.length}
+//                     >
+//                       <img
+//                         src={rightarrowIcon} // Replace with your right arrow icon path
+//                         alt="right arrow icon"
+//                         style={{ width: "30px", height: "30px" }}
+//                       />
+//                     </button>
+//                   </div>
+//                 </div>
+//               </div>
+//             );
+//           })
+//         )}
+//       </div>
+//     </Layout>
+//   );
+// };
+
+// export default MoviesPage;
+
+
+
+
+
