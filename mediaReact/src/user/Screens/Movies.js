@@ -1,221 +1,221 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Layout from '../Layout/Layout';
-import Head from '../Components/Head';
-import Filters from '../Components/Filters';
-import API_URL from '../../Config';
+// import React, { useState, useEffect } from 'react';
+// import { Link } from 'react-router-dom';
+// import Layout from '../Layout/Layout';
+// import Head from '../Components/Head';
+// import Filters from '../Components/Filters';
+// import API_URL from '../../Config';
 
-const MoviesPage = () => {
-  const maxPage = 5;
-  const log = localStorage.getItem('login');
-  const [page, setPage] = useState(maxPage);
-  const [vimage, setvImage] = useState([]);
-  const [all, setall] = useState(null);
-  const [images, setImages] = useState({}); // Store images with video IDs as keys
-  const userid = sessionStorage.getItem('userId');
-  const [videoContainer,setVideoContainer] = useState([]);
+// const MoviesPage = () => {
+//   const maxPage = 5;
+//   const log = localStorage.getItem('login');
+//   const [page, setPage] = useState(maxPage);
+//   const [vimage, setvImage] = useState([]);
+//   const [all, setall] = useState(null);
+//   const [images, setImages] = useState({}); // Store images with video IDs as keys
+//   const userid = sessionStorage.getItem('userId');
+//   const [videoContainer,setVideoContainer] = useState([]);
 
-  const HandleLoadingMore = () => {
-    setPage(page + maxPage);
-  };
+//   const HandleLoadingMore = () => {
+//     setPage(page + maxPage);
+//   };
 
-  // useEffect(() => {
-  //   fetch(`${API_URL}/api/v2/video/getall`)
-  //     .then(response => {
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-  //       return response.json();
-  //     })
-  //     .then(data => {
-  //       setall(data);
-  //       console.log("Fetched Data:", data);
-  //       const id = data.id;
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching data:', error);
-  //     });
+//   // useEffect(() => {
+//   //   fetch(`${API_URL}/api/v2/video/getall`)
+//   //     .then(response => {
+//   //       if (!response.ok) {
+//   //         throw new Error('Network response was not ok');
+//   //       }
+//   //       return response.json();
+//   //     })
+//   //     .then(data => {
+//   //       setall(data);
+//   //       console.log("Fetched Data:", data);
+//   //       const id = data.id;
+//   //     })
+//   //     .catch(error => {
+//   //       console.error('Error fetching data:', error);
+//   //     });
 
-  //   fetchData();
-  // }, []);
-
-
-  useEffect(() => {
-    // Fetch video data
-    fetch(`${API_URL}/api/v2/video/getall`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setall(data);
-        console.log("Fetched Data:", data);
-
-        // Fetch images for each video
-        data.forEach(video => {
-          const id = video.id;
-
-          // Fetch the image using the video id
-          fetch(`${API_URL}/api/v2/${id}/videothumbnail`)
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Network response was not ok');
-              }
-              return response.json(); // Fetch the image as JSON
-            })
-            .then(data => {
-              // Assuming the response data has the image base64 string under 'videoThumbnail'
-              const imageBase64 = data.videoThumbnail;
-              const imageUrl = `data:image/png;base64,${imageBase64}`;
-
-              // Update the state with the image URL for the specific video ID
-              setImages(prevImages => ({
-                ...prevImages,
-                [id]: imageUrl
-              }));
-
-              console.log("Fetched Image URL for ID", id, ":", imageUrl);
-            })
-            .catch(error => {
-              console.error('Error fetching image:', error);
-            });
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+//   //   fetchData();
+//   // }, []);
 
 
-  useEffect(() => {
-    fetch(`${API_URL}/api/v2/getvideocontainer`)
-      .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
-      .then(data => setVideoContainer(data))
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+//   useEffect(() => {
+//     // Fetch video data
+//     fetch(`${API_URL}/api/v2/video/getall`)
+//       .then(response => {
+//         if (!response.ok) {
+//           throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//       })
+//       .then(data => {
+//         setall(data);
+//         console.log("Fetched Data:", data);
 
-  console.log(videoContainer)
+//         // Fetch images for each video
+//         data.forEach(video => {
+//           const id = video.id;
 
-  const handlEdit = async (Id) => {
-    localStorage.setItem('items', Id);
-  };
+//           // Fetch the image using the video id
+//           fetch(`${API_URL}/api/v2/${id}/videothumbnail`)
+//             .then(response => {
+//               if (!response.ok) {
+//                 throw new Error('Network response was not ok');
+//               }
+//               return response.json(); // Fetch the image as JSON
+//             })
+//             .then(data => {
+//               // Assuming the response data has the image base64 string under 'videoThumbnail'
+//               const imageBase64 = data.videoThumbnail;
+//               const imageUrl = `data:image/png;base64,${imageBase64}`;
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/v2/GetvideoThumbnail`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+//               // Update the state with the image URL for the specific video ID
+//               setImages(prevImages => ({
+//                 ...prevImages,
+//                 [id]: imageUrl
+//               }));
 
-      const data = await response.json();
-      if (data && Array.isArray(data)) {
-        setvImage(data);
-      } else {
-        console.error('Invalid or empty data received:', data);
-      }
-    } catch (error) {
-      console.error('Error fetching or processing image data:', error);
-    }
-  };
+//               console.log("Fetched Image URL for ID", id, ":", imageUrl);
+//             })
+//             .catch(error => {
+//               console.error('Error fetching image:', error);
+//             });
+//         });
+//       })
+//       .catch(error => {
+//         console.error('Error fetching data:', error);
+//       });
+//   }, []);
 
-  return (
-    <Layout>
-      <div
-        className='mx-auto min-h-screen px-10'
-        style={{
-          background: 'linear-gradient(to bottom, #141335, #0c0d1a)', // Gradient background applied here
-        }}
-      >
-        <div className="px-2 mb-6">
-          <Filters />
+
+//   useEffect(() => {
+//     fetch(`${API_URL}/api/v2/getvideocontainer`)
+//       .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
+//       .then(data => setVideoContainer(data))
+//       .catch(error => {
+//         console.error('Error fetching data:', error);
+//       });
+//   }, []);
+
+//   console.log(videoContainer)
+
+//   const handlEdit = async (Id) => {
+//     localStorage.setItem('items', Id);
+//   };
+
+//   const fetchData = async () => {
+//     try {
+//       const response = await fetch(`${API_URL}/api/v2/GetvideoThumbnail`);
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! Status: ${response.status}`);
+//       }
+
+//       const data = await response.json();
+//       if (data && Array.isArray(data)) {
+//         setvImage(data);
+//       } else {
+//         console.error('Invalid or empty data received:', data);
+//       }
+//     } catch (error) {
+//       console.error('Error fetching or processing image data:', error);
+//     }
+//   };
+
+//   return (
+//     <Layout>
+//       <div
+//         className='mx-auto min-h-screen px-10'
+//         style={{
+//           background: 'linear-gradient(to bottom, #141335, #0c0d1a)', // Gradient background applied here
+//         }}
+//       >
+//         <div className="px-2 mb-6">
+//           <Filters />
           
-          <p className='text-lg font-medium'>
-            Total <span className='font-bold text-subMain'>{all && all.length > 0 ? all.length : "none"}</span> items Found
-          </p>
+//           <p className='text-lg font-medium'>
+//             Total <span className='font-bold text-subMain'>{all && all.length > 0 ? all.length : "none"}</span> items Found
+//           </p>
 
-          <div
-            className='grid sm:mt-10 mt-6 xl:grid-cols-4 2xl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6'
-            style={{ height: "auto !important" }}
-          >
-            {all && all.length > 0 ? (
-              all.map((video) => (
-                <div key={video.id} className="slider-item">
-                  <div className='border border-border p-1 hover:scale-95 transitions relative rounded overflow-hidden' style={{ height: "16rem" }}>
-                    <Link to={userid ? `/watchpage/${video.videoTitle}` : "/UserLogin"} onClick={() => handlEdit(video.id)} className='w-full'>
-                    {images[video.id] &&  
-            <img 
-              src={images[video.id]}
-              alt={`Image for ${video.videoTitle}`} 
+//           <div
+//             className='grid sm:mt-10 mt-6 xl:grid-cols-4 2xl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6'
+//             style={{ height: "auto !important" }}
+//           >
+//             {all && all.length > 0 ? (
+//               all.map((video) => (
+//                 <div key={video.id} className="slider-item">
+//                   <div className='border border-border p-1 hover:scale-95 transitions relative rounded overflow-hidden' style={{ height: "16rem" }}>
+//                     <Link to={userid ? `/watchpage/${video.videoTitle}` : "/UserLogin"} onClick={() => handlEdit(video.id)} className='w-full'>
+//                     {images[video.id] &&  
+//             <img 
+//               src={images[video.id]}
+//               alt={`Image for ${video.videoTitle}`} 
 
-                        className='w-full h-64 object-cover'
-                      />
-                    }
-                    </Link>
-                    <div className='absolute flex-btn gap-2 bottom-0 right-0 left-0 bg-main bg-opacity-60 text-white px-4 py-3'>
-                      <h3 className='font-semibold truncate'>{video.videoTitle}</h3>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div></div>
-            )}
-          </div>
-        </div>
-      </div>
-    </Layout>
+//                         className='w-full h-64 object-cover'
+//                       />
+//                     }
+//                     </Link>
+//                     <div className='absolute flex-btn gap-2 bottom-0 right-0 left-0 bg-main bg-opacity-60 text-white px-4 py-3'>
+//                       <h3 className='font-semibold truncate'>{video.videoTitle}</h3>
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))
+//             ) : (
+//               <div></div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </Layout>
 
-  //   <Layout>
-  //   <div
-  //     className='container-fluid min-vh-100 px-3'
-  //     style={{
-  //       background: 'linear-gradient(to bottom, #141335, #0c0d1a)', // Gradient background applied here
-  //     }}
-  //   >
-  //     <div className="mb-4">
+//   //   <Layout>
+//   //   <div
+//   //     className='container-fluid min-vh-100 px-3'
+//   //     style={{
+//   //       background: 'linear-gradient(to bottom, #141335, #0c0d1a)', // Gradient background applied here
+//   //     }}
+//   //   >
+//   //     <div className="mb-4">
         
         
-  //       <p className='fs-4 fw-medium'>
-  //         Total <span className='fw-bold text-primary'>{all && all.length > 0 ? all.length : "none"}</span> items Found
-  //       </p>
+//   //       <p className='fs-4 fw-medium'>
+//   //         Total <span className='fw-bold text-primary'>{all && all.length > 0 ? all.length : "none"}</span> items Found
+//   //       </p>
 
-  //       <div className='row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4'>
-  //         {all && all.length > 0 ? (
-  //           all.map((video) => (
-  //             <div key={video.id} className="col">
-  //               <div className='card border border-light rounded overflow-hidden shadow-sm h-100'>
-  //                 <Link to={userid ? `/watchpage/${video.videoTitle}` : "/UserLogin"} onClick={() => handlEdit(video.id)} className='text-decoration-none'>
-  //                 {images[video.id] &&  
-  //           <img 
-  //             src={images[video.id]}
-  //             alt={`Image for ${video.videoTitle}`} 
-  //                     className='card-img-top'
-  //                   />
-  //                 }
-  //                 </Link>
-  //                 <div className='card-img-overlay d-flex align-items-end bg-dark bg-opacity-50 text-white'>
-  //                   <h3 className='card-title fw-semibold text-truncate'>{video.videoTitle}</h3>
-  //                 </div>
-  //               </div>
-  //             </div>
-  //           ))
-  //         ) : (
-  //           <div className='text-center w-100'>
-  //             <p>No items found</p>
-  //           </div>
-  //         )}
-  //       </div>
-  //     </div>
-  //   </div>
-  // </Layout>
-  );
-};
+//   //       <div className='row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4'>
+//   //         {all && all.length > 0 ? (
+//   //           all.map((video) => (
+//   //             <div key={video.id} className="col">
+//   //               <div className='card border border-light rounded overflow-hidden shadow-sm h-100'>
+//   //                 <Link to={userid ? `/watchpage/${video.videoTitle}` : "/UserLogin"} onClick={() => handlEdit(video.id)} className='text-decoration-none'>
+//   //                 {images[video.id] &&  
+//   //           <img 
+//   //             src={images[video.id]}
+//   //             alt={`Image for ${video.videoTitle}`} 
+//   //                     className='card-img-top'
+//   //                   />
+//   //                 }
+//   //                 </Link>
+//   //                 <div className='card-img-overlay d-flex align-items-end bg-dark bg-opacity-50 text-white'>
+//   //                   <h3 className='card-title fw-semibold text-truncate'>{video.videoTitle}</h3>
+//   //                 </div>
+//   //               </div>
+//   //             </div>
+//   //           ))
+//   //         ) : (
+//   //           <div className='text-center w-100'>
+//   //             <p>No items found</p>
+//   //           </div>
+//   //         )}
+//   //       </div>
+//   //     </div>
+//   //   </div>
+//   // </Layout>
+//   );
+// };
 
-export default MoviesPage;
+// export default MoviesPage;
 
 // import React, { useState, useEffect } from 'react';
 // import Layout from '../Layout/Layout';
@@ -428,6 +428,165 @@ export default MoviesPage;
 // };
 
 // export default MoviesPage;
+
+
+import React, { useState, useEffect } from 'react';
+import Layout from '../Layout/Layout';
+import API_URL from '../../Config';
+import axios from 'axios';
+import leftarrowIcon from '../UserIcon/left slide icon.png';
+import rightarrowIcon from '../UserIcon/right slide icon.png';
+
+const MoviesPage = () => {
+  const [states, setStates] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState({}); // Object to track current indices per category
+  const [videoBanners, setVideoBanners] = useState([]); // State to store banner data
+  const [bannerIndex, setBannerIndex] = useState(0); // Track banner index for sliding
+
+
+  // Fetch video banners (if needed, but not used in your current code)
+  const fetchVideoBanners = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v2/getallvideobanners`);
+      // Handle banner data here if necessary
+      setVideoBanners(response.data)
+    } catch (error) {
+      console.error('Error fetching video banners:', error);
+    }
+  };
+
+  // Fetch video container data
+  const fetchVideoContainer = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v2/getvideocontainer`);
+      setStates(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching video container:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchVideoBanners();
+    fetchVideoContainer();
+  }, []);
+
+  // Automatically update the bannerIndex every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBannerIndex((prevIndex) => (prevIndex + 1) % videoBanners.length);
+    }, 4000); // Change slide every 3 seconds
+
+    return () => clearInterval(interval); // Clear interval on component unmount
+  }, [videoBanners.length]);
+
+  // Navigate to the next set of videos
+  const handleNext = (category) => {
+    setCurrentIndex((prevIndex) => {
+      const newIndex = (prevIndex[category] || 0) + 1;
+      return { ...prevIndex, [category]: newIndex };
+    });
+  };
+
+  // Navigate to the previous set of videos
+  const handlePrevious = (category) => {
+    setCurrentIndex((prevIndex) => {
+      const newIndex = Math.max(0, (prevIndex[category] || 0) - 1);
+      return { ...prevIndex, [category]: newIndex };
+    });
+  };
+
+  return (
+    <Layout>
+      {/* Banner Section Displayed at the Top */}
+<div className="banner-container">
+  {videoBanners.length > 0 && (
+    <div className="banner-items" style={{ transform: `translateX(-${bannerIndex * 100}%)` }}>
+      {videoBanners.map((banner, index) => (
+        <div key={index} className="banner-item">
+          <img src={`${API_URL}/api/v2/${banner.videoId}/videothumbnail`} alt={`Banner ${index}`} />
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+      <div className="container-list">
+        {states.length === 0 ? (
+          <div>No content available</div>
+        ) : (
+          states.map((state) => {
+            const videoDescriptions = state.videoDescriptions || [];
+            const start = currentIndex[state.value] || 0; // Use state.value for indexing
+            const displayedVideos = videoDescriptions.slice(start, start + 6); // Display 6 videos at a time
+
+            return (
+              <div key={state.value}>
+                <div className="customcontainer">
+                  <span>{state.value}</span>
+                  <div className="navigation">
+                    {/* Left Button */}
+                    <button
+                      onClick={() => handlePrevious(state.value)}
+                      disabled={start === 0} // Disable if at the start
+                    >
+                      <img
+                        src={leftarrowIcon}
+                        alt="left arrow icon"
+                        style={{ width: "30px", height: "30px" }}
+                      />
+                    </button>
+
+                    <div className="items">
+                      {displayedVideos.length === 0 ? (
+                        <div>No videos available</div>
+                      ) : (
+                        displayedVideos.map((video, index) => {
+                          const videoId = video.id;
+                          const videoTitle = video.videoTitle;
+
+                          return (
+                            <div key={`${videoId}-${state.value}-${index}`} className="item">
+                              <img
+                                src={`${API_URL}/api/v2/${videoId}/videothumbnail`}
+                                alt={`Video ${videoId}`}
+                              />
+                              {/* <p>{videoTitle}</p> */}
+                              <div className="overlay">
+                                <p className="video-title">{videoTitle}</p>
+                                <p className="video-year">{video.year}</p> {/* Assuming year is part of video object */}
+                                <p className="video-duration">{video.mainVideoDuration}</p> {/* Assuming duration is part of video object */}
+                                <p className="video-category">{state.value}</p> {/* Displaying the category/genre */}
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+
+                    {/* Right Button */}
+                    <button
+                      onClick={() => handleNext(state.value)}
+                      disabled={start + 6 >= videoDescriptions.length} // Disable if no more videos to display
+                    >
+                      <img
+                        src={rightarrowIcon}
+                        alt="right arrow icon"
+                        style={{ width: "30px", height: "30px" }}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </Layout>
+  );
+};
+
+export default MoviesPage;
 
 
 
