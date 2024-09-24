@@ -10,6 +10,9 @@ const Footer_setting = () => {
     aboutUsBodyScript: '',
     featureBox1HeaderScript: '',
     featureBox1BodyScript: '',
+    featureBox2HeaderScript: '',
+    featureBox2BodyScript: '',
+    aboutUsImage:'',
     contactUsEmail: '',
     contactUsBodyScript: '',
     callUsPhoneNumber: '',
@@ -133,18 +136,21 @@ const Footer_setting = () => {
                   <input type="text" name="aboutUsHeaderScript" className="form-control mb-3" value={formData.aboutUsHeaderScript} onChange={handleInputChange} />
                   <label>Body Script</label>
                   <input type="text" name="aboutUsBodyScript" className="form-control mb-3" value={formData.aboutUsBodyScript} onChange={handleInputChange} />
-                </>
-              )}
-              {step === 2 && (
-                <>
                   <h4>Feature Box1</h4>
                   <label>Header Script</label>
                   <input type="text" name="featureBox1HeaderScript" className="form-control mb-3" value={formData.featureBox1HeaderScript} onChange={handleInputChange} />
                   <label>Body Script</label>
                   <input type="text" name="featureBox1BodyScript" className="form-control mb-3" value={formData.featureBox1BodyScript} onChange={handleInputChange} />
+                  <h4>Feature Box2</h4>
+                  <label>Header Script</label>
+                  <input type="text" name="featureBox2HeaderScript" className="form-control mb-3" value={formData.featureBox2HeaderScript} onChange={handleInputChange} />
+                  <label>Body Script</label>
+                  <input type="text" name="featureBox2BodyScript" className="form-control mb-3" value={formData.featureBox2BodyScript} onChange={handleInputChange} />
+                  <label>About Us Image</label>
+                  <input type="file" name="aboutUsImage" className="form-control mb-3" onChange={handleFileChange} />
                 </>
               )}
-              {step === 3 && (
+              {step === 2 && (
                 <>
                   <h3>Contact Us</h3>
                   <label>Email</label>
@@ -165,7 +171,7 @@ const Footer_setting = () => {
                   <input type="file" name="contactUsImage" className="form-control mb-3" onChange={handleFileChange} />
                 </>
               )}
-              {step === 4 && (
+              {step === 3 && (
                 <>
                   <h4>App URL</h4>
                   <label>Playstore URL</label>
@@ -183,12 +189,12 @@ const Footer_setting = () => {
                     Previous
                   </button>
                 )}
-                {step < 4 && (
+                {step < 3 && (
                   <button type="button" className="btn btn-primary" style={{backgroundColor: "#007bff"}} onClick={goToNextStep}>
                     Next
                   </button>
                 )}
-                {step === 4 && (
+                {step === 3 && (
                   <button type="submit" className="btn btn-primary" style={{backgroundColor: "#007bff"}}>
                     Submit
                   </button>
