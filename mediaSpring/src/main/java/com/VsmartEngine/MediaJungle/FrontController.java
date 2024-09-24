@@ -214,6 +214,10 @@ public class FrontController {
 		return AudioController.uploadAudio(categoryId, audioFile, thumbnail, paid, token);
 	}
 
+	 
+	 
+	 
+//	 Add the {filename} with the extension example(mp3,mp4 etc).
 	@GetMapping("/{filename}/file")
 	public ResponseEntity<Resource> getAudioFile(@PathVariable String filename, HttpServletRequest request) {
 
@@ -226,6 +230,7 @@ public class FrontController {
 
 		return AudioController.getAudioById(id);
 	}
+
 
 	@GetMapping("/audio/{id}/file")
 	public ResponseEntity<Resource> getAudioFile(@PathVariable String id) throws IOException {

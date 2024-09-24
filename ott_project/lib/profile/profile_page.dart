@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ott_project/plan_and_payment/subscription_page.dart';
 import 'package:ott_project/profile/change_password_page.dart';
 import 'package:ott_project/plan_and_payment/plan_page.dart';
 import 'package:ott_project/pages/login_page.dart';
+import 'package:ott_project/profile/view_profile_page.dart';
 import 'package:ott_project/service/service.dart';
 import '../components/background_image.dart';
 import '../components/pallete.dart';
-import 'update_profile.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -58,9 +59,9 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-            'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-        //'http://192.168.40.165:8080/api/v2/GetUserById/$userId'
-        //'http://localhost:8080/api/v2/GetUserById/$userId'
+            //    'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+            //'http://192.168.40.165:8080/api/v2/GetUserById/$userId'
+            'http://localhost:8080/api/v2/GetUserById/$userId'),
         //),
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Colors.white70,
                     ),
                     title: Text(
-                      'Edit Profile',
+                      'Profile',
                       style: TextStyle(color: kWhite),
                     ),
                     onTap: () {
@@ -211,7 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  UpdateProfilePage(onProfileUpdated: () {
+                                  ViewProfilePage(onProfileUpdated: () {
                                     fetchUserProfile(context);
                                   })));
                     },
