@@ -72,8 +72,7 @@ public class test {
 	@Autowired
 	private CastandcrewRepository CastandcrewRepository;
 	
-	@Autowired
-	private AudioContainerRepository AudioContainerRepository;
+
 
 
 	@PostMapping("/test")
@@ -391,13 +390,4 @@ public class test {
 		 return ResponseEntity.ok(audiocat);
 	}
 	
-	
-	@PostMapping("/audiocontainer")
-	public ResponseEntity<?> Audioconatiner(@RequestParam("AudioContainer") List<AudioContainer> data) {
-		
-//		AudioContainerRepository.save(data);
-			
-		 return ResponseEntity.ok().build();
-	}
-
 }

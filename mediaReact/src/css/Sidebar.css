@@ -863,8 +863,8 @@ td{
 
 /* container */
 .toggle {
-  width: 23%;
-  height: 10%;
+  /* width: 17.3%; */
+  /* height: 10%; */
   background-color: rgba(43, 42, 82, 0.3);
   border-radius: 20px;
   padding: 10px;
@@ -873,7 +873,7 @@ td{
 .custom-btn {
   border: none !important;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 16px;
   background-color: transparent !important;
   color: #2b2a52 !important;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -883,7 +883,7 @@ td{
 .active-btn {
   background-color: #2b2a52 !important;
   color: white !important;
-  border-radius: 10px;
+  border-radius: 50px;
 }
 
 /* Inactive button styles */

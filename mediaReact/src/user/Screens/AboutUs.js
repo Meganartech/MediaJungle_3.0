@@ -103,11 +103,12 @@ const AboutUs = () => {
               </div>
             </div>
             <div className='mt-10 lg:mt-0'>
-              <img
-                src='/images/aboutus.png'
-                alt='aboutus'
-                className='w-full xl:block hidden h-header rounded-lg object-cover'
-              />
+            <img
+url="https://lh3.googleusercontent.com/pw/AP1GczP7REQ8i_gJpBU7u9OzYfCioso7Mi9eWH95qmk554rDF1nWrcZ8uxxlPY9A5XGDer9OPV54iJQVX0NaxmbDQBBACN0kJrfC2BLkU6djiTa7cUMcTL-p4ntB61_Gfpc_MAnZIlcOI2ynHXzRA1d1Nt7NgFToHfRrfiACDDmU8K-PyiN5-0xWf1tGwWFTSvr0-0ty8wAtxjwCqGS7T5b_eEsUKSmmvvC6NDbYpmH5P51ANus6MepI-g5HgPL8G8amqmM-Uw6zGPTsiJB6ok4Fq_0bOwOKfcFgK6xuc_qbKXef4seeUk7Mav8BPZSE7ty5qBxyuSGfFnYiCHH5RsNywDJYG-cZXGZoFouI6Oj3hIEB5q97W4nfiepXcSrUYYAFU12DvBNozDWNAifVcqVJuv-Ixo9yzafqKINCQjeSZ1RyKJd_-kYQRnukuOUtApmQRC_hJVurfolcPrAOJ22CsjTlxAqpV_hzb72wk2-r7HK-Zno1Av3z6-NiY4U6xfC9bPcyjk_ok-a1cIiUQ1bzAyFHNEnkwrsHwPCDy9XjxYIRGfzE57gTtCos89WRq4osRN-I4W6d15UwyoD-pDrsHYXmhvRa7Q31Uy0u1Yl2qHCWwOJ2U2DrCLVu-Dy-WMnXDN-2xvkkOGK-l5s-oRLOOAsNR3i43ZrIm27qvN8DM_2Xw9u_swP8ZqqR_1xghLSJ1AFRhT3JQHTYYdpZJ5ejX9ErfRbmeM3id34fMohMMd89Xic1DyWnh9kwaxIPQVB75VE-GhZwcsxNiJOXR3E2a8bKeC1TQesGtdbJ2bLFXR9RLuqFxg8E2VpOb9iTdtqqq3IZ2psb_eobWhG0DkP68r4xi2fRrW6hBa8Gb1ILVB__bip32MrNucKQCjCs8bWQsSAEKXe1M-SyjWA_SsPfFyQDmjlC1k55dhp28oqYU8a7ZpmEXyfycLFriOkMIE3JEArYDMhwpUaljfhw=w780-h1040-no"
+  alt="aboutus"
+  className="w-full xl:block hidden h-header rounded-lg object-cover"
+/>
+
             </div>
           </div>
         </div>
