@@ -158,6 +158,7 @@ const AboutUs = () => {
             </div>
             <div className='mt-10 lg:mt-0'>
             <img
+
                   src={`${API_URL}/${aboutUsData.aboutUsImage}`} // prepend the base URL
                   alt="About Us"
                   className='w-full xl:block hidden h-header rounded-lg object-cover'
