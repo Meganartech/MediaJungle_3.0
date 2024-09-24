@@ -158,6 +158,7 @@ public class PaymentController {
             if (!paymentSettingOptional.isPresent()) {
                 return new ResponseEntity<>("Payment settings not found", HttpStatus.NOT_FOUND);
             }
+            
             Paymentsettings paymentSetting = paymentSettingOptional.get();
             String razorpayApiKey = paymentSetting.getRazorpay_key();
             String razorpayApiSecret = paymentSetting.getRazorpay_secret_key();
