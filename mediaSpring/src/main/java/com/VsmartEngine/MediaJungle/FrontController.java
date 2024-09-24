@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.Banner.VideoBanner;
+import com.VsmartEngine.MediaJungle.Banner.VideoBannerRequest;
+import com.VsmartEngine.MediaJungle.Banner.videoBannerController;
 import com.VsmartEngine.MediaJungle.Container.VideoContainer;
 import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.controller.AddUserController;
@@ -140,6 +143,9 @@ public class FrontController {
 	@Autowired
 	private VideoContainerController videocontainercontroller;
 	
+	@Autowired
+	private videoBannerController videobannercontroller;
+	
 	
 	@PostMapping("/AdminRegister")
 	public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
@@ -208,6 +214,10 @@ public class FrontController {
 		return AudioController.uploadAudio(categoryId, audioFile, thumbnail, paid, token);
 	}
 
+	 
+	 
+	 
+//	 Add the {filename} with the extension example(mp3,mp4 etc).
 	@GetMapping("/{filename}/file")
 	public ResponseEntity<Resource> getAudioFile(@PathVariable String filename, HttpServletRequest request) {
 
@@ -220,6 +230,7 @@ public class FrontController {
 
 		return AudioController.getAudioById(id);
 	}
+
 
 	@GetMapping("/audio/{id}/file")
 	public ResponseEntity<Resource> getAudioFile(@PathVariable String id) throws IOException {
@@ -965,6 +976,15 @@ public class FrontController {
 			 return VideoController.deleteVideoDescription(videoId, token);
 		 }
 		 
+		 @DeleteMapping("/deleteMultiplevideos")
+		 @Transactional
+		 public ResponseEntity<?> deleteMultiplevideos(
+		            @RequestHeader("Authorization") String token, 
+		            @RequestBody List<Long> videoIds
+		    ) {
+			 return VideoController.deleteMultiplevideos(token, videoIds);
+		 }
+		 
 		 @GetMapping("/categorylist/category")
 			public ResponseEntity<List<String>> getCategoryNamesByIds(@RequestParam List<Long> categoryIds) {
                   return CategoryController.getCategoryNamesByIds(categoryIds);
@@ -981,7 +1001,6 @@ public class FrontController {
 		 }
 
 
-		 
 		    @GetMapping("/{videoId}/videothumbnail")
 			 @Transactional
 		    public ResponseEntity<Map<String, byte[]>> getVideoThumbnail(@PathVariable long videoId) {
@@ -990,7 +1009,7 @@ public class FrontController {
 		    
 		    @GetMapping("/images-by-category")
 		    @Transactional
-		    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam Long categoryId) {
+		    public List<Long> getVideoImagesByCategory(@RequestParam Long categoryId) {
 		    	return VideoController.getVideoImagesByCategory(categoryId);
 		    }
 		    
@@ -1000,11 +1019,22 @@ public class FrontController {
 		    	return videocontainercontroller.createVideoContainer(videoContainerRequests);
 		    }
 		    
-		    
 		    @GetMapping("/getvideocontainer")
 		    public ResponseEntity<List<VideoContainer>> getAllVideoContainers() {
 		    	return videocontainercontroller.getAllVideoContainers();
 		    }
+		    
+		    @PostMapping("/addvideobanner")
+		    public ResponseEntity<String> createVideoBanner(@RequestBody VideoBannerRequest videoBannerRequest) {
+		    	return videobannercontroller.createVideoBanner(videoBannerRequest);
+		    }
+		    
+		    @GetMapping("/getallvideobanners")
+		    public ResponseEntity<List<VideoBanner>> getAllVideoBanner() {
+		    	return videobannercontroller.getAllVideoBanner();
+		    }
+		    
+
 //		 @GetMapping("/{filename}/file")
 //			public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
 //

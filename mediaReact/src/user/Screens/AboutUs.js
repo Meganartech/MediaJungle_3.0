@@ -58,11 +58,68 @@
 
 // export default AboutUs
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../Layout/Layout'
 import Head from '../Components/Head'
+import API_URL from '../../Config';
 
 const AboutUs = () => {
+  const [aboutUsData, setAboutUsData] = useState({
+    aboutUsHeaderScript: '',
+    aboutUsBodyScript: '',
+    featureBox1HeaderScript: '',
+    featureBox1BodyScript: '',
+    featureBox2HeaderScript: '',
+    featureBox2BodyScript: '',
+    aboutUsImage:'null',
+    contactUsEmail: '',
+    contactUsBodyScript: '',
+    callUsPhoneNumber: '',
+    callUsBodyScript: '',
+    locationMapUrl: '',
+    locationAddress: '',
+    contactUsImage: null, // Handle file upload
+    appUrlPlaystore: '',
+    appUrlAppStore: '',
+    copyrightInfo: '',// default image URL
+  });
+  console.log(aboutUsData);
+  useEffect(() => {
+    const fetchAboutUsData = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/v2/footer-settings');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data); // Log the data to check its structure
+        setAboutUsData({
+          aboutUsHeaderScript: data.aboutUsHeaderScript || '',
+          aboutUsBodyScript: data.aboutUsBodyScript || '',
+          featureBox1HeaderScript: data.featureBox1HeaderScript || '',
+          featureBox1BodyScript: data.featureBox1BodyScript || '',
+          featureBox2HeaderScript: data.featureBox2HeaderScript || '',
+          featureBox2BodyScript: data.featureBox2BodyScript || '',
+          aboutUsImage: data.aboutUsImage || 'default_image_url', // Provide a default
+          contactUsEmail: data.contactUsEmail || '',
+          contactUsBodyScript: data.contactUsBodyScript || '',
+          callUsPhoneNumber: data.callUsPhoneNumber || '',
+          callUsBodyScript: data.callUsBodyScript || '',
+          locationMapUrl: data.locationMapUrl || '',
+          locationAddress: data.locationAddress || '',
+          contactUsImage: data.contactUsImage || null, 
+          appUrlPlaystore: data.appUrlPlaystore || '',
+          appUrlAppStore: data.appUrlAppStore || '',
+          copyrightInfo: data.copyrightInfo || '',
+        });
+      } catch (error) {
+        console.error('Error fetching About Us data:', error);
+      }
+    };
+  
+    fetchAboutUsData();
+  }, []);
+  
   return (
     <Layout className='min-height-screen container mx-auto'>
       <div className=' px-2 my-6'>
@@ -71,44 +128,48 @@ const AboutUs = () => {
           <div className='grid grid-flow-row xl:grid-cols-2 gap-4 xl:gap-16 items-center'>
             <div>
               <h3 className='text-xl lg:text-3xl mb-4 font-semibold'>
-                Welcome to our New10Media Website
+               {aboutUsData.aboutUsHeaderScript}
               </h3>
               <div className='mt-3 text-sm leading-8 text-text'>
                 <p>
-                  It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-                </p>
-                <p>
-                  It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
-                </p>
+{aboutUsData.aboutUsBodyScript}             
+   </p>
               </div>
               <div className='grid md:grid-cols-2 gap-6 mt-8' style={{width:'100%'}}>
                 <div className='p-8 bg-dry rounded-lg'>
                   <span className='text-3xl block font-extrabold mt-4'>
-                    10K
+                  {aboutUsData.featureBox1HeaderScript}
                   </span>
-                  <h4 className='text-lg font-semibold my-2'>Listed Movies</h4>
+                  
                   <p className='mb-0 text-text leading-7 text-sm'>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                    {aboutUsData.featureBox1BodyScript}
                   </p>
                 </div>
                 <div className='p-8 bg-dry rounded-lg'>
                   <span className='text-3xl block font-extrabold mt-4'>
-                    8K
+                   {aboutUsData.featureBox2HeaderScript}
                   </span>
-                  <h4 className='text-lg font-semibold my-2'>Lovely Users</h4>
+                 
                   <p className='mb-0 text-text leading-7 text-sm'>
-                    Completely Free without Registration
+                    {aboutUsData.featureBox2BodyScript}
                   </p>
                 </div>
               </div>
             </div>
             <div className='mt-10 lg:mt-0'>
             <img
+<<<<<<< HEAD
 url="https://lh3.googleusercontent.com/pw/AP1GczP7REQ8i_gJpBU7u9OzYfCioso7Mi9eWH95qmk554rDF1nWrcZ8uxxlPY9A5XGDer9OPV54iJQVX0NaxmbDQBBACN0kJrfC2BLkU6djiTa7cUMcTL-p4ntB61_Gfpc_MAnZIlcOI2ynHXzRA1d1Nt7NgFToHfRrfiACDDmU8K-PyiN5-0xWf1tGwWFTSvr0-0ty8wAtxjwCqGS7T5b_eEsUKSmmvvC6NDbYpmH5P51ANus6MepI-g5HgPL8G8amqmM-Uw6zGPTsiJB6ok4Fq_0bOwOKfcFgK6xuc_qbKXef4seeUk7Mav8BPZSE7ty5qBxyuSGfFnYiCHH5RsNywDJYG-cZXGZoFouI6Oj3hIEB5q97W4nfiepXcSrUYYAFU12DvBNozDWNAifVcqVJuv-Ixo9yzafqKINCQjeSZ1RyKJd_-kYQRnukuOUtApmQRC_hJVurfolcPrAOJ22CsjTlxAqpV_hzb72wk2-r7HK-Zno1Av3z6-NiY4U6xfC9bPcyjk_ok-a1cIiUQ1bzAyFHNEnkwrsHwPCDy9XjxYIRGfzE57gTtCos89WRq4osRN-I4W6d15UwyoD-pDrsHYXmhvRa7Q31Uy0u1Yl2qHCWwOJ2U2DrCLVu-Dy-WMnXDN-2xvkkOGK-l5s-oRLOOAsNR3i43ZrIm27qvN8DM_2Xw9u_swP8ZqqR_1xghLSJ1AFRhT3JQHTYYdpZJ5ejX9ErfRbmeM3id34fMohMMd89Xic1DyWnh9kwaxIPQVB75VE-GhZwcsxNiJOXR3E2a8bKeC1TQesGtdbJ2bLFXR9RLuqFxg8E2VpOb9iTdtqqq3IZ2psb_eobWhG0DkP68r4xi2fRrW6hBa8Gb1ILVB__bip32MrNucKQCjCs8bWQsSAEKXe1M-SyjWA_SsPfFyQDmjlC1k55dhp28oqYU8a7ZpmEXyfycLFriOkMIE3JEArYDMhwpUaljfhw=w780-h1040-no"
   alt="aboutus"
   className="w-full xl:block hidden h-header rounded-lg object-cover"
 />
 
+=======
+                  src={`${API_URL}/${aboutUsData.aboutUsImage}`} // prepend the base URL
+                  alt="About Us"
+                  className='w-full xl:block hidden h-header rounded-lg object-cover'
+                />
+>>>>>>> dcbfadc8d9bd82ba49aa6bc075db2e307d782baa
             </div>
           </div>
         </div>

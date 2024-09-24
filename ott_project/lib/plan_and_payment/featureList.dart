@@ -34,6 +34,27 @@ class FeatureList extends StatelessWidget {
               runSpacing: 5.0,
               spacing: 6.0,
               children: snapshot.data!.map((feature) {
+                String formatFeatureName(String featureName) {
+                  List<String> words = featureName.split(' ');
+                  StringBuffer formattedText = StringBuffer();
+
+                  for (int i = 0; i < words.length; i++) {
+                    if (words[i].length <= 4) {
+                      // If it's the first word or the current word is short, keep it on the same line.
+                      if (formattedText.isNotEmpty) {
+                        formattedText.write(
+                            ' '); // Add space between short words on the same line.
+                      }
+                      formattedText.write(words[i] + '');
+                    } else {
+                      // If the word is long, move it to the next line.
+                      formattedText.write('\n' + words[i]);
+                    }
+                  }
+
+                  return formattedText.toString().trim();
+                }
+
                 double opacity = feature.isActiveForPlan ? 1.0 : 0.3;
                 return FractionallySizedBox(
                   widthFactor: 0.20,
@@ -41,14 +62,18 @@ class FeatureList extends StatelessWidget {
                     padding: EdgeInsets.only(),
                     child: Opacity(
                       opacity: opacity,
-                      child: Text(feature.featureName,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis),
+                      child: Container(
+                        height: 45,
+                        width: 30,
+                        child: Text(formatFeatureName(feature.featureName),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                            maxLines: feature.featureName.split(' ').length,
+                            overflow: TextOverflow.ellipsis),
+                      ),
                     ),
                   ),
                 );
