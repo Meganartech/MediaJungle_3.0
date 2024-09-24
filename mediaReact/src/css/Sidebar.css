@@ -998,7 +998,7 @@ td{
 
 .banner-item {
   min-width: 100%; /* Adjust width considering container padding */
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.10s ease-in-out;
   flex: 0 0 auto; /* Width adjustment instead of full flex-basis */
   padding: 0 15px; /* Padding inside container */
 }
@@ -1010,3 +1010,7 @@ td{
   height: 100%;
   object-fit: cover;
 }
+
+
+
+
