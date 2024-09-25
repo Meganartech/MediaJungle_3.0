@@ -34,7 +34,7 @@ class _PlanPageState extends State<PlanPage> {
   String? razorpayKey;
   Map<String, bool> expandedState = {};
   int? _userId;
-  String baseUrl = 'http://192.168.183.129:8080/api/v2';
+  String baseUrl = 'http://:8080/api/v2';
 
   // double? discountedAmount;
   Map<String, Map<String, double>> discountedAmounts = {};

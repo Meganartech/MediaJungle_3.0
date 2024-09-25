@@ -50,7 +50,7 @@ select:focus {
 /* Additional styles for slick arrow buttons */
 .slick-prev,
 .slick-next {
-  font-size: 28px;
+  /* font-size: 28px; */
   color: #fff;
   background-color: #333;
   border-radius: 50%;

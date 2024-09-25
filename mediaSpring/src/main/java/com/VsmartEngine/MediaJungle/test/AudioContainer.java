@@ -19,7 +19,7 @@ public class AudioContainer {
 	private String container_name;
 	
 	@Column(name="category_id" )
-	private String categoryId;
+	private long categoryId;
 
 	public long getId() {
 		return id;
@@ -37,17 +37,17 @@ public class AudioContainer {
 		this.container_name = container_name;
 	}
 
-	public String getCategoryId() {
+	public long getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(String categoryId) {
+	public void setCategoryId(long categoryId) {
 		this.categoryId = categoryId;
 	}
 
 	@Override
 	public String toString() {
-		return "AudioContainermodel [id=" + id + ", container_name=" + container_name + ", categoryId=" + categoryId
+		return "AudioContainer [id=" + id + ", container_name=" + container_name + ", categoryId=" + categoryId
 				+ "]";
 	}
 	

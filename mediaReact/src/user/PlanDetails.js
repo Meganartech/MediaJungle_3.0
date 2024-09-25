@@ -101,8 +101,7 @@
           throw new Error('Failed to calculate discount');
         }
     
-        const discountedAmount = await discountResponse.json();  // Get the calculated amount
-    
+        const discountedAmount = await discountResponse.json(); // Get the calculated amount
         console.log('Discounted Amount:', discountedAmount);
     
         // Step 2: Proceed with payment using the discounted amount
@@ -112,13 +111,15 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            amount: discountedAmount,     // Use the discounted amount
+            amount: discountedAmount, // Use the discounted amount
             userId: userId,
             planname: selectedPlan.planname
           })
         });
     
         const order = await paymentResponse.text();
+        const statusCode = paymentResponse.status; // Get the status code
+    
         console.log('Order Response:', order);
     
         if (order.startsWith("You have already paid")) {
@@ -133,7 +134,9 @@
           description: "This is for testing",
           handler: async function (response) {
             console.log('Payment Success:', response);
-            await sendPaymentIdToServer(response.razorpay_payment_id, order, response.status_code, selectedPlan.planname, userId, tenure.id, response.razorpay_signature);
+    
+            // Here, we send the selected plan amount along with other details
+            await sendPaymentIdToServer(discountedAmount, response.razorpay_payment_id, order, statusCode, selectedPlan.planname, userId, tenure.id, response.razorpay_signature);
             Swal.fire('Success', 'Payment successful!', 'success');
           },
           theme: {
@@ -158,6 +161,38 @@
         Swal.fire('Error', 'Error calculating discount or processing payment', 'error');
       }
     };
+    
+    
+    const sendPaymentIdToServer = async (amount, paymentId, orderId, statusCode, planname, userId, tenureId, signature) => {
+      try {
+        const response = await fetch(`${API_URL}/api/v2/confirmPayment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            Amount: amount, // Pass the amount here
+            paymentId: paymentId,
+            orderId: orderId,
+            statusCode: statusCode,
+            planname: planname,
+            userId: userId,
+            tenureId: tenureId,
+            signature: signature
+          })
+        });
+    
+        if (!response.ok) {
+          throw new Error('Failed to confirm payment');
+        }
+    
+        const result = await response.json();
+        console.log('Payment Confirmation:', result);
+      } catch (error) {
+        console.error('Error confirming payment:', error);
+      }
+    };
+    
     
     const [discountedAmounts, setDiscountedAmounts] = useState({}); // Track discounted amounts
 
@@ -222,34 +257,35 @@ useEffect(() => {
           console.error('Error fetching data:', error);
         });
     }, []);
-    const sendPaymentIdToServer = async (paymentId, orderId, statusCode, planname, userId, tenureId, signature) => {
-      try {
-        const response = await fetch(`${API_URL}/api/v2/confirmPayment`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            paymentId: paymentId,
-            orderId: orderId,
-            statusCode: statusCode,
-            planname: planname,
-            userId: userId,
-            tenureId: tenureId,
-            signature: signature
-          })
-        });
+    // const sendPaymentIdToServer = async (Amount, paymentId, orderId, statusCode, planname, userId, tenureId, signature) => {
+    //   try {
+    //     const response = await fetch(`${API_URL}/api/v2/confirmPayment`, {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json'
+    //       },
+    //       body: JSON.stringify({
+    //         Amount: Amount,
+    //         paymentId: paymentId,
+    //         orderId: orderId,
+    //         statusCode: statusCode,
+    //         planname: planname,
+    //         userId: userId,
+    //         tenureId: tenureId,
+    //         signature: signature
+    //       })
+    //     });
     
-        if (!response.ok) {
-          throw new Error('Failed to confirm payment');
-        }
+    //     if (!response.ok) {
+    //       throw new Error('Failed to confirm payment');
+    //     }
     
-        const result = await response.json();
-        console.log('Payment Confirmation:', result);
-      } catch (error) {
-        console.error('Error confirming payment:', error);
-      }
-    };
+    //     const result = await response.json();
+    //     console.log('Payment Confirmation:', result);
+    //   } catch (error) {
+    //     console.error('Error confirming payment:', error);
+    //   }
+    // };
     
     const handlePlanSelect = (plan) => {
       setSelectedPlan(plan);
