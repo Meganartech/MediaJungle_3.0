@@ -60,8 +60,8 @@ class _ProfilePageState extends State<ProfilePage> {
       var response = await http.get(
         Uri.parse(
             //    'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            //'http://192.168.40.165:8080/api/v2/GetUserById/$userId'
-            'http://localhost:8080/api/v2/GetUserById/$userId'),
+            'http://192.168.183.129:8080/api/v2/GetUserById/$userId'),
+        // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         //),
         headers: {
           'Content-Type': 'application/json',
@@ -156,12 +156,16 @@ class _ProfilePageState extends State<ProfilePage> {
                           : const AssetImage('assets/icon/media_jungle.png'),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.02,
+                  ),
                   Text(
                     usernameController.text,
                     style: TextStyle(color: kWhite),
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.04,
+                  ),
                   ListTile(
                     leading: Icon(
                       Icons.subscriptions_rounded,
@@ -172,12 +176,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(color: kWhite),
                     ),
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => PlanPage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SubscriptionPage()));
                     },
                   ),
                   SizedBox(
-                    height: 20,
+                    height: MediaQuery.sizeOf(context).height * 0.02,
                   ),
                   ListTile(
                     leading: Icon(
@@ -196,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   SizedBox(
-                    height: 20,
+                    height: MediaQuery.sizeOf(context).height * 0.02,
                   ),
                   ListTile(
                     leading: Icon(
@@ -217,17 +223,22 @@ class _ProfilePageState extends State<ProfilePage> {
                                   })));
                     },
                   ),
-                  const SizedBox(height: 50.0),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.18),
 
                   // const SizedBox(height: 16.0),
                   SizedBox(
-                    width: double.infinity,
+                    //width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
                         _handleLogout(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.sizeOf(context).height * 0.07,
+                            vertical: 15),
                         backgroundColor: Color.fromARGB(174, 93, 104, 195),
                         foregroundColor: kWhite,
                       ),
@@ -249,10 +260,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   SizedBox(
-                    height: 8,
+                    height: MediaQuery.sizeOf(context).height * 0.02,
                   ),
                   SizedBox(
-                    width: double.infinity,
+                    // width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
                         showDialog(
@@ -277,7 +288,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.sizeOf(context).height * 0.04,
+                            vertical: 15),
                         backgroundColor: Color.fromARGB(174, 93, 104, 195),
                         foregroundColor: kWhite,
                       ),

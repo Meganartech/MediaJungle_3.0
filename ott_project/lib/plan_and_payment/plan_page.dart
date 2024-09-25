@@ -34,7 +34,7 @@ class _PlanPageState extends State<PlanPage> {
   String? razorpayKey;
   Map<String, bool> expandedState = {};
   int? _userId;
-  String baseUrl = 'http://localhost:8080/api/v2';
+  String baseUrl = 'http://192.168.183.129:8080/api/v2';
 
   // double? discountedAmount;
   Map<String, Map<String, double>> discountedAmounts = {};
@@ -153,13 +153,14 @@ class _PlanPageState extends State<PlanPage> {
         (plan) => plan.planname == selectedPlan,
         orElse: () => PlanDetails(
             id: 0, planname: '', amount: 0, tenure: [], feature: []));
-
+    double finalAmount = discountedAmounts[selectedPlan]?[selectedDuration] ??
+        selectedPlanDetails.amount;
     await _sendPaymentDetailsToServer(
       response.orderId!,
       response.paymentId!,
       '200',
       selectedPlan,
-      selectedPlanDetails.amount,
+      finalAmount,
       selectedPlanDetails.feature.toString(),
       selectedPlanDetails.tenure.toString(),
       // selectedPlanDetails.validity.toString(),
@@ -191,6 +192,13 @@ class _PlanPageState extends State<PlanPage> {
       print('Not logged in');
       return;
     }
+    print('Sending payment details to server:');
+    print('Order ID: $orderId');
+    print('Payment ID: $paymentId');
+    print('Status Code: $statusCode');
+    print('Plan Name: $planName');
+    print('Amount: $amount');
+    print('User ID: $_userId');
     final response = await http.post(
       Uri.parse('$baseUrl/buy'),
       body: jsonEncode({
@@ -203,13 +211,15 @@ class _PlanPageState extends State<PlanPage> {
       }),
       headers: {'Content-type': 'application/json'},
     );
+    print('Amount:$amount');
     if (response.statusCode == 200) {
       print('Payment ID and signature sent to server');
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Payment successful')));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to confirm payment with server')));
+      print('Amount:$amount');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('$amount Failed to confirm payment with server')));
     }
   }
 
@@ -248,14 +258,18 @@ class _PlanPageState extends State<PlanPage> {
         (plan) => plan.planname == selectedPlan,
         orElse: () => PlanDetails(
             id: 0, planname: '', amount: 0, tenure: [], feature: []));
-
+    double amount = selectedPlanDetails.amount;
+    if (discountedAmounts[selectedPlan] != null &&
+        discountedAmounts[selectedPlan]![selectedDuration] != null) {
+      amount = discountedAmounts[selectedPlan]![selectedDuration]!;
+    }
     try {
-      final amount = selectedPlanDetails.amount.toInt().toString();
+      final amountInPaise = amount.toInt().toString();
       final userId = _userId.toString();
       final planName = selectedPlan;
 
       final requestData = {
-        'amount': amount,
+        'amount': amountInPaise,
         'userId': userId,
         'planname': planName,
       };
@@ -304,8 +318,7 @@ class _PlanPageState extends State<PlanPage> {
         if (orderId.startsWith('order_')) {
           var options = {
             'key': razorpayKey,
-            'amount':
-                (selectedPlanDetails.amount * 100).toInt(), // Amount in paise
+            'amount': amountInPaise, // Amount in paise
             'name': 'Meganar',
             'order_id': orderId,
             'description': '$selectedPlan plan for $selectedDuration',

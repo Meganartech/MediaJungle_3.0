@@ -220,7 +220,7 @@ class _MoviePageState extends State<MoviePage> {
                           height: 1,
                         ),
                         SizedBox(
-                          height: 7,
+                          height: MediaQuery.sizeOf(context).height * 0.02,
                         ),
                         CategoryBar(
                             selectedCategory: selectedCategory,
@@ -233,7 +233,7 @@ class _MoviePageState extends State<MoviePage> {
                           height: 1,
                         ),
                         SizedBox(
-                          height: 5,
+                          height: MediaQuery.sizeOf(context).height * 0.02,
                         ),
                         Expanded(
                           child: _searchController.text.isNotEmpty &&
@@ -299,7 +299,10 @@ class _MoviePageState extends State<MoviePage> {
                                                     title: category,
                                                     movies: categoryMovies),
                                                 SizedBox(
-                                                  height: 20,
+                                                  height:
+                                                      MediaQuery.sizeOf(context)
+                                                              .height *
+                                                          0.02,
                                                 ),
                                               ],
                                             );
