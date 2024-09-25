@@ -1022,14 +1022,19 @@ public class FrontController {
 		    
 		    
 		    @PostMapping("/videocontainer")
-			public ResponseEntity<String> createVideoContainer(@RequestBody List<VideoContainer> videoContainerRequests) {
+			public ResponseEntity<?> createVideoContainer(@RequestBody List<VideoContainer> videoContainerRequests) {
 		    	return videocontainercontroller.createVideoContainer(videoContainerRequests);
 		    }
 		    
-//		    @GetMapping("/getvideocontainer")
-//		    public ResponseEntity<List<VideoContainer>> getAllVideoContainers() {
-//		    	return videocontainercontroller.getAllVideoContainers();
-//		    }
+		    @GetMapping("/getvideocontainers")
+		    public ResponseEntity<List<VideoContainer>> getAllVideoContainers() {
+		    	return videocontainercontroller.getAllVideoContainers();
+		    }
+		    
+		    @DeleteMapping("/videocontainer/{id}")
+		   	public ResponseEntity<?> Deletevideoconatiner(@PathVariable("id") long id) {
+		    	return videocontainercontroller.Deletevideoconatiner(id);
+		    }
 		    
 		    @GetMapping("/getvideocontainer")
 		    public ResponseEntity<List<VideoContainerDTO>> getVideoContainersWithDetails() {

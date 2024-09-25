@@ -3,18 +3,22 @@ package com.VsmartEngine.MediaJungle.Container;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VsmartEngine.MediaJungle.test.AudioContainer;
 import com.VsmartEngine.MediaJungle.video.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
 
@@ -45,40 +49,81 @@ public class VideoContainerController {
 //        // Return a response
 //        return ResponseEntity.ok("VideoContainer processed successfully");
 //    }
+
+//	public ResponseEntity<String> createVideoContainer(@RequestBody List<VideoContainer> videoContainerRequests) {
+//	    try {
+//	        // Map the requests to entities
+//	        for (VideoContainer request : videoContainerRequests) {
+//	            VideoContainer videocontainer = new VideoContainer();
+//	            videocontainer.setValue(request.getValue());
+//	            videocontainer.setCategory(request.getCategory());
+//	            
+//	            // Save to the database
+//	            videocontainerrepository.save(videocontainer);
+//	        }
+//
+//	        // Return a success response
+//	        return ResponseEntity.ok("VideoContainer processed successfully");
+//	        
+//	    } catch (Exception e) {
+//	        // Log the exception (optional)
+//	        // logger.error("Error processing video containers", e);
+//
+//	        // Return an error response
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//	                             .body("Error processing video containers: " + e.getMessage());
+//	    }
+//	}
 	
-	public ResponseEntity<String> createVideoContainer(@RequestBody List<VideoContainer> videoContainerRequests) {
+	
+	public ResponseEntity<?> createVideoContainer(@RequestBody List<VideoContainer> videoContainerRequests) {
 	    try {
-	        // Map the requests to entities
-	        for (VideoContainer request : videoContainerRequests) {
-	            VideoContainer videocontainer = new VideoContainer();
-	            videocontainer.setValue(request.getValue());
-	            videocontainer.setCategory(request.getCategory());
+	        for (int i = 0; i < videoContainerRequests.size(); i++) {
+	            VideoContainer container = videoContainerRequests.get(i);
+	            Long id = container.getId();  // Use the wrapper class 'Long' to allow null values
 	            
-	            // Save to the database
-	            videocontainerrepository.save(videocontainer);
+	            if (id == null || id == 0) {  // Handle null or new records (id == 0)
+	                System.out.println("Creating new container. Id: " + id);
+	                videocontainerrepository.save(container);  // Save new container
+	            } else {
+	                // Update existing container
+	                Optional<VideoContainer> containerData = videocontainerrepository.findById(id);
+	                
+	                if (containerData.isPresent()) {
+	                    VideoContainer edit = containerData.get();
+	                    edit.setCategory(container.getCategory());
+	                    edit.setValue(container.getValue());
+	                    videocontainerrepository.save(edit);  // Save updated container
+	                } else {
+	                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                                         .body("Container with id " + id + " not found");
+	                }
+	            }
 	        }
-
-	        // Return a success response
-	        return ResponseEntity.ok("VideoContainer processed successfully");
-	        
+	        return ResponseEntity.ok().build();
 	    } catch (Exception e) {
-	        // Log the exception (optional)
-	        // logger.error("Error processing video containers", e);
-
-	        // Return an error response
+	        e.printStackTrace();  // Print the stack trace for debugging
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                             .body("Error processing video containers: " + e.getMessage());
+	                             .body("An error occurred while processing the containers: " + e.getMessage());
 	    }
 	}
 
+
 	
 
-//    public ResponseEntity<List<VideoContainer>> getAllVideoContainers() {
-//        // Fetch all video containers from the database
-//        List<VideoContainer> videoContainers = videocontainerrepository.findAll();
-//        // Return the list of video containers
-//        return ResponseEntity.ok(videoContainers);
-//    }
+    public ResponseEntity<List<VideoContainer>> getAllVideoContainers() {
+        // Fetch all video containers from the database
+        List<VideoContainer> videoContainers = videocontainerrepository.findAll();
+        // Return the list of video containers
+        return ResponseEntity.ok(videoContainers);
+    }
+    
+    @DeleteMapping("/videocontainer/{id}")
+   	public ResponseEntity<?> Deletevideoconatiner(@PathVariable("id") long id) {
+   		
+    	videocontainerrepository.deleteById(id);
+    	return ResponseEntity.ok().build();
+   	}
 	
 	
 	public ResponseEntity<List<VideoContainerDTO>> getVideoContainersWithDetails() {

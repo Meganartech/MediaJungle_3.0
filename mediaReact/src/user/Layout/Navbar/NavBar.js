@@ -217,7 +217,7 @@ useEffect(() => {
                   </div>}
             </div>
             <div className='con5' style={{ background: 'linear-gradient(to top, #141335, #0c0d1a)'}}> 
-            <NavLink to='/Home' className={Hover}>
+            <NavLink to='/' className={Hover}>
                             Movies
                         </NavLink>
                         <NavLink to='/MusicPage' className={Hover}>
