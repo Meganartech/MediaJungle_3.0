@@ -925,6 +925,7 @@ public class FrontController {
 		 }
 		 
 		 
+		 
 		 @GetMapping("/videoimage/{id}")
 		 @Transactional
 		 public ResponseEntity<Map<String, byte[]>> getVideoImagesByVideoId(@PathVariable Long id) {
