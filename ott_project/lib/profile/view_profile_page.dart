@@ -70,7 +70,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       var response = await http.get(
         Uri.parse(
             //  'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.183.129:8080/api/v2/GetUserById/$userId'),
+            'http://192.168.0.6:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',

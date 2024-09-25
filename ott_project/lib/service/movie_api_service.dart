@@ -8,7 +8,7 @@ class MovieApiService {
   static const String baseUrl = 
   //'http://localhost:8080/api/v2';
   //'https://testtomcat.vsmartengine.com/media/api/v2';
-  'http://192.168.183.129:8080/api/v2';
+  'http://192.168.0.6:8080/api/v2';
   Future<Movie> fetchVideoDetail(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/GetvideoDetail/$id'));
 

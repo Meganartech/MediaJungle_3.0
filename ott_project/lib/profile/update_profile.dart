@@ -82,10 +82,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         //print(userData);
         //_image = userData['profile'];
         // setState(() {
-        //   usernameController.text = userData['username'] ?? '';
-        //   emailController.text = userData['email'] ?? '';
-        //   mobilenumberController.text = userData['mobnum'] ?? '';
-        //   base64Image = userData['profile'];
+        usernameController.text = userData['username'] ?? '';
+        emailController.text = userData['email'] ?? '';
+        mobilenumberController.text = userData['mobnum'] ?? '';
+        base64Image = userData['profile'];
         // });
         setState(() {});
         //  await fetchProfileImage(userId);
@@ -106,7 +106,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       var url = Uri.parse(
           //'http://localhost:8080/api/v2/UpdateUser/mobile/$userId');
           //'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
-          'http://192.168.183.129:8080/api/v2/UpdateUser/mobile/$userId');
+          'http://192.168.0.6:8080/api/v2/UpdateUser/mobile/$userId');
       var request = http.MultipartRequest('PATCH', url);
       //..headers.addAll({'Content-Type': 'application/json'});
       request.fields['username'] = usernameController.text;

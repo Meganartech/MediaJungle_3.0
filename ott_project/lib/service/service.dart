@@ -20,8 +20,8 @@ class Service {
   ) async {
     var uri = Uri.parse(
         // "https://testtomcat.vsmartengine.com/media/api/v2/userregister");
-        'http://192.168.183.129:8080/api/v2/userregister');
-        //'http://localhost:8080/api/v2/userregister');
+        'http://192.168.0.6:8080/api/v2/userregister');
+    //'http://localhost:8080/api/v2/userregister');
     //Map<String, String> headers = {"Content-Type": "multipart/form-data"};
     var request = http.MultipartRequest('POST', uri);
     request.fields['username'] = username;
@@ -82,7 +82,7 @@ class Service {
   ) async {
     var uri = Uri.parse(
         //"https://testtomcat.vsmartengine.com/media/api/v2/login");
-        'http://192.168.183.129:8080/api/v2/login');
+        'http://192.168.0.6:8080/api/v2/login');
     //'http://localhost:8080/api/v2/login');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map data = {
