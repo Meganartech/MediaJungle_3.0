@@ -220,10 +220,10 @@ useEffect(() => {
             <NavLink to='/' className={Hover}>
                             Movies
                         </NavLink>
-                        <NavLink to='/MusicPage' className={Hover}>
+                        <NavLink to='/AudioHomecreeen' className={Hover}>
                             Music
                         </NavLink>
-                        <NavLink to='/Library' className={Hover}>
+                        <NavLink to='#' className={Hover}>
                             Library
                         </NavLink>
                         <div style={{padding:'50px'}}>
