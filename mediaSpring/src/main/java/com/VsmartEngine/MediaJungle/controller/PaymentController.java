@@ -66,7 +66,6 @@ public class PaymentController {
             String paymentId = requestData.get("paymentId");
             String orderId = requestData.get("orderId");
             int statusCode = Integer.parseInt(requestData.get("statusCode")); // Parse as int
-            System.out.println("*******************" + statusCode); // Ensure this is included in your incoming data
             String planname = requestData.get("planname");
             Long amount = Long.parseLong(requestData.get("Amount")); // Ensure this is the correct paid amount
             Long userId = Long.parseLong(requestData.get("userId"));
@@ -82,19 +81,22 @@ public class PaymentController {
             // Log the payment status for debugging
             System.out.println("Payment Status: " + finalStatus);
             
-            // Update the user's payment information in the database
+            // Check if the user exists and save the payment details
             Optional<PaymentUser> paymentUserOptional = paymentrepository.findByUserId(userId);
             if (paymentUserOptional.isPresent()) {
                 PaymentUser paymentUser = paymentUserOptional.get();
+
+                // Set payment details
                 paymentUser.setPaymentId(paymentId);
                 paymentUser.setOrderId(orderId);
                 paymentUser.setStatus(finalStatus); // Set status based on payment success
                 paymentUser.setSubscriptionTitle(planname);
                 paymentUser.setAmount(amount); // Store the correct paid amount
-                
+                paymentUser.setExpiryDate(LocalDate.now().plusMonths(1)); // Set expiry date, if needed
+
                 // Log the user data being saved for debugging
                 System.out.println("Saving PaymentUser: " + paymentUser);
-                paymentrepository.save(paymentUser);
+                paymentrepository.save(paymentUser); // Save updated payment details
 
                 return new ResponseEntity<>("Payment confirmed successfully", HttpStatus.OK);
             } else {
@@ -108,6 +110,7 @@ public class PaymentController {
         }
     }
 
+
     // Helper method to determine payment success based on statusCode
     private boolean checkIfPaymentIsSuccessful(int statusCode) {
         // Check if the status code is 200 (HTTP OK)
@@ -119,7 +122,7 @@ public class PaymentController {
             Long amount = Long.parseLong(requestData.get("amount"));
             Long userId = Long.parseLong(requestData.get("userId"));
             String planName = requestData.get("planname");
-
+            System.out.println(":::::::::::::::::::FSDFASDFASDF::::::::::::::::::::" +requestData);
             Optional<PaymentUser> optionPayment = paymentrepository.findByUserId(userId);
             Optional<UserRegister> userOption = userregisterrepository.findById(userId);
 
@@ -169,20 +172,20 @@ public class PaymentController {
 //                payment.setOrderId(orderId);
 //                payment.setSubscriptionTitle(planName);
 //                payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription
+////                paymentrepository.save(payment);
+
+//              Save or update payment details
+//                PaymentUser payment = optionPayment.orElseGet(() -> {
+//                    PaymentUser newPayment = new PaymentUser();
+//                    newPayment.setUserId(userId);
+//                    return newPayment;
+//                });
+//
+//                payment.setOrderId(orderId);
+//                payment.setSubscriptionTitle(planName);
+//                payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription
+//
 //                paymentrepository.save(payment);
-
-             // Save or update payment details
-                PaymentUser payment = optionPayment.orElseGet(() -> {
-                    PaymentUser newPayment = new PaymentUser();
-                    newPayment.setUserId(userId);
-                    return newPayment;
-                });
-
-                payment.setOrderId(orderId);
-                payment.setSubscriptionTitle(planName);
-                payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription
-
-                paymentrepository.save(payment);
 
                 return orderId;
             } else {
@@ -276,5 +279,4 @@ public class PaymentController {
     
     
     
-
 
