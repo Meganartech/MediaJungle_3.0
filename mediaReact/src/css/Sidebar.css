@@ -1008,6 +1008,7 @@ td{
 .banner-items {
   display: flex;
   transition: transform 0.10s ease-in-out;
+  width: 100%;
   
   
 }

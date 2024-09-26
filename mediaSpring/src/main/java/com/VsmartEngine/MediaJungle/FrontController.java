@@ -1043,7 +1043,7 @@ public class FrontController {
 		    }
 
 		    @PostMapping("/addvideobanner")
-		    public ResponseEntity<String> createVideoBanner(@RequestBody VideoBannerRequest videoBannerRequest) {
+		    public ResponseEntity<?> createVideoBanner(@RequestBody List<VideoBanner> videoBannerRequest) {
 		    	return videobannercontroller.createVideoBanner(videoBannerRequest);
 		    }
 		    
@@ -1052,7 +1052,10 @@ public class FrontController {
 		    	return videobannercontroller.getAllVideoBanner();
 		    }
 		    
-
+		    @DeleteMapping("/videobanner/{id}")
+		   	public ResponseEntity<?> Deletevideobanner(@PathVariable("id") long id) {
+		    	return videobannercontroller.Deletevideobanner(id);
+		    }
 //		 @GetMapping("/{filename}/file")
 //			public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
 //
