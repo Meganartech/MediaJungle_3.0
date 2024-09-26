@@ -27,6 +27,7 @@ class MyTextField extends StatefulWidget {
 }
 
 class _MyTextFieldState extends State<MyTextField> {
+  String? errorText;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -36,55 +37,106 @@ class _MyTextFieldState extends State<MyTextField> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: Container(
-            height: size.height * 0.07,
+            height: size.height * 0.08,
             width: size.width * 0.9,
             decoration: BoxDecoration(
               color: Color.fromRGBO(28, 38, 74, 0),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white),
+              border: Border.all(
+                  color: errorText != null ? Colors.red : Colors.white),
             ),
-            child: Center(
-              //constraints: BoxConstraints(minHeight: size.height * 0.07),
-              child: TextFormField(
-                controller: widget.controller,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 10),
-                    child: Icon(
-                      widget.icon,
-                      size: 20,
-                      color: kWhite,
+            child: Stack(
+              children: [
+                Center(
+                  //constraints: BoxConstraints(minHeight: size.height * 0.07),
+                  child: TextFormField(
+                    controller: widget.controller,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 20, right: 10, top: 0),
+                        child: Icon(
+                          widget.icon,
+                          size: 20,
+                          color: kWhite,
+                        ),
+                      ),
+                      hintText: widget.hint,
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(color: Colors.white60),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                      isDense: true,
+                    ),
+                    obscureText: widget.obscureText,
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    keyboardType: widget.inputType,
+                    textInputAction: widget.inputAction,
+                    validator: (value) {
+                      setState(() {
+                        errorText = _getErrorText(value);
+                      });
+                      return errorText;
+                    },
+                    onChanged: (value) {
+                      if (errorText != null) {
+                        setState(() {
+                          errorText = _getErrorText(value);
+                        });
+                      }
+                    },
+                    // validator: widget.validator != null
+                    //     ? (value) {
+                    //         if (widget.validator!(value) != null) {
+                    //           return widget.validator!(value);
+                    //         } else if (widget.confirmPasswordController != null &&
+                    //             widget.confirmPasswordController!.text != value) {
+                    //           return 'Passwords do not match';
+                    //         }
+                    //         return null;
+                    //       }
+                    //     : null,
+                  ),
+                ),
+                if (errorText != null)
+                  Positioned(
+                    right: 10,
+                    top: 0,
+                    bottom: 0,
+                    child: Center(
+                      child: Tooltip(
+                        message: errorText!,
+                        preferBelow: false,
+                        child: Icon(
+                          Icons.error,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                      ),
                     ),
                   ),
-                  hintText: widget.hint,
-                  hintStyle: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: Colors.white60),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 11, horizontal: 16),
-                ),
-                obscureText: widget.obscureText,
-                style: TextStyle(fontSize: 18, color: Colors.white),
-                keyboardType: widget.inputType,
-                textInputAction: widget.inputAction,
-                validator: widget.validator != null
-                    ? (value) {
-                        if (widget.validator!(value) != null) {
-                          return widget.validator!(value);
-                        } else if (widget.confirmPasswordController != null &&
-                            widget.confirmPasswordController!.text != value) {
-                          return 'Passwords do not match';
-                        }
-                        return null;
-                      }
-                    : null,
-              ),
+              ],
             ),
           ),
         ),
       ],
     );
+  }
+
+  String? _getErrorText(String? value) {
+    if (widget.validator != null) {
+      final validatorResult = widget.validator!(value);
+      if (validatorResult != null) {
+        return validatorResult;
+      }
+    }
+    if (widget.confirmPasswordController != null &&
+        widget.confirmPasswordController!.text != value) {
+      return 'Passwords do not match';
+    }
+    return null;
   }
 }
