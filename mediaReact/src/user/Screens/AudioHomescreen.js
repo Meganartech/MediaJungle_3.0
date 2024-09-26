@@ -18,7 +18,18 @@ const AudioHomescreen = () => {
     const delay = 3000; // Set the delay to 3 seconds
     const [filename, setFilename] = useState(null);
     const [audiotitle, setAudiotitle] = useState(null);
+    const [bannerIndex, setBannerIndex] = useState(0); // Track banner index for sliding
 
+      // Fetch video banners (if needed, but not used in your current code)
+  const fetchVideoBanners = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v2/getallvideobanners`);
+      // Handle banner data here if necessary
+      setVideoBanners(response.data)
+    } catch (error) {
+      console.error('Error fetching video banners:', error);
+    }
+  };
   
     // Fetch data only once on mount
     useEffect(() => {
@@ -32,7 +43,8 @@ const AudioHomescreen = () => {
           const data = await response.json();
           setMovies(data);
           setCategories(data);
-          setVideoBanners(data[0]?.audiolist || []); // Safe access
+          fetchVideoBanners();
+          // setVideoBanners(data[0]?.audiolist || []); // Safe access
         } catch (error) {
           console.error('Error fetching data:', error);
         } finally {
@@ -49,6 +61,13 @@ const AudioHomescreen = () => {
       setFilename(categoryName);
       // Perform some action here
     };
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setBannerIndex((prevIndex) => (prevIndex + 1) % videoBanners.length);
+      }, 4000); // Change slide every 3 seconds
+  
+      return () => clearInterval(interval); // Clear interval on component unmount
+    }, [videoBanners.length]);
   
     // Automatically update the banner index every 3 seconds
     useEffect(() => {
@@ -65,6 +84,8 @@ const AudioHomescreen = () => {
     if (loading) {
       return <div>Loading...</div>; // Show loading state
     }
+
+   
   
     // if (videoBanners.length === 0) {
     //   return <div>No banners available</div>; // No banners available
@@ -79,19 +100,28 @@ const AudioHomescreen = () => {
         {categories.length ===0 ? <div>AudioContainer is empty </div> : 
         <div>
           { videoBanners.length === 0? <div>No banners available</div> :
-          <div className="slider-container" style={{ marginBottom: '30px' }}>
-            <div className="slider-track" style={{ display: 'flex', overflow: 'hidden' }}>
-              <div className="slider-content" style={{ transition: 'transform 0.5s ease-in-out' }}>
-                <div className="movie-card" style={{ width: '100%', textAlign: 'center' }}>
-                  <img
-                    src={`${API_URL}/api/v2/image/${currentBanner.id}`} // Use currentBanner here
-                    alt={currentBanner.movieName || 'Movie'}
-                    style={{ width: '90vw', height: '80vh', loading: 'lazy' }} // Lazy loading
-                  />
+          // <div className="slider-container" style={{ marginBottom: '30px' }}>
+          //   <div className="slider-track" style={{ display: 'flex', overflow: 'hidden' }}>
+          //     <div className="slider-content" style={{ transition: 'transform 0.5s ease-in-out' }}>
+          //       <div className="movie-card" style={{ width: '100%', textAlign: 'center' }}>
+          //         <img
+          //           src={`${API_URL}/api/v2/image/${currentBanner.id}`} // Use currentBanner here
+          //           alt={currentBanner.movieName || 'Movie'}
+          //           style={{ width: '90vw', height: '80vh', loading: 'lazy' }} // Lazy loading
+          //         />
+          //       </div>
+          //     </div>
+          //   </div>
+          // </div>
+          <div className="banner-container">
+            <div className="banner-items" style={{ transform: `translateX(-${bannerIndex * 100}%)` }}>
+              {videoBanners.map((banner, index) => (
+                <div key={index} className="banner-item"  style={{ cursor: 'pointer' }}>
+                  <img src={`${API_URL}/api/v2/${banner.videoId}/videothumbnail`} alt={`Banner ${index}`} />
                 </div>
-              </div>
+              ))}
             </div>
-          </div>
+            </div>
 
 }
   

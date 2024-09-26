@@ -519,9 +519,9 @@ useEffect(() => {
               <button className={`col-lg-6  custom-btn  ${activeView === 'movie' ? 'active-btn' : 'inactive-btn'}`} onClick={() => handleViewChange('movie')} style={{ height:'35px'}}>
                 Movie
               </button>
-              <button className={`col-lg-6  custom-btn ${activeView === 'music' ? 'active-btn' : 'inactive-btn'}`} onClick={() => handleViewChange('music')}>
+              {/* <button className={`col-lg-6  custom-btn ${activeView === 'music' ? 'active-btn' : 'inactive-btn'}`} onClick={() => handleViewChange('music')}>
                 Music
-              </button>
+              </button> */}
              
               </div>
               <div className='col-lg-3'>
