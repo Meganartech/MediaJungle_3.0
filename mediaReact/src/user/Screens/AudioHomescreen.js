@@ -92,7 +92,7 @@ const AudioHomescreen = () => {
     // }
   
     const currentBanner = videoBanners[currentIndexBanner]; // Current banner data
-    const audioSrc = `http://localhost:8080/api/v2/${filename}/file`; // Replace with your audio file path
+    const audioSrc = `${API_URL}/api/v2/${filename}/file`; // Replace with your audio file path
 
   
     return (
