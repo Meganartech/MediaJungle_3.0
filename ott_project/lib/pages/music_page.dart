@@ -298,11 +298,11 @@ class _MusicPageState extends State<MusicPage> {
                       //),
                       //),
                       Expanded(
-                        //child: SingleChildScrollView(
-                        // child: Padding(
-                        //   padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        child: ListView(
+                          //  child: Padding(
+                          //    padding: const EdgeInsets.all(8.0),
+                          //child: Column(
+                          // crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             if (_searchController.text.isNotEmpty &&
                                 _filteredAudios.isEmpty)
@@ -317,13 +317,13 @@ class _MusicPageState extends State<MusicPage> {
                                 height: 300,
                                 child: _buildMusicCategories(),
                               ),
-                              // SizedBox(
-                              //     height: 150, child: _buildRecentlyPlayed()),
+                              SizedBox(
+                                  height: 150, child: _buildRecentlyPlayed()),
                             ]
                           ],
+                          //),
+                          // ),
                         ),
-                        //),
-                        // ),
                       ),
 
                       Consumer<AudioProvider>(

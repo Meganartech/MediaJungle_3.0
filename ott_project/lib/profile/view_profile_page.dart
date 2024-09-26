@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -69,8 +70,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       var response = await http.get(
         Uri.parse(
             //  'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            // 'http://192.168.40.165:8080/api/v2/GetUserById/$userId'),
-            'http://localhost:8080/api/v2/GetUserById/$userId'),
+            'http://192.168.0.6:8080/api/v2/GetUserById/$userId'),
+        // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -126,7 +127,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   //  GestureDetector(
                   // onTap: _pickProfilePicture,
@@ -145,7 +146,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                     usernameController.text,
                     style: TextStyle(color: kWhite),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
                   profileInfo('Name', usernameController.text),
                   const SizedBox(height: 15),
                   // Display Email row
@@ -155,9 +156,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                   profileInfo('Phone Number', mobilenumberController.text),
                   //const SizedBox(height: 30),
 
-                  const SizedBox(height: 50.0),
                   SizedBox(
-                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.18,
+                  ),
+                  SizedBox(
+                    //width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -169,11 +172,20 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                     })));
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        // minimumSize: Size(double.infinity, 40),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.sizeOf(context).height * 0.04,
+                            vertical: 15),
                         backgroundColor: Color.fromARGB(174, 93, 104, 195),
                         foregroundColor: kWhite,
                       ),
-                      child: const Text('Edit Profile'),
+                      child: const Text(
+                        'Edit Profile',
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16.0),
@@ -187,13 +199,16 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   }
 
   Widget profileInfo(String label, String value) {
-    return Center(
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
               flex: 2,
               child: Text('$label',
+                  textAlign: TextAlign.left,
                   style: TextStyle(
                       color: kWhite,
                       fontWeight: FontWeight.normal,
@@ -204,8 +219,9 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                   color: kWhite, fontWeight: FontWeight.normal, fontSize: 16)),
           const SizedBox(width: 10),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: Text(value,
+                textAlign: TextAlign.start,
                 style: TextStyle(
                     color: kWhite,
                     fontWeight: FontWeight.normal,

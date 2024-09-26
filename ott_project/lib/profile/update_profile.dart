@@ -66,9 +66,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
     try {
       var response = await http.get(
-        Uri.parse(
-            //  'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://localhost:8080/api/v2/GetUserById/$userId'),
+        Uri.parse('http://192.168.183.129:8080/api/v2/GetUserById/$userId'),
+        // 'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+        //   'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -82,10 +82,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         //print(userData);
         //_image = userData['profile'];
         // setState(() {
-        //   usernameController.text = userData['username'] ?? '';
-        //   emailController.text = userData['email'] ?? '';
-        //   mobilenumberController.text = userData['mobnum'] ?? '';
-        //   base64Image = userData['profile'];
+        usernameController.text = userData['username'] ?? '';
+        emailController.text = userData['email'] ?? '';
+        mobilenumberController.text = userData['mobnum'] ?? '';
+        base64Image = userData['profile'];
         // });
         setState(() {});
         //  await fetchProfileImage(userId);
@@ -103,10 +103,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     //String? token = await secureStorage.read(key: 'token');
     String? userId = await secureStorage.read(key: 'userId');
     try {
-      var url =
-          Uri.parse('http://localhost:8080/api/v2/UpdateUser/mobile/$userId');
-      //'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
-      //'http://192.168.40.165:8080/api/v2/UpdateUser/mobile/$userId');
+      var url = Uri.parse(
+          //'http://localhost:8080/api/v2/UpdateUser/mobile/$userId');
+          //'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
+          'http://192.168.0.6:8080/api/v2/UpdateUser/mobile/$userId');
       var request = http.MultipartRequest('PATCH', url);
       //..headers.addAll({'Content-Type': 'application/json'});
       request.fields['username'] = usernameController.text;
@@ -222,20 +222,28 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     inputAction: TextInputAction.next,
                     obscureText: false,
                   ),
-                  const SizedBox(height: 24.0),
                   SizedBox(
-                    width: double.infinity,
+                    height: MediaQuery.sizeOf(context).height * 0.15,
+                  ),
+                  SizedBox(
+                    // width: double.infinity,
                     child: ElevatedButton(
                       onPressed: _updateUserProfile,
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                        // minimumSize: Size(double.infinity, 40),
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.sizeOf(context).height * 0.09,
+                            vertical: 15),
                         backgroundColor: Color.fromARGB(174, 93, 104, 195),
                         foregroundColor: kWhite,
                       ),
                       child: const Text('Save'),
                     ),
                   ),
-                  const SizedBox(height: 16.0),
+                  // const SizedBox(height: 16.0),
                 ],
               ),
             ),

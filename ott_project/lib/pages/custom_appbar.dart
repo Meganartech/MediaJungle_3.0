@@ -260,10 +260,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     if (iconData != null)
                       Image.memory(
                         iconData!.imageBytes,
-                        height: 60,
+                        height: 70,
                       )
                     else
-                      Image.asset('assets/icon/media_jungle.png', height: 30),
+                      Image.asset('assets/icon/media_jungle.png', height: 50),
                     Spacer(),
                     IconButton(
                         onPressed: () {},
