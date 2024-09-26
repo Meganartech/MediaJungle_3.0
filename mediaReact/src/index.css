@@ -68,7 +68,7 @@ select:focus {
   transform: scale(1.2);
 }
 /* Drawer */
-.drawer {
+/*.drawer {
 overflow: visible;
 }
 .drawer .drawer-content-wrapper {
@@ -111,4 +111,82 @@ transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
     width: 420px;
     }
     }
- 
+ */
+ .slider-container {
+    position: relative;
+    padding: 0 50px; /* Add some padding so the buttons don't overlap the images */
+  }
+  
+  .prev-button, .next-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    /* background-color: #333; */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .prev-button {
+    left: 0; /* Place "Previous" button on the far left */
+  }
+  
+  .next-button {
+    right: 0; /* Place "Next" button on the far right */
+  }
+  
+  .movie-card {
+    text-align: center;
+  }
+
+  /* App.css or your specific CSS file */
+audio {
+    display: none; /* Hide the default audio controls */
+}
+input[type="range"].audioProgressBarr {
+    -webkit-appearance: none; /* Remove default styling */
+    width: 100%; /* Full width */
+    background: white; /* Background color of the track */
+    border-radius: 5px; /* Rounded corners */
+    height: 8px; /* Height of the track */
+}
+
+
+/* Progress bar track */
+
+/* Progress fill */
+input[type="range"].audioProgressBarr::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default thumb */
+    width: 16px; /* Width of the thumb */
+    height: 16px; /* Height of the thumb */
+    background: red; /* Red color for the thumb */
+    border-radius: 50%; /* Make it circular */
+}
+
+
+/* Optional: Change the color of the filled portion */
+input[type="range"].audioProgressBarr:before {
+    content: '';
+    position: absolute;
+    height: 8px; /* Match the track height */
+    background: red; /* Red color for the filled portion */
+    width: calc(var(--progress) * 1%); /* Width based on progress */
+    border-radius: 5px; /* Rounded corners */
+    z-index: 1; /* Make sure it’s above the track */
+}
+.custom-progress-bar {
+    background-color: rgb(245, 239, 239); /* Background color of the progress bar */
+    border-radius: 5px; /* Optional: rounded corners for the bar */
+    height: 8px; /* Set height for the progress bar */
+    margin: 0; /* Remove any margin */
+    padding: 0; /* Remove any padding */
+}
+
+/* To change the filled color of the ProgressBar to violet */
+.custom-progress-bar .progress-bar {
+    background-color: violet; /* Violet color for the filled portion */
+    height: 100%; /* Fill the height of the progress bar */
+    /* width: 100%; */
+}

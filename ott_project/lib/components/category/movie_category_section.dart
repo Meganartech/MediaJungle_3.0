@@ -53,7 +53,6 @@ class MovieCategorySection extends StatelessWidget {
   }
 }
 
-
 class MoviesCategorySection extends StatelessWidget {
   final String title;
   final List<Movies> movies;
@@ -82,9 +81,11 @@ class MoviesCategorySection extends StatelessWidget {
                 child: Text('See more', style: TextStyle(color: Colors.green))),
           ],
         ),
-        SizedBox(height: 10),
         SizedBox(
-          height: 180,
+          height: MediaQuery.sizeOf(context).height * 0.01,
+        ),
+        SizedBox(
+          height: MediaQuery.sizeOf(context).height * 0.25,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: displayedMovies.length,

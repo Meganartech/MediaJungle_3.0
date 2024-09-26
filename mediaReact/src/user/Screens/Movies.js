@@ -436,6 +436,7 @@ import API_URL from '../../Config';
 import axios from 'axios';
 import leftarrowIcon from '../UserIcon/left slide icon.png';
 import rightarrowIcon from '../UserIcon/right slide icon.png';
+import { useNavigate } from 'react-router-dom';
 
 const MoviesPage = () => {
   const [states, setStates] = useState([]);
@@ -496,6 +497,28 @@ const MoviesPage = () => {
     });
   };
 
+
+  const [play, setPlay] = useState(false); // Define state for play
+  const log = localStorage.getItem('login');
+  const navigate = useNavigate(); // Define navigate function
+
+
+  const handleEdit = (id) => {
+    localStorage.setItem('items', id);
+  };
+
+
+
+  const handlePlayClick = (videoid,videotitle) => {
+    handleEdit(videoid);
+    setPlay(true);
+    if (log === "true") {
+      navigate("/play");
+    } else {
+      navigate("/UserLogin");
+    }
+  };
+
   return (
     <Layout>
       {/* Banner Section Displayed at the Top */}
@@ -547,18 +570,21 @@ const MoviesPage = () => {
 
                           return (
                             <div key={`${videoId}-${state.value}-${index}`} className="item">
-                              <img
-                                src={`${API_URL}/api/v2/${videoId}/videothumbnail`}
-                                alt={`Video ${videoId}`}
-                              />
-                              {/* <p>{videoTitle}</p> */}
-                              <div className="overlay">
-                                <p className="video-title">{videoTitle}</p>
-                                <p className="video-year">{video.year}</p> {/* Assuming year is part of video object */}
-                                <p className="video-duration">{video.mainVideoDuration}</p> {/* Assuming duration is part of video object */}
-                                <p className="video-category">{state.value}</p> {/* Displaying the category/genre */}
-                              </div>
-                            </div>
+  <div  onClick={() => handlePlayClick(videoId, videoTitle)}  style={{ cursor: 'pointer' }}>
+    <img
+      src={`${API_URL}/api/v2/${videoId}/videothumbnail`}
+      alt={`Video ${videoId}`}
+      
+    />
+  </div>
+  <div className="overlay">
+    <p className="video-title">{videoTitle}</p>
+    <p className="video-year">{video.year}</p> {/* Assuming year is part of video object */}
+    <p className="video-duration">{video.mainVideoDuration}</p> {/* Assuming duration is part of video object */}
+    <p className="video-category">{state.value}</p> {/* Displaying the category/genre */}
+  </div>
+</div>
+
                           );
                         })
                       )}

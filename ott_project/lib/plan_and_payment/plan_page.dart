@@ -34,7 +34,7 @@ class _PlanPageState extends State<PlanPage> {
   String? razorpayKey;
   Map<String, bool> expandedState = {};
   int? _userId;
-  String baseUrl = 'http://localhost:8080/api/v2';
+  String baseUrl = 'http://192.168.0.6:8080/api/v2';
 
   // double? discountedAmount;
   Map<String, Map<String, double>> discountedAmounts = {};
@@ -153,16 +153,21 @@ class _PlanPageState extends State<PlanPage> {
         (plan) => plan.planname == selectedPlan,
         orElse: () => PlanDetails(
             id: 0, planname: '', amount: 0, tenure: [], feature: []));
+    double finalAmount = discountedAmounts[selectedPlan]?[selectedDuration] ??
+        selectedPlanDetails.amount;
+    Tenures selectedTenure = selectedPlanDetails.tenure.firstWhere(
+      (tenure) => tenure.tenureName == selectedDuration,
+      orElse: () => Tenures(id: 0, tenureName: '', months: 0, discount: 0),
+    );
 
     await _sendPaymentDetailsToServer(
       response.orderId!,
       response.paymentId!,
       '200',
       selectedPlan,
-      selectedPlanDetails.amount,
-      selectedPlanDetails.feature.toString(),
-      selectedPlanDetails.tenure.toString(),
-      // selectedPlanDetails.validity.toString(),
+      finalAmount,
+      selectedTenure.id.toString(),
+      //selectedPlanDetails.feature.toString(),
       response.signature!,
     );
   }
@@ -183,33 +188,49 @@ class _PlanPageState extends State<PlanPage> {
     String statusCode,
     String planName,
     double amount,
-    String tenure,
-    String feature,
+    String tenureId,
     String signature,
   ) async {
     if (_userId == null) {
       print('Not logged in');
       return;
     }
+    print('Sending payment details to server:');
+    print('Order ID: $orderId');
+    print('Payment ID: $paymentId');
+    print('Status Code: $statusCode');
+    print('Plan Name: $planName');
+    print('Amount: $amount');
+    print('User ID: $_userId');
+
+    //final response = await http.post(url)
+
     final response = await http.post(
-      Uri.parse('$baseUrl/buy'),
+      Uri.parse('$baseUrl/confirmPayment'),
       body: jsonEncode({
         'orderId': orderId,
         'paymentId': paymentId,
         'status_code': statusCode,
         'planname': planName,
+        'amount': amount.toInt().toString(),
         'userId': _userId.toString(),
-        'amount': amount,
+        'tenureId': tenureId,
+        'signature': signature
       }),
       headers: {'Content-type': 'application/json'},
     );
+    print('Amount:$amount');
+    print('Amt res:${response.statusCode}');
     if (response.statusCode == 200) {
       print('Payment ID and signature sent to server');
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Payment successful')));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to confirm payment with server')));
+      print('Amount:$amount');
+      print('Amt res:${response.statusCode}');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              '$amount, $statusCode, $paymentId Failed to confirm payment with server')));
     }
   }
 
@@ -248,14 +269,24 @@ class _PlanPageState extends State<PlanPage> {
         (plan) => plan.planname == selectedPlan,
         orElse: () => PlanDetails(
             id: 0, planname: '', amount: 0, tenure: [], feature: []));
-
+    double amount = selectedPlanDetails.amount;
+    // double amount = discountedAmounts[selectedPlan]?[selectedDuration];
+    if (discountedAmounts[selectedPlan] != null &&
+        discountedAmounts[selectedPlan]![selectedDuration] != null) {
+      amount = discountedAmounts[selectedPlan]![selectedDuration]!;
+    }
     try {
-      final amount = selectedPlanDetails.amount.toInt().toString();
+      print('Amount before sending: $amount');
+      final amountInPaise = (amount * 100).toInt().toString();
       final userId = _userId.toString();
       final planName = selectedPlan;
 
+      // print('Amount before sending: $amount');  // Debugging check
+//final amountInPaise = (amount * 100).toInt().toString();
+      print('Amount in paise before sending: $amountInPaise');
+
       final requestData = {
-        'amount': amount,
+        'amount': amountInPaise,
         'userId': userId,
         'planname': planName,
       };
@@ -304,8 +335,7 @@ class _PlanPageState extends State<PlanPage> {
         if (orderId.startsWith('order_')) {
           var options = {
             'key': razorpayKey,
-            'amount':
-                (selectedPlanDetails.amount * 100).toInt(), // Amount in paise
+            'amount': amountInPaise, // Amount in paise
             'name': 'Meganar',
             'order_id': orderId,
             'description': '$selectedPlan plan for $selectedDuration',

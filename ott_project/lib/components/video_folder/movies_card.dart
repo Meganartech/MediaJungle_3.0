@@ -104,6 +104,7 @@ class MoviesCard extends StatelessWidget {
       },
       child: Container(
         width: 100,
+        //height: 500,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -115,7 +116,7 @@ class MoviesCard extends StatelessWidget {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData) {
                       return Image.memory(snapshot.data!,
-                          width: 164, height: 135, fit: BoxFit.fill);
+                          width: 164, height: 130, fit: BoxFit.fill);
                     } else {
                       return Container(
                         width: 164,
@@ -127,7 +128,7 @@ class MoviesCard extends StatelessWidget {
                     }
                   }),
             ),
-            SizedBox(height: 3),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
             Text(
               movie.moviename,
               style: TextStyle(

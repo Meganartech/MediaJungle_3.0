@@ -270,12 +270,18 @@ td{
   white-space: nowrap;
   height: 68.70vh;
 }
+
 .table-container2 {
   overflow-x: auto;
   white-space: nowrap;
   height: 72vh;
 }
 
+.table-container3 {
+  overflow-x: auto;
+  white-space: nowrap;
+  height: 68.70vh;
+}
 .table {
   margin: 0;
 }
