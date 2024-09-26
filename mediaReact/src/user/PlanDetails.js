@@ -113,7 +113,7 @@
               },
               body: JSON.stringify({
                   amount: discountedAmount,
-                  userId: userId,
+                  userId: parseFloat(userId,10),
                   planname: selectedPlan.planname
               })
           });
@@ -138,7 +138,7 @@
               description: "This is for testing",
               handler: async function (response) {
                   console.log('Payment Success:', response);
-                  // await sendPaymentIdToServer(discountedAmount, response.razorpay_payment_id, order, paymentResponse.status, selectedPlan.planname, userId, tenure.id, response.razorpay_signature);
+                  await sendPaymentIdToServer(discountedAmount, response.razorpay_payment_id, order, paymentResponse.status, selectedPlan.planname, userId, response.razorpay_signature);
                   Swal.fire('Success', 'Payment successful!', 'success');
               },
               theme: {
@@ -164,19 +164,21 @@
   
     
     
-  const sendPaymentIdToServer = async (amount, paymentId, orderId, statusCode, planname, userId, tenureId, signature) => {
-    // Log the parameters being passed
+  const sendPaymentIdToServer = async (discountedAmount, paymentId, orderId, status, planname, userId) => {
+  
     console.log('Sending Payment Data:', {
-      Amount: 100,
+      amount: discountedAmount,
       paymentId: paymentId,
       orderId: orderId,
-      statusCode: statusCode,
+      status: status,
       planname: planname,
-      userId: userId,
-      tenureId: tenureId,
-      signature: signature
+      userId: userId
     });
-  
+    console.log(typeof discountedAmount, discountedAmount);
+
+    console.log(typeof userId, userId);
+
+    
     try {
       const response = await fetch(`${API_URL}/api/v2/confirmPayment`, {
         method: 'POST',
@@ -184,14 +186,12 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          Amount: amount, // Pass the amount here
+          amount:discountedAmount, // Pass the amount here
           paymentId: paymentId,
           orderId: orderId,
-          statusCode: statusCode,
+          status: status,
           planname: planname,
-          userId: userId,
-          tenureId: tenureId,
-          signature: signature
+          userId: Number(userId)
         })
       });
   
