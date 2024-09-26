@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import API_URL from '../Config';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { useRef } from 'react';
+import ManualSlider from './ManualSliderTest';
 
 const AudioHomecreeenContainer = () => {
     const [movies, setMovies] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0); // Manage the current slide index
+ 
     useEffect(() => {
         fetch(`${API_URL}/api/v2/audioContainerDetails`)
           .then(response => {
@@ -118,38 +124,75 @@ const AudioHomecreeenContainer = () => {
     // }, []);
 console.log(movies.length);
 console.log(movies);
-    // Slider settings for react-slick
-  const settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        }
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        }
-      }
-    ]
-  };
 
-  return (
-    <div>
-    <h2>Movie Slider</h2>
+// const goNext = () => {
+//   if (currentIndex < totalSlides - slidesToShow) {
+//     setCurrentIndex(currentIndex + 1);
+//   }
+// };
+
+// // Move to the previous slide
+// const goPrev = () => {
+//   if (currentIndex > 0) {
+//     setCurrentIndex(currentIndex - 1);
+//   }
+// };
+// const totalSlides = category.audiolist.length;
+// const slidesToShow = 6; // Show 6 images at a time
+    // Slider settings for react-slicke for the slider
+
+    // const sliderRef = useRef(null); // Create a reference for the slider
+
+    // const settings = {
+    //   dots: true,
+    //   infinite: false,
+    //   speed: 500,
+    //   slidesToShow: 6, // Show 6 images at a time
+    //   slidesToScroll: 1,
+    //   responsive: [
+    //     {
+    //       breakpoint: 1024,
+    //       settings: {
+    //         slidesToShow: 3,
+    //       }
+    //     },
+    //     {
+    //       breakpoint: 600,
+    //       settings: {
+    //         slidesToShow: 2,
+    //       }
+    //     },
+    //     {
+    //       breakpoint: 480,
+    //       settings: {
+    //         slidesToShow: 1,
+    //       }
+    //     }
+    //   ]
+    // };
+  
+    // // Move slider forward
+    // const goNext = () => {
+    //   if (sliderRef.current) {
+    //     sliderRef.current.slickNext(); // Move to the next slide
+    //   }
+    // };
+  
+    // // Move slider backward
+    // const goPrev = () => {
+    //   if (sliderRef.current) {
+    //     sliderRef.current.slickPrev(); // Move to the previous slide
+    //   }
+    // };
+  
+
+  // const settings = {
+  //   dots: true,       // Enable pagination dots
+  //   infinite: true,   // Enable infinite loop scrolling
+  //   speed: 500,       // Transition speed
+  //   slidesToShow: 6,  // Number of images to show at once
+  //   slidesToScroll: 1 // Scroll 1 image at a time
+  // };
     {/* <Slider {...settings}>
       {movies.slice(0, movies.length).map(movie => (
         <div key={movie.id} className="movie-card">
@@ -159,28 +202,63 @@ console.log(movies);
         </div>
       ))}
     </Slider> */}
-      {categories.map((category, index) => (
-        category.audiolist.length >= 0 && ( // Only display slider if audiolist is not empty
-          <div key={index}>
-            <h3>{category.category_name}</h3> {/* Category name */}
-            <Slider {...settings}>
-              {category.audiolist.map(movie => (
-                <div key={movie.id} className="movie-card">
-                  <img src={`${API_URL}/api/v2/image/${movie.id}`} alt={movie.movieName} style={{ width: '100%', height: 'auto' }} />
-                  <h3>{movie.audio_title}</h3>
-                  <p>{movie.certificate_name}</p>
-                </div>
-              ))}
-            </Slider>
-          </div>
-        )
-      ))}
-
-
-
-
-
+    {/* <Slider {...settings}>
+{category.audiolist.map(movie => (
+  <div key={movie.id} className="image-slide">
+    <img src={`${API_URL}/api/v2/image/${movie.id}`} alt={movie.movieName} style={{ width: '100%', height: 'auto' }} />
+    <h3>{movie.audio_title}</h3>
+    <p>{movie.certificate_name}</p>
   </div>
+))}
+</Slider> */}
+
+  return (
+//     <div>
+//     <h2>Movie Slider</h2>
+  
+//       {categories.map((category, index) => (
+//         category.audiolist.length >= 0 && ( // Only display slider if audiolist is not empty
+//           <div key={index}>
+//             <h3>{category.category_name}</h3> {/* Category name */}
+//             <div className="slider-container">
+//       <button className="prev-button" onClick={goPrev}>Previous</button> {/* Custom Previous Button */}
+      
+//       <Slider ref={sliderRef} {...settings}> {/* Attach ref to Slider */}
+//         {category.audiolist.map(movie => (
+//           <div key={movie.id} className="movie-card">
+//             <img src={`${API_URL}/api/v2/image/${movie.id}`} alt={movie.movieName} style={{ width: '100%', height: 'auto' }} />
+//             <h3>{movie.audio_title}</h3>
+//             <p>{movie.certificate_name}</p>
+//           </div>
+//         ))}
+//       </Slider>
+
+//       <button className="next-button" onClick={goNext}>Next</button> {/* Custom Next Button */}
+//     </div>
+
+// </div>
+//         )
+//       ))}
+
+
+
+
+
+//   </div>
+<div>
+<h2>Movie Sliders</h2>
+{categories.map((category, index) => (
+  category.audiolist.length > 0 && ( // Only render the slider if audiolist is not empty
+    <div key={index}>
+      <h3 className='custom-label'>{category.category_name}</h3>
+      <ManualSlider category={category} API_URL={API_URL} /> {/* Pass each category to the slider */}
+    </div>
+  )
+))}
+</div>
+
+
+
 );
 };
 
