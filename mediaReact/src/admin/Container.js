@@ -924,18 +924,22 @@ return () => {
           {/* <div className="table-container"> */}
           {activeView === 'movie' && (
               <>
-  <div className='row py-3' style={{ marginLeft: '0px' ,marginRight: '0px',marginTop: '10px',paddingLeft:'50px',paddingRight:'70px'}} >
-          <div className='col-lg-2 d-flex toggle' style={{ marginLeft: '0px' ,marginRight: '0px',marginTop: '0px',paddingBottom:'5px',paddingTop:'5px',borderRadius:'55px',height:'60px'}}>
-            
-              
-              <button className={`col-lg-6  custom-btn  ${activeView === 'movie' ? 'active-btn' : 'inactive-btn'}`} onClick={() => handleViewChange('movie')} style={{ height:'35px'}}>
+  <div className="row py-3" style={{ paddingLeft: '50px', paddingRight: '70px', marginTop: '10px' }}>
+            <div className="col-lg-2 d-flex toggle" style={{ height: '50px', borderRadius: '55px' }}>
+              <button
+                className={`col-lg-6 custom-btn ${activeView === 'movie' ? 'active-btn' : 'inactive-btn'}`}
+                onClick={() => handleViewChange('movie')}
+                style={{ height: '35px' }}
+              >
                 Movie
               </button>
-              <button className={`col-lg-6  custom-btn ${activeView === 'music' ? 'active-btn' : 'inactive-btn'}`} onClick={() => handleViewChange('music')}>
+              <button
+                className={`col-lg-6 custom-btn ${activeView === 'music' ? 'active-btn' : 'inactive-btn'}`}
+                onClick={() => handleViewChange('music')}
+              >
                 Music
               </button>
-             
-              </div>
+            </div>
               <div className='col-lg-3'>
               </div> 
               <div className='col-lg-2 custom-label'style={{ paddingTop:'6px',textAlign:'right '}}>No of Container
