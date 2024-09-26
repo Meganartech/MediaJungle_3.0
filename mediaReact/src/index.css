@@ -126,7 +126,7 @@ transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
     border: none;
     padding: 10px 20px;
     cursor: pointer;
-    z-index: 1;
+    z-index: 2;
   }
   
   .prev-button {
@@ -179,14 +179,14 @@ input[type="range"].audioProgressBarr:before {
 .custom-progress-bar {
     background-color: rgb(245, 239, 239); /* Background color of the progress bar */
     border-radius: 5px; /* Optional: rounded corners for the bar */
-    height: 8px; /* Set height for the progress bar */
+    height: 4px; /* Set height for the progress bar */
     margin: 0; /* Remove any margin */
     padding: 0; /* Remove any padding */
 }
 
 /* To change the filled color of the ProgressBar to violet */
 .custom-progress-bar .progress-bar {
-    background-color: violet; /* Violet color for the filled portion */
+    background-color: red; /* Violet color for the filled portion */
     height: 100%; /* Fill the height of the progress bar */
     /* width: 100%; */
 }
