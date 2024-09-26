@@ -385,8 +385,8 @@ const handlevideoDropdownToggle = (index) => {
     return row;  // Return other rows unchanged
   });
   setvideoTableData(updatedData);
-  const categoryNames = videotitle.map(item => item.VideoTitle);
-  setvideoFilteredOptions(categoryNames)
+  // const categoryNames = videotitle.map(item => item.VideoTitle);
+  // setvideoFilteredOptions(categoryNames)
   
   
   };
@@ -610,7 +610,8 @@ const handleVideoDelete = async (index) => {
       {activeView === 'movie' && (
         <>
           <div className="row py-3" style={{ paddingLeft: '50px', paddingRight: '70px', marginTop: '10px' }}>
-            <div className="col-lg-2 d-flex toggle" style={{ height: '50px', borderRadius: '55px' }}>
+            <div className="col-lg-2"></div>
+            {/* <div className="col-lg-2 d-flex toggle" style={{ height: '50px', borderRadius: '55px' }}>
               <button
                 className={`col-lg-6 custom-btn ${activeView === 'movie' ? 'active-btn' : 'inactive-btn'}`}
                 onClick={() => handleViewChange('movie')}
@@ -623,8 +624,8 @@ const handleVideoDelete = async (index) => {
                 onClick={() => handleViewChange('music')}
               >
                 Music
-              </button>
-            </div>
+              </button> 
+            </div> */}
             <div className="col-lg-3"></div>
             <div className="col-lg-2 custom-label" style={{ paddingTop: '6px', textAlign: 'right' }}>
               No of Containers
