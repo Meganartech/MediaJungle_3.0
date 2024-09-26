@@ -94,9 +94,9 @@ import Banner_setting from './admin/Banner_setting';
 import Footer_setting from './admin/Footer_setting';
 import AudioContainer_settings from './admin/AudioContainer_settings';
 import Container from './admin/Container';
-import AudioHomecreeenContainer from './admin/AudioHomecreeenContainer';
-
-
+import AudioHomecreeenContainer from './user/Screens/AudioBanner';
+import AudioHomecreeen from './user/Screens/AudioHomescreen';
+import Aud from './admin/appptest';
 
 
 
@@ -190,7 +190,7 @@ const App = () => {
 
 {/*         
             <Route path='/' element={{hasSignedUp ?{navigate("/Home")} : {navigate("/admin/addUser")}} />} /> */}
-
+<Route path='test' element= {<AudioHomecreeen/>} />
             <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<MoviesPage/>} />} />
           {/* <Route path='/' element={<Home  />} /> */}
 
@@ -291,7 +291,7 @@ const App = () => {
            <Route path='licence' element={<Licence/>} />
 
           {/* AudioContainer_settings */}
-          <Route path='container' element= {<Container/>} />
+          <Route path='Aud' element ={<Aud />} />
           
           
       

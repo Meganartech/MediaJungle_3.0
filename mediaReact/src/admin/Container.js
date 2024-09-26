@@ -991,7 +991,7 @@ return () => {
            {activeView === 'music' && (
               <>
                       <div className='row py-3' style={{ marginLeft: '0px' ,marginRight: '0px',marginTop: '10px',paddingLeft:'50px',paddingRight:'70px'}} >
-          <div className='col-lg-2 d-flex toggle' style={{ marginLeft: '0px' ,marginRight: '0px',marginTop: '0px',paddingBottom:'5px',paddingTop:'5px',borderRadius:'55px',height:'60px'}}>
+          <div className='col-lg-2 d-flex toggle' style={{ marginLeft: '0px' ,marginRight: '0px',marginTop: '0px',paddingBottom:'5px',paddingTop:'5px',borderRadius:'55px',height:'50px',paddingRight:'5px'}}>
             
               
               <button className={`col-lg-6  custom-btn  ${activeView === 'movie' ? 'active-btn' : 'inactive-btn'}`} onClick={() => handleViewChange('movie')} style={{ height:'35px'}}>
