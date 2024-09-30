@@ -88,17 +88,7 @@ class _MyTextFieldState extends State<MyTextField> {
                         });
                       }
                     },
-                    // validator: widget.validator != null
-                    //     ? (value) {
-                    //         if (widget.validator!(value) != null) {
-                    //           return widget.validator!(value);
-                    //         } else if (widget.confirmPasswordController != null &&
-                    //             widget.confirmPasswordController!.text != value) {
-                    //           return 'Passwords do not match';
-                    //         }
-                    //         return null;
-                    //       }
-                    //     : null,
+                 
                   ),
                 ),
                 if (errorText != null)
