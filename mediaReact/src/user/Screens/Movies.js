@@ -436,13 +436,14 @@ import API_URL from '../../Config';
 import axios from 'axios';
 import leftarrowIcon from '../UserIcon/left slide icon.png';
 import rightarrowIcon from '../UserIcon/right slide icon.png';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const MoviesPage = () => {
   const [states, setStates] = useState([]);
   const [currentIndex, setCurrentIndex] = useState({}); // Object to track current indices per category
   const [videoBanners, setVideoBanners] = useState([]); // State to store banner data
   const [bannerIndex, setBannerIndex] = useState(0); // Track banner index for sliding
+  const userid = sessionStorage.getItem("userId");
 
 
   // Fetch video banners (if needed, but not used in your current code)
@@ -570,21 +571,28 @@ const MoviesPage = () => {
 
                           return (
                             <div key={`${videoId}-${state.value}-${index}`} className="item">
-  <div  onClick={() => handlePlayClick(videoId)}  style={{ cursor: 'pointer' }}>
-    <img
-      src={`${API_URL}/api/v2/${videoId}/videothumbnail`}
-      alt={`Video ${videoId}`} 
-    />
-  </div>
-  <p>{videoTitle}</p>
-
-  {/* <div className="overlay">
-    <p className="video-title">{videoTitle}</p>
-    <p className="video-year">{video.year}</p> 
-    <p className="video-duration">{video.mainVideoDuration}</p> 
-    <p className="video-category">{state.value}</p> 
-  </div> */}
-</div>
+                            {/* <div onClick={() => handlePlayClick(videoId)} style={{ cursor: 'pointer' }}> */}
+                            <div>
+                              <Link
+                                to={userid ? `/watchpage/${video.videoTitle}` : "/UserLogin"}
+                                onClick={() => handleEdit(video.id)}
+                              >
+                                <img
+                                  src={`${API_URL}/api/v2/${videoId}/videothumbnail`}
+                                  alt={`Video ${videoId}`}
+                                />
+                              </Link>
+                            </div>
+                            <p>{videoTitle}</p>
+                          
+                            {/* <div className="overlay">
+                              <p className="video-title">{videoTitle}</p>
+                              <p className="video-year">{video.year}</p>
+                              <p className="video-duration">{video.mainVideoDuration}</p>
+                              <p className="video-category">{state.value}</p>
+                            </div> */}
+                          </div>
+                          
 
                           );
                         })

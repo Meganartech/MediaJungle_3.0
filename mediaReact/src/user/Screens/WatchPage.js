@@ -25,6 +25,8 @@ const WatchPage = () => {
   const [thumbnails, setThumbnails] = useState({});
   const [videocast, setvideocast] = useState([]);
   const [base64, setbase64] = useState([]);
+  const [categoriesvaluelist,setcategoriesvaluelist] = useState([]);
+  const [castandcrewlist,setcastandcrewlist] = useState([]);
 
   const subscribed = expiryDate > currentDate;
   const modeofvideo = getall.paid;
@@ -32,27 +34,42 @@ const WatchPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch video details
         const response = await axios.get(`${API_URL}/api/v2/GetvideoDetail/${id}`);
-        setgetall(response.data);
-        console.log(response.data);
+        const videoData = response.data;
+        setgetall(videoData);
+        console.log(videoData);
+  
+        // Fetch the category names by IDs, if categorylist is available
+        if (videoData.categorylist && videoData.categorylist.length > 0) {
+          const categoryIds = videoData.categorylist.join(','); 
+          const categoryResponse = await fetch(`${API_URL}/api/v2/categorylist/category?categoryIds=${categoryIds}`);
+          const categoryNames = await categoryResponse.json();
+          console.log('Category Names:', categoryNames);
+          setcategoriesvaluelist(categoryNames);
+        }
+
+        if (videoData.castandcrewlist && videoData.castandcrewlist.length > 0) {
+          const castIds = videoData.castandcrewlist.join(','); // Convert list to comma-separated string
+          const castresponse = await fetch(`${API_URL}/api/v2/getcastids?ids=${castIds}`); // Make sure 'ids' is used, not 'castIds'
+          
+          if (castresponse.ok) {
+            const castNames = await castresponse.json();
+            console.log('castNames', castNames);
+            setcastandcrewlist(castNames); // Assuming this is where you set the fetched data in the state
+          } else {
+            console.error('Error fetching cast names:', castresponse.statusText);
+          }
+        }
+
+        
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error.message);
       }
-    };
 
-    const fetchThumbnail = async () => {
-      try {
-          const response = await axios.get(`${API_URL}/api/v2/${id}/videothumbnail`);
-          if (response.data && response.data.videoThumbnail) {
-              const thumbnail = response.data.videoThumbnail;
-              const imageUrl = `data:image/png;base64,${thumbnail}`;
-              setThumbnail(imageUrl);
-          }
-      } catch (error) {
-          console.error('Error fetching video thumbnail:', error);
-      }
-  };
+      
+    };
 
     const fetchUser = async () => {
       try {
@@ -74,7 +91,6 @@ const WatchPage = () => {
     };
 
     fetchData();
-    fetchThumbnail();
     fetchUser();
   }, [id, userid]);
 
@@ -217,9 +233,8 @@ const WatchPage = () => {
   
   <Layout>
      <div className="videothumbnail position-relative">
-  {Thumbnail && (
     <>
-      <img src={Thumbnail} alt="image" className="img-fluid" />
+      <img src={`${API_URL}/api/v2/${id}/videothumbnail`} alt="image" className="img-fluid" />
       <div className="overlay-buttons">
         <button id="button1" className="me-4">Subscription</button>
         <button id="button2" className=" me-4">Add to Watch list</button>
@@ -227,11 +242,46 @@ const WatchPage = () => {
       </div>
       <span className="overlay-span">Duration:&nbsp;{getall.mainVideoDuration}</span>
     </>
-  )}
+ 
 </div>
 
 <div className='content'>
-  
+  <div className='title'>
+  <span >{getall.videoTitle}</span>
+  </div>
+  <div style={{marginTop:'30px'}}>
+  {categoriesvaluelist && categoriesvaluelist.length > 0 && (
+  <span >{categoriesvaluelist.join('/')}</span>
+ 
+)}
+ </div>
+ <div className='castandcrew'>
+ <span>Cast & Crew</span>
+ {castandcrewlist && castandcrewlist.length > 0 && (
+  <div style={{ display: 'flex', flexDirection: 'row', gap: '15px' }}>
+    {castandcrewlist.map(cast => (
+      <div key={cast.id} style={{ textAlign: 'center' }}> {/* Added textAlign for centering */}
+        <img
+          src={`${API_URL}/api/v2/getcastimage/${cast.id}`} // Assuming cast has an id property
+          alt={`Cast member ${cast.name}`} // Assuming cast has a name property
+          style={{ width: '100px', height: '100px', borderRadius: '50px', marginTop: '25px' }}
+        />
+        <p>{cast.name}</p> {/* Displaying the cast member's name */}
+      </div>
+    ))}
+  </div>
+)}
+ </div>
+ <div className='story'>
+  <span className='storyspan'>Story</span>
+  <div className='description'>
+  <span>{getall.description}</span>
+  </div>
+ </div>
+
+ <div className='suggestion'>
+  <span>Suggestion</span>
+ </div>
 </div>
 
   </Layout>

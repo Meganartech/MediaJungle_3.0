@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
+import com.VsmartEngine.MediaJungle.model.CastandCrewDTO;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
@@ -113,6 +115,21 @@ public class CastandcrewController {
         return new ResponseEntity<>(getcast, HttpStatus.OK);
     }
 	
+    @GetMapping("/getcastids")
+    public ResponseEntity<List<CastandCrewDTO>> getCastandcrewByIds(@RequestParam List<Long> ids) {
+        // Fetch the CastandCrew entities by ID
+        List<CastandCrew> castList = castandcrewrepository.findAllById(ids);
+
+        // Convert each CastandCrew entity to a CastandCrewDTO
+        List<CastandCrewDTO> castDTOs = castList.stream()
+            .map(cast -> new CastandCrewDTO(cast.getId(), cast.getName()))
+            .collect(Collectors.toList());
+
+        // Return the list of CastandCrewDTOs
+        return new ResponseEntity<>(castDTOs, HttpStatus.OK);
+    }
+
+    
 
     public ResponseEntity<CastandCrew> getcast(@PathVariable Long id) {
         try {

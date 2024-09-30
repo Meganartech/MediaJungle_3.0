@@ -48,6 +48,7 @@ import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.Addaudio1;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
+import com.VsmartEngine.MediaJungle.model.CastandCrewDTO;
 import com.VsmartEngine.MediaJungle.model.Companysiteurl;
 import com.VsmartEngine.MediaJungle.model.Contactsettings;
 import com.VsmartEngine.MediaJungle.model.Emailsettings;
@@ -322,6 +323,11 @@ public class FrontController {
 
 		return CastandcrewController.getAllPCastandcrew();
 	}
+	
+	@GetMapping("/getcastids")
+    public ResponseEntity<List<CastandCrewDTO>> getCastandcrewByIds(@RequestParam List<Long> ids) {
+		 return CastandcrewController.getCastandcrewByIds(ids);
+	 }
 
 	@GetMapping("/getcast/{id}")
 	public ResponseEntity<CastandCrew> getcast(@PathVariable Long id) {
