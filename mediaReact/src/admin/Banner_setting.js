@@ -347,20 +347,23 @@ const handlevideoInputChanget = (e, index) => {
 
 // Toggle dropdown for specific row
 const handlevideoDropdownToggle = (index) => {
-  // If the dropdown is already open for this index, close it
-  if (index === videoexistIndexvalue) {
-    // Close all dropdowns
+  setvideoExistIndexvalue(index)
+  
+  
+  if(index==videoexistIndexvalue){
     const updatedDropdownStatesToFalse = videodropdownStates.map(() => false);
-    setvideoDropdownStates(updatedDropdownStatesToFalse);
-    setvideoExistIndexvalue(null);
-  } else {
-    // Open the dropdown for the current index and close others
-    setvideoDropdownStates((prevStates) =>
-      prevStates.map((state, i) => (i === index ? !state : false))
-    );
-    setvideoExistIndexvalue(index);
+  setvideoDropdownStates(updatedDropdownStatesToFalse);
+  setvideoExistIndexvalue(null)
+  
+  }else{
+  setvideoDropdownStates(prevvideoDropdownStates => 
+    prevvideoDropdownStates.map((state, i) => (i === index ? !state : false))
+    
+  );
   }
-};
+  
+  };
+
 
   
   // Handle selecting an option
@@ -385,11 +388,13 @@ const handlevideoDropdownToggle = (index) => {
     return row;  // Return other rows unchanged
   });
   setvideoTableData(updatedData);
-  const categoryNames = videotitle.map(item => item.VideoTitle);
+  const categoryNames = videotitle.map(item => item.videoTitle);
   setvideoFilteredOptions(categoryNames)
   
-  
   };
+  
+
+  
 
   const handleSubmit = async () => {
     try {

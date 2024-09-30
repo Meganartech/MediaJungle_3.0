@@ -29,6 +29,7 @@ import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
+import com.VsmartEngine.MediaJungle.video.VideoImage;
 
 
 @Controller
@@ -128,6 +129,31 @@ public class CastandcrewController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+    
+    
+    public ResponseEntity<byte[]> getVideocast(@PathVariable long Id) {
+	    try {
+	        // Fetch the video image from the repository
+	    	Optional<CastandCrew> castDetailOpt = castandcrewrepository.findById(Id);
+
+	    	if (castDetailOpt.isPresent()) {
+	    		CastandCrew castDetail = castDetailOpt.get();
+
+	            // Decompress the image bytes
+	            byte[] decompressedVideoThumbnail = ImageUtils.decompressImage(castDetail.getImage());
+
+	            // Return the decompressed image data directly with the correct content type
+	            return ResponseEntity.ok()
+	                                 .contentType(MediaType.IMAGE_PNG) // Or use MediaType.IMAGE_PNG for PNG images
+	                                 .body(decompressedVideoThumbnail);
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();  // Replace with proper logging in production
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+	}
 
 	
 

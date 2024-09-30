@@ -328,6 +328,11 @@ public class FrontController {
 
 		return CastandcrewController.getcast(id);
 	}
+	
+	@GetMapping("/getcastimage/{Id}")
+	 public ResponseEntity<byte[]> getVideocast(@PathVariable long Id) {
+		 return CastandcrewController.getVideocast(Id);
+	}
 
 	@GetMapping("/GetAllcastthumbnail")
 	public ResponseEntity<List<byte[]>> getcastthumbnail() {
@@ -337,11 +342,10 @@ public class FrontController {
 
 	@GetMapping("/GetThumbnailsforcast/{id}")
 	public ResponseEntity<List<String>> getCastThumbnailsById(@PathVariable Long id) {
-
 		return CastandcrewController.getThumbnailsById(id);
-
 	}
 
+	
 	@DeleteMapping("/Deletecastandcrew/{Id}")
 	  public ResponseEntity<?> deletecast(@PathVariable Long Id,@RequestHeader("Authorization") String token) {
 
@@ -1013,6 +1017,12 @@ public class FrontController {
 		 @Transactional
 		 public ResponseEntity<byte[]> getVideoThumbnail(@PathVariable long videoId) {
 			 return videoImageController.getVideoThumbnail(videoId);
+		 }
+		 
+		 @GetMapping("/{videoId}/videoBanner")
+		 @Transactional
+		 public ResponseEntity<byte[]> getVideoBanner(@PathVariable long videoId) {
+			 return videoImageController.getVideoBanner(videoId);
 		 }
 		    
 		    @GetMapping("/images-by-category")
