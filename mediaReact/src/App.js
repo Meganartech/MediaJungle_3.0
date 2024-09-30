@@ -93,6 +93,7 @@ import PrivacyPolicy from './user/Screens/PrivacyPolicy';
 import Banner_setting from './admin/Banner_setting';
 import Footer_setting from './admin/Footer_setting';
 import AudioContainer_settings from './admin/AudioContainer_settings';
+import AudioBanner_settings from './admin/AudioBanner_settings';
 import Container from './admin/Container';
 import AudioHomecreeenContainer from './user/Screens/AudioBanner';
 import AudioHomecreeen from './user/Screens/AudioHomescreen';
@@ -190,7 +191,7 @@ const App = () => {
 
 {/*         
             <Route path='/' element={{hasSignedUp ?{navigate("/Home")} : {navigate("/admin/addUser")}} />} /> */}
-<Route path='test' element= {<AudioHomecreeen/>} />
+<Route path='AudioHomecreeen' element= {<AudioHomecreeen/>} />
             <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<MoviesPage/>} />} />
           {/* <Route path='/' element={<Home  />} /> */}
 
@@ -291,7 +292,7 @@ const App = () => {
            <Route path='licence' element={<Licence/>} />
 
           {/* AudioContainer_settings */}
-          <Route path='Aud' element ={<Aud />} />
+          <Route path='Aud' element ={<AudioBanner_settings />} />
           
           
       
