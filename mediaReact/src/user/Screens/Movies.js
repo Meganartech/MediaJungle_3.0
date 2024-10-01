@@ -509,7 +509,7 @@ const MoviesPage = () => {
 
 
 
-  const handlePlayClick = (videoid,videotitle) => {
+  const handlePlayClick = (videoid) => {
     handleEdit(videoid);
     setPlay(true);
     if (log === "true") {
@@ -526,7 +526,7 @@ const MoviesPage = () => {
   {videoBanners.length > 0 && (
     <div className="banner-items" style={{ transform: `translateX(-${bannerIndex * 100}%)` }}>
       {videoBanners.map((banner, index) => (
-        <div key={index} className="banner-item">
+        <div key={index} className="banner-item" onClick={() => handlePlayClick(banner.videoId)}  style={{ cursor: 'pointer' }}>
           <img src={`${API_URL}/api/v2/${banner.videoId}/videothumbnail`} alt={`Banner ${index}`} />
         </div>
       ))}
@@ -570,19 +570,20 @@ const MoviesPage = () => {
 
                           return (
                             <div key={`${videoId}-${state.value}-${index}`} className="item">
-  <div  onClick={() => handlePlayClick(videoId, videoTitle)}  style={{ cursor: 'pointer' }}>
+  <div  onClick={() => handlePlayClick(videoId)}  style={{ cursor: 'pointer' }}>
     <img
       src={`${API_URL}/api/v2/${videoId}/videothumbnail`}
-      alt={`Video ${videoId}`}
-      
+      alt={`Video ${videoId}`} 
     />
   </div>
-  <div className="overlay">
+  <p>{videoTitle}</p>
+
+  {/* <div className="overlay">
     <p className="video-title">{videoTitle}</p>
-    <p className="video-year">{video.year}</p> {/* Assuming year is part of video object */}
-    <p className="video-duration">{video.mainVideoDuration}</p> {/* Assuming duration is part of video object */}
-    <p className="video-category">{state.value}</p> {/* Displaying the category/genre */}
-  </div>
+    <p className="video-year">{video.year}</p> 
+    <p className="video-duration">{video.mainVideoDuration}</p> 
+    <p className="video-category">{state.value}</p> 
+  </div> */}
 </div>
 
                           );
