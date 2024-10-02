@@ -15,6 +15,7 @@ import 'package:ott_project/pages/video_page.dart';
 import 'package:ott_project/service/audio_service.dart';
 import 'package:provider/provider.dart';
 import '../components/background_image.dart';
+import '../components/music_folder/audio_container.dart';
 import '../components/music_folder/music_player_page.dart';
 import '../components/music_folder/song_player_page.dart';
 import '../components/video_folder/movie.dart';
@@ -314,11 +315,11 @@ class _MusicPageState extends State<MusicPage> {
                               )
                             else ...[
                               SizedBox(
-                                height: 300,
+                                height: 500,
                                 child: _buildMusicCategories(),
                               ),
-                              SizedBox(
-                                  height: 150, child: _buildRecentlyPlayed()),
+                              // SizedBox(
+                              //     height: 150, child: _buildRecentlyPlayed()),
                             ]
                           ],
                           //),
@@ -365,53 +366,51 @@ class _MusicPageState extends State<MusicPage> {
   }
 
   Widget _buildMusicCategories() {
-    return FutureBuilder<Map<String, List<Music>>>(
-      future: _musicByCategory,
+    return FutureBuilder<List<AudioContainer>>(
+      future: AudioService.fetchAudioContainer(),
       builder: (context, snapshot) {
-        print('Music page FutureBuilder is being called');
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(
-              child: Text('Error: ${snapshot.error}',
-                  style: TextStyle(color: Colors.white)));
+              child: Text(
+            'Error: ${snapshot.error}',
+            style: TextStyle(color: Colors.white),
+          ));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
-              child: Text('No audios available',
-                  style: TextStyle(color: Colors.white)));
-        } else if (!snapshot.hasData || snapshot.data == null) {
-          return Center(child: Text('No image available'));
+            child: Text(
+              'No audios found',
+              style: TextStyle(color: Colors.white),
+            ),
+          );
         } else {
-          debugPrint('Fetched songs:${snapshot.data}');
-          print('Fetched ${snapshot.data!.length} categories');
-
-          return
-              // Expanded(
-              //   // height: 200,
-              //   // width: 500,
-              //   child:
-              ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    final categoryName = snapshot.data!.keys.elementAt(index);
-                    final musicList = snapshot.data![categoryName]!;
-                    print('Category name: $categoryName');
-                    print('Music:$musicList');
-                    print(
-                        'Fetched ${musicList.length} audios in category $categoryName');
-                    snapshot.data!.forEach((categoryName, musicList) {
-                      print(
-                          'Fetched ${musicList.length} audios in category $categoryName');
-                    });
-                    return MusicCategorySection(
-                        title: categoryName,
-                        audios: musicList,
-                        userId: widget.userId,
-                        onTap: (audio) => _playSong(audio, musicList));
-                  });
-
-          //);
+          // final movie = snapshot.data!;
+          // final categories = movie
+          //     .expand((movie) => movie.categories)
+          //     .toSet()
+          //     .toList();
+          final audioContainer = snapshot.data!;
+          print('Audio container details:${audioContainer}');
+          return ListView.builder(
+              itemCount: audioContainer.length,
+              itemBuilder: (context, index) {
+                final container = audioContainer[index];
+                // final containerVideos =
+                //     container.video;
+                return Column(
+                  children: [
+                    MusicCategorySection(
+                      audioContainer: container,
+                      userId: widget.userId,
+                      onTap: (_) {},
+                    ),
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.02,
+                    ),
+                  ],
+                );
+              });
         }
       },
     );

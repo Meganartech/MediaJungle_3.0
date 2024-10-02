@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:ott_project/components/video_folder/category.dart';
 import 'package:ott_project/components/video_folder/movie.dart';
+import 'package:ott_project/components/video_folder/video_container.dart';
 
 class MovieService {
   static const String baseUrl =
@@ -42,21 +43,30 @@ class MovieService {
     }
   }
 
+  static Future<List<VideoContainer>> fetchVideoContainer() async {
+    final response = await http.get(Uri.parse('$baseUrl/getvideocontainer'));
+
+    print('Video container response: ${response.statusCode}');
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      print('Video container details:${response.body}');
+      return body
+          .map((container) => VideoContainer.fromJson(container))
+          .toList();
+    } else {
+      throw Exception("Failed to load video containers");
+    }
+  }
+
   static Future<Uint8List?> fetchvideoImage(int videoId) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/$videoId/videothumbnail'));
 
-      print(response.statusCode);
+      print('Video image${response.statusCode}');
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseBody = jsonDecode(response.body);
-        //print(responseBody);
-
-        if (responseBody.isNotEmpty) {
-          String base64Image = responseBody.values.first;
-          return base64Decode(base64Image);
-        }
+        return response.bodyBytes;
       }
     } catch (e) {
       print("Error fetching image for movie $videoId: $e");

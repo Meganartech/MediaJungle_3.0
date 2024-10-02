@@ -15,6 +15,7 @@ import 'package:ott_project/service/service.dart';
 import '../components/background_image.dart';
 import '../components/category/movie_category_section.dart';
 
+import '../components/video_folder/video_container.dart';
 import '../components/video_folder/video_play.dart';
 import '../service/icon_service.dart';
 // Import the movie service
@@ -28,12 +29,10 @@ class MoviePage extends StatefulWidget {
 
 class _MoviePageState extends State<MoviePage> {
   final Service service = Service();
-
-  late Future<List<Movies>> _allMovies;
   List<Movies> allMovies = [];
   final TextEditingController _searchController = TextEditingController();
   List<Movies> _filteredMovies = [];
-  List<String> _moviePageCategories = [];
+ 
   Map<String, List<Movies>> _categorizedMovies = {};
 
   //int _selectedIndex = 1;
@@ -55,7 +54,7 @@ class _MoviePageState extends State<MoviePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _allMovies = MovieService().getMoviesWithCategories();
+    //_allMovies = MovieService().getMoviesWithCategories();
     //_fetchMovies();
   }
 
@@ -71,19 +70,7 @@ class _MoviePageState extends State<MoviePage> {
     }
   }
 
-  // Future<List<Movies>> _fetchMovies() async {
-  //   try {
-  //     final movies = await MovieService.fetchVideos();
-
-  //     setState(() {
-  //       allMovies = movies;
-  //     });
-  //     _categorizeMovies(allMovies);
-  //     return allMovies;
-  //   } catch (e) {
-  //     throw Exception('Failed to load movies');
-  //   }
-  // }
+  
 
   Future<void> _refreshMovies() async {
     // await _fetchMovies();
@@ -256,8 +243,8 @@ class _MoviePageState extends State<MoviePage> {
                               //               index: index);
                               //         },
                               //       )
-                              : FutureBuilder<List<Movies>>(
-                                  future: _allMovies,
+                              : FutureBuilder<List<VideoContainer>>(
+                                  future: MovieService.fetchVideoContainer(),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
@@ -278,26 +265,26 @@ class _MoviePageState extends State<MoviePage> {
                                         ),
                                       );
                                     } else {
-                                      final movie = snapshot.data!;
-                                      final categories = movie
-                                          .expand((movie) => movie.categories)
-                                          .toSet()
-                                          .toList();
-
+                                      // final movie = snapshot.data!;
+                                      // final categories = movie
+                                      //     .expand((movie) => movie.categories)
+                                      //     .toSet()
+                                      //     .toList();
+                                      final videoContainer = snapshot.data!;
+                                      print(
+                                          'Video container details:${videoContainer}');
                                       return ListView.builder(
-                                          itemCount: categories.length,
+                                          itemCount: videoContainer.length,
                                           itemBuilder: (context, index) {
-                                            final category = categories[index];
-                                            final categoryMovies = movie
-                                                .where((movie) => movie
-                                                    .categories
-                                                    .contains(category))
-                                                .toList();
+                                            final container =
+                                                videoContainer[index];
+                                            // final containerVideos =
+                                            //     container.video;
                                             return Column(
                                               children: [
                                                 MoviesCategorySection(
-                                                    title: category,
-                                                    movies: categoryMovies),
+                                                  videoContainer: container,
+                                                ),
                                                 SizedBox(
                                                   height:
                                                       MediaQuery.sizeOf(context)
