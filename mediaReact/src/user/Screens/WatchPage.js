@@ -8,8 +8,8 @@ import axios from 'axios';
 import Titles from '../Components/Titles';
 
 const WatchPage = () => {
-  const id = localStorage.getItem('items');
-  console.log("videoid",id)
+  // const id = localStorage.getItem('items');
+  // console.log("videoid",id)
   const [getall, setgetall] = useState('');
   const [Thumbnail, setThumbnail] = useState('');
   const [play, setPlay] = useState(false);
@@ -30,6 +30,22 @@ const WatchPage = () => {
 
   const subscribed = expiryDate > currentDate;
   const modeofvideo = getall.paid;
+
+  const getItemsFromLocalStorage = () => {
+    const items = localStorage.getItem('items');
+    
+    // Parse the JSON string back to an object
+    return items ? JSON.parse(items) : null;
+  };
+  
+  // Example of using the retrieved items
+  const storedItem = getItemsFromLocalStorage();
+  const id = storedItem.id
+  const categoryid = storedItem.categoryid;
+  if (storedItem) {
+    console.log('ID:', storedItem.id);
+    console.log('Category ID:', storedItem.categoryid);
+  }
 
   useEffect(() => {
     const fetchData = async () => {

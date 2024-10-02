@@ -769,4 +769,3 @@ const handleVideoDelete = async (index) => {
 };
 
 export default Banner_setting;
-

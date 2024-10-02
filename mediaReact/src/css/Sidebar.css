@@ -856,19 +856,16 @@ td{
 .title{
   font-size: 25px;
   font-weight: bold;
-
 }
 
 .castandcrew{
   margin-top: 30px;
   font-size: 25px;
   font-weight: bold;
-
 }
 
 .story{
-  margin-top: 30px;
-  
+  margin-top: 30px;  
 }
 
 .storyspan{
@@ -885,7 +882,6 @@ td{
   margin-top: 30px;
   font-size: 25px;
   font-weight: bold;
-
 }
 
 /* bulk action dropdown*/
