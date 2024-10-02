@@ -1,4 +1,6 @@
+
 package com.VsmartEngine.MediaJungle.controller;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,6 +45,10 @@ public class PaymentController {
     
     @Autowired
     private PaymentsettingRepository paymentsettingrepository;
+    
+//    @Autowired
+//    private PaymentUser PaymentUser;
+    
 
     public ResponseEntity<List<PaymentUser>> getPaymentHistory(@PathVariable Long userId) {
         try {
@@ -57,56 +63,80 @@ public class PaymentController {
         }
     }
     @PostMapping("/confirmPayment")
-    public ResponseEntity<String> confirmPayment(@RequestBody Map<String, String> requestData) {
-        try {
-            // Log received data for debugging
-            System.out.println("Received payment data: " + requestData);
+  public ResponseEntity<String> confirmPayment(@RequestBody Map<String, String> requestData) {
+    try {
+        // Log received data for debugging
+        System.out.println("Received payment data: " + requestData);
+//
+        // Extract data from the request
+       String paymentId = requestData.get("paymentId");
+        String orderId = requestData.get("orderId");
+      int statusCode = Integer.parseInt(requestData.get("status")); // Parse as int
+        String subscriptionTitle = requestData.get("planname");
+        Long amount = Long.parseLong(requestData.get("amount")); // Ensure the correct case for "amount"
+      Long userId = Long.parseLong(requestData.get("userId"));
 
-            // Extract data from the request
-            String paymentId = requestData.get("paymentId");
-            String orderId = requestData.get("orderId");
-            int statusCode = Integer.parseInt(requestData.get("statusCode")); // Parse as int
-            System.out.println("*******************" + statusCode); // Ensure this is included in your incoming data
-            String planname = requestData.get("planname");
-            Long amount = Long.parseLong(requestData.get("Amount")); // Ensure this is the correct paid amount
-            Long userId = Long.parseLong(requestData.get("userId"));
-            Long tenureId = Long.parseLong(requestData.get("tenureId")); // Ensure this is formatted correctly
-            String signature = requestData.get("signature");
 
-            // Validate the received payment information
-            boolean isPaymentSuccessful = checkIfPaymentIsSuccessful(statusCode); // Call with int
+//        String orderId="data";
+//        
 
-            // Set status based on payment success
-            String finalStatus = isPaymentSuccessful ? "success" : "failed"; 
+//        Long userId=1L;
+//        
+//         String paymentId="dta";
+//        Long amount=100l; // Changed from Amount to amount
+//         LocalDate expiryDate=LocalDate.now().plusMonths(1);
+//         String status="yes";
+//         String subscriptionTitle="data";
 
-            // Log the payment status for debugging
-            System.out.println("Payment Status: " + finalStatus);
-            
-            // Update the user's payment information in the database
-            Optional<PaymentUser> paymentUserOptional = paymentrepository.findByUserId(userId);
-            if (paymentUserOptional.isPresent()) {
-                PaymentUser paymentUser = paymentUserOptional.get();
-                paymentUser.setPaymentId(paymentId);
-                paymentUser.setOrderId(orderId);
-                paymentUser.setStatus(finalStatus); // Set status based on payment success
-                paymentUser.setSubscriptionTitle(planname);
-                paymentUser.setAmount(amount); // Store the correct paid amount
-                
-                // Log the user data being saved for debugging
-                System.out.println("Saving PaymentUser: " + paymentUser);
-                paymentrepository.save(paymentUser);
+        // Validate the received payment information
+        boolean isPaymentSuccessful = checkIfPaymentIsSuccessful(statusCode);
 
-                return new ResponseEntity<>("Payment confirmed successfully", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-            }
-        } catch (NumberFormatException e) {
-            return new ResponseEntity<>("Invalid number format", HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace(); // Log the exception
-            return new ResponseEntity<>("An error occurred while confirming the payment", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        // Set status based on payment success
+        String finalStatus = isPaymentSuccessful ? "success" : "failed"; 
+
+        // Log the payment status for debugging
+        System.out.println("Payment Status: " + finalStatus);
+
+        // Check if the user exists and save the payment details
+//        Optional<PaymentUser> paymentUserOptional = paymentrepository.findByUserId(userId);
+//        if (paymentUserOptional.isPresent()) {
+//            PaymentUser paymentUser = paymentUserOptional.get();
+//
+//            // Set payment details
+//            paymentUser.setPaymentId(paymentId);
+//            paymentUser.setOrderId(orderId);
+//            paymentUser.setStatus(finalStatus);
+//            paymentUser.setSubscriptionTitle(subscriptionTitle);
+//            paymentUser.setAmount(amount);
+//            paymentUser.setExpiryDate(LocalDate.now().plusMonths(1)); // Set expiry date to one month from now
+//            paymentUser.setUserId(userId);
+//            // Save updated payment details
+//            paymentrepository.save(paymentUser); // Make sure paymentrepository is defined properly
+//            return new ResponseEntity<>("Payment confirmed successfully", HttpStatus.OK);
+//        } else {
+//        	  PaymentUser paymentUser = paymentUserOptional.get();
+
+              // Set payment details
+        PaymentUser PaymentUser=new PaymentUser();
+        	PaymentUser.setPaymentId(paymentId);
+        	PaymentUser.setOrderId(orderId);
+        	PaymentUser.setStatus(finalStatus);
+        	PaymentUser.setSubscriptionTitle(subscriptionTitle);
+        	PaymentUser.setAmount(amount);
+        	PaymentUser.setExpiryDate(LocalDate.now().plusMonths(1)); // Set expiry date to one month from now
+        	PaymentUser.setUserId(userId);
+              // Save updated payment details
+              paymentrepository.save(PaymentUser); // 
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+//        }
+    } catch (NumberFormatException e) {
+        return new ResponseEntity<>("Invalid number format", HttpStatus.BAD_REQUEST);
+    } catch (Exception e) {
+        e.printStackTrace(); // Log the exception for further investigation
+        return new ResponseEntity<>("An error occurred while confirming the payment", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
 
     // Helper method to determine payment success based on statusCode
     private boolean checkIfPaymentIsSuccessful(int statusCode) {
@@ -119,7 +149,7 @@ public class PaymentController {
             Long amount = Long.parseLong(requestData.get("amount"));
             Long userId = Long.parseLong(requestData.get("userId"));
             String planName = requestData.get("planname");
-
+            System.out.println(":::::::::::::::::::FSDFASDFASDF::::::::::::::::::::" +requestData);
             Optional<PaymentUser> optionPayment = paymentrepository.findByUserId(userId);
             Optional<UserRegister> userOption = userregisterrepository.findById(userId);
 
@@ -169,20 +199,20 @@ public class PaymentController {
 //                payment.setOrderId(orderId);
 //                payment.setSubscriptionTitle(planName);
 //                payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription
+////                paymentrepository.save(payment);
+
+//              Save or update payment details
+//                PaymentUser payment = optionPayment.orElseGet(() -> {
+//                    PaymentUser newPayment = new PaymentUser();
+//                    newPayment.setUserId(userId);
+//                    return newPayment;
+//                });
+//
+//                payment.setOrderId(orderId);
+//                payment.setSubscriptionTitle(planName);
+//                payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription
+//
 //                paymentrepository.save(payment);
-
-             // Save or update payment details
-                PaymentUser payment = optionPayment.orElseGet(() -> {
-                    PaymentUser newPayment = new PaymentUser();
-                    newPayment.setUserId(userId);
-                    return newPayment;
-                });
-
-                payment.setOrderId(orderId);
-                payment.setSubscriptionTitle(planName);
-                payment.setExpiryDate(LocalDate.now().plusMonths(1)); // Assuming 1-month subscription
-
-                paymentrepository.save(payment);
 
                 return orderId;
             } else {
@@ -276,5 +306,4 @@ public class PaymentController {
     
     
     
-
 
