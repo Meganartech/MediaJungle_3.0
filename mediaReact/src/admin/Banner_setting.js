@@ -392,9 +392,6 @@ const handlevideoDropdownToggle = (index) => {
   setvideoFilteredOptions(categoryNames)
   
   };
-  
-
-  
 
   const handleSubmit = async () => {
     try {

@@ -1106,6 +1106,30 @@ td{
   color: #2196f3;
 }
 
+.videoscreenitems {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.videoscreenitem-row {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap if they exceed the container width */
+  gap: 20px; /* Adds space between the items */
+}
+
+.videoscreenitem {
+  flex: 0 1 200px; /* Controls the width of each item (200px or more depending on the screen) */
+  text-align: center;
+}
+
+.videoscreenthumbnail {
+  width: 100%; /* Ensure image takes full width of the item */
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
 
 
 
