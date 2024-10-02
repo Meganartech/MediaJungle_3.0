@@ -106,7 +106,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       var url = Uri.parse(
           //'http://localhost:8080/api/v2/UpdateUser/mobile/$userId');
           //'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
-          'http://192.168.0.6:8080/api/v2/UpdateUser/mobile/$userId');
+          'http://192.168.183.129:8080/api/v2/UpdateUser/mobile/$userId');
       var request = http.MultipartRequest('PATCH', url);
       //..headers.addAll({'Content-Type': 'application/json'});
       request.fields['username'] = usernameController.text;
@@ -182,12 +182,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   GestureDetector(
                     onTap: _pickProfilePicture,
                     child: CircleAvatar(
+                      backgroundColor: const Color.fromARGB(255, 51, 49, 49),
                       radius: 50,
                       backgroundImage: _profilePicture != null
                           ? FileImage(_profilePicture!)
                           : base64Image.isNotEmpty
                               ? Image.memory(base64Decode(base64Image)).image
-                              : const AssetImage('assets/images/bg2.jpg'),
+                              : null,
                     ),
                   ),
                   const SizedBox(height: 10),

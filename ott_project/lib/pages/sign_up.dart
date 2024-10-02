@@ -12,7 +12,6 @@ import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/login_page.dart';
 import 'package:ott_project/service/service.dart';
 
-
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
@@ -74,7 +73,7 @@ class _SignUpState extends State<SignUp> {
                                   Colors.grey.shade200.withOpacity(0.3),
                               child: _imageFile == null
                                   ? Icon(FontAwesomeIcons.user,
-                                      color: kWhite, size: size.width * 0.14)
+                                      color: kWhite, size: size.width * 0.11)
                                   : CircleAvatar(
                                       radius: size.width * 0.13,
                                       backgroundImage: FileImage(_imageFile!),
@@ -109,13 +108,12 @@ class _SignUpState extends State<SignUp> {
                         inputAction: TextInputAction.next,
                         obscureText: false,
                         validator: (value) {
-                          if (value!.isEmpty) {
+                          if (value?.isEmpty ?? true) {
                             return '  Please enter your name';
                           }
                           return null;
                         },
                       ),
-
                       MyTextField(
                         controller: emailController,
                         icon: FontAwesomeIcons.envelope,
@@ -143,6 +141,9 @@ class _SignUpState extends State<SignUp> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return '  Please enter mobile number';
+                          }
+                          if (value.length < 10) {
+                            return ' Please enter 10 digits';
                           }
                           return null;
                         },
@@ -176,31 +177,38 @@ class _SignUpState extends State<SignUp> {
                         },
                         confirmPasswordController: passwordController,
                       ),
-
                       SizedBox(height: 20),
-                      TextButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              bool signupSuccess = await registerUser(context);
-                              if (signupSuccess) {
-                                // Sign-up successful, navigate to login or home screen
+                      Container(
+                        height: size.height * 0.07,
+                        width: size.width * 0.8,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: Colors.blueGrey.shade300),
+                        child: TextButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                bool signupSuccess =
+                                    await registerUser(context);
+                                if (signupSuccess) {
+                                  // Sign-up successful, navigate to login or home screen
+                                  showValidationDialog(
+                                      'User registered Successfully!!!');
+                                } //else {
+                                //   // Sign-up failed, show an error message
+                                //   showValidationDialog(
+                                //       'User with the given email already exists.');
+                                // }
+                              } else {
                                 showValidationDialog(
-                                    'User registered Successfully!!!');
-                              } //else {
-                              //   // Sign-up failed, show an error message
-                              //   showValidationDialog(
-                              //       'User with the given email already exists.');
-                              // }
-                            } else {
-                              showValidationDialog(
-                                  ' Please enter required fields to register.');
-                            }
-                          },
-                          child: Text(
-                            'Register',
-                            style:
-                                kBodyText.copyWith(fontWeight: FontWeight.bold),
-                          )),
+                                    ' Please enter required fields to register.');
+                              }
+                            },
+                            child: Text(
+                              'Register',
+                              style: kBodyText.copyWith(
+                                  fontWeight: FontWeight.bold),
+                            )),
+                      ),
                       SizedBox(
                         height: 20,
                       ),
@@ -212,30 +220,11 @@ class _SignUpState extends State<SignUp> {
                               thickness: 0.5,
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.symmetric(horizontal: 10),
-                          //   child: Text(
-                          //     'Or Continue with',
-                          //     style: TextStyle(color: Colors.grey[500]),
-                          //   ),
-                          // ),
-                          // Expanded(
-                          //   child: Divider(
-                          //     color: Colors.grey[400],
-                          //     thickness: 0.5,
-                          //   ),
-                          // ),
                         ],
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      // Square(
-                      //     onTap: () {}, imagePath: 'assets/images/google.jpg'),
-                      // const SizedBox(
-                      //   height: 20,
-                      // ),
-                      // SizedBox(height: 20),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -265,16 +254,55 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  Future<void> validateAndRegisterUser(BuildContext context) async {
+    // Check if all fields are filled
+    if (usernameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        mobilenumberController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        confirmpasswordController.text.isEmpty) {
+      // Show error message for empty fields
+      showValidationDialog("All fields are required.");
+      return;
+    }
+
+    // Validate email format
+    if (!isValidEmail(emailController.text)) {
+      showValidationDialog("Please enter a valid email.");
+      return;
+    }
+
+    // Validate password and confirm password match
+    if (passwordController.text != confirmpasswordController.text) {
+      showValidationDialog("Passwords do not match.");
+      return;
+    }
+
+    // If validation passes, proceed with registration
+    bool isRegistered = await registerUser(context);
+
+    if (isRegistered) {
+      // Registration success, navigate to login page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } else {
+      // Handle registration failure
+      showValidationDialog("Registration failed. Please try again.");
+    }
+  }
+
   Future<bool> registerUser(BuildContext context) async {
     return await service.createUser(
-      context,
-      usernameController.text,
-      emailController.text,
-      mobilenumberController.text,
-      passwordController.text,
-      confirmpasswordController.text,
-      _imageFile!,
-    );
+        context,
+        usernameController.text,
+        emailController.text,
+        mobilenumberController.text,
+        passwordController.text,
+        confirmpasswordController.text
+        // _imageFile!,
+        );
   }
 
   bool isValidEmail(String email) {
@@ -294,8 +322,7 @@ class _SignUpState extends State<SignUp> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
+                Navigator.pop(context);
               },
               child: Text(
                 'OK',
