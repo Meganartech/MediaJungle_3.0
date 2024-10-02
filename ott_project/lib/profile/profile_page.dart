@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ott_project/plan_and_payment/subscription_page.dart';
 import 'package:ott_project/profile/change_password_page.dart';
-import 'package:ott_project/plan_and_payment/plan_page.dart';
 import 'package:ott_project/pages/login_page.dart';
 import 'package:ott_project/profile/view_profile_page.dart';
 import 'package:ott_project/service/service.dart';
@@ -60,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
       var response = await http.get(
         Uri.parse(
             //    'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.0.6:8080/api/v2/GetUserById/$userId'),
+            'http://192.168.183.129:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         //),
         headers: {
@@ -150,10 +149,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   GestureDetector(
                     //onTap: _pickProfilePicture,
                     child: CircleAvatar(
+                      backgroundColor: const Color.fromARGB(255, 51, 49, 49),
                       radius: 50,
                       backgroundImage: base64Image.isNotEmpty
                           ? Image.memory(base64Decode(base64Image)).image
-                          : const AssetImage('assets/icon/media_jungle.png'),
+                          : null,
+                      // child: base64Image.isEmpty
+                      //     ? Icon(
+                      //         Icons.person,
+                      //         size: 50,
+                      //         color: Colors.white,
+                      //       )
+                      //     : null,
                     ),
                   ),
                   SizedBox(
