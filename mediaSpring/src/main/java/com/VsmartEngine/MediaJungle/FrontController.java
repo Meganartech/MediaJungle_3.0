@@ -48,6 +48,7 @@ import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.Addaudio1;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
+import com.VsmartEngine.MediaJungle.model.CastandCrewDTO;
 import com.VsmartEngine.MediaJungle.model.Companysiteurl;
 import com.VsmartEngine.MediaJungle.model.Contactsettings;
 import com.VsmartEngine.MediaJungle.model.Emailsettings;
@@ -322,11 +323,21 @@ public class FrontController {
 
 		return CastandcrewController.getAllPCastandcrew();
 	}
+	
+	@GetMapping("/getcastids")
+    public ResponseEntity<List<CastandCrewDTO>> getCastandcrewByIds(@RequestParam List<Long> ids) {
+		 return CastandcrewController.getCastandcrewByIds(ids);
+	 }
 
 	@GetMapping("/getcast/{id}")
 	public ResponseEntity<CastandCrew> getcast(@PathVariable Long id) {
 
 		return CastandcrewController.getcast(id);
+	}
+	
+	@GetMapping("/getcastimage/{Id}")
+	 public ResponseEntity<byte[]> getVideocast(@PathVariable long Id) {
+		 return CastandcrewController.getVideocast(Id);
 	}
 
 	@GetMapping("/GetAllcastthumbnail")
@@ -337,11 +348,10 @@ public class FrontController {
 
 	@GetMapping("/GetThumbnailsforcast/{id}")
 	public ResponseEntity<List<String>> getCastThumbnailsById(@PathVariable Long id) {
-
 		return CastandcrewController.getThumbnailsById(id);
-
 	}
 
+	
 	@DeleteMapping("/Deletecastandcrew/{Id}")
 	  public ResponseEntity<?> deletecast(@PathVariable Long Id,@RequestHeader("Authorization") String token) {
 
@@ -1013,6 +1023,12 @@ public class FrontController {
 		 @Transactional
 		 public ResponseEntity<byte[]> getVideoThumbnail(@PathVariable long videoId) {
 			 return videoImageController.getVideoThumbnail(videoId);
+		 }
+		 
+		 @GetMapping("/{videoId}/videoBanner")
+		 @Transactional
+		 public ResponseEntity<byte[]> getVideoBanner(@PathVariable long videoId) {
+			 return videoImageController.getVideoBanner(videoId);
 		 }
 		    
 		    @GetMapping("/images-by-category")
