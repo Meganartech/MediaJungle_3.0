@@ -70,7 +70,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       var response = await http.get(
         Uri.parse(
             //  'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.0.6:8080/api/v2/GetUserById/$userId'),
+            'http://192.168.183.129:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
@@ -88,10 +88,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
           usernameController.text = userData['username'] ?? '';
           emailController.text = userData['email'] ?? '';
           mobilenumberController.text = userData['mobnum'] ?? '';
-          base64Image = userData['profile'];
+          if (userData['profile'] != null) {
+            base64Image = userData['profile'];
+          }
         });
         setState(() {});
-        //  await fetchProfileImage(userId);
       } else {
         // Handle error
         print('Failed to fetch user profile');
@@ -134,11 +135,12 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                   //child:
                   CircleAvatar(
                     radius: 50,
+                    backgroundColor: const Color.fromARGB(255, 51, 49, 49),
                     backgroundImage: _profilePicture != null
                         ? FileImage(_profilePicture!)
                         : base64Image.isNotEmpty
                             ? Image.memory(base64Decode(base64Image)).image
-                            : const AssetImage('assets/images/bg2.jpg'),
+                            : null,
                   ),
                   //),
                   const SizedBox(height: 10),
