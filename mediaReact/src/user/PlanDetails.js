@@ -71,19 +71,19 @@
   
     const handlePayment = async (tenure) => {
       const userId = sessionStorage.getItem('userId');
-   
+  
       if (!userId) {
           Swal.fire('Error', 'You are not logged in. Redirecting to login page...', 'error').then(() => {
               window.location.href = '/UserLogin';
           });
           return;
       }
-   
+  
       if (!selectedPlan) {
           Swal.fire('Error', 'Please select a plan.', 'error');
           return;
       }
-   
+  
       try {
           // Calculate discounted amount
           const discountResponse = await fetch(`${API_URL}/api/v2/calculateDiscount`, {
@@ -97,14 +97,14 @@
                   discountedMonths: tenure.discount
               })
           });
-   
+  
           if (!discountResponse.ok) {
               throw new Error('Failed to calculate discount');
           }
-   
+  
           const discountedAmount = await discountResponse.json();
           console.log('Discounted Amount:', discountedAmount);
-   
+  
           // Proceed with payment
           const paymentResponse = await fetch(`${API_URL}/api/v2/payment`, {
               method: 'POST',
@@ -113,11 +113,12 @@
               },
               body: JSON.stringify({
                   amount: discountedAmount,
-                  userId: parseFloat(userId,10),
-                  planname: selectedPlan.planname
+                  userId: parseFloat(userId, 10),
+                  planname: selectedPlan.planname,
+                  tenure: tenure.months // Pass the tenure months here for payment API
               })
           });
-   
+  
           if (!paymentResponse.ok) {
               const orderMessage = await paymentResponse.text();
               if (orderMessage.startsWith("You have already paid")) {
@@ -126,11 +127,10 @@
               }
               throw new Error('Payment processing failed');
           }
-   
+  
           const order = await paymentResponse.text();
           console.log('Order Response:', order);
-          console.log('Order Response:2', paymentResponse);
-          // sendPaymentIdToServer(discountedAmount, response.razorpay_payment_id, order, paymentResponse.status, selectedPlan.planname, userId, tenure.id, response.razorpay_signature);
+  
           // Initialize Razorpay payment
           const options = {
               order_id: order,
@@ -138,7 +138,8 @@
               description: "This is for testing",
               handler: async function (response) {
                   console.log('Payment Success:', response);
-                  await sendPaymentIdToServer(discountedAmount, response.razorpay_payment_id, order, paymentResponse.status, selectedPlan.planname, userId, response.razorpay_signature);
+                  // Pass the tenure months to the sendPaymentIdToServer function
+                  await sendPaymentIdToServer(discountedAmount, response.razorpay_payment_id, order, paymentResponse.status, selectedPlan.planname, userId, tenure.months);
                   Swal.fire('Success', 'Payment successful!', 'success');
               },
               theme: {
@@ -150,61 +151,57 @@
                   }
               }
           };
-   
+  
           const pay = new window.Razorpay(options);
           pay.on('payment.failed', function (response) {
               Swal.fire('Error', `Payment failed: ${response.error.description}`, 'error');
           });
           pay.open();
-   
+  
       } catch (error) {
           Swal.fire('Error', error.message || 'Error calculating discount or processing payment', 'error');
       }
   };
   
-    
-    
-  const sendPaymentIdToServer = async (discountedAmount, paymentId, orderId, status, planname, userId) => {
-  
+  const sendPaymentIdToServer = async (discountedAmount, paymentId, orderId, status, planname, userId, tenureMonths) => {
     console.log('Sending Payment Data:', {
-      amount: discountedAmount,
-      paymentId: paymentId,
-      orderId: orderId,
-      status: status,
-      planname: planname,
-      userId: userId
+        amount: discountedAmount,
+        paymentId: paymentId,
+        orderId: orderId,
+        status: status,
+        planname: planname,
+        userId: userId,
+        tenure: tenureMonths // Now this will be the months value
     });
-    console.log(typeof discountedAmount, discountedAmount);
 
-    console.log(typeof userId, userId);
-
-    
     try {
-      const response = await fetch(`${API_URL}/api/v2/confirmPayment`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          amount:discountedAmount, // Pass the amount here
-          paymentId: paymentId,
-          orderId: orderId,
-          status: status,
-          planname: planname,
-          userId: Number(userId)
-        })
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to confirm payment');
-      }
-  
-      const result = await response.json();
-      console.log('Payment Confirmation:', result);
+        const response = await fetch(`${API_URL}/api/v2/confirmPayment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                amount: discountedAmount,
+                paymentId: paymentId,
+                orderId: orderId,
+                status: status,
+                planname: planname,
+                userId: Number(userId),
+                tenure: tenureMonths // Use the tenure months directly
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to confirm payment');
+        }
+
+        const result = await response.json();
+        console.log('Payment Confirmation:', result);
     } catch (error) {
-      console.error('Error confirming payment:', error);
+        console.error('Error confirming payment:', error);
     }
-  };
+};
+
   
     
     
