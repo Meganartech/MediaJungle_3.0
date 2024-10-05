@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -154,15 +153,11 @@ class Service {
 
   Future<bool> logoutUser(BuildContext context) async {
     String? token = await secureStorage.read(key: 'token');
-    if (token == null) {
-      _showAlertDialog(context, 'Error', 'No token found');
-      return false;
-    }
     var uri = Uri.parse('http://192.168.183.129:8080/api/v2/logout');
     //  "https://testtomcat.vsmartengine.com/media/api/v2/logout");
     Map<String, String> headers = {
       "Content-Type": "application/json",
-      "Authorization": token,
+      //"Authorization": token,
     };
 
     try {

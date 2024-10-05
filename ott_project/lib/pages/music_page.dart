@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:ott_project/components/category/music_category_section.dart';
 
@@ -16,7 +15,6 @@ import 'package:ott_project/service/audio_service.dart';
 import 'package:provider/provider.dart';
 import '../components/background_image.dart';
 import '../components/music_folder/audio_container.dart';
-import '../components/music_folder/music_player_page.dart';
 import '../components/music_folder/song_player_page.dart';
 import '../components/video_folder/movie.dart';
 import '../components/video_folder/video_play.dart';

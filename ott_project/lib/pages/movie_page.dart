@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/song_player_page.dart';
@@ -9,14 +8,12 @@ import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/pages/audio_page.dart';
 import 'package:ott_project/pages/home_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
-import 'package:ott_project/search/search_result_movie.dart';
 import 'package:ott_project/service/movie_service_page.dart';
 import 'package:ott_project/service/service.dart';
 import '../components/background_image.dart';
 import '../components/category/movie_category_section.dart';
 
 import '../components/video_folder/video_container.dart';
-import '../components/video_folder/video_play.dart';
 import '../service/icon_service.dart';
 // Import the movie service
 

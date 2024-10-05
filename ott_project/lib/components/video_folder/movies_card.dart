@@ -9,7 +9,6 @@ import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/components/video_folder/video_play.dart';
 
 import '../pallete.dart';
-import 'movie_player_page.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;

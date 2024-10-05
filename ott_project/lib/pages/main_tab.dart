@@ -8,7 +8,6 @@ import 'package:ott_project/pages/music_page.dart';
 import 'package:ott_project/pages/sample_home_page.dart';
 import 'package:ott_project/service/service.dart';
 
-import 'video_page.dart';
 
 class MainTab extends StatefulWidget {
   const MainTab({super.key});
@@ -93,7 +92,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                   indicatorWeight: 0.01,
                   indicatorColor: Colors.transparent,
                   dividerColor: Colors.transparent,
-                  overlayColor: const MaterialStatePropertyAll(
+                  overlayColor: const WidgetStatePropertyAll(
                       Color.fromARGB(0, 14, 13, 13)),
                   unselectedLabelStyle: TextStyle(
                       color: Colors.white,

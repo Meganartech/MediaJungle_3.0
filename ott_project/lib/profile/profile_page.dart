@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> fetchUserProfile(BuildContext context) async {
     String? token = await secureStorage.read(key: 'token');
     String? userId = await secureStorage.read(key: 'userId');
-    if (token == null || userId == null) {
+    if (userId == null) {
       showDialog(
           context: context,
           builder: (context) => AlertDialog(

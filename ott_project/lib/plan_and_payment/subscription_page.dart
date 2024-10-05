@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -8,7 +7,6 @@ import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/plan_and_payment/plan_page.dart';
-import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/service/icon_service.dart';
 import 'package:ott_project/service/service.dart';
 
@@ -110,7 +108,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   Future<void> fetchUserProfile(BuildContext context) async {
     String? token = await secureStorage.read(key: 'token');
     String? userId = await secureStorage.read(key: 'userId');
-    if (token == null || userId == null) {
+    if (userId == null) {
       showDialog(
           context: context,
           builder: (context) => AlertDialog(

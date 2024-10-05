@@ -18,7 +18,6 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import 'package:video_player/video_player.dart';
 
-import 'video_container.dart';
 
 class MoviePlayerPage extends StatefulWidget {
   final List<Movies> movies;

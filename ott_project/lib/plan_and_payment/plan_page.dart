@@ -8,7 +8,6 @@ import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/plan_and_payment/featureList.dart';
 import 'package:ott_project/plan_and_payment/payment_settings.dart';
 import 'package:ott_project/plan_and_payment/plan_details.dart';
-import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/service/icon_service.dart';
 import 'package:ott_project/service/plan_api_service.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
