@@ -392,9 +392,6 @@ const handlevideoDropdownToggle = (index) => {
   setvideoFilteredOptions(categoryNames)
   
   };
-  
-
-  
 
   const handleSubmit = async () => {
     try {
@@ -769,4 +766,3 @@ const handleVideoDelete = async (index) => {
 };
 
 export default Banner_setting;
-

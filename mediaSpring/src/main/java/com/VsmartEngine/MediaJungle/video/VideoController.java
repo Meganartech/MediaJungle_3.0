@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,9 +37,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.AddUser;
+import com.VsmartEngine.MediaJungle.model.CastAndCrewModalDTO;
+import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.FileModel;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
+import com.VsmartEngine.MediaJungle.repository.AddNewCategoriesRepository;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
+import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 import com.VsmartEngine.MediaJungle.service.FileService;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
@@ -93,6 +98,12 @@ public class VideoController {
 	
 	@Autowired
 	private AddVideoDescriptionRepository videodescription ;
+	
+	@Autowired
+	private CastandcrewRepository castandcrewrepository;
+	
+	@Autowired
+	private AddNewCategoriesRepository addnewcategoriesrepository;
 
 	public ResponseEntity<?> uploadVideoDescription(
 	        @RequestParam("videoTitle") String videoTitle,
@@ -692,58 +703,7 @@ public class VideoController {
 	        }
 	    }
 	    
-//	    @GetMapping("/images-by-category")
-//	    @Transactional
-//	    public List<byte[]> getVideoImagesByCategory(@RequestParam Long categoryId) {
-//	    	List<byte[]> videoThumbnails = new ArrayList<>();
-//
-//	        // Retrieve all videos from the repository
-//	        List<VideoDescription> videos = videodescriptionRepository.findAll();
-//	        
-//	        // Collect video IDs where the category ID is present
-//	        List<Long> videoIds = new ArrayList<>();
-//	        for (VideoDescription video : videos) {
-//	            if (video.getCategorylist().contains(categoryId)) {
-//	                videoIds.add(video.getId());
-//	            }
-//	        }
-//
-//	        // Retrieve video images by the video IDs
-//	        if (!videoIds.isEmpty()) {
-//	            List<VideoImage> videoImages = videoimagerepository.findByVideoIdIn(videoIds);
-//	            for (VideoImage videoImage : videoImages) {
-//	                videoThumbnails.add(ImageUtils.decompressImage(videoImage.getVideoThumbnail())); // Add videoThumbnail to the list
-//	            }
-//	        }
-//	        return videoThumbnails;
-//	    }
-	    
-	    
-	 
-//	    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam Long categoryId) {
-//	        List<VideoDescriptionDTO> videoThumbnails = new ArrayList<>();
-//	        // Retrieve all videos from the repository
-//	        List<VideoDescription> videos = videodescriptionRepository.findAll();
-//	        // Collect video IDs where the category ID is present
-//	        List<Long> videoIds = new ArrayList<>();
-//	       
-//	       
-//	        for (VideoDescription video : videos) {
-//	            if (video.getCategorylist().contains(categoryId)) {
-//	                videoIds.add(video.getId());
-//	            }
-//	        }
-//	        System.out.println(videoIds);
-//	        
-////	         Retrieve video images by the video IDs
-//	        if (!videoIds.isEmpty()) {
-////	            List<VideoImage> videoImages = videoimagerepository.findByVideoIdIn(videoIds);
-////	            for (VideoImage videoImage : videoImages) {
-////	                videoThumbnails.add(new VideoDescriptionDTO(videoImage.getVideoId(), ImageUtils.decompressImage(videoImage.getVideoThumbnail())));
-////	            }
-//	        }
-//	        return videoThumbnails;
-//	    }
+
 	    
 	    public List<Long> getVideoImagesByCategory(@RequestParam Long categoryId) {
 	        // Retrieve all videos from the repository
@@ -759,6 +719,59 @@ public class VideoController {
 	        System.out.println(videoIds);
 	        return videoIds;
 	    }
+	    
+	    
+	    public ResponseEntity<VideoScreenDTO> getVideoScreenDetails(Long videoId, Long categoryId) {
+	        // Step 1: Fetch the video by videoId
+	        Optional<VideoDescription> videoOpt = videodescriptionRepository.findById(videoId);
+	        
+	        if (!videoOpt.isPresent()) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Handle case when video is not found
+	        }
+	        
+	        VideoDescription video = videoOpt.get();
+	        
+	        // Step 2: Fetch the cast and crew details based on castAndCrewList
+	        List<Long> castAndCrewIds = video.getCastandcrewlist(); // Assuming this is a list of Long IDs
+	        List<CastAndCrewModalDTO> castAndCrewDetails = new ArrayList<>();
+
+	        for (Long castAndCrewId : castAndCrewIds) {
+	            Optional<CastandCrew> castAndCrewOpt = castandcrewrepository.findById(castAndCrewId);
+	            if (castAndCrewOpt.isPresent()) {
+	                CastandCrew castAndCrew = castAndCrewOpt.get();
+	                // Map CastAndCrew to CastAndCrewModalDTO
+	                CastAndCrewModalDTO castAndCrewDTO = new CastAndCrewModalDTO(
+	                    castAndCrew.getId(),
+	                    castAndCrew.getName(),
+	                    castAndCrew.getDescription()
+	                );
+	                castAndCrewDetails.add(castAndCrewDTO);
+	            }
+	        }
+	        
+	        List<Long> categoryIds = video.getCategorylist(); // Assuming this is a list of Long IDs
+	        List<String> categoryValues = addnewcategoriesrepository.findcategoryByIds( categoryIds);
+	        
+	        // Step 3: Fetch full video descriptions and filter them by categoryId
+	        List<VideoDescription> matchingVideos = videodescriptionRepository.findAll()
+	                .stream()
+	                .filter(v -> v.getCategorylist().contains(categoryId))
+	                .collect(Collectors.toList());
+
+	        // Step 4: Build the VideoScreenDTO response
+	        VideoScreenDTO videoScreenDTO = new VideoScreenDTO(
+	            video.getId(),
+	            video.getVideoTitle(),
+	            categoryValues,
+	            castAndCrewDetails,
+	            video.getDescription(),
+	            matchingVideos
+	        );
+
+	        // Step 5: Return the VideoScreenDTO with all video and cast/crew details
+	        return ResponseEntity.ok(videoScreenDTO);
+	    }
+
 	    
 //	    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam String categoryId) {
 //	        List<VideoDescriptionDTO> videoThumbnails = new ArrayList<>();

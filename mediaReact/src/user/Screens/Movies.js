@@ -462,7 +462,7 @@ const MoviesPage = () => {
     try {
       const response = await axios.get(`${API_URL}/api/v2/getvideocontainer`);
       setStates(response.data);
-      console.log(response.data);
+      console.log("videocontainer",response.data);
     } catch (error) {
       console.error('Error fetching video container:', error);
     }
@@ -504,9 +504,18 @@ const MoviesPage = () => {
   const navigate = useNavigate(); // Define navigate function
 
 
-  const handleEdit = (id) => {
-    localStorage.setItem('items', id);
+  // const handleEdit = (id,categoryid) => {
+  //   localStorage.setItem('items', id);
+  // };
+
+  const handleEdit = (id, categoryid) => {
+    // Create an object to store both id and categoryid
+    const item = { id, categoryid };
+  
+    // Store the item object in local storage as a JSON string
+    localStorage.setItem('items', JSON.stringify(item));
   };
+  
 
 
 
@@ -575,7 +584,7 @@ const MoviesPage = () => {
                             <div>
                               <Link
                                 to={userid ? `/watchpage/${video.videoTitle}` : "/UserLogin"}
-                                onClick={() => handleEdit(video.id)}
+                                onClick={() => handleEdit(video.id,state.categoryid)}
                               >
                                 <img
                                   src={`${API_URL}/api/v2/${videoId}/videothumbnail`}

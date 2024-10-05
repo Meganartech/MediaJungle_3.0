@@ -152,7 +152,7 @@ public class VideoContainerController {
 	        }
 
 	        // Step 6: Create a custom response object with the container's value and matching videos
-	        VideoContainerDTO response = new VideoContainerDTO(container.getValue(), matchingVideos);
+	        VideoContainerDTO response = new VideoContainerDTO(container.getValue(),categoryId, matchingVideos);
 
 	        // Step 7: Add the response object to the list
 	        responseList.add(response);

@@ -75,6 +75,7 @@ import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
 import com.VsmartEngine.MediaJungle.video.VideoDescriptionDTO;
 import com.VsmartEngine.MediaJungle.video.VideoImageController;
+import com.VsmartEngine.MediaJungle.video.VideoScreenDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -996,6 +997,14 @@ public class FrontController {
 		    ) {
 			 return VideoController.deleteMultiplevideos(token, videoIds);
 		 }
+		 
+		 @GetMapping("/videoscreen")
+		    public ResponseEntity<VideoScreenDTO> getVideoScreenDetails(
+		            @RequestParam("videoId") Long videoId,
+		            @RequestParam("categoryId") Long categoryId) {
+		        
+		        return VideoController.getVideoScreenDetails(videoId, categoryId); // Call the service or controller logic
+		    }
 		 
 		 @GetMapping("/categorylist/category")
 			public ResponseEntity<List<String>> getCategoryNamesByIds(@RequestParam List<Long> categoryIds) {
