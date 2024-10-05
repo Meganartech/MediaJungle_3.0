@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom'; // Import NavLink for navigation
+import { Link, NavLink } from 'react-router-dom'; // Import NavLink for navigation
 import Layout from './Layout/Layout';
 import { FiLogIn } from 'react-icons/fi';
 import { FaBell, FaKey, FaPen, FaUserEdit } from 'react-icons/fa'; // Import the pen icon for editing
@@ -95,7 +95,7 @@ const UserProfileScreen = () => {
                             <div className="mb-6">
                                 <label className="flex text-yellow-600 text-lg font-medium">
                                     <FaBell />
-                                    <span className="ml-4 text-lg font-medium text-gray-500">Subscription Plan</span>
+                                    <span className="ml-4 text-lg font-medium text-gray-500"><Link to="/Subscriptiondetails">Subscription Plan</Link></span>
                                 </label>
                             </div>
                             <div className="mb-6">
