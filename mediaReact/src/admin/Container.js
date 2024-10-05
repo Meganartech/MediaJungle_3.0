@@ -189,6 +189,7 @@ const handlevideoInputChanget = (e, index) => {
    // Toggle dropdown for specific row
 const handlevideoDropdownToggle = (index) => {
   setvideoExistIndexvalue(index)
+  console.log("videodropdowm",videodropdownStates);
   
   if(index==videoexistIndexvalue){
     const updatedDropdownStatesToFalse = videodropdownStates.map(() => false);
@@ -228,6 +229,7 @@ const handlevideoDropdownToggle = (index) => {
   setvideoTableData(updatedData);
   const categoryNames = categories.map(item => item.categories);
   setvideoFilteredOptions(categoryNames)
+  console.log("categoryNames",categoryNames)
   
   
   };

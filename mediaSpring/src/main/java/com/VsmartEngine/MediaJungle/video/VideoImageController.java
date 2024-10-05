@@ -109,6 +109,32 @@ public class VideoImageController {
 	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 	}
+	
+	
+	
+	public ResponseEntity<byte[]> getVideoBanner(@PathVariable long videoId) {
+	    try {
+	        // Fetch the video image from the repository
+	        Optional<VideoImage> videoImageOptional = videoimagerepository.findVideoById(videoId);
+
+	        if (videoImageOptional.isPresent()) {
+	            VideoImage videoImage = videoImageOptional.get();
+
+	            // Decompress the image bytes
+	            byte[] decompressedVideoThumbnail = ImageUtils.decompressImage(videoImage.getUserBanner());
+
+	            // Return the decompressed image data directly with the correct content type
+	            return ResponseEntity.ok()
+	                                 .contentType(MediaType.IMAGE_PNG) // Or use MediaType.IMAGE_PNG for PNG images
+	                                 .body(decompressedVideoThumbnail);
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();  // Replace with proper logging in production
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+	}
 
 
 

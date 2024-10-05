@@ -3,6 +3,8 @@ import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/components/video_folder/movie.dart';
 import 'package:ott_project/components/video_folder/movies_card.dart';
 
+import '../video_folder/video_container.dart';
+
 class MovieCategorySection extends StatelessWidget {
   final String title;
   final List<Movie> movies;
@@ -54,14 +56,14 @@ class MovieCategorySection extends StatelessWidget {
 }
 
 class MoviesCategorySection extends StatelessWidget {
-  final String title;
-  final List<Movies> movies;
-  const MoviesCategorySection(
-      {super.key, required this.title, required this.movies});
+  final VideoContainer videoContainer;
+  const MoviesCategorySection({super.key, required this.videoContainer});
 
   @override
   Widget build(BuildContext context) {
-    final displayedMovies = movies.length > 5 ? movies.sublist(0, 5) : movies;
+    final displayedMovies = videoContainer.videoDescriptions.length > 5
+        ? videoContainer.videoDescriptions.sublist(0, 5)
+        : videoContainer.videoDescriptions;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -69,7 +71,7 @@ class MoviesCategorySection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              title,
+              videoContainer.value,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -93,8 +95,8 @@ class MoviesCategorySection extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: MoviesCard(
-                    movie: movies[index],
-                    movies: movies,
+                    movie: displayedMovies[index],
+                    //movies: videoContainer.videoDescriptions,
                     initialIndex: index,
                   ),
                 );

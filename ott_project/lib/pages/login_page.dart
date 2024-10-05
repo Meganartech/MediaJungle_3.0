@@ -47,13 +47,21 @@ class _LoginPageState extends State<LoginPage> {
                       height: 10,
                     ),
                     Center(
-                      child: Text(
-                        'Media Jungle',
-                        style: TextStyle(
-                            color: kWhite,
-                            fontSize: 42,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            'assets/icon/media_jungle.png',
+                            fit: BoxFit.cover,
+                            height: MediaQuery.sizeOf(context).height * 0.20,
+                            width: MediaQuery.sizeOf(context).width * 0.50,
+                          )),
+                      // child: Text(
+                      //   'Media Jungle',
+                      //   style: TextStyle(
+                      //       color: kWhite,
+                      //       fontSize: 42,
+                      //       fontWeight: FontWeight.bold),
+                      // ),
                     ),
                     Center(
                       child: Text(
@@ -72,7 +80,6 @@ class _LoginPageState extends State<LoginPage> {
                           MyTextField(
                             controller: emailController,
                             hint: 'Enter Email',
-                            
                             obscureText: false,
                             icon: FontAwesomeIcons.envelope,
                             inputType: TextInputType.emailAddress,
@@ -137,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 15,
                     ),
                     Container(
-                      height: size.height * 0.08,
+                      height: size.height * 0.07,
                       width: size.width * 0.8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),

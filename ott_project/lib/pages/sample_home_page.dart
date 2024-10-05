@@ -18,9 +18,6 @@ import 'package:ott_project/service/icon_service.dart';
 import 'package:ott_project/service/movie_service_page.dart';
 import 'package:ott_project/service/service.dart';
 import 'package:ott_project/components/video_folder/movie.dart';
-
-import 'package:ott_project/components/video_folder/video_play.dart';
-import 'package:archive/archive.dart';
 import 'package:provider/provider.dart';
 
 import '../components/background_image.dart';

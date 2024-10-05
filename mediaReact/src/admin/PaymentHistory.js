@@ -108,7 +108,7 @@ const PaymentHistory = () => {
         <ol className="breadcrumb mb-4 d-flex my-0">
 
        
-          <li className="breadcrumb-item"><Link to="/admin/SubscriptionPayments">Manage Users</Link></li>
+          <li className="breadcrumb-item"><Link to="/admin/users">Manage Users</Link></li>
           <li className="breadcrumb-item active text-white">Payment History</li>
           <li className="ms-auto text-end text-white">
         Bulk Action

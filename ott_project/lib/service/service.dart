@@ -16,11 +16,11 @@ class Service {
     String mobnum,
     String password,
     String confirmpassword,
-    File profilePicture,
+    // File profilePicture,
   ) async {
     var uri = Uri.parse(
         // "https://testtomcat.vsmartengine.com/media/api/v2/userregister");
-        'http://192.168.0.6:8080/api/v2/userregister');
+        'http://192.168.183.129:8080/api/v2/userregister');
     //'http://localhost:8080/api/v2/userregister');
     //Map<String, String> headers = {"Content-Type": "multipart/form-data"};
     var request = http.MultipartRequest('POST', uri);
@@ -30,10 +30,11 @@ class Service {
     request.fields['password'] = password;
     request.fields['confirmPassword'] = confirmpassword;
     // print(username + email + mobnum + password + confirmpassword);
-    request.files.add(await http.MultipartFile.fromPath(
-      'profile',
-      profilePicture.path,
-    ));
+    // request.files.add(await http.MultipartFile.fromPath(
+    //   'profile',
+    //   profilePicture.path,
+    // )
+    //);
 
     try {
       var response = await request.send();
@@ -82,7 +83,7 @@ class Service {
   ) async {
     var uri = Uri.parse(
         //"https://testtomcat.vsmartengine.com/media/api/v2/login");
-        'http://192.168.0.6:8080/api/v2/login');
+        'http://192.168.183.129:8080/api/v2/login');
     //'http://localhost:8080/api/v2/login');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map data = {
@@ -157,8 +158,8 @@ class Service {
       _showAlertDialog(context, 'Error', 'No token found');
       return false;
     }
-    var uri =
-        Uri.parse("https://testtomcat.vsmartengine.com/media/api/v2/logout");
+    var uri = Uri.parse('http://192.168.183.129:8080/api/v2/logout');
+    //  "https://testtomcat.vsmartengine.com/media/api/v2/logout");
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": token,

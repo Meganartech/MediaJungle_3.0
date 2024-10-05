@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/pallete.dart';
@@ -15,6 +13,8 @@ import 'package:ott_project/service/icon_service.dart';
 import 'package:ott_project/service/plan_api_service.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:ott_project/service/service.dart';
+
+import '../pages/custom_appbar.dart';
 
 class PlanPage extends StatefulWidget {
   const PlanPage({super.key});
@@ -34,7 +34,9 @@ class _PlanPageState extends State<PlanPage> {
   String? razorpayKey;
   Map<String, bool> expandedState = {};
   int? _userId;
-  String baseUrl = 'http://192.168.0.6:8080/api/v2';
+  String baseUrl = 'http://192.168.183.129:8080/api/v2';
+  bool _isSearching = false;
+  List<dynamic> _searchResults = [];
 
   // double? discountedAmount;
   Map<String, Map<String, double>> discountedAmounts = {};
@@ -372,6 +374,13 @@ class _PlanPageState extends State<PlanPage> {
     }
   }
 
+  void handleSearchState(bool isSearching, List<dynamic> results) {
+    setState(() {
+      _isSearching = isSearching;
+      _searchResults = results;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -381,92 +390,20 @@ class _PlanPageState extends State<PlanPage> {
           BackgroundImage(),
           SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppBar(
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.transparent,
-                  title: _showSearch
-                      ? TextField(
-                          controller: _searchController,
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'Search Songs...',
-                            hintStyle: TextStyle(color: Colors.white54),
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (value) {},
-                        )
-                      : Row(
-                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            if (iconData != null)
-                              Image.memory(
-                                iconData!.imageBytes,
-                                height: 60,
-                              )
-                            else
-                              Image.asset('assets/images/bgimg2.jpg',
-                                  height: 30),
-                            Spacer(),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.cast_connected_rounded,
-                                  color: kWhite,
-                                )),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            IconButton(
-                                onPressed: _showNotification,
-                                icon: Icon(
-                                  Icons.notifications,
-                                  color: kWhite,
-                                )),
-                          ],
-                        ),
-                  actions: [
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _showSearch = !_showSearch;
-                            if (!_showSearch) {
-                              _searchController.clear();
-                              //_filterAudioList('');
-                            }
-                          });
-                        },
-                        icon: Icon(
-                          Icons.search_rounded,
-                          color: kWhite,
-                        )),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfilePage()));
-                        },
-                        icon: Icon(
-                          Icons.person_outline_rounded,
-                          color: kWhite,
-                        )),
-                    SizedBox(
-                      width: 10,
-                    ),
-                  ],
+                CustomAppBar(
+                  onSearchChanged: handleSearchState,
                 ),
                 Divider(
                   color: Colors.white,
                 ),
-                SizedBox(
-                  height: 20,
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => Navigator.pop(context),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -532,7 +469,8 @@ class _PlanPageState extends State<PlanPage> {
                 });
               },
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding:
+                    EdgeInsets.only(top: 16, right: 16, left: 16, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -556,7 +494,7 @@ class _PlanPageState extends State<PlanPage> {
             ),
             if (expandedState[plan.planname]!)
               Padding(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.only(top: 0, right: 8, left: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

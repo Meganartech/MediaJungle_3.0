@@ -6,10 +6,11 @@ import { FaCloudDownloadAlt, FaHeart, FaPlay, FaUserFriends } from 'react-icons/
 import API_URL from '../../Config';
 import axios from 'axios';
 import Titles from '../Components/Titles';
+import { CardText } from 'react-bootstrap';
 
 const WatchPage = () => {
-  const id = localStorage.getItem('items');
-  console.log("videoid",id)
+  // const id = localStorage.getItem('items');
+  // console.log("videoid",id)
   const [getall, setgetall] = useState('');
   const [Thumbnail, setThumbnail] = useState('');
   const [play, setPlay] = useState(false);
@@ -25,33 +26,48 @@ const WatchPage = () => {
   const [thumbnails, setThumbnails] = useState({});
   const [videocast, setvideocast] = useState([]);
   const [base64, setbase64] = useState([]);
+  const [categoriesvaluelist,setcategoriesvaluelist] = useState([]);
+  const [castandcrewlist,setcastandcrewlist] = useState([]);
 
   const subscribed = expiryDate > currentDate;
   const modeofvideo = getall.paid;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/api/v2/GetvideoDetail/${id}`);
-        setgetall(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError(error.message);
-      }
-    };
+  const getItemsFromLocalStorage = () => {
+    const items = localStorage.getItem('items');
+    
+    // Parse the JSON string back to an object
+    return items ? JSON.parse(items) : null;
+  };
+  
+  // Example of using the retrieved items
+  const storedItem = getItemsFromLocalStorage();
+  const id = storedItem.id
+  const categoryid = storedItem.categoryid;
+  if (storedItem) {
+    console.log('ID:', storedItem.id);
+    console.log('Category ID:', storedItem.categoryid);
+  }
 
-    const fetchThumbnail = async () => {
-      try {
-          const response = await axios.get(`${API_URL}/api/v2/${id}/videothumbnail`);
-          if (response.data && response.data.videoThumbnail) {
-              const thumbnail = response.data.videoThumbnail;
-              const imageUrl = `data:image/png;base64,${thumbnail}`;
-              setThumbnail(imageUrl);
-          }
-      } catch (error) {
-          console.error('Error fetching video thumbnail:', error);
-      }
+  
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      // Construct the URL with query parameters
+      const response = await axios.get(`${API_URL}/api/v2/videoscreen`, {
+        params: {
+          videoId: id,        // Pass videoId as query parameter
+          categoryId: categoryid, // Pass categoryId as query parameter
+        },
+      });
+      
+      // Fetch video details
+      const videoData = response.data;
+      setgetall(videoData);
+      console.log(videoData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError(error.message);
+    }
   };
 
     const fetchUser = async () => {
@@ -74,9 +90,8 @@ const WatchPage = () => {
     };
 
     fetchData();
-    fetchThumbnail();
     fetchUser();
-  }, [id, userid]);
+  }, [id, userid,categoryid]);
 
   useEffect(() => {
     const fetchvideocastandcrew = async () => {
@@ -217,9 +232,8 @@ const WatchPage = () => {
   
   <Layout>
      <div className="videothumbnail position-relative">
-  {Thumbnail && (
     <>
-      <img src={Thumbnail} alt="image" className="img-fluid" />
+      <img src={`${API_URL}/api/v2/${id}/videothumbnail`} alt="image" className="img-fluid" />
       <div className="overlay-buttons">
         <button id="button1" className="me-4">Subscription</button>
         <button id="button2" className=" me-4">Add to Watch list</button>
@@ -227,12 +241,66 @@ const WatchPage = () => {
       </div>
       <span className="overlay-span">Duration:&nbsp;{getall.mainVideoDuration}</span>
     </>
-  )}
+ 
 </div>
 
 <div className='content'>
-  
+  <div className='title'>
+  <span >{getall.videotitle}</span>
+  </div>
+  <div style={{marginTop:'30px'}}>
+  {getall.category && getall.category.length > 0 && (
+  <span >{getall.category.join('/')}</span>
+ 
+)}
+ </div>
+ <div className='castandcrew'>
+ <span>Cast & Crew</span>
+ {getall.castandcrew && getall.castandcrew.length > 0 && (
+  <div style={{ display: 'flex', flexDirection: 'row', gap: '15px' }}>
+    {getall.castandcrew.map(cast => (
+      <div key={cast.id} style={{ textAlign: 'center' }}> {/* Added textAlign for centering */}
+        <img
+          src={`${API_URL}/api/v2/getcastimage/${cast.id}`} // Assuming cast has an id property
+          alt={`Cast member ${cast.name}`} // Assuming cast has a name property
+          style={{ width: '100px', height: '100px', borderRadius: '50px', marginTop: '25px' }}
+        />
+        <p>{cast.name}</p> {/* Displaying the cast member's name */}
+      </div>
+    ))}
+  </div>
+)}
+ </div>
+ <div className='story'>
+  <span className='storyspan'>Story</span>
+  <div className='description'>
+  <span>{getall.description}</span>
+  </div>
+ </div>
+
+ <div className='suggestion'>
+  <span>Suggestion</span>
+  <div className="videoscreenitems">
+  {getall.videoDescriptions && getall.videoDescriptions.length > 0 && (
+    <div className="videoscreenitem-row">
+      {getall.videoDescriptions.map((video) => (
+        <div key={video.id} className="item">
+          <img
+            src={`${API_URL}/api/v2/${video.id}/videothumbnail`}
+            alt={`Video ${video.videoTitle}`} // Assuming videoTitle is part of video
+            className="videoscreenthumbnail"
+          />
+          <p>{video.videoTitle}</p> {/* Assuming videoTitle is a property of video */}
+        </div>
+      ))}
+    </div>
+  )}
 </div>
+
+
+    </div>
+ </div>
+
 
   </Layout>
   );

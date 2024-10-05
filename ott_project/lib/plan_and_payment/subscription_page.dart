@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/app_icon.dart';
+import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/plan_and_payment/plan_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/service/icon_service.dart';
@@ -23,12 +24,13 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   AppIcon? iconData;
   bool _showSearch = false;
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController _searchController = TextEditingController();
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
   String subscriptionPlan = 'Free';
   String expiry = '';
   bool isSubscribed = false;
   double amount = 0.0;
+   bool _isSearching = false;
+  List<dynamic> _searchResults = [];
   void initState() {
     super.initState();
     _loadIcon();
@@ -46,8 +48,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   }
 
   Future<void> _loadSubscriptionStatus(int userId) async {
-    String url = 'http://localhost:8080/api/v2/paymentHistory/$userId';
-    //'http://192.168.183.129:8080/api/v2/paymentHistory/$userId';
+    String url = 
+    //'http://localhost:8080/api/v2/paymentHistory/$userId';
+    'http://192.168.183.129:8080/api/v2/paymentHistory/$userId';
     try {
       var response = await http.get(Uri.parse(url));
 
@@ -165,6 +168,14 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       print('Error fetching user profile: $e');
     }
   }
+  
+  void handleSearchState(bool isSearching, List<dynamic> results) {
+    setState(() {
+      _isSearching = isSearching;
+      _searchResults = results;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -177,86 +188,87 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppBar(
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.transparent,
-                  title: _showSearch
-                      ? TextField(
-                          controller: _searchController,
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'Search Songs...',
-                            hintStyle: TextStyle(color: Colors.white54),
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (value) {},
-                        )
-                      : Row(
-                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            if (iconData != null)
-                              Image.memory(
-                                iconData!.imageBytes,
-                                height: 70,
-                              )
-                            else
-                              Image.asset('assets/images/bgimg2.jpg',
-                                  height: 30),
-                            Spacer(),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.cast_connected_rounded,
-                                  color: kWhite,
-                                )),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.notifications,
-                                  color: kWhite,
-                                )),
-                          ],
-                        ),
-                  actions: [
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _showSearch = !_showSearch;
-                            if (!_showSearch) {
-                              _searchController.clear();
-                              //_filterAudioList('');
-                            }
-                          });
-                        },
-                        icon: Icon(
-                          Icons.search_rounded,
-                          color: kWhite,
-                        )),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfilePage()));
-                        },
-                        icon: Icon(
-                          Icons.person_outline_rounded,
-                          color: kWhite,
-                        )),
-                    SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                ),
+                CustomAppBar(onSearchChanged: handleSearchState),
+                // AppBar(
+                //   automaticallyImplyLeading: false,
+                //   backgroundColor: Colors.transparent,
+                //   title: _showSearch
+                //       ? TextField(
+                //           controller: _searchController,
+                //           style: TextStyle(color: Colors.white),
+                //           decoration: InputDecoration(
+                //             hintText: 'Search Songs...',
+                //             hintStyle: TextStyle(color: Colors.white54),
+                //             border: InputBorder.none,
+                //           ),
+                //           onChanged: (value) {},
+                //         )
+                //       : Row(
+                //           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //           children: [
+                //             SizedBox(
+                //               height: 20,
+                //             ),
+                //             if (iconData != null)
+                //               Image.memory(
+                //                 iconData!.imageBytes,
+                //                 height: 70,
+                //               )
+                //             else
+                //               Image.asset('assets/images/bgimg2.jpg',
+                //                   height: 30),
+                //             Spacer(),
+                //             IconButton(
+                //                 onPressed: () {},
+                //                 icon: Icon(
+                //                   Icons.cast_connected_rounded,
+                //                   color: kWhite,
+                //                 )),
+                //             SizedBox(
+                //               width: 10,
+                //             ),
+                //             IconButton(
+                //                 onPressed: () {},
+                //                 icon: Icon(
+                //                   Icons.notifications,
+                //                   color: kWhite,
+                //                 )),
+                //           ],
+                //         ),
+                //   actions: [
+                //     IconButton(
+                //         onPressed: () {
+                //           setState(() {
+                //             _showSearch = !_showSearch;
+                //             if (!_showSearch) {
+                //               _searchController.clear();
+                //               //_filterAudioList('');
+                //             }
+                //           });
+                //         },
+                //         icon: Icon(
+                //           Icons.search_rounded,
+                //           color: kWhite,
+                //         )),
+                //     SizedBox(
+                //       width: 10,
+                //     ),
+                //     IconButton(
+                //         onPressed: () {
+                //           Navigator.push(
+                //               context,
+                //               MaterialPageRoute(
+                //                   builder: (context) => ProfilePage()));
+                //         },
+                //         icon: Icon(
+                //           Icons.person_outline_rounded,
+                //           color: kWhite,
+                //         )),
+                //     SizedBox(
+                //       width: 10,
+                //     ),
+                //   ],
+                // ),
                 Divider(
                   color: Colors.white,
                 ),

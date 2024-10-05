@@ -8,17 +8,23 @@ import com.VsmartEngine.MediaJungle.video.VideoDescription;
 public class VideoContainerDTO {
 	
 	private String value;
+	private long categoryid;
 	private List<VideoDescription> videoDescriptions; // Matching VideoDescriptions
 	public VideoContainerDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	public VideoContainerDTO(String value, List<VideoDescription> videoDescriptions) {
+	
+
+	public VideoContainerDTO(String value, long categoryid, List<VideoDescription> videoDescriptions) {
 		super();
 		this.value = value;
+		this.categoryid = categoryid;
 		this.videoDescriptions = videoDescriptions;
 	}
+
+
 
 	public String getValue() {
 		return value;
@@ -33,6 +39,19 @@ public class VideoContainerDTO {
 		this.videoDescriptions = videoDescriptions;
 	}
 
+
+
+	public long getCategoryid() {
+		return categoryid;
+	}
+
+
+
+	public void setCategoryid(long categoryid) {
+		this.categoryid = categoryid;
+	}
+
+	
 
 	
 
