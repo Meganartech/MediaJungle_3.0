@@ -3,8 +3,10 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
+import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/notification/notification.dart';
 import 'package:ott_project/components/pallete.dart';
+import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/profile/profile_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -39,6 +41,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
   List<dynamic> _filteredContent = [];
   late List<Movie> _allMovies = [];
   late List<Music> _music = [];
+  List<AudioContainer> _audio = [];
+  List<VideoContainer> _video = [];
   AppIcon? iconData;
   List<Notifications>? notifications;
   int unreadCount = 0;
@@ -50,7 +54,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     super.initState();
     _loadIcon();
     _loadToken();
-    _loadMovieandMusic();
+    _loadVideoAndAudioContainers();
     loadRecentSearch();
     //_filterAudioList('');
   }
@@ -81,9 +85,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
     }
   }
 
-  Future<void> _loadMovieandMusic() async {
-    _allMovies = await MovieService.fetchMovies();
-    _music = await AudioService.fetchMusic();
+  // Future<void> _loadMovieandMusic() async {
+  //   _allMovies = await MovieService.fetchMovies();
+  //   _music = await AudioService.fetchMusic();
+  // }
+  Future<void> _loadVideoAndAudioContainers() async {
+    _video = await MovieService.fetchVideoContainer();
+    _audio = await AudioService.fetchAudioContainer();
   }
 
   Future<void> _loadNotifications() async {
@@ -342,16 +350,31 @@ class _CustomAppBarState extends State<CustomAppBar> {
             .map((query) => {'type': 'recent', 'query': query})
             .toList();
       } else {
-        final uniqueMovies = <Movie>{};
-        final uniqueSongs = <Music>{};
+        final uniqueVideos = <VideoDescription>{};
+        final uniqueAudios = <AudioDescription>{};
 
-        uniqueMovies.addAll(_allMovies.where((movie) =>
-            movie.moviename.toLowerCase().contains(query.toLowerCase())));
-        uniqueSongs.addAll(_music.where((song) =>
-            song.songname.toLowerCase().contains(query.toLowerCase())));
+        // Search through video titles
+        for (var container in _video) {
+          for (var video in container.videoDescriptions) {
+            // Assuming 'videos' is a List<VideoDescription>
+            if (video.videoTitle.toLowerCase().contains(query.toLowerCase())) {
+              uniqueVideos.add(video);
+            }
+          }
+        }
+
+        // Search through audio titles
+        for (var container in _audio) {
+          for (var audio in container.audiolist) {
+            // Assuming 'audios' is a List<AudioDescription>
+            if (audio.audioTitle.toLowerCase().contains(query.toLowerCase())) {
+              uniqueAudios.add(audio);
+            }
+          }
+        }
         _filteredContent = [
-          ...uniqueMovies,
-          ...uniqueSongs,
+          ...uniqueVideos,
+          ...uniqueAudios,
         ];
       }
     });

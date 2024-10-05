@@ -1,7 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/music.dart';
+import 'package:ott_project/components/pallete.dart';
+
+import '../music_folder/audio_card.dart';
 
 // class MusicCategorySection extends StatelessWidget {
 //   final String title;
@@ -191,167 +195,63 @@ import 'package:ott_project/components/music_folder/music.dart';
 //   // }
 // }
 class MusicCategorySection extends StatelessWidget {
-  final String title;
-  final List<Music> audios;
+  final AudioContainer audioContainer;
   final int userId;
   final Function(Music) onTap;
 
   const MusicCategorySection({
     super.key,
-    required this.title,
-    required this.audios,
+   // required this.title,
+    required this.audioContainer,
     required this.userId,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Debugging: print the audios list length
-    print('Title:$title');
-    debugPrint('Number of audios in category $title: ${audios.length}');
-    //debugPrint('Number of audios in category $title: ${audios.length}');
-    return
-        // Container(
-        // padding: EdgeInsets.all(4),
-        // margin: EdgeInsets.all(10),
-        Column(
+   final displayedAudio = audioContainer.audiolist.length > 5
+        ? audioContainer.audiolist.sublist(0, 5)
+        : audioContainer.audiolist;
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              title,
+              audioContainer.categoryName,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: kWhite,
               ),
             ),
             TextButton(
-              onPressed: () {},
-              child: Text(
-                'See more',
-                style: TextStyle(color: Colors.green),
-              ),
-            ),
+                onPressed: () {},
+                child: Text('See more', style: TextStyle(color: Colors.green))),
           ],
         ),
-        SizedBox(height: 10),
         SizedBox(
-          height: 200,
-          width: 500,
-          child: audios.isEmpty
-              ? Center(
-                  child: Text(
-                    'No audios available',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              :
-              // : Expanded(
-              //     child:
-              ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: audios.length,
-                  itemBuilder: (context, index) {
-                    final audio = audios[index];
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: GestureDetector(
-                        onTap: () => onTap(audio),
-                        child: Container(
-                          width: 120,
-                          margin: EdgeInsets.only(right: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    height: 135,
-                                    width: 120,
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[800],
-                                        borderRadius: BorderRadius.circular(7)),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: FutureBuilder<Uint8List?>(
-                                        future: audio
-                                            .thumbnailImage, // Ensure this future returns a Uint8List or null
-                                        builder: (context, snapshot) {
-                                          print(
-                                              'Music category FutureBuilder is being called');
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return Container(
-                                              width: 120,
-                                              height: 135,
-                                              color: Colors.grey,
-                                              child: Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                            );
-                                          } else if (snapshot.connectionState ==
-                                              ConnectionState.done) {
-                                            if (snapshot.hasData &&
-                                                snapshot.data != null) {
-                                              print(
-                                                  'Image fetched successfully');
-                                              return Image.memory(
-                                                snapshot.data!,
-                                                width: 120,
-                                                height: 135,
-                                                fit: BoxFit.fill,
-                                              );
-                                            } else {
-                                              return Center(
-                                                child: Icon(
-                                                  Icons.music_note_rounded,
-                                                  color: Colors.white,
-                                                  size: 50,
-                                                ),
-                                              );
-                                            }
-                                          } else {
-                                            return Container(
-                                              width: 120,
-                                              height: 135,
-                                              color: Colors.grey,
-                                              child: Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  Icon(Icons.play_circle,
-                                      color: Colors.white, size: 35),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                audio.songname,
-                                style: TextStyle(color: Colors.white),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-          //),
+          height: MediaQuery.sizeOf(context).height * 0.01,
         ),
-        SizedBox(height: 20),
+        SizedBox(
+          height: MediaQuery.sizeOf(context).height * 0.25,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: displayedAudio.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: AudioCard(
+                    audio: displayedAudio[index],
+                    //movies: videoContainer.videoDescriptions,
+                    initialIndex: index,
+                  ),
+                );
+              }),
+        ),
       ],
     );
-    //);
+       
   }
 }

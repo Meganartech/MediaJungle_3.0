@@ -6,10 +6,12 @@ import 'package:ott_project/components/music_folder/audio.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/service/audio_api_service.dart';
 
+import '../components/music_folder/audio_container.dart';
+
 class AudioService {
-  static const String baseUrl = 
- // 'http://localhost:8080/api/v2';
-  'http://192.168.183.129:8080/api/v2';
+  static const String baseUrl =
+      // 'http://localhost:8080/api/v2';
+      'http://192.168.183.129:8080/api/v2';
   static Future<List<Audio>> fetchAudio() async {
     final response = await http.get(Uri.parse('$baseUrl/getaudiodetailsdto'));
     //print(response.statusCode);
@@ -38,6 +40,22 @@ class AudioService {
       return musicList;
     } else {
       throw Exception("Failed to load songs");
+    }
+  }
+
+  static Future<List<AudioContainer>> fetchAudioContainer() async {
+    final response =
+        await http.get(Uri.parse('$baseUrl/audioContainerDetails'));
+
+    print('Audio container response: ${response.statusCode}');
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      print('Audio container details:${response.body}');
+      List<AudioContainer> audioList =
+          body.map((container) => AudioContainer.fromJson(container)).toList();
+      return audioList;
+    } else {
+      throw Exception("Failed to load video containers");
     }
   }
 
