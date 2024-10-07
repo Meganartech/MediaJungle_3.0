@@ -204,7 +204,7 @@ class _MoviePageState extends State<MoviePage> {
                           height: 1,
                         ),
                         SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.02,
+                          height: MediaQuery.sizeOf(context).height * 0.01,
                         ),
                         CategoryBar(
                             selectedCategory: selectedCategory,
@@ -216,9 +216,7 @@ class _MoviePageState extends State<MoviePage> {
                           color: Colors.white,
                           height: 1,
                         ),
-                        SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.02,
-                        ),
+                       
                         Expanded(
                           child: _searchController.text.isNotEmpty &&
                                   _filteredMovies.isEmpty
@@ -228,18 +226,7 @@ class _MoviePageState extends State<MoviePage> {
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 )
-                              // : _searchController.text.isNotEmpty
-                              //     ? ListView.builder(
-                              //         shrinkWrap: true,
-                              //         physics: NeverScrollableScrollPhysics(),
-                              //         itemCount: _filteredMovies.length,
-                              //         itemBuilder: (context, index) {
-                              //           return SearchResultMovie(
-                              //               movie: _filteredMovies[index],
-                              //               allMovies: _filteredMovies,
-                              //               index: index);
-                              //         },
-                              //       )
+                              
                               : FutureBuilder<List<VideoContainer>>(
                                   future: MovieService.fetchVideoContainer(),
                                   builder: (context, snapshot) {

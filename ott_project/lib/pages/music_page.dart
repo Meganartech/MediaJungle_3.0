@@ -277,8 +277,8 @@ class _MusicPageState extends State<MusicPage> {
                             height: 1,
                           ),
                           SizedBox(
-                            height: 7,
-                          ),
+                          height: MediaQuery.sizeOf(context).height * 0.01,
+                        ),
                           CategoryBar(
                               selectedCategory: 'Music',
                               onCategorySelected: _navigateToCategory),
@@ -289,19 +289,14 @@ class _MusicPageState extends State<MusicPage> {
                             color: Colors.white,
                             height: 1,
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
+                          
                         ],
                       ),
                       //),
                       //),
                       Expanded(
                         child: ListView(
-                          //  child: Padding(
-                          //    padding: const EdgeInsets.all(8.0),
-                          //child: Column(
-                          // crossAxisAlignment: CrossAxisAlignment.center,
+                        
                           children: [
                             if (_searchController.text.isNotEmpty &&
                                 _filteredAudios.isEmpty)

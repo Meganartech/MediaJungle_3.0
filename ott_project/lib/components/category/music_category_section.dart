@@ -230,11 +230,11 @@ class MusicCategorySection extends StatelessWidget {
                 child: Text('See more', style: TextStyle(color: Colors.green))),
           ],
         ),
+        // SizedBox(
+        //   height: MediaQuery.sizeOf(context).height * 0.01,
+        // ),
         SizedBox(
-          height: MediaQuery.sizeOf(context).height * 0.01,
-        ),
-        SizedBox(
-          height: MediaQuery.sizeOf(context).height * 0.25,
+          height: MediaQuery.sizeOf(context).height * 0.22,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: displayedAudio.length,

@@ -39,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
       var response = await http.get(
         Uri.parse(
             //    'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.183.129:8080/api/v2/GetUserById/$userId'),
+            'http://192.168.183.42:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         //),
         headers: {
@@ -111,14 +111,14 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.arrow_back_rounded,
-                  color: kWhite,
-                )),
+            // leading: IconButton(
+            //     onPressed: () {
+            //       Navigator.pop(context);
+            //     },
+            //     icon: Icon(
+            //       Icons.arrow_back_rounded,
+            //       color: kWhite,
+            //     )),
             backgroundColor: Colors.transparent,
           ),
           body: Padding(
@@ -210,7 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   })));
                     },
                   ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.18),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.09),
 
                   // const SizedBox(height: 16.0),
                   SizedBox(

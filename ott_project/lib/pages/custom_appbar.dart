@@ -318,16 +318,16 @@ class _CustomAppBarState extends State<CustomAppBar> {
             SizedBox(
               width: 6,
             ),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProfilePage()));
-                },
-                icon: Icon(
-                  Icons.person_outline_rounded,
-                  color: kWhite,
-                  size: 25,
-                )),
+            // IconButton(
+            //     onPressed: () {
+            //       Navigator.push(context,
+            //           MaterialPageRoute(builder: (context) => ProfilePage()));
+            //     },
+            //     icon: Icon(
+            //       Icons.person_outline_rounded,
+            //       color: kWhite,
+            //       size: 25,
+            //     )),
             SizedBox(
               width: 10,
             ),
