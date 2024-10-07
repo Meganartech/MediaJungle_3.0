@@ -66,17 +66,16 @@ public class PaymentController {
   public ResponseEntity<String> confirmPayment(@RequestBody Map<String, String> requestData) {
     try {
         // Log received data for debugging
-        System.out.println("Received payment data: " + requestData);
+    	System.out.println("Received payment data: " + requestData);
 //
-        // Extract data from the request
+        // Extract data from the request				
        String paymentId = requestData.get("paymentId");
         String orderId = requestData.get("orderId");
       int statusCode = Integer.parseInt(requestData.get("status")); // Parse as int
         String subscriptionTitle = requestData.get("planname");
         Long amount = Long.parseLong(requestData.get("amount")); // Ensure the correct case for "amount"
       Long userId = Long.parseLong(requestData.get("userId"));
-
-
+      int tenure=Integer.parseInt(requestData.get("tenure"));
 //        String orderId="data";
 //        
 
@@ -117,17 +116,30 @@ public class PaymentController {
 //        	  PaymentUser paymentUser = paymentUserOptional.get();
 
               // Set payment details
+   
         PaymentUser PaymentUser=new PaymentUser();
         	PaymentUser.setPaymentId(paymentId);
         	PaymentUser.setOrderId(orderId);
         	PaymentUser.setStatus(finalStatus);
         	PaymentUser.setSubscriptionTitle(subscriptionTitle);
         	PaymentUser.setAmount(amount);
-        	PaymentUser.setExpiryDate(LocalDate.now().plusMonths(1)); // Set expiry date to one month from now
         	PaymentUser.setUserId(userId);
+        	// Calculate expiry date
+            LocalDate currentDate = LocalDate.now();
+            PaymentUser.setExpiryDate(currentDate.plusMonths(tenure));
               // Save updated payment details
-              paymentrepository.save(PaymentUser); // 
+              paymentrepository.save(PaymentUser); 
+              Optional<UserRegister> userOptional = userregisterrepository.findById(userId);
+
+              if (userOptional.isPresent()) {
+              UserRegister user = userOptional.get();
+              user.setPaymentId(PaymentUser);  // Set the paymentUser
+              userregisterrepository.save(user); 
+           
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+              } else {
+                  return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+              }
 //        }
     } catch (NumberFormatException e) {
         return new ResponseEntity<>("Invalid number format", HttpStatus.BAD_REQUEST);

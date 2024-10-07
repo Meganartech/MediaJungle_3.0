@@ -6,10 +6,11 @@ import { FaCloudDownloadAlt, FaHeart, FaPlay, FaUserFriends } from 'react-icons/
 import API_URL from '../../Config';
 import axios from 'axios';
 import Titles from '../Components/Titles';
+import { CardText } from 'react-bootstrap';
 
 const WatchPage = () => {
-  const id = localStorage.getItem('items');
-  console.log("videoid",id)
+  // const id = localStorage.getItem('items');
+  // console.log("videoid",id)
   const [getall, setgetall] = useState('');
   const [Thumbnail, setThumbnail] = useState('');
   const [play, setPlay] = useState(false);
@@ -31,45 +32,43 @@ const WatchPage = () => {
   const subscribed = expiryDate > currentDate;
   const modeofvideo = getall.paid;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch video details
-        const response = await axios.get(`${API_URL}/api/v2/GetvideoDetail/${id}`);
-        const videoData = response.data;
-        setgetall(videoData);
-        console.log(videoData);
+  const getItemsFromLocalStorage = () => {
+    const items = localStorage.getItem('items');
+    
+    // Parse the JSON string back to an object
+    return items ? JSON.parse(items) : null;
+  };
   
-        // Fetch the category names by IDs, if categorylist is available
-        if (videoData.categorylist && videoData.categorylist.length > 0) {
-          const categoryIds = videoData.categorylist.join(','); 
-          const categoryResponse = await fetch(`${API_URL}/api/v2/categorylist/category?categoryIds=${categoryIds}`);
-          const categoryNames = await categoryResponse.json();
-          console.log('Category Names:', categoryNames);
-          setcategoriesvaluelist(categoryNames);
-        }
+  // Example of using the retrieved items
+  const storedItem = getItemsFromLocalStorage();
+  const id = storedItem.id
+  const categoryid = storedItem.categoryid;
+  if (storedItem) {
+    console.log('ID:', storedItem.id);
+    console.log('Category ID:', storedItem.categoryid);
+  }
 
-        if (videoData.castandcrewlist && videoData.castandcrewlist.length > 0) {
-          const castIds = videoData.castandcrewlist.join(','); // Convert list to comma-separated string
-          const castresponse = await fetch(`${API_URL}/api/v2/getcastids?ids=${castIds}`); // Make sure 'ids' is used, not 'castIds'
-          
-          if (castresponse.ok) {
-            const castNames = await castresponse.json();
-            console.log('castNames', castNames);
-            setcastandcrewlist(castNames); // Assuming this is where you set the fetched data in the state
-          } else {
-            console.error('Error fetching cast names:', castresponse.statusText);
-          }
-        }
-
-        
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError(error.message);
-      }
-
+  
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      // Construct the URL with query parameters
+      const response = await axios.get(`${API_URL}/api/v2/videoscreen`, {
+        params: {
+          videoId: id,        // Pass videoId as query parameter
+          categoryId: categoryid, // Pass categoryId as query parameter
+        },
+      });
       
-    };
+      // Fetch video details
+      const videoData = response.data;
+      setgetall(videoData);
+      console.log(videoData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError(error.message);
+    }
+  };
 
     const fetchUser = async () => {
       try {
@@ -92,7 +91,7 @@ const WatchPage = () => {
 
     fetchData();
     fetchUser();
-  }, [id, userid]);
+  }, [id, userid,categoryid]);
 
   useEffect(() => {
     const fetchvideocastandcrew = async () => {
@@ -247,19 +246,19 @@ const WatchPage = () => {
 
 <div className='content'>
   <div className='title'>
-  <span >{getall.videoTitle}</span>
+  <span >{getall.videotitle}</span>
   </div>
   <div style={{marginTop:'30px'}}>
-  {categoriesvaluelist && categoriesvaluelist.length > 0 && (
-  <span >{categoriesvaluelist.join('/')}</span>
+  {getall.category && getall.category.length > 0 && (
+  <span >{getall.category.join('/')}</span>
  
 )}
  </div>
  <div className='castandcrew'>
  <span>Cast & Crew</span>
- {castandcrewlist && castandcrewlist.length > 0 && (
+ {getall.castandcrew && getall.castandcrew.length > 0 && (
   <div style={{ display: 'flex', flexDirection: 'row', gap: '15px' }}>
-    {castandcrewlist.map(cast => (
+    {getall.castandcrew.map(cast => (
       <div key={cast.id} style={{ textAlign: 'center' }}> {/* Added textAlign for centering */}
         <img
           src={`${API_URL}/api/v2/getcastimage/${cast.id}`} // Assuming cast has an id property
@@ -281,8 +280,27 @@ const WatchPage = () => {
 
  <div className='suggestion'>
   <span>Suggestion</span>
- </div>
+  <div className="videoscreenitems">
+  {getall.videoDescriptions && getall.videoDescriptions.length > 0 && (
+    <div className="videoscreenitem-row">
+      {getall.videoDescriptions.map((video) => (
+        <div key={video.id} className="item">
+          <img
+            src={`${API_URL}/api/v2/${video.id}/videothumbnail`}
+            alt={`Video ${video.videoTitle}`} // Assuming videoTitle is part of video
+            className="videoscreenthumbnail"
+          />
+          <p>{video.videoTitle}</p> {/* Assuming videoTitle is a property of video */}
+        </div>
+      ))}
+    </div>
+  )}
 </div>
+
+
+    </div>
+ </div>
+
 
   </Layout>
   );
