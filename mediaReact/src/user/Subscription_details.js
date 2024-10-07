@@ -16,6 +16,11 @@ function Subscription_details() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [getall, setGetAll] = useState('');
+  const [planDetails, setPlanDetails] = useState(null); // Define state for plan details
+  // Check if subscription has expired
+  const currentDate = new Date();
+  const expiryDate = new Date(user?.paymentId?.expiryDate);
+  const isExpired =expiryDate < currentDate;
 
   useEffect(() => {
       if (!jwtToken) {
@@ -40,7 +45,7 @@ function Subscription_details() {
               setLoading(false);
           });
   }, [jwtToken, userId]);
-
+ 
   useEffect(() => {
       fetch(`${API_URL}/api/v2/GetsiteSettings`)
           .then(response => {
@@ -74,28 +79,42 @@ function Subscription_details() {
  
         {/* Separate div for User Information */}
         <div>
-            {jwtToken && user ? (
-                <>
-                    <div className="mb-6">
-                        <label className="flex text-yellow-600 text-lg font-medium">
-                            <span className="ml-4 text-lg font-medium text-gray-500">Subscription Plan  :  </span>
-                        </label>
-                    </div>
-                    <div className="mb-6">
-                        <label className="flex text-yellow-600 text-lg font-medium mb-2">
-                            <span className="ml-4 text-lg font-medium text-gray-500"></span>
-                        </label>
-                    </div>
-                   
-                </>
-            ) : (
-                <NavLink to='/UserLogin' className='bg-subMain transitions hover:bg-main flex-rows gap-4 text-white p-4 rounded-lg w-full text-center'>
-                    <FiLogIn /> Sign In
+        {jwtToken && user ? (
+                    <>
+                        <div className="mb-6">
+                            <label className="flex text-yellow-600 text-lg font-medium">
+                                <span className="ml-4 text-lg font-medium text-gray-500">  Subscription Plan: {user.paymentId ? user.paymentId.subscriptionTitle : 'Free'}</span>
+                            </label>
+                        </div>
+                        <div className="mb-6">
+                            <label className="flex text-yellow-600 text-lg font-medium mb-2">
+                                <span className="ml-4 text-lg font-medium text-gray-500">Expiry Date: {user.paymentId ? user.paymentId.expiryDate : 'N/A'}</span>
+                            </label>
+                        </div>
+                         {/* Display message if subscription has expired */}
+              {isExpired && (
+                <div className="mb-4 text-red-500 text-lg">
+                  Your subscription has expired. Please renew your subscription.
+                </div>
+              )}
+  {isExpired && (
+              <div className="flex justify-center">
+                <NavLink
+                  to='/GetSubscription'
+                  className='bg-red-500 text-white p-2 rounded-lg text-sm hover:bg-red-800'
+                >
+                  Get Subscription
                 </NavLink>
-            )}
+              </div>)}
+            </>
+          ) : (
+            <NavLink to='/UserLogin' className='bg-subMain transitions hover:bg-main flex-rows gap-4 text-white p-4 rounded-lg w-full text-center'>
+              <FiLogIn /> Sign In
+            </NavLink>
+          )} 
+            </div>
         </div>
-    </div>
-</Layout>
+    </Layout>
   )
 }
 
