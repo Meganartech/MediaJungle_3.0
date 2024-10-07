@@ -146,26 +146,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Future<void> fetchUserProfile(BuildContext context) async {
     String? token = await secureStorage.read(key: 'token');
     String? userId = await secureStorage.read(key: 'userId');
-    if (userId == null) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                backgroundColor: Colors.transparent,
-                content: Text(
-                  'Token or User Id not found',
-                  style: TextStyle(color: Colors.white),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              ));
-      return;
-    }
 
     try {
       var response = await http.get(
