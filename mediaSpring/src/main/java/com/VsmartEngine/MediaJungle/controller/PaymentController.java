@@ -3,6 +3,7 @@ package com.VsmartEngine.MediaJungle.controller;
 
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,7 @@ import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
 import com.VsmartEngine.MediaJungle.repository.PaymentRepository;
 import com.VsmartEngine.MediaJungle.repository.PaymentsettingRepository;
+import com.VsmartEngine.MediaJungle.service.UserService;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 import com.razorpay.Order;
@@ -242,7 +245,19 @@ public class PaymentController {
         }
     }
 
-   
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("GetPlanDetailsByUserId/{userId}")
+    public ResponseEntity<Map<String, String>> getPlanDetailsByUserId(@PathVariable Long userId) {
+        String plan = userService.getPlanDetailsByUserId(userId); // Get the plan details as a string
+
+        // Wrap the plan details in a JSON object
+        Map<String, String> response = new HashMap<>();
+        response.put("planName", plan);
+
+        return ResponseEntity.ok(response); // Return the JSON object
+    }
 
 
     public ResponseEntity<String> updatePaymentId(@RequestBody Map<String, String> requestData) {
