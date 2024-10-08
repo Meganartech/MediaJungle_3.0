@@ -8,7 +8,6 @@ import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/plan_and_payment/featureList.dart';
 import 'package:ott_project/plan_and_payment/payment_settings.dart';
 import 'package:ott_project/plan_and_payment/plan_details.dart';
-import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/service/icon_service.dart';
 import 'package:ott_project/service/plan_api_service.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -34,7 +33,7 @@ class _PlanPageState extends State<PlanPage> {
   String? razorpayKey;
   Map<String, bool> expandedState = {};
   int? _userId;
-  String baseUrl = 'http://192.168.183.129:8080/api/v2';
+  String baseUrl = 'http://192.168.183.42:8080/api/v2';
   bool _isSearching = false;
   List<dynamic> _searchResults = [];
 
@@ -133,12 +132,21 @@ class _PlanPageState extends State<PlanPage> {
       );
       print('ResponseDiscount:${response.statusCode}');
       if (response.statusCode == 200) {
-        final discountedPrice = double.parse(response.body);
+        if(response.body.isNotEmpty){
+        final discountedPrice = double.tryParse(response.body);
+        if(discountedPrice != null){
         setState(() {
           discountedAmounts[planName] ??= {};
-          discountedAmounts[planName]![tenureName] = discountedPrice;
+          discountedAmounts[planName]![tenureName] = discountedPrice!;
         });
-      } else {
+        }else{
+          print('Invalid discount format from server.');
+        }
+      }else {
+        print('Empty response body from server.');
+      }
+      }
+       else {
         print('Failed to calculate discount');
       }
     } catch (e) {
@@ -212,11 +220,11 @@ class _PlanPageState extends State<PlanPage> {
       body: jsonEncode({
         'orderId': orderId,
         'paymentId': paymentId,
-        'status_code': statusCode,
+        'status': statusCode,
         'planname': planName,
         'amount': amount.toInt().toString(),
         'userId': _userId.toString(),
-        'tenureId': tenureId,
+        'tenure': tenureId,
         'signature': signature
       }),
       headers: {'Content-type': 'application/json'},
@@ -279,7 +287,7 @@ class _PlanPageState extends State<PlanPage> {
     }
     try {
       print('Amount before sending: $amount');
-      final amountInPaise = (amount * 100).toInt().toString();
+      final amountInPaise = (amount * 100).toInt();
       final userId = _userId.toString();
       final planName = selectedPlan;
 

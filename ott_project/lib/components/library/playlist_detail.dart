@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/background_image.dart';
-import 'package:ott_project/components/music_folder/music.dart';
-import 'package:ott_project/components/music_folder/music_player_page.dart';
 import 'package:ott_project/components/music_folder/playlist.dart';
 import 'package:ott_project/components/music_folder/song_player_page.dart';
 import 'package:ott_project/components/pallete.dart';

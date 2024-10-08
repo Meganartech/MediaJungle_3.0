@@ -4,11 +4,9 @@ import 'package:ott_project/components/category/audio_category_section.dart';
 import 'package:ott_project/components/music_folder/audio.dart';
 
 import 'package:ott_project/components/music_folder/audio_provider.dart';
-import 'package:ott_project/components/music_folder/currently_playing_bar.dart';
 import 'package:ott_project/components/music_folder/recently_played_manager.dart';
 import 'package:ott_project/components/video_folder/category_bar.dart';
 import 'package:ott_project/pages/app_icon.dart';
-import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/pages/home_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/pages/video_page.dart';

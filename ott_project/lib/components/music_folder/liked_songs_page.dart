@@ -7,7 +7,6 @@ import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/music_folder/audio.dart';
 import 'package:ott_project/components/music_folder/music_player_page.dart';
 import 'package:ott_project/components/pallete.dart';
-import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/service/audio_api_service.dart';
 import '../../pages/app_icon.dart';
 

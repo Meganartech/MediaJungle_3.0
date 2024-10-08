@@ -5,7 +5,6 @@ import 'package:ott_project/components/music_folder/listen_again.dart';
 import 'package:ott_project/components/music_folder/music_player_page.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/app_icon.dart';
-import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/pages/blockbuster_movie_page.dart';
 import 'package:ott_project/service/audio_service.dart';
 import 'package:ott_project/service/icon_service.dart';

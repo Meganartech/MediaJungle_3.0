@@ -1,7 +1,4 @@
-import 'dart:convert';
-import 'dart:typed_data';
 
-import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/notification/notification.dart';
@@ -18,7 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import '../components/music_folder/audio.dart';
 import '../components/music_folder/music.dart';
 import '../components/video_folder/movie.dart';
-import '../components/video_folder/video_play.dart';
 import '../service/icon_service.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -322,16 +318,16 @@ class _CustomAppBarState extends State<CustomAppBar> {
             SizedBox(
               width: 6,
             ),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProfilePage()));
-                },
-                icon: Icon(
-                  Icons.person_outline_rounded,
-                  color: kWhite,
-                  size: 25,
-                )),
+            // IconButton(
+            //     onPressed: () {
+            //       Navigator.push(context,
+            //           MaterialPageRoute(builder: (context) => ProfilePage()));
+            //     },
+            //     icon: Icon(
+            //       Icons.person_outline_rounded,
+            //       color: kWhite,
+            //       size: 25,
+            //     )),
             SizedBox(
               width: 10,
             ),

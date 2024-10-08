@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/song_player_page.dart';
@@ -9,14 +8,12 @@ import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/pages/audio_page.dart';
 import 'package:ott_project/pages/home_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
-import 'package:ott_project/search/search_result_movie.dart';
 import 'package:ott_project/service/movie_service_page.dart';
 import 'package:ott_project/service/service.dart';
 import '../components/background_image.dart';
 import '../components/category/movie_category_section.dart';
 
 import '../components/video_folder/video_container.dart';
-import '../components/video_folder/video_play.dart';
 import '../service/icon_service.dart';
 // Import the movie service
 
@@ -207,7 +204,7 @@ class _MoviePageState extends State<MoviePage> {
                           height: 1,
                         ),
                         SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.02,
+                          height: MediaQuery.sizeOf(context).height * 0.01,
                         ),
                         CategoryBar(
                             selectedCategory: selectedCategory,
@@ -219,9 +216,7 @@ class _MoviePageState extends State<MoviePage> {
                           color: Colors.white,
                           height: 1,
                         ),
-                        SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.02,
-                        ),
+                       
                         Expanded(
                           child: _searchController.text.isNotEmpty &&
                                   _filteredMovies.isEmpty
@@ -231,18 +226,7 @@ class _MoviePageState extends State<MoviePage> {
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 )
-                              // : _searchController.text.isNotEmpty
-                              //     ? ListView.builder(
-                              //         shrinkWrap: true,
-                              //         physics: NeverScrollableScrollPhysics(),
-                              //         itemCount: _filteredMovies.length,
-                              //         itemBuilder: (context, index) {
-                              //           return SearchResultMovie(
-                              //               movie: _filteredMovies[index],
-                              //               allMovies: _filteredMovies,
-                              //               index: index);
-                              //         },
-                              //       )
+                              
                               : FutureBuilder<List<VideoContainer>>(
                                   future: MovieService.fetchVideoContainer(),
                                   builder: (context, snapshot) {
