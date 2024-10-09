@@ -148,14 +148,16 @@ class MovieCard extends StatelessWidget {
 class MoviesCard extends StatelessWidget {
   final VideoDescription movie;
   final int initialIndex;
-  //final VoidCallback onTap;
+  final VoidCallback onTap;
+  final List<int> categoryList;
   //final List<Movies> movies;
 
   const MoviesCard({
     Key? key,
     required this.movie,
     required this.initialIndex,
-    //required this.onTap,
+    required this.onTap,
+    required this.categoryList,
     //this.movies = const []
   }) : super(key: key);
 
@@ -164,7 +166,7 @@ class MoviesCard extends StatelessWidget {
     // final compressedBytes = base64.decode(movie.thumbnail);
     // final decompressedBytes = ZLibDecoder().decodeBytes(compressedBytes);
     return GestureDetector(
-     // onTap: onTap,
+     onTap: onTap,
       child: Container(
         width: 100,
         //height: 500,

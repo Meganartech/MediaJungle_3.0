@@ -56,7 +56,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
       _movieDetails =
           await _apiService.fetchVideoDetail(widget.movies[movieIndex].id);
 
-      await _fetchCastAndCrew(widget.movies[movieIndex].id);
+     // await _fetchCastAndCrew(widget.movies[movieIndex].id);
       setState(() {});
       return _initializeVideoPlayer(widget.movies[movieIndex].id);
     } catch (e) {
@@ -64,15 +64,15 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     }
   }
 
-  Future<void> _fetchCastAndCrew(int movieId) async {
-    try {
-      _castAndCrew = await _apiService.fetchCastAndCrew(movieId);
-      setState(() {});
-      //return _initializeVideoPlayer(widget.movies[movieIndex].id);
-    } catch (e) {
-      print('Error fetching cast and crew: $e');
-    }
-  }
+  // Future<void> _fetchCastAndCrew(int movieId) async {
+  //   try {
+  //     _castAndCrew = await _apiService.fetchCastAndCrew(movieId);
+  //     setState(() {});
+  //     //return _initializeVideoPlayer(widget.movies[movieIndex].id);
+  //   } catch (e) {
+  //     print('Error fetching cast and crew: $e');
+  //   }
+  // }
 
   Future<void> _initializeVideoPlayer(int id) async {
     try {

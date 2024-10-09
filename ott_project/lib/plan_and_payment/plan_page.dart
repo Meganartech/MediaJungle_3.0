@@ -137,7 +137,7 @@ class _PlanPageState extends State<PlanPage> {
         if(discountedPrice != null){
         setState(() {
           discountedAmounts[planName] ??= {};
-          discountedAmounts[planName]![tenureName] = discountedPrice!;
+          discountedAmounts[planName]![tenureName] = discountedPrice;
         });
         }else{
           print('Invalid discount format from server.');

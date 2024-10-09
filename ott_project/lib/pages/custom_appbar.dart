@@ -5,7 +5,6 @@ import 'package:ott_project/components/notification/notification.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/pages/app_icon.dart';
-import 'package:ott_project/profile/profile_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ott_project/service/audio_service.dart';
 
