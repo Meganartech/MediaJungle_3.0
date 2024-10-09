@@ -762,12 +762,12 @@ public class VideoController {
 	        VideoScreenDTO videoScreenDTO = new VideoScreenDTO(
 	            video.getId(),
 	            video.getVideoTitle(),
+	            video.getMainVideoDuration(),
 	            categoryValues,
 	            castAndCrewDetails,
 	            video.getDescription(),
 	            matchingVideos
 	        );
-
 	        // Step 5: Return the VideoScreenDTO with all video and cast/crew details
 	        return ResponseEntity.ok(videoScreenDTO);
 	    }

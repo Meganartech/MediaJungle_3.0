@@ -9,6 +9,7 @@ public class VideoScreenDTO {
 	
 	private long videoid;
 	private String videotitle;
+	private String duration;
 	private List<String> category = new ArrayList<>();
 	private List<CastAndCrewModalDTO> castandcrew;
 	private String description;
@@ -17,16 +18,19 @@ public class VideoScreenDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public VideoScreenDTO(long videoid, String videotitle, List<String> category, List<CastAndCrewModalDTO> castandcrew,
-			String description, List<VideoDescription> videoDescriptions) {
+	
+	public VideoScreenDTO(long videoid, String videotitle, String duration, List<String> category,
+			List<CastAndCrewModalDTO> castandcrew, String description, List<VideoDescription> videoDescriptions) {
 		super();
 		this.videoid = videoid;
 		this.videotitle = videotitle;
+		this.duration = duration;
 		this.category = category;
 		this.castandcrew = castandcrew;
 		this.description = description;
 		this.videoDescriptions = videoDescriptions;
 	}
+
 	public long getVideoid() {
 		return videoid;
 	}
@@ -62,6 +66,14 @@ public class VideoScreenDTO {
 	}
 	public void setVideoDescriptions(List<VideoDescription> videoDescriptions) {
 		this.videoDescriptions = videoDescriptions;
+	}
+
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
 	}
 	
 }
