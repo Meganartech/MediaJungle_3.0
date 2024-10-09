@@ -98,6 +98,7 @@ import Container from './admin/Container';
 import AudioHomecreeenContainer from './user/Screens/AudioBanner';
 import AudioHomecreeen from './user/Screens/AudioHomescreen';
 import Aud from './admin/appptest';
+import ViewProfile from './user/ViewProfile';
 
 
 
@@ -219,7 +220,8 @@ const App = () => {
           <Route path='watchpage/:id' element={<WatchPage />} />
           {/* <Route path='videoScreen/:id' element={<VideoScreen/>} />  */}
           <Route path='userforgetpassword' element={<Userforgetpassword />} />
-          
+          <Route path='ViewProfile' element={<ViewProfile />} />
+         
 
 
           <Route path='admin' element={<Login />}  >
