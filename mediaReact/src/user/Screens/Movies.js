@@ -516,13 +516,15 @@ const MoviesPage = () => {
     localStorage.setItem('items', JSON.stringify(item));
   };
   
-
+  const handleBanner = (id) =>{
+    localStorage.setItem('items', id);
+  }
 
 
   const handlePlayClick = (videoid) => {
-    handleEdit(videoid);
+    handleBanner(videoid);
     setPlay(true);
-    if (log === "true") {
+    if (userid) {
       navigate("/play");
     } else {
       navigate("/UserLogin");
@@ -537,7 +539,7 @@ const MoviesPage = () => {
     <div className="banner-items" style={{ transform: `translateX(-${bannerIndex * 100}%)` }}>
       {videoBanners.map((banner, index) => (
         <div key={index} className="banner-item" onClick={() => handlePlayClick(banner.videoId)}  style={{ cursor: 'pointer' }}>
-          <img src={`${API_URL}/api/v2/${banner.videoId}/videothumbnail`} alt={`Banner ${index}`} />
+          <img src={`${API_URL}/api/v2/${banner.videoId}/videoBanner`} alt={`Banner ${index}`} />
         </div>
       ))}
     </div>

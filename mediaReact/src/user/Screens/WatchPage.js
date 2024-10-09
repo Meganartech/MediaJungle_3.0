@@ -116,23 +116,25 @@ useEffect(() => {
     fetchvideocastandcrew();
   }, [id]);
 
-  const handleEdit = (id, name) => {
-    console.log(`Editing movie: ${id} - ${name}`);
+ const handleEdit = (id) => {
+    localStorage.setItem('items', id);
   };
 
-  const handlePlayClick = () => {
-    handleEdit(getall.id, getall.moviename);
+  const handlePlayClick = (videoid) => {
+    handleEdit(videoid);
     setPlay(true);
-    if (log === "true") {
+    if (userid) {
       navigate("/play");
     } else {
       navigate("/UserLogin");
     }
   };
 
+
   const handleSubscribe = () => {
     navigate('/PlanDetails');
   };
+
 
   return (
   //   <Layout className="container mx-auto min-h-screen overflow-y-auto">
@@ -235,7 +237,7 @@ useEffect(() => {
     <>
       <img src={`${API_URL}/api/v2/${id}/videothumbnail`} alt="image" className="img-fluid" />
       <div className="overlay-buttons">
-        <button id="button1" className="me-4">Subscription</button>
+        <button id="button1" className="me-4" onClick={() => handlePlayClick(id)}>Play</button>
         <button id="button2" className=" me-4">Add to Watch list</button>
         <i className="bi bi-share-fill share-icon"></i>
       </div>
@@ -278,7 +280,7 @@ useEffect(() => {
   </div>
  </div>
 
- <div className='suggestion'>
+ {/* <div className='suggestion'>
   <span>Suggestion</span>
   <div className="videoscreenitems">
   {getall.videoDescriptions && getall.videoDescriptions.length > 0 && (
@@ -290,7 +292,7 @@ useEffect(() => {
             alt={`Video ${video.videoTitle}`} // Assuming videoTitle is part of video
             className="videoscreenthumbnail"
           />
-          <p>{video.videoTitle}</p> {/* Assuming videoTitle is a property of video */}
+          <p>{video.videoTitle}</p> 
         </div>
       ))}
     </div>
@@ -298,7 +300,7 @@ useEffect(() => {
 </div>
 
 
-    </div>
+    </div> */}
  </div>
 
 
