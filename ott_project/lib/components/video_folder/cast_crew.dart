@@ -37,15 +37,21 @@ class CastCrew {
   final String name;
   
   final int id;
-  final Uint8List? image; 
+  Uint8List? image; 
 
   CastCrew({required this.name,this.image, required this.id});
 
   factory CastCrew.fromJson(Map<String, dynamic> json) {
     return CastCrew(
       name: json['name'] as String,
-     
       id: json['id'] as int,
     );
+  }
+   Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'image': image,
+    };
   }
 }

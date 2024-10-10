@@ -7,6 +7,7 @@ import 'package:ott_project/components/music_folder/currently_playing_bar.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/recently_played.dart';
 import 'package:ott_project/components/video_folder/category_bar.dart';
+import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/pages/home_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
@@ -426,7 +427,7 @@ class _MusicPageState extends State<MusicPage> {
         itemBuilder: (context, index) {
           final item = _searchResults[index];
           return ListTile(
-            title: Text(item is Movie ? item.moviename : item.songname,
+            title: Text(item is AudioDescription ? item.audioTitle : 'unknown',
                 style: TextStyle(color: Colors.white)),
             subtitle: Text(item is Movie ? 'Movie' : 'Song',
                 style: TextStyle(color: Colors.white70)),

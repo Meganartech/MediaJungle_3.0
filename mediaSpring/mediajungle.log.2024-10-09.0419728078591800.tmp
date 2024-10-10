@@ -1,0 +1,184 @@
+2024-10-09 17:12:40 [http-nio-8080-exec-270] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoContainersWithDetails with arguments: []
+2024-10-09 17:12:40 [http-nio-8080-exec-270] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoContainersWithDetails with result: <200 OK OK,[com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@13e50669, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@17c14ce5, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@945bb5c, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@3f99c821],[]>
+2024-10-09 17:12:40 [http-nio-8080-exec-272] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:12:40 [http-nio-8080-exec-242] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:12:40 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:12:40 [http-nio-8080-exec-274] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:12:40 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@7bfd95d1,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:12:40 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@2f2a83a0,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-274] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@70fd5e41,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:12:40 [http-nio-8080-exec-274] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:12:40 [http-nio-8080-exec-272] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@5622915,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-242] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@5bf986a7,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-283] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:12:40 [http-nio-8080-exec-283] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@15ef1826,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@439a93c5,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-274] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@c88a14b,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-262] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:12:40 [http-nio-8080-exec-277] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [4]
+2024-10-09 17:12:40 [http-nio-8080-exec-269] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:12:40 [http-nio-8080-exec-262] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@66a57f1b,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-281] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:12:40 [http-nio-8080-exec-268] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:12:40 [http-nio-8080-exec-269] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@5c750e4c,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:12:40 [http-nio-8080-exec-268] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@778dc6f2,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-281] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@7564bc1e,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-278] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:12:40 [http-nio-8080-exec-275] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:12:40 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@68859276,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-277] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@61ebffd4,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-257] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:12:40 [http-nio-8080-exec-257] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@dc2ff30,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-265] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:12:40 [http-nio-8080-exec-279] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:12:40 [http-nio-8080-exec-278] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@215731dd,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-275] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@334d51df,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-259] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:12:40 [http-nio-8080-exec-265] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@4ab7b7aa,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-228] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [4]
+2024-10-09 17:12:40 [http-nio-8080-exec-279] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@6a090b4b,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-255] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:12:40 [http-nio-8080-exec-259] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@1e4e36d1,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-255] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@7775bcda,[Content-Type:"image/png"]>
+2024-10-09 17:12:40 [http-nio-8080-exec-228] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@245404c5,[Content-Type:"image/png"]>
+2024-10-09 17:13:04 [http-nio-8080-exec-282] INFO  c.V.MediaJungle.LoggingAspect - Entering method: userlogin with arguments: [{email=rose@gmail.com, password=rose}]
+2024-10-09 17:13:04 [http-nio-8080-exec-282] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: userlogin with result: <200 OK OK,{name=Rose, message=Login successful, userId=1, email=rose@gmail.com, token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb3NlQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoicm9zZUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTcyODQ3NDE4NCwiZXhwIjoxNzI4NTYwNTg0fQ.JIlRo4IPlZKSnEsYPJHcLRb_z9Powt0DKa2UK49XOOY},[]>
+2024-10-09 17:13:04 [http-nio-8080-exec-281] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoContainersWithDetails with arguments: []
+2024-10-09 17:13:04 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoContainersWithDetails with arguments: []
+2024-10-09 17:13:04 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoContainersWithDetails with result: <200 OK OK,[com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@382e1883, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@29b213af, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@48e30916, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@485f779d],[]>
+2024-10-09 17:13:04 [http-nio-8080-exec-281] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoContainersWithDetails with result: <200 OK OK,[com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@66a5469f, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@2dd2d71f, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@ebb861c, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@2a259624],[]>
+2024-10-09 17:13:05 [http-nio-8080-exec-271] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:05 [http-nio-8080-exec-270] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:05 [http-nio-8080-exec-269] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:05 [http-nio-8080-exec-277] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:05 [http-nio-8080-exec-269] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@248b074,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-269] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:13:05 [http-nio-8080-exec-269] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@1bef820,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-254] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:13:05 [http-nio-8080-exec-269] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:13:05 [http-nio-8080-exec-271] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@21dbe8ac,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-270] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@6a30600a,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-254] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@53979507,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-254] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:05 [http-nio-8080-exec-277] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@2562dafb,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-269] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@3dfdf138,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-280] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:05 [http-nio-8080-exec-279] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:05 [http-nio-8080-exec-265] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:13:05 [http-nio-8080-exec-279] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@1adb9e0a,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-265] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@155ec91a,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-256] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:05 [http-nio-8080-exec-254] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@6d5a31e9,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-280] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@734ab2f3,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-259] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:13:05 [http-nio-8080-exec-267] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:13:05 [http-nio-8080-exec-259] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@3e7007d6,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-276] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:05 [http-nio-8080-exec-267] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@1daec946,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-278] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:05 [http-nio-8080-exec-256] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@1e14dfb5,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-234] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:05 [http-nio-8080-exec-278] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@3180a062,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-275] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:05 [http-nio-8080-exec-276] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@24493512,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-283] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:13:05 [http-nio-8080-exec-275] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@7f13b6d4,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-234] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@2c547936,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-272] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [4]
+2024-10-09 17:13:05 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [4]
+2024-10-09 17:13:05 [http-nio-8080-exec-283] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@5493f513,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-274] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:13:05 [http-nio-8080-exec-274] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@326a8396,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@6c3f7227,[Content-Type:"image/png"]>
+2024-10-09 17:13:05 [http-nio-8080-exec-272] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@41ac552,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-268] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoContainersWithDetails with arguments: []
+2024-10-09 17:13:36 [http-nio-8080-exec-268] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoContainersWithDetails with result: <200 OK OK,[com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@16f24c88, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@15532c1a, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@417f7af8, com.VsmartEngine.MediaJungle.Container.VideoContainerDTO@5689186a],[]>
+2024-10-09 17:13:36 [http-nio-8080-exec-267] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:36 [http-nio-8080-exec-256] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:36 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:36 [http-nio-8080-exec-281] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:36 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@36f14e1d,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:13:36 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@54f4afea,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:13:36 [http-nio-8080-exec-267] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@24a6508e,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-256] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@7181f887,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@1ee84f34,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-281] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@2a5b9fd4,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:13:36 [http-nio-8080-exec-254] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:36 [http-nio-8080-exec-261] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@746b9394,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-278] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:13:36 [http-nio-8080-exec-278] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@3fdddcf0,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-254] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@1d24ce31,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-275] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:36 [http-nio-8080-exec-280] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:36 [http-nio-8080-exec-264] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:13:36 [http-nio-8080-exec-264] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@1ea76ea2,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-273] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:36 [http-nio-8080-exec-257] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:36 [http-nio-8080-exec-275] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@5cea1ee5,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-273] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@5bd73ec7,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-263] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [5]
+2024-10-09 17:13:36 [http-nio-8080-exec-228] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:36 [http-nio-8080-exec-280] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@10dd23af,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-263] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@1f72b8a9,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-255] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [1]
+2024-10-09 17:13:36 [http-nio-8080-exec-228] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@36c096e3,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-262] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [2]
+2024-10-09 17:13:36 [http-nio-8080-exec-257] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@7fef625d,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-255] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@6d74b57b,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-242] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [4]
+2024-10-09 17:13:36 [http-nio-8080-exec-283] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:13:36 [http-nio-8080-exec-276] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [3]
+2024-10-09 17:13:36 [http-nio-8080-exec-234] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoThumbnail with arguments: [4]
+2024-10-09 17:13:36 [http-nio-8080-exec-283] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@55358fd1,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-276] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@10a5728e,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-262] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@709675b2,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-242] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@77529526,[Content-Type:"image/png"]>
+2024-10-09 17:13:36 [http-nio-8080-exec-234] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoThumbnail with result: <200 OK OK,[B@7a169fd7,[Content-Type:"image/png"]>
+2024-10-09 17:13:37 [http-nio-8080-exec-264] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoScreenDetails with arguments: [2, 1]
+2024-10-09 17:13:37 [http-nio-8080-exec-264] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoScreenDetails with result: <200 OK OK,com.VsmartEngine.MediaJungle.video.VideoScreenDTO@3b9ecb2b,[]>
+2024-10-09 17:13:37 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@26f0343e]
+2024-10-09 17:13:37 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:13:38 [http-nio-8080-exec-279] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@4b19fc3b]
+2024-10-09 17:13:38 [http-nio-8080-exec-279] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:13:39 [http-nio-8080-exec-268] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@5ea45d8a]
+2024-10-09 17:13:39 [http-nio-8080-exec-268] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:13:40 [http-nio-8080-exec-265] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@d822e67]
+2024-10-09 17:13:40 [http-nio-8080-exec-265] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:14:10 [http-nio-8080-exec-259] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoScreenDetails with arguments: [1, 5]
+2024-10-09 17:14:10 [http-nio-8080-exec-259] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoScreenDetails with result: <200 OK OK,com.VsmartEngine.MediaJungle.video.VideoScreenDTO@39089d3e,[]>
+2024-10-09 17:16:31 [http-nio-8080-exec-254] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@d17210b]
+2024-10-09 17:16:31 [http-nio-8080-exec-254] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:16:32 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@2dedeec0]
+2024-10-09 17:16:32 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:16:33 [http-nio-8080-exec-272] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@595ef049]
+2024-10-09 17:16:33 [http-nio-8080-exec-272] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:31:11 [http-nio-8080-exec-268] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@5e420702]
+2024-10-09 17:31:11 [http-nio-8080-exec-268] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:31:12 [http-nio-8080-exec-265] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@49e284e0]
+2024-10-09 17:31:12 [http-nio-8080-exec-265] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:31:16 [http-nio-8080-exec-259] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoScreenDetails with arguments: [2, 1]
+2024-10-09 17:31:16 [http-nio-8080-exec-259] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoScreenDetails with result: <200 OK OK,com.VsmartEngine.MediaJungle.video.VideoScreenDTO@5fd277a,[]>
+2024-10-09 17:31:16 [http-nio-8080-exec-278] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@24bc1684]
+2024-10-09 17:31:16 [http-nio-8080-exec-278] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:31:16 [http-nio-8080-exec-254] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@22102aab]
+2024-10-09 17:31:16 [http-nio-8080-exec-254] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:31:18 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [2, org.apache.catalina.connector.RequestFacade@328e96f7]
+2024-10-09 17:31:18 [http-nio-8080-exec-266] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:31:19 [http-nio-8080-exec-272] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideoScreenDetails with arguments: [3, 2]
+2024-10-09 17:31:19 [http-nio-8080-exec-272] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideoScreenDetails with result: <200 OK OK,com.VsmartEngine.MediaJungle.video.VideoScreenDTO@6706e8df,[]>
+2024-10-09 17:31:19 [http-nio-8080-exec-268] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [3, org.apache.catalina.connector.RequestFacade@63d3c02]
+2024-10-09 17:31:19 [http-nio-8080-exec-268] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:31:19 [http-nio-8080-exec-259] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [3, org.apache.catalina.connector.RequestFacade@7dfa161]
+2024-10-09 17:31:19 [http-nio-8080-exec-259] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:31:20 [http-nio-8080-exec-275] INFO  c.V.MediaJungle.LoggingAspect - Entering method: getVideo with arguments: [3, org.apache.catalina.connector.RequestFacade@33cca7b7]
+2024-10-09 17:31:20 [http-nio-8080-exec-275] INFO  c.V.MediaJungle.LoggingAspect - Exiting method: getVideo with result: <206 PARTIAL_CONTENT Partial Content,Byte array resource [resource loaded from byte array],[Content-Type:"video/mp4", Content-Disposition:"inline", Content-Range:"bytes 0-928133/928134", Content-Length:"928134"]>
+2024-10-09 17:32:47 [RMI TCP Connection(396)-127.0.0.1] INFO  o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+2024-10-09 17:32:48 [RMI TCP Connection(396)-127.0.0.1] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-09 17:32:48 [RMI TCP Connection(396)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-10-09 17:32:48 [RMI TCP Connection(396)-127.0.0.1] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

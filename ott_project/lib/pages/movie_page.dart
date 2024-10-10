@@ -309,9 +309,9 @@ class _MoviePageState extends State<MoviePage> {
             );
           } else {
             return ListTile(
-              title: Text(item is Movie ? item.moviename : item.songname,
+              title: Text(item is VideoDescription ? item.videoTitle : 'null',
                   style: TextStyle(color: Colors.white)),
-              subtitle: Text(item is Movie ? 'Movie' : 'Song',
+              subtitle: Text(item is VideoDescription ? 'Movie' : 'Song',
                   style: TextStyle(color: Colors.white70)),
               onTap: () {
                 if (item is Movie) {

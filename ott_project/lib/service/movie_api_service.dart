@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
@@ -45,15 +46,30 @@ class MovieApiService {
     }
   }
 
+    Future<String> fetchVideoStreamUrl(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/$id/videofile'));
+    print(response.statusCode);
+    if (response.statusCode == 206 || response.statusCode == 200) {
+      return '$baseUrl/$id/videofile';
+    } else {
+      throw Exception('Failed to load video stream');
+    }
+  }
+
   Future<VideoDescription> fetchVideoScreenDetails(int videoId,int categoryId) async{
     final response = await http.get(Uri.parse('$baseUrl/videoscreen?videoId=$videoId&categoryId=$categoryId'));
   print('Response:${response.statusCode}');
     print('Response: ${response.body}');
     if(response.statusCode ==200){
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+   
+
+      //videoDescription
       List<VideoDescription> videoDescriptions = (jsonResponse['videoDescriptions'] as List)
         .map((item) => VideoDescription.fromJson(item))
         .toList();
+
+        // sepaarate video description
        try {
       return videoDescriptions.firstWhere(
         (video) => video.id == videoId,
@@ -69,31 +85,35 @@ class MovieApiService {
     }
   }
 
-  Future<String> fetchVideoStreamUrl(int id) async {
-    final response = await http.get(Uri.parse('$baseUrl/$id/videofile'));
-    print(response.statusCode);
-    if (response.statusCode == 206 || response.statusCode == 200) {
-      return '$baseUrl/$id/videofile';
-    } else {
-      throw Exception('Failed to load video stream');
+
+
+  Future<List<CastCrew>> fetchCastAndCrew(List<int> castIds) async {
+    List<CastCrew> castList =[];
+   for (var id in castIds){
+    try{
+    final response = await http.get(Uri.parse('$baseUrl/getcast/$id'));
+
+    if(response.statusCode == 200){
+      final Map<String,dynamic> castDetails = jsonDecode(response.body);
+
+      Uint8List? image = await fetchCastAndCrewImage(id);
+
+      CastCrew member = CastCrew(name: castDetails['name'] ?? 'Unknown', id: castDetails['id'],image: image);
+
+      castList.add(member);
+    }else{
+      print('Failed to load cast details for ID $id: ${response.statusCode}');
+          // Add a placeholder member if details couldn't be fetched
+          castList.add(CastCrew(name: 'Cast Member', id: id));
     }
+    }catch(e){
+        print('Error fetching cast member $id: $e');
+        // Add a placeholder member in case of error
+        castList.add(CastCrew(name: 'Cast Member', id: id));
+    }
+   }
+   return castList;
   }
-
-  // Future<List<CastMember>> fetchCastAndCrew(int movieId) async {
-  //   final response =
-  //       await http.get(Uri.parse('$baseUrl/Getvideocast?movieId=$movieId'));
-  //   print(response.statusCode);
-
-  //   if (response.statusCode == 200) {
-  //     List castData = jsonDecode(response.body);
-  //     return castData
-  //         .map((json) => CastMember.fromJson(json))
-  //         .where((CastMember) => CastMember.videoId == movieId)
-  //         .toList();
-  //   } else {
-  //     throw Exception('Faild to load cast and crew');
-  //   }
-  // }
 
  Future<Uint8List?> fetchCastAndCrewImage(int castId) async{
   final response = await http.get(Uri.parse('$baseUrl/getcastimage/$castId'));

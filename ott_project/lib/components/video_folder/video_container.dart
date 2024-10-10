@@ -71,7 +71,7 @@ class VideoDescription {
       certificateName: json['certificateName'],
       vidofilename: json['vidofilename'],
       videotrailerfilename: json['videotrailerfilename'],
-      castAndCrewList: List<int>.from(json['castandcrewlist'] ?? []) ,
+      castAndCrewList: List<int>.from(json['castandcrewlist']),
       tagList: List<int>.from(json['taglist']),
       categoryList: List<int>.from(json['categorylist'] ?? [] ),
     );

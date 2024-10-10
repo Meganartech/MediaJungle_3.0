@@ -100,7 +100,7 @@ function Subscription_details() {
   {isExpired && (
               <div className="flex justify-center">
                 <NavLink
-                  to='/GetSubscription'
+                  to='/PlanDetails'
                   className='bg-red-500 text-white p-2 rounded-lg text-sm hover:bg-red-800'
                 >
                   Get Subscription
