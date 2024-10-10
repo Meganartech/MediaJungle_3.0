@@ -848,6 +848,8 @@ public class FrontController {
 		return UserRegisterController.resetPassword(loginRequest);
 	}
 	
+	
+	
 	 @GetMapping("/notifications")
 	 public ResponseEntity<?>GetAllNotification(@RequestHeader("Authorization") String token){
 		 
@@ -1005,6 +1007,10 @@ public class FrontController {
 		        
 		        return VideoController.getVideoScreenDetails(videoId, categoryId); // Call the service or controller logic
 		    }
+		 @GetMapping("/access")
+		 public ResponseEntity<?> getUserAccess(@RequestParam("userId") Long userId) {
+				return VideoController.getUserAccess(userId);
+			}
 		 
 		 @GetMapping("/categorylist/category")
 			public ResponseEntity<List<String>> getCategoryNamesByIds(@RequestParam List<Long> categoryIds) {

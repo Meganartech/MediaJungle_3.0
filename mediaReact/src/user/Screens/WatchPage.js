@@ -64,7 +64,6 @@ useEffect(() => {
           categoryId: categoryid, // Pass categoryId as query parameter
         },
       });
-      
       // Fetch video details
       const videoData = response.data;
       setgetall(videoData);
@@ -76,23 +75,21 @@ useEffect(() => {
   };
 
     const fetchUser = async () => {
-      try {
-        const response = await fetch(`${API_URL}/api/v2/GetUserById/${userid}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch user');
-        }
-        const data = await response.json();
-        setUser(data);
-        if (data && data.paymentId && data.paymentId.expiryDate) {
-          setexpiryDate(new Date(data.paymentId.expiryDate));
-          setcurrentdate(new Date());
-        }
-        console.log(data);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        setError(error.message);
-      }
-    };
+  try {
+    const response = await fetch(`${API_URL}/api/v2/access?userId=${userid}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch user');
+    }
+    const data = await response.text();  // Use response.text() for plain text response
+    setUser(data);
+    
+    console.log(data);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    setError(error.message);
+  }
+};
+
 
     fetchData();
     fetchUser();
@@ -122,7 +119,7 @@ useEffect(() => {
   }, [id]);
 
  const handleEdit = (id) => {
-    localStorage.setItem('items', id);
+    localStorage.setItem('id', id);
   };
 
   const handlePlayClick = (videoid) => {
@@ -166,8 +163,6 @@ useEffect(() => {
     // Store the item object in local storage as a JSON string
     localStorage.setItem('items', JSON.stringify(item));
   };
-  
-
 
   return (
 
@@ -178,7 +173,18 @@ useEffect(() => {
     <>
       <img src={`${API_URL}/api/v2/${id}/videothumbnail`} alt="image" className="img-fluid" />
       <div className="overlay-buttons">
+      {getall.videoAccessType === false ? 
+    <button id="button1" className="me-4" onClick={() => handlePlayClick(id)}>Play</button>
+    :
+    user === 'Access granted' ? (
         <button id="button1" className="me-4" onClick={() => handlePlayClick(id)}>Play</button>
+    ) : (
+      <Link to="/PlanDetails">
+        <button id="button1" className="me-4">Subscribe</button>
+        </Link>
+    )
+}
+
         <button id="button2" className=" me-4">Add to Watch list</button>
         <i className="bi bi-share-fill share-icon"></i>
       </div>

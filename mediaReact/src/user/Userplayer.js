@@ -5,10 +5,10 @@ import API_URL from '../Config';
 
 const Userplayer = () => {
 
-  const [videoUrl, setVideoUrl] = useState('');
+  // const [videoUrl, setVideoUrl] = useState('');
   const location = useLocation();
   const log=localStorage.getItem('login');
-  const id = localStorage.getItem('items');
+  const id = localStorage.getItem('id');
 
   const get = location.state ? location.state.get : null; // Check if location.state exists
   
