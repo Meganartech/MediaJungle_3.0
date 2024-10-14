@@ -73,7 +73,7 @@ class VideoDescription {
       videotrailerfilename: json['videotrailerfilename'],
       castAndCrewList: List<int>.from(json['castandcrewlist']),
       tagList: List<int>.from(json['taglist']),
-      categoryList: List<int>.from(json['categorylist']),
+      categoryList: List<int>.from(json['categorylist'] ?? [] ),
     );
   }
 

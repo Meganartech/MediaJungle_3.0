@@ -26,6 +26,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   String subscriptionPlan = 'Free';
   String expiry = '';
   bool isSubscribed = false;
+  bool isSubscriptionExpired = false;
   int amount = 0;
    bool _isSearching = false;
   List<dynamic> _searchResults = [];
@@ -63,7 +64,12 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             subscriptionPlan = subscriptionData['subscriptionTitle'] ?? 'Free';
             expiry = subscriptionData['expiryDate'] ?? '';
             amount = subscriptionData['amount'] ?? 0;
-            isSubscribed = subscriptionPlan != 'Free';
+            
+            if(expiry.isNotEmpty){
+              DateTime expiryDate = DateTime.parse(expiry);
+              isSubscriptionExpired = DateTime.now().isAfter(expiryDate);
+            }
+            isSubscribed = subscriptionPlan != 'Free' && !isSubscriptionExpired;
           });
         } else {
           setState(() {
@@ -200,7 +206,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.18,
                 ),
-                if (!isSubscribed)
+                if (!isSubscribed && isSubscriptionExpired)
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
@@ -218,7 +224,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                 builder: (context) => PlanPage()));
                       },
                       child: Text(
-                        'Get Subscription',
+                       isSubscriptionExpired ? 'Renew Subscription' : 'Get Subscription',
                         style: TextStyle(color: kWhite),
                       ),
                     ),
@@ -232,6 +238,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   }
 
   Widget subscribeInfo(String label, String value) {
+
+    bool isExpired = label == 'Expiry' && isSubscriptionExpired;
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -253,7 +261,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           const SizedBox(width: 10),
           Expanded(
             flex: 2,
-            child: Text(value,
+            child: Text(
+              isExpired ? 'Expired' : value,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                     color: kWhite,

@@ -11,6 +11,7 @@ import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/components/video_folder/cast_crew.dart';
 
 import 'package:ott_project/components/video_folder/movie.dart';
+import 'package:ott_project/components/video_folder/video_container.dart';
 
 import 'package:ott_project/service/movie_api_service.dart';
 
@@ -18,69 +19,72 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import 'package:video_player/video_player.dart';
 
-
-class MoviePlayerPage extends StatefulWidget {
-  final List<Movies> movies;
+class MoviesPlayerPage extends StatefulWidget {
+  final List<VideoDescription> videoDescriptions;
   final int initialIndex;
+  final int categoryId;
 
-  MoviePlayerPage({
-    required this.movies,
+  MoviesPlayerPage({
+    required this.videoDescriptions,
+    required this.categoryId,
     this.initialIndex = 0,
   });
 
   @override
-  _MoviePlayerPageState createState() => _MoviePlayerPageState();
+  _MoviesPlayerPageState createState() => _MoviesPlayerPageState();
 }
 
-class _MoviePlayerPageState extends State<MoviePlayerPage> {
+class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
   late int _currentIndex;
-  List<CastMember> _castAndCrew = [];
+  List<CastCrew> castCrew = [];
   late MovieApiService _apiService;
-  late Movies _movieDetails;
+  late VideoDescription _movieDetails;
   bool isFullScreen = false;
   bool _showControls = true;
   final String currentCategory = '';
   Timer? _hideControlsTimer;
+  String baseUrl = 'http';
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
     _apiService = MovieApiService();
-    _initializeVideoPlayerFuture = _fetchVideoDetail(_currentIndex);
+    _initializeVideoPlayerFuture = _fetchVideoScreenDetails(widget.videoDescriptions[_currentIndex].id, widget.categoryId);
   }
 
-  Future<void> _fetchVideoDetail(int movieIndex) async {
-    try {
-      _movieDetails =
-          await _apiService.fetchVideoDetails(widget.movies[movieIndex].id);
+  Future<void> _fetchVideoScreenDetails(int videoId,int categoryId) async{
 
-      List<int> castIds = [1, 2, 3, 4];
-
-      await _fetchCastAndCrewList(castIds);
-      setState(() {});
-      return _initializeVideoPlayer(widget.movies[movieIndex].id);
-    } catch (e) {
-      print('Error fetching video details: $e');
+    try{
+      print('Video screen....');
+      print('VideoId:$videoId, CategoryId : $categoryId');
+      _movieDetails = await _apiService.fetchVideoScreenDetails(videoId, categoryId);
+     //List<int> castIds = _movieDetails.castAndCrewList;
+    if( _movieDetails.castAndCrewList.isNotEmpty){
+      castCrew = await _apiService.fetchCastAndCrew(_movieDetails.castAndCrewList);
+    }
+    //  await _fetchCastAndCrewList(castIds);
+      setState(() { });
+      return _initializeVideoPlayer(_movieDetails.id);
+    }catch(e){
+      print('Error fetching video screen details: $e');
     }
   }
 
-  Future<void> _fetchCastAndCrewList(List<int> castIds) async {
-    try {
-      _castAndCrew = await _apiService.fetchCastAndCrewList(castIds);
-      setState(() {});
-      //return _initializeVideoPlayer(widget.movies[movieIndex].id);
-    } catch (e) {
-      print('Error fetching cast and crew: $e');
-    }
-  }
 
-  Future<void> _initializeVideoPlayer(int id) async {
+
+  Future<void> _initializeVideoPlayer(int videoId) async {
     try {
-      String videoStreamUrl = await _apiService.fetchVideoStreamUrl(id);
-      _controller = VideoPlayerController.networkUrl(Uri.parse(videoStreamUrl));
+      print("Video URL: $videoId");
+
+      String videoStreamUrl = await _apiService.fetchVideoStreamUrl(videoId);
+      _controller = VideoPlayerController.network(Uri.parse(videoStreamUrl).toString());
+
+      final videoDetails = await _apiService.fetchMovieDetail(videoId);
+      // final Uri videoStreamUrl = Uri.parse(videoUrl);
+      // _controller = VideoPlayerController.networkUrl(videoStreamUrl);
       // _initializeVideoPlayerFuture = _controller.initialize();
       await _controller.initialize();
       _controller.setLooping(true);
@@ -89,7 +93,7 @@ class _MoviePlayerPageState extends State<MoviePlayerPage> {
         setState(() {});
       });
       //await _fetchVideoDetail(id);
-      //await _fetchCastAndCrew(id);
+     // await  _fetchCastAndCrewList(castIds);
       _showControls = true;
       _startHideControlsTimer();
       return Future.value();
@@ -114,16 +118,16 @@ class _MoviePlayerPageState extends State<MoviePlayerPage> {
     if (_currentIndex > 0) {
       setState(() {
         _currentIndex--;
-        _initializeVideoPlayer(widget.movies[_currentIndex].id);
+        _initializeVideoPlayer(widget.videoDescriptions[_currentIndex].id);
       });
     }
   }
 
   void _playNext() {
-    if (_currentIndex < widget.movies.length - 1) {
+    if (_currentIndex < widget.videoDescriptions.length - 1) {
       setState(() {
         _currentIndex++;
-        _initializeVideoPlayer(widget.movies[_currentIndex].id);
+        _initializeVideoPlayer(widget.videoDescriptions[_currentIndex].id);
       });
     }
   }
@@ -192,7 +196,7 @@ class _MoviePlayerPageState extends State<MoviePlayerPage> {
     final String shareUrl =
         'http://192.168.12.128:8080/api/GetvideoDetail/${_movieDetails.id}';
     final String shareText =
-        'Check out "${_movieDetails.moviename}" on Our Movie App!';
+        'Check out "${_movieDetails.videoTitle}" on Our Movie App!';
 
     showModalBottomSheet(
       context: context,
@@ -505,7 +509,7 @@ class _MoviePlayerPageState extends State<MoviePlayerPage> {
               Container(
                 width: 170,
                 child: Text(
-                  _movieDetails.moviename,
+                  _movieDetails.videoTitle,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -544,19 +548,19 @@ class _MoviePlayerPageState extends State<MoviePlayerPage> {
             height: 110,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: _castAndCrew.length,
+                itemCount: castCrew.length,
                 itemBuilder: (context, index) {
+                  CastCrew cast = castCrew[index];
                   return Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: Column(
                       children: [
+
+                        // Text('cnvvn',style:TextStyle(color: Colors.white),),
                         CircleAvatar(
                           radius: 30,
-                          backgroundImage: Image.memory(
-                            _castAndCrew[index].imageBytes,
-                            fit: BoxFit.fill,
-                          ).image,
-                        ),
+                          backgroundImage: cast.image != null ? MemoryImage(cast.image!) :   AssetImage('assets/icon/thupaki.png') as ImageProvider
+                                                ),
                         SizedBox(
                           height: 6,
                         ),
@@ -564,7 +568,7 @@ class _MoviePlayerPageState extends State<MoviePlayerPage> {
                           // padding: EdgeInsets.symmetric(horizontal: 8),
                           width: 79,
                           child: Text(
-                            _castAndCrew[index].name,
+                            cast.name,
                             style: TextStyle(color: Colors.white, fontSize: 12),
                             textAlign: TextAlign.center,
                             softWrap: true,

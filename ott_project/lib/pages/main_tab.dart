@@ -5,7 +5,6 @@ import 'package:ott_project/pages/movie_page.dart';
 // import 'package:ott_project/pages/audio_page.dart';
 // import 'package:ott_project/pages/home_page.dart';
 import 'package:ott_project/pages/music_page.dart';
-import 'package:ott_project/pages/sample_home_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/service/service.dart';
 
@@ -87,8 +86,9 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
               ),
 
               child: BottomAppBar(
+                
                 color: Colors.transparent,
-                elevation: 2,
+                elevation: 10,
                 child: TabBar(
                   controller: controller,
                   indicatorWeight: 0.01,

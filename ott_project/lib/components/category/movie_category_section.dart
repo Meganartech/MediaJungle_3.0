@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/components/video_folder/movie.dart';
+import 'package:ott_project/components/video_folder/movie_player_page.dart';
 import 'package:ott_project/components/video_folder/movies_card.dart';
 
 import '../video_folder/video_container.dart';
@@ -92,10 +93,19 @@ class MoviesCategorySection extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: displayedMovies.length,
               itemBuilder: (context, index) {
+                final movie = displayedMovies[index];
+                final categoryId =movie.categoryList.isNotEmpty 
+                  ? movie.categoryList.first 
+                  : 1; 
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: MoviesCard(
                     movie: displayedMovies[index],
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> 
+                      MoviesPlayerPage(categoryId: categoryId,videoDescriptions: videoContainer.videoDescriptions,initialIndex: index,),));
+                    },
+                    categoryList: displayedMovies[index].categoryList,
                     //movies: videoContainer.videoDescriptions,
                     initialIndex: index,
                   ),

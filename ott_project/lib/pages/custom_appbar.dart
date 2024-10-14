@@ -5,7 +5,6 @@ import 'package:ott_project/components/notification/notification.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/pages/app_icon.dart';
-import 'package:ott_project/profile/profile_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ott_project/service/audio_service.dart';
 
@@ -35,8 +34,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
   TextEditingController _searchController = TextEditingController();
   bool _showSearch = false;
   List<dynamic> _filteredContent = [];
-  late List<Movie> _allMovies = [];
-  late List<Music> _music = [];
   List<AudioContainer> _audio = [];
   List<VideoContainer> _video = [];
   AppIcon? iconData;
@@ -256,7 +253,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   onSubmitted: _performSearch,
                 )
               : Row(
-                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(
                       height: 20,
@@ -318,23 +314,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
             SizedBox(
               width: 6,
             ),
-            // IconButton(
-            //     onPressed: () {
-            //       Navigator.push(context,
-            //           MaterialPageRoute(builder: (context) => ProfilePage()));
-            //     },
-            //     icon: Icon(
-            //       Icons.person_outline_rounded,
-            //       color: kWhite,
-            //       size: 25,
-            //     )),
+         
             SizedBox(
               width: 10,
             ),
           ],
         ),
-        // if (_showSearch && _filteredContent.isNotEmpty)
-        //   Expanded(child: _buildSearchResults()),
+
       ],
     );
   }
@@ -382,67 +368,5 @@ class _CustomAppBarState extends State<CustomAppBar> {
     saveRecentSearch(query);
   }
 
-  // Widget _buildSearchResults() {
-  //   if (_searchController.text.isEmpty) {
-  //     return Container();
-  //   }
-  //   if (_filteredContent.isEmpty) {
-  //     return Center(
-  //       child: Text(
-  //         'No movies or songs found',
-  //         style: TextStyle(color: Colors.white, fontSize: 18),
-  //       ),
-  //     );
-  //   }
-  //   return ListView.builder(
-  //       itemCount: _filteredContent.length,
-  //       itemBuilder: (context, index) {
-  //         final item = _filteredContent[index];
-  //         // final compressedBytes = base64.decode(item.thumbnail);
-  //         // final decompressedBytes = ZLibDecoder().decodeBytes(compressedBytes);
-  //         return ListTile(
-  //           title: Text(item is Movie ? item.moviename : item.songname,
-  //               style: TextStyle(color: Colors.white)),
-  //           subtitle: Text(item is Movie ? 'Movie' : 'Song',
-  //               style: TextStyle(color: Colors.white70)),
-  //           // leading: ClipRRect(
-  //           //   borderRadius: BorderRadius.circular(8),
-  //           //   child: Image.memory(
-  //           //     Uint8List.fromList(decompressedBytes),
-  //           //     width: 35,
-  //           //     height: 35,
-  //           //     fit: BoxFit.fill,
-  //           //   ),
-  //           // ),
-  //           onTap: () {
-  //             if (item is Movie) {
-  //               Navigator.push(
-  //                 context,
-  //                 MaterialPageRoute(
-  //                   builder: (context) => VideoPlayerPage(
-  //                     movies: _allMovies,
-  //                     initialIndex: _allMovies.indexOf(item),
-  //                   ),
-  //                 ),
-  //               );
-  //             } else if (item is Music) {
-  //               // Navigator.push(
-  //               //   context,
-  //               //   MaterialPageRoute(
-  //               //     builder: (context) => MusicPlayerPage(
-  //               //       audio: item,
-  //               //       onDislike: (p0) {},
-  //               //       audioList: _music,
-  //               //       onChange: (newAudio) {
-  //               //         Provider.of<AudioProvider>(context, listen: false)
-  //               //             .setCurrentlyPlaying(newAudio, _music);
-  //               //       },
-  //               //     ),
-  //               //   ),
-  //               // );
-  //             }
-  //           },
-  //         );
-  //       });
-  // }
+
 }
