@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../Layout/Layout';
 import { Link, useNavigate } from 'react-router-dom';
-import { BiArrowBack } from 'react-icons/bi';
-import { FaCloudDownloadAlt, FaHeart, FaPlay, FaUserFriends } from 'react-icons/fa';
 import API_URL from '../../Config';
 import axios from 'axios';
-import Titles from '../Components/Titles';
-import { CardText } from 'react-bootstrap';
+
 
 const WatchPage = () => {
   // const id = localStorage.getItem('items');
@@ -32,6 +29,10 @@ const WatchPage = () => {
   const subscribed = expiryDate > currentDate;
   const modeofvideo = getall.paid;
 
+  const [id, setId] = useState(null); // Define id as a state variable
+  const [categoryid, setCategoryid] = useState(null); // Define categ
+
+  
   const getItemsFromLocalStorage = () => {
     const items = localStorage.getItem('items');
     
@@ -40,13 +41,17 @@ const WatchPage = () => {
   };
   
   // Example of using the retrieved items
+  useEffect(() => {
   const storedItem = getItemsFromLocalStorage();
-  const id = storedItem.id
-  const categoryid = storedItem.categoryid;
+  
   if (storedItem) {
-    console.log('ID:', storedItem.id);
-    console.log('Category ID:', storedItem.categoryid);
+    setId(storedItem.id);
+      setCategoryid(storedItem.categoryid);
+      console.log('ID:', storedItem.id);
+      console.log('Category ID:', storedItem.categoryid);
   }
+}, []);
+  
 
   
 useEffect(() => {
@@ -59,11 +64,10 @@ useEffect(() => {
           categoryId: categoryid, // Pass categoryId as query parameter
         },
       });
-      
       // Fetch video details
       const videoData = response.data;
       setgetall(videoData);
-      console.log(videoData);
+      console.log("videoData",videoData);
     } catch (error) {
       console.error('Error fetching data:', error);
       setError(error.message);
@@ -71,23 +75,21 @@ useEffect(() => {
   };
 
     const fetchUser = async () => {
-      try {
-        const response = await fetch(`${API_URL}/api/v2/GetUserById/${userid}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch user');
-        }
-        const data = await response.json();
-        setUser(data);
-        if (data && data.paymentId && data.paymentId.expiryDate) {
-          setexpiryDate(new Date(data.paymentId.expiryDate));
-          setcurrentdate(new Date());
-        }
-        console.log(data);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        setError(error.message);
-      }
-    };
+  try {
+    const response = await fetch(`${API_URL}/api/v2/access?userId=${userid}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch user');
+    }
+    const data = await response.text();  // Use response.text() for plain text response
+    setUser(data);
+    
+    console.log(data);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    setError(error.message);
+  }
+};
+
 
     fetchData();
     fetchUser();
@@ -117,7 +119,7 @@ useEffect(() => {
   }, [id]);
 
  const handleEdit = (id) => {
-    localStorage.setItem('items', id);
+    localStorage.setItem('id', id);
   };
 
   const handlePlayClick = (videoid) => {
@@ -135,118 +137,63 @@ useEffect(() => {
     navigate('/PlanDetails');
   };
 
+  const [index, setIndex] = useState(0); // Track the starting index of the displayed videos
+  const DISPLAY_LIMIT = 5; // Number of videos to display at a time
+
+  // Safely handle undefined or empty videoDescriptions array
+  const videos = getall?.videoDescriptions || [];
+  const visibleVideos = videos.slice(index, index + DISPLAY_LIMIT);
+
+  const handleNext = () => {
+    if (index + DISPLAY_LIMIT < videos.length) {
+      setIndex(index + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (index > 0) {
+      setIndex(index - 1);
+    }
+  };
+
+  const handleEdit1 = (id, categoryid) => {
+    // Create an object to store both id and categoryid
+    const item = { id, categoryid };
+  
+    // Store the item object in local storage as a JSON string
+    localStorage.setItem('items', JSON.stringify(item));
+  };
 
   return (
-  //   <Layout className="container mx-auto min-h-screen overflow-y-auto">
-  //     <div className='p-1 mb-5'>
-  //       <div className="flex-btn flex-wrap mb-6 gap-2 bg-main rounded border border-gray-800 p-6">
-  //         <Link
-  //           to={`/`}
-  //           className='md:text-xl text-sm flex gap-3 items-center font-bold text-dryGray'
-  //           style={{ color: "#FBC740" }}
-  //         >
-  //           <BiArrowBack /> {getall.moviename}
-  //         </Link>
-  //         <div className='flex-btn sm:w-auto w-full gap-5'>
-  //           <p className='md:text-xl text-sm flex gap-3 items-center font-bold text-dryGray' style={{ color: "#FBC740" }}>
-  //             {getall.year} {getall.category}
-  //           </p>
-  //           <button className='hover:text-subMain'>
-  //             <FaHeart />
-  //           </button>
-  //         </div>
-  //         {modeofvideo ? subscribed ? (
-  //           <div className='w-full h-screen rounded-lg overflow-hidden relative'>
-  //             <div className='absolute top-0 left-0 bottom-0 right-0 bg-main bg-opacity-30 flex-colo'>
-  //               <button onClick={handlePlayClick} className='bg-white text-subMain flex-colo border border-subMain rounded-full w-20 h-20 font-medium text-xl'>
-  //                 <FaPlay />
-  //               </button>
-  //             </div>
-  //             <img
-  //               // src={`data:image/png;base64,${Thumbnail}`}
-  //               src={Thumbnail}
-  //               alt={getall.moviename}
-  //               className='w-full h-full object-cover'
-  //             />
-  //           </div>
-  //         ) : (
-  //           <div className='w-full h-screen rounded-lg overflow-hidden relative flex flex-col justify-center items-center'>
-  //             <img
-  //               // src={`data:image/png;base64,${Thumbnail}`}
-  //               src={Thumbnail}
-  //               alt={getall.moviename}
-  //               className='w-full h-full object-cover'
-  //             />
-  //             <div className='absolute bottom-0 right-0 left-0 p-80 flex flex-col justify-end items-center  gap-4'>
-  //               <button onClick={handleSubscribe} className="bg-subMain hover:text-main transition duration-300 text-white px-2 py-3 rounded font-medium sm:text-sm text-xs inline-flex items-center" style={{ width: '15%', justifyContent: 'center' }}>
-  //                 Subscribe
-  //               </button>
-  //             </div>
-  //           </div>
-  //         ) : (
-  //           <div className='w-full h-screen rounded-lg overflow-hidden relative'>
-  //             <div className='absolute top-0 left-0 bottom-0 right-0 bg-main bg-opacity-30 flex-colo'>
-  //               <button onClick={handlePlayClick} className='bg-white text-subMain flex-colo border border-subMain rounded-full w-20 h-20 font-medium text-xl'>
-  //                 <FaPlay />
-  //               </button>
-  //             </div>
-  //             <img
-  //               // src={`data:image/png;base64,${Thumbnail}`}
-  //               src={Thumbnail}
-  //               alt={getall.moviename}
-  //               className='w-full h-full object-cover'
-  //             />
-  //           </div>
-  //         )}
-  //       </div>
-  //       <p className='md:text-xl text-sm flex gap-3 items-center font-bold text-dryGray' style={{ marginTop: '30px', color: "#FBC740", fontSize: '30px' }}>
-  //         Movie Description
-  //       </p>
-  //       <p className='md:text-xl text-sm flex gap-3 items-center font-bold text-dryGray' style={{ margin: '30px 0 10px 40px', fontSize: '20px' }}>
-  //         {getall.description}
-  //       </p>
-  //     </div>
-  //     {/* <div> */}
-  //       <Titles title="Cast And Crew" Icon={FaUserFriends} />
-  //       <div>
-  //       <div>
-  //   {base64.length > 0 ? (
-  //     <div className="flex flex-wrap gap-4" style={{ marginTop: '20px' }}>
-  //       {base64.map((image, index) => (
-  //         <div key={index} className="flex flex-col items-center gap-2">
-  //           <img
-  //             src={`data:image/png;base64,${image}`}
-  //             className="h-24 w-24 rounded-full object-cover"
-  //             alt={`Thumbnail ${index}`}
-  //           />
-  //           <span style={{ color: '#FBC740' }}>{videocast.find(item => item.castAndCrewImage === image)?.castAndCrew?.name}</span>
-  //         </div>
-  //       ))}
-  //     </div>
-  //   ) : (
-  //     <p>Loading cast and crew...</p>
-  //   )}
-  //   {error && <p>Error: {error}</p>}
-  // </div>
-  //     </div>
-  //   </Layout>
 
   
   <Layout>
+ 
      <div className="videothumbnail position-relative">
     <>
       <img src={`${API_URL}/api/v2/${id}/videothumbnail`} alt="image" className="img-fluid" />
       <div className="overlay-buttons">
+      {getall.videoAccessType === false ? 
+    <button id="button1" className="me-4" onClick={() => handlePlayClick(id)}>Play</button>
+    :
+    user === 'Access granted' ? (
         <button id="button1" className="me-4" onClick={() => handlePlayClick(id)}>Play</button>
+    ) : (
+      <Link to="/PlanDetails">
+        <button id="button1" className="me-4">Subscribe</button>
+        </Link>
+    )
+}
+
         <button id="button2" className=" me-4">Add to Watch list</button>
         <i className="bi bi-share-fill share-icon"></i>
       </div>
-      <span className="overlay-span">Duration:&nbsp;{getall.mainVideoDuration}</span>
+      <span className="overlay-span">Duration:&nbsp;{getall.duration}</span>
     </>
  
 </div>
 
-<div className='content'>
+<div className='content h-100'>
   <div className='title'>
   <span >{getall.videotitle}</span>
   </div>
@@ -273,6 +220,9 @@ useEffect(() => {
   </div>
 )}
  </div>
+
+ 
+ 
  <div className='story'>
   <span className='storyspan'>Story</span>
   <div className='description'>
@@ -280,28 +230,59 @@ useEffect(() => {
   </div>
  </div>
 
- {/* <div className='suggestion'>
+ 
+ {/* <div className="suggestion">
+ <span className='suggspan'>Suggestion</span>
+ </div> */}
+
+ <div className="suggestion">
   <span>Suggestion</span>
   <div className="videoscreenitems">
-  {getall.videoDescriptions && getall.videoDescriptions.length > 0 && (
-    <div className="videoscreenitem-row">
-      {getall.videoDescriptions.map((video) => (
-        <div key={video.id} className="item">
-          <img
-            src={`${API_URL}/api/v2/${video.id}/videothumbnail`}
-            alt={`Video ${video.videoTitle}`} // Assuming videoTitle is part of video
-            className="videoscreenthumbnail"
-          />
-          <p>{video.videoTitle}</p> 
-        </div>
-      ))}
-    </div>
-  )}
+    {videos.length > 0 && (
+      <div className="videoscreenitem-row">
+        <button onClick={handlePrev} disabled={index === 0}>&lt;</button>
+        {visibleVideos.map((video) => (
+          <div key={video.id} className="item">
+            <a
+              href={userid ? `/watchpage/${video.videoTitle}` : "/UserLogin"}
+              onClick={(e) => {
+                e.preventDefault(); // Prevent default navigation to handle custom behavior
+                if (userid) {
+                  handleEdit1(video.id, categoryid);
+                  window.location.href = `/watchpage/${video.videoTitle}`; // Force reload
+                } else {
+                  window.location.href = "/UserLogin";
+                }
+              }}
+            >
+              <img
+                src={`${API_URL}/api/v2/${video.id}/videothumbnail`}
+                alt={`Video ${video.videoTitle}`}
+                className="videoscreenthumbnail"
+              />
+            </a>
+            <p>{video.videoTitle}</p>
+          </div>
+        ))}
+        <button
+          onClick={handleNext}
+          disabled={index + DISPLAY_LIMIT >= videos.length}
+        >
+          &gt;
+        </button>
+      </div>
+    )}
+  </div>
+  
 </div>
 
 
-    </div> */}
- </div>
+
+
+
+    </div> 
+   
+
 
 
   </Layout>
