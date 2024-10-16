@@ -3,6 +3,8 @@ import Layout from '../Layout/Layout';
 import { Link, useNavigate } from 'react-router-dom';
 import API_URL from '../../Config';
 import axios from 'axios';
+import leftarrowIcon from '../UserIcon/left slide icon.png';
+import rightarrowIcon from '../UserIcon/right slide icon.png';
 
 
 const WatchPage = () => {
@@ -240,7 +242,13 @@ useEffect(() => {
   <div className="videoscreenitems">
     {videos.length > 0 && (
       <div className="videoscreenitem-row">
-        <button onClick={handlePrev} disabled={index === 0}>&lt;</button>
+        <button onClick={handlePrev} disabled={index === 0}>
+        <img
+          src={leftarrowIcon}
+          alt="left arrow icon"
+          style={{ width: "30px", height: "30px" }}
+        />
+        </button>
         {visibleVideos.map((video) => (
           <div key={video.id} className="item">
             <a
@@ -268,7 +276,11 @@ useEffect(() => {
           onClick={handleNext}
           disabled={index + DISPLAY_LIMIT >= videos.length}
         >
-          &gt;
+          <img
+            src={rightarrowIcon}
+            alt="right arrow icon"
+            style={{ width: "30px", height: "30px" }}
+          />
         </button>
       </div>
     )}
