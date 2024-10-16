@@ -12,8 +12,6 @@ import 'package:ott_project/service/movie_service_page.dart';
 import 'package:ott_project/service/notification_api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import '../components/music_folder/audio.dart';
-import '../components/music_folder/music.dart';
-import '../components/video_folder/movie.dart';
 import '../service/icon_service.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
