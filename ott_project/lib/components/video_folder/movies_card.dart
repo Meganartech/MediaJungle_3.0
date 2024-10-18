@@ -150,6 +150,7 @@ class MoviesCard extends StatelessWidget {
   final int initialIndex;
   final VoidCallback onTap;
   final List<int> categoryList;
+
   //final List<Movies> movies;
 
   const MoviesCard({
@@ -158,7 +159,8 @@ class MoviesCard extends StatelessWidget {
     required this.initialIndex,
     required this.onTap,
     required this.categoryList,
-    //this.movies = const []
+
+    
   }) : super(key: key);
 
   Widget build(BuildContext context) {

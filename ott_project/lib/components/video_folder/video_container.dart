@@ -4,9 +4,10 @@ import 'package:ott_project/service/movie_service_page.dart';
 
 class VideoContainer {
   final String value;
+  final int categoryId;
   final List<VideoDescription> videoDescriptions;
 
-  VideoContainer({required this.value, required this.videoDescriptions});
+  VideoContainer({required this.value, required this.videoDescriptions,required this.categoryId});
 
   factory VideoContainer.fromJson(Map<String, dynamic> json) {
     var list = json['videoDescriptions'] as List;
@@ -15,6 +16,7 @@ class VideoContainer {
 
     return VideoContainer(
       value: json['value'],
+      categoryId: json['categoryid'],
       videoDescriptions: videoDescriptionsList,
     );
   }
@@ -36,7 +38,6 @@ class VideoDescription {
   final List<int> castAndCrewList;
   final List<int> tagList;
   final List<int> categoryList;
-
   Uint8List? thumbnail;
 
   VideoDescription({
