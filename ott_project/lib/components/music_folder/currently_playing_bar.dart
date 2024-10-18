@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:provider/provider.dart';
@@ -8,11 +9,11 @@ import 'package:provider/provider.dart';
 class CurrentlyPlayingBar extends StatefulWidget {
   // final Audio? currentlyPlaying;
   final VoidCallback onTap;
-  final Music? musicCurrentlyPlaying;
+  final AudioDescription? audioCurrentlyPlaying;
 
   const CurrentlyPlayingBar({
     super.key,
-    required this.musicCurrentlyPlaying,
+    required this.audioCurrentlyPlaying,
     required this.onTap,
   });
 
@@ -32,13 +33,13 @@ class _CurrentlyPlayingBarState extends State<CurrentlyPlayingBar> {
   @override
   void didUpdateWidget(CurrentlyPlayingBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.musicCurrentlyPlaying != widget.musicCurrentlyPlaying) {
+    if (oldWidget.audioCurrentlyPlaying != widget.audioCurrentlyPlaying) {
       _loadThumbnailImage();
     }
   }
 
   Future<void> _loadThumbnailImage() async {
-    final image = await widget.musicCurrentlyPlaying!.thumbnailImage;
+    final image = await widget.audioCurrentlyPlaying!.thumbnailImage;
     setState(() {
       thumbnail = image;
     });
@@ -46,7 +47,7 @@ class _CurrentlyPlayingBarState extends State<CurrentlyPlayingBar> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.musicCurrentlyPlaying == null) return SizedBox.shrink();
+    if (widget.audioCurrentlyPlaying == null) return SizedBox.shrink();
 
     return Consumer<AudioProvider>(builder: (context, audioProvider, child) {
       // final decodedImage =
@@ -80,7 +81,7 @@ class _CurrentlyPlayingBarState extends State<CurrentlyPlayingBar> {
                         )
                       : Container(),
                   // FutureBuilder<Uint8List?>(
-                  //   future: musicCurrentlyPlaying!
+                  //   future: audioCurrentlyPlaying!
                   //       .thumbnailImage, // Ensure this future returns a Uint8List or null
                   //   builder: (context, snapshot) {
                   //     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -130,7 +131,7 @@ class _CurrentlyPlayingBarState extends State<CurrentlyPlayingBar> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          widget.musicCurrentlyPlaying!.songname,
+                          widget.audioCurrentlyPlaying!.audioTitle,
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis,

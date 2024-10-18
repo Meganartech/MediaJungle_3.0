@@ -32,20 +32,20 @@ class SearchResultAudio extends StatelessWidget {
             .toList();
         Provider.of<AudioProvider>(context, listen: false)
             .setCurrentlyPlaying(audio, categoryPlayList);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MusicPlayerPage(
-                audio: audio,
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => MusicPlayerPage(
+        //         audio: audio,
 
-                audioList: categoryPlayList,
-                onDislike: (p0) {},
-                onChange: (newAudio) {
-                  Provider.of<AudioProvider>(context, listen: false)
-                      .setCurrentlyPlaying(newAudio, categoryPlayList);
-                }, // Implement this if needed
-              ),
-            ));
+        //         audioList: categoryPlayList,
+        //         onDislike: (p0) {},
+        //         onChange: (newAudio) {
+        //           Provider.of<AudioProvider>(context, listen: false)
+        //               .setCurrentlyPlaying(newAudio, categoryPlayList);
+        //         }, // Implement this if needed
+        //       ),
+        //     ));
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8),

@@ -5,6 +5,7 @@ import 'package:archive/archive.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ott_project/components/music_folder/audio.dart';
+import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/playlist.dart';
 import 'package:ott_project/components/music_folder/recently_played.dart';
@@ -47,6 +48,13 @@ class AudioProvider with ChangeNotifier {
   List<MusicPlaylist> musicplaylists = [];
   List<MusicPlaylist> get mplaylists => musicplaylists;
 
+  // audioDescription
+
+  AudioDescription? _audioDescriptioncurrently;
+  AudioDescription? get audioDescriptioncurrently => _audioDescriptioncurrently;
+  List<AudioDescription> audio_playlist=[];
+  List<AudioDescription> originalaudioPlaylist =[];
+
   // String newPlaylistTitle = '';
   // String newPlaylistDescription = '';
 
@@ -68,10 +76,222 @@ class AudioProvider with ChangeNotifier {
     });
 
     audioPlayer.onPlayerComplete.listen((_) {
-      handleMusicCompletion();
+      handleAudioCompletion();
     });
   }
 
+  //audio description providers
+
+  Future<void> prepareSong() async{
+    if(currentIndex >= 0 && currentIndex < audio_playlist.length){
+      try{
+        final currentSong = audio_playlist[currentIndex];
+        audioUrl = await AudioApiService().fetchAudioStreamUrl(currentSong.audioFileName);
+        if(audioUrl != null){
+          await audioPlayer.setSource(UrlSource(audioUrl!));
+          notifyListeners();
+        }
+      }catch(e){
+        print('Error preparing song: $e');
+      }
+    }else{
+      print('Error: Invalid song index');
+    }
+  }
+  // Updates the currently playing audio description
+
+  void _updateCurrentlyPlayingSong(AudioDescription audioDescription){
+    _audioDescriptioncurrently = audioDescription;
+    notifyListeners();
+  }
+
+   // Sets the currently playing audio and playlist
+
+   Future<void> setCurrentlyPlayingSong(AudioDescription audioDescription,List<AudioDescription> newPlaylist) async{
+      if(newPlaylist.isEmpty){
+        print('Error:Playlist is empty');
+        return;
+      }
+      _audioDescriptioncurrently = audioDescription;
+      audio_playlist = newPlaylist;
+      currentIndex = audio_playlist.indexOf(audioDescription);
+      await _saveCurrentlyPlayingSong();
+      notifyListeners();
+      await prepareSong();
+   }
+
+  // Save currently playing audio to shared preferences
+  Future<void> _saveCurrentlyPlayingSong() async{
+    final prefs = await SharedPreferences.getInstance();
+    if(_audioDescriptioncurrently!= null){
+      prefs.setString('currentlyPlayingSong', jsonEncode(_audioDescriptioncurrently!.toJson()));
+      prefs.setInt('currentIndex', currentIndex);
+      prefs.setString('songPlayList', jsonEncode(audio_playlist.map((a)=> a.toJson()).toList()));
+    }
+  }
+
+
+  // Load currently playing audio from shared preferences
+  Future<void> loadCurrentlyPlayingSong() async{
+    final prefs = await SharedPreferences.getInstance();
+    final savedIndex = prefs.getInt('currentIndex');
+    final audioJSon = prefs.getString('currentlyPlayingSong');
+    final playListJson = prefs.getString('songPlayList');
+
+    if(audioJSon != null){
+      final audioMap = jsonDecode(audioJSon) as Map<String,dynamic>;
+      _audioDescriptioncurrently = AudioDescription.fromJson(audioMap);
+      notifyListeners();
+    }
+    if(savedIndex != null){
+      currentIndex = savedIndex;
+    }
+    if(playListJson != null){
+      originalaudioPlaylist = (jsonDecode(playListJson) as List).map((audioMap)=>AudioDescription.fromJson(audioMap)).toList();
+    }
+    if(currentIndex < 0 || currentIndex >= audio_playlist.length){
+      print('Error:Invalid song index after loading');
+      currentIndex = -1;
+    }
+    notifyListeners();
+  }
+
+  //Play song
+
+  Future<void> playSong() async {
+    print('Current Index: $currentIndex');
+    print('Playlist Length: ${playList.length}');
+
+    if (currentIndex >= 0 && currentIndex < audio_playlist.length) {
+      try {
+        final currentAudio = audio_playlist[currentIndex];
+        audioUrl =
+            await AudioApiService().fetchAudioStreamUrl(currentAudio.audioFileName);
+        await audioPlayer.stop();
+        await audioPlayer.play(UrlSource(audioUrl!));
+        isPlaying = true;
+        _updateCurrentlyPlayingSong(currentAudio);
+        notifyListeners();
+      } catch (e) {
+        print('Error playing audio: $e');
+      }
+    } else {
+      print('Error: Invalid song index');
+    }
+  }
+
+  //play or pause song
+  void playPauseSong() async {
+    try {
+      if (isPlaying) {
+        await audioPlayer.pause();
+        isPlaying = false;
+      } else {
+        if (audioUrl == null && _audioDescriptioncurrently != null) {
+          // audioUrl = await AudioApiService()
+          //     .fetchAudioStreamUrl(_currentlyPlaying!.fileName);
+          await prepareAudio();
+        }
+        await audioPlayer.resume();
+        isPlaying = true;
+        // await audioPlayer.play(UrlSource(audioUrl!));
+      }
+      // isPlaying = !isPlaying;
+      notifyListeners();
+    } catch (e) {
+      print('Error playing/pausing audio: $e');
+    }
+  }
+
+   
+
+  void toggleShuffleSong() {
+    _isShuffleOn = !_isShuffleOn;
+    if (_isShuffleOn) {
+      //_originalPlaylist = List.from(playList);
+      playList.shuffle();
+      currentIndex = audio_playlist.indexOf(_audioDescriptioncurrently!);
+    } else {
+      audio_playlist = List.from(originalaudioPlaylist);
+      currentIndex = audio_playlist.indexOf(_audioDescriptioncurrently!);
+    }
+    notifyListeners();
+  }
+
+  RepeatMode _repeatModeSong = RepeatMode.off;
+  RepeatMode get repeatModeSong => _repeatModeSong;
+
+  void toggleRepeatSong() {
+    switch (_repeatModeSong) {
+      case RepeatMode.off:
+        _repeatModeSong = RepeatMode.all;
+        break;
+      case RepeatMode.all:
+        _repeatModeSong = RepeatMode.one;
+        break;
+      case RepeatMode.one:
+        _repeatModeSong = RepeatMode.off;
+        break;
+    }
+    notifyListeners();
+  }
+
+  //Play next audio
+
+Future<void> playNextSong() async {
+    if (_repeatModeSong == RepeatMode.one) {
+      await playSong();
+    } else {
+      if (currentIndex < audio_playlist.length - 1) {
+        currentIndex++;
+      } else if (_repeatModeSong == RepeatMode.all || _isShuffleOn) {
+        currentIndex = 0;
+      } else {
+        print('End of playlist reached.');
+        return;
+      }
+      _updateCurrentlyPlayingSong(audio_playlist[currentIndex]);
+      notifyListeners();
+      await playSong();
+      _recentlyPlayedManager.addRecentlyPlayed(playList[currentIndex]);
+    }
+  }
+//play prevoues audio
+  Future<void> playPreviousSong() async {
+    if (_repeatModeSong == RepeatMode.one) {
+      await playSong();
+    } else {
+      if (currentIndex > 0) {
+        currentIndex--;
+      } else if (_repeatModeSong == RepeatMode.all || _isShuffleOn) {
+        currentIndex = audio_playlist.length - 1;
+      } else {
+        print('Beginning of playlist reached.');
+        return;
+      }
+      _updateCurrentlyPlayingSong(audio_playlist[currentIndex]);
+      notifyListeners();
+      await playSong();
+      _recentlyPlayedManager.addRecentlyPlayed(playList[currentIndex]);
+    }
+  }
+
+  //song completion
+  void handleAudioCompletion() async {
+    if (_repeatModeSong == RepeatMode.one) {
+      await playSong();
+    } else if (_repeatModeSong == RepeatMode.all ||
+        _isShuffleOn ||
+        currentIndex < audio_playlist.length - 1) {
+      await playNextSong();
+    } else {
+      isPlaying = false;
+      notifyListeners();
+    }
+  }
+
+
+// audio class providers
   Future<void> prepareAudio() async {
     if (currentIndex >= 0 && currentIndex < playList.length) {
       try {

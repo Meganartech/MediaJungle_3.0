@@ -7,10 +7,11 @@ import 'package:ott_project/components/music_folder/currently_playing_bar.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/recently_played.dart';
 import 'package:ott_project/components/video_folder/category_bar.dart';
+import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/pages/home_page.dart';
+import 'package:ott_project/pages/movie_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
-import 'package:ott_project/pages/video_page.dart';
 import 'package:ott_project/service/audio_service.dart';
 import 'package:provider/provider.dart';
 import '../components/background_image.dart';
@@ -38,6 +39,7 @@ class _MusicPageState extends State<MusicPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Music> _filteredAudios = [];
   late List<Movie> _allMovies = [];
+  late List<VideoDescription> _allVideos =[];
   bool _isSearching = false;
   List<dynamic> _searchResults = [];
   late Future<Map<String, List<Music>>> _musicByCategory;
@@ -50,7 +52,7 @@ class _MusicPageState extends State<MusicPage> {
   void initState() {
     super.initState();
     //_audio = _fetchAudios();
-    _musicByCategory = _fetchAudios();
+   // _musicByCategory = _fetchAudios();
 
     //_fetchMovies();
     Provider.of<AudioProvider>(context, listen: false).loadCurrentlyPlaying();
@@ -64,116 +66,37 @@ class _MusicPageState extends State<MusicPage> {
   //   _audio = AudioService.fetchMusic();
   // }
 
-  Future<Map<String, List<Music>>> _fetchAudios() async {
-    try {
-      final audios = await AudioService.fetchMusicByCategory();
-      print("Fetched ${audios.length} audios");
-      print('Audios:$audios');
-      // _buildCategoryMap(audios);
-      // for (var audio in audios) {
-      //   await audio.fetchImage();
-      //   //print("Fetched image for ${audio.songname}");
-      // }
-      // _categorizeAudios = _categorizedAFudiosStatic(audios);
-      return audios;
-    } catch (e) {
-      print('Error fetching audios: $e');
-      throw Exception('Failed to load audios');
-    }
-  }
-
-  // Future<List<Movie>> _fetchMovies() async {
+  // Future<Map<String, List<Music>>> _fetchAudios() async {
   //   try {
-  //     final movies = await MovieService.fetchMovies();
-  //     setState(() {
-  //       _allMovies = movies;
-  //     });
-  //     // _categorizeMovies(_allMovies);
-  //     return _allMovies;
+  //     final audios = await AudioService.fetchMusicByCategory();
+  //     print("Fetched ${audios.length} audios");
+  //     print('Audios:$audios');
+  //     // _buildCategoryMap(audios);
+  //     // for (var audio in audios) {
+  //     //   await audio.fetchImage();
+  //     //   //print("Fetched image for ${audio.songname}");
+  //     // }
+  //     // _categorizeAudios = _categorizedAFudiosStatic(audios);
+  //     return audios;
   //   } catch (e) {
-  //     throw Exception('Failed to load movies');
+  //     print('Error fetching audios: $e');
+  //     throw Exception('Failed to load audios');
   //   }
   // }
 
-  // Map<String, List<Music>> _categorizedAudiosStatic(List<Music> audios) {
-  //   final categories = ['Anirudh Songs', 'Yuvan', 'Tamil Hits'];
-  //   Map<String, List<Music>> categorized = {};
-  //   int startIndex = 0;
-  //   for (var category in categories) {
-  //     int endIndex = startIndex + 5;
-  //     if (endIndex > audios.length) endIndex = audios.length;
-  //     if (startIndex < audios.length) {
-  //       categorized[category] = audios.sublist(startIndex, endIndex);
-  //       startIndex = endIndex;
-  //     }
-  //   }
-  //   return categorized;
-  // }
-
-  // void _buildCategoryMap(List<Audio> audios) {
-  //   for (var audio in audios) {
-  //     if (!_categoryMap.containsKey(audio.categoryName)) {
-  //       _categoryMap[audio.categoryName] = audio.categoryName;
-  //     }
-  //   }
-  // }
-
-  // Map<String, List<Audio>> _categorizedAudios(List<Audio> audios) {
-  //   Map<String, List<Audio>> categorized = {};
-  //   for (var audio in audios) {
-  //     String categoryName =
-  //         _categoryMap[audio.categoryName] ?? 'Unknown Category';
-  //     if (!categorized.containsKey(categoryName)) {
-  //       categorized[categoryName] = [];
-  //     }
-  //     categorized[categoryName]!.add(audio);
-  //   }
-  //   return categorized;
-  // }
-
-  // void _filterAudioList(String query) {
-  //   setState(() {
-  //     if (query.isEmpty) {
-  //       _filteredAudios = _categorizeAudios.values.expand((i) => i).toList();
-  //       print('Filtered Audio All:$_filteredAudios');
-  //     } else {
-  //       final Map<String, Music> uniqueAudios = {};
-  //       final input = query.toLowerCase();
-
-  //       for (var categoryAudios in _categorizeAudios.values) {
-  //         for (var audio in categoryAudios) {
-  //           final audioName = audio.songname.toLowerCase();
-  //           final words = audioName.split(' ');
-
-  //           if (audioName.contains(input) ||
-  //               words.any((word) => word.startsWith(input))) {
-  //             uniqueAudios.putIfAbsent(audioName, () => audio);
-  //           }
-  //         }
-  //       }
-
-  //       _filteredAudios = uniqueAudios.values.toList();
-  //       print('Filtered Audio:$_filteredAudios');
-  //     }
-  //   });
-  // }
-
-  // Future<void> _refreshAudio() async {
-  //   await _fetchAudios();
-  // }
 
   void _navigateToCategory(String category) {
     switch (category) {
       case "All":
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => HomePage()),
+        // );
         break;
       case "Movies":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => VideoPage()),
+          MaterialPageRoute(builder: (context) => MoviePage()),
         );
         break;
       case "Music":
@@ -192,38 +115,11 @@ class _MusicPageState extends State<MusicPage> {
     }
   }
 
-  // void _playSong(Music audio) {
-  //   //_mrecentlyPlayed.addRecentlyPlayed(audio);
-  //   _mrecentlyPlayed.addRecentlyPlayed(audio);
 
-  //   String? category = _categorizeAudios.entries
-  //       .firstWhere((entry) => entry.value.contains(audio),
-  //           orElse: () => MapEntry('', []))
-  //       .key;
-  //   List<Music> categoryPlayList = _categorizeAudios[category] ?? [];
-  //   Provider.of<AudioProvider>(context, listen: false)
-  //       .musicsetCurrentlyPlaying(audio, categoryPlayList);
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => SongPlayerPage(
-  //         music: audio,
-  //         musicList: categoryPlayList,
-  //         onDislike: (p0) {},
-  //         onChange: (newAudio) {
-  //           setState(() {
-  //             Provider.of<AudioProvider>(context, listen: false)
-  //                 .musicsetCurrentlyPlaying(newAudio, categoryPlayList);
-  //           });
-  //         }, // You'll need to implement this
-  //       ),
-  //     ),
-  //   );
-  // }
 
-  void _playSong(Music audio, List<Music> playlist) {
-    Provider.of<AudioProvider>(context, listen: false)
-        .musicsetCurrentlyPlaying(audio, playlist);
+  void _playSong(AudioDescription audio, List<AudioDescription> playlist) {
+    // Provider.of<AudioProvider>(context, listen: false)
+    //     .musicsetCurrentlyPlaying(audio, playlist);
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -233,8 +129,8 @@ class _MusicPageState extends State<MusicPage> {
           onDislike: (p0) {},
           onChange: (newAudio) {
             setState(() {
-              Provider.of<AudioProvider>(context, listen: false)
-                  .musicsetCurrentlyPlaying(newAudio, playlist);
+              // Provider.of<AudioProvider>(context, listen: false)
+              //     .musicsetCurrentlyPlaying(newAudio, playlist);
             });
           },
         ),
@@ -295,8 +191,7 @@ class _MusicPageState extends State<MusicPage> {
                       //),
                       //),
                       Expanded(
-                        child: ListView(
-                        
+                        child: ListView(                       
                           children: [
                             if (_searchController.text.isNotEmpty &&
                                 _filteredAudios.isEmpty)
@@ -322,23 +217,22 @@ class _MusicPageState extends State<MusicPage> {
 
                       Consumer<AudioProvider>(
                         builder: (context, audioProvider, child) {
-                          return audioProvider.musiccurrentlyPlaying != null
+                          return audioProvider.audioDescriptioncurrently != null
                               ? CurrentlyPlayingBar(
-                                  musicCurrentlyPlaying:
-                                      audioProvider.musiccurrentlyPlaying,
+                                  audioCurrentlyPlaying:
+                                      audioProvider.audioDescriptioncurrently,
                                   onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => SongPlayerPage(
-                                            music: audioProvider
-                                                .musiccurrentlyPlaying!,
+                                            music: audioProvider.audioDescriptioncurrently!,                                              
                                             onChange: (newAudio) {
                                               audioProvider
-                                                  .musicsetCurrentlyPlaying(
+                                                  .setCurrentlyPlayingSong(
                                                       newAudio,
                                                       audioProvider
-                                                          .music_playlist);
+                                                          .audio_playlist);
                                             },
                                             onDislike: ((p0) {}),
                                           ),
@@ -396,7 +290,10 @@ class _MusicPageState extends State<MusicPage> {
                     MusicCategorySection(
                       audioContainer: container,
                       userId: widget.userId,
-                      onTap: (_) {},
+                      onTap: (audio) {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context)=>SongPlayerPage(music: audio, onChange: (_){}, onDislike:(_){})));
+                      },
                     ),
                     SizedBox(
                       height: MediaQuery.sizeOf(context).height * 0.02,
@@ -409,14 +306,14 @@ class _MusicPageState extends State<MusicPage> {
     );
   }
 
-  Widget _buildRecentlyPlayed() {
-    return SingleChildScrollView(
-      child: RecentlyPlayedSongs(
-          recentlyPlayed: _mrecentlyPlayed,
-          onTap: (audio) =>
-              _playSong(audio, _mrecentlyPlayed.getRecentlyPlayed())),
-    );
-  }
+  // Widget _buildRecentlyPlayed() {
+  //   return SingleChildScrollView(
+  //     child: RecentlyPlayedSongs(
+  //         recentlyPlayed: _mrecentlyPlayed,
+  //         onTap: (audio) =>
+  //             _playSong(audio, _mrecentlyPlayed.getRecentlyPlayed())),
+  //   );
+  // }
 
   Widget _buildSearchResults() {
     return Container(
@@ -426,23 +323,24 @@ class _MusicPageState extends State<MusicPage> {
         itemBuilder: (context, index) {
           final item = _searchResults[index];
           return ListTile(
-            title: Text(item is AudioDescription ? item.audioTitle : 'unknown',
+            title: Text(item is VideoDescription ? item.videoTitle : item is AudioDescription ? item.audioTitle : 'unknown',
                 style: TextStyle(color: Colors.white)),
-            subtitle: Text(item is Movie ? 'Movie' : 'Song',
+            subtitle: Text(item is VideoDescription ? 'Movie' : item is AudioDescription ? 'Song' : 'Unknown',
                 style: TextStyle(color: Colors.white70)),
             onTap: () {
-              if (item is Movie) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VideoPlayerPage(
-                      movies: _allMovies,
-                      initialIndex: _allMovies.indexOf(item),
-                    ),
-                  ),
-                );
-                // } else {
-                //   if (item is Music) {
+              // if (item is VideoDescription) {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => VideoPlayerPage(
+              //         movies: _allVideos,
+              //         initialIndex: _allVideos.indexOf(item),
+              //       ),
+              //     ),
+              //   );
+              //   } 
+                // else {
+                //   if (item is AudioDescription) {
                 //     Navigator.push(
                 //         context,
                 //         MaterialPageRoute(
@@ -457,7 +355,7 @@ class _MusicPageState extends State<MusicPage> {
                 //                   onDislike: (p0) {},
                 //                 )));
                 //   }
-              }
+              //}
             },
           );
         },

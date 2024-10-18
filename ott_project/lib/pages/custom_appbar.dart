@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/notification/notification.dart';
@@ -207,26 +209,32 @@ class _CustomAppBarState extends State<CustomAppBar> {
     });
   }
 
-  Future<void> loadRecentSearch() async {
+   Future<void> saveRecentSearch(String query,String type,String title) async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _recentSearch = prefs.getStringList('recentSearch') ?? [];
-    });
-  }
-
-  Future<void> saveRecentSearch(String query) async {
-    if (query.isNotEmpty) {
+    final recentSearch = {'query':query,'type':type,'title':title};
+    final recentSearchJson = jsonEncode(recentSearch);
       setState(() {
-        _recentSearch.add(query);
-        _recentSearch.insert(0, query);
+       
+        _recentSearch.insert(0, recentSearchJson);
         if (_recentSearch.length > 5) {
           _recentSearch = _recentSearch.sublist(0, 5);
         }
       });
-      final prefs = await SharedPreferences.getInstance();
+     
       await prefs.setStringList('recentSearch', _recentSearch);
-    }
   }
+
+  Future<void> loadRecentSearch() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedSearches = prefs.getStringList('recentSearch') ?? [];
+    setState(() {
+      _recentSearch = savedSearches.map((search){
+        return jsonDecode(search) as Map<String,dynamic>;
+      }).cast<String>().toList();
+    });
+  }
+
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -363,7 +371,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   void _performSearch(String query) {
     _filterContent(query);
-    saveRecentSearch(query);
+    //saveRecentSearch(query);
   }
 
 
