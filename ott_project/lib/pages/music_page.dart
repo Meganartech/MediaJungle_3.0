@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:ott_project/components/category/music_category_section.dart';
 
@@ -16,7 +15,6 @@ import 'package:ott_project/service/audio_service.dart';
 import 'package:provider/provider.dart';
 import '../components/background_image.dart';
 import '../components/music_folder/audio_container.dart';
-import '../components/music_folder/music_player_page.dart';
 import '../components/music_folder/song_player_page.dart';
 import '../components/video_folder/movie.dart';
 import '../components/video_folder/video_play.dart';
@@ -279,8 +277,8 @@ class _MusicPageState extends State<MusicPage> {
                             height: 1,
                           ),
                           SizedBox(
-                            height: 7,
-                          ),
+                          height: MediaQuery.sizeOf(context).height * 0.01,
+                        ),
                           CategoryBar(
                               selectedCategory: 'Music',
                               onCategorySelected: _navigateToCategory),
@@ -291,19 +289,14 @@ class _MusicPageState extends State<MusicPage> {
                             color: Colors.white,
                             height: 1,
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
+                          
                         ],
                       ),
                       //),
                       //),
                       Expanded(
                         child: ListView(
-                          //  child: Padding(
-                          //    padding: const EdgeInsets.all(8.0),
-                          //child: Column(
-                          // crossAxisAlignment: CrossAxisAlignment.center,
+                        
                           children: [
                             if (_searchController.text.isNotEmpty &&
                                 _filteredAudios.isEmpty)
@@ -433,7 +426,7 @@ class _MusicPageState extends State<MusicPage> {
         itemBuilder: (context, index) {
           final item = _searchResults[index];
           return ListTile(
-            title: Text(item is Movie ? item.moviename : item.songname,
+            title: Text(item is AudioDescription ? item.audioTitle : 'unknown',
                 style: TextStyle(color: Colors.white)),
             subtitle: Text(item is Movie ? 'Movie' : 'Song',
                 style: TextStyle(color: Colors.white70)),

@@ -2,13 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ott_project/profile/update_profile.dart';
 import '../components/background_image.dart';
-import '../components/myTextField.dart';
 import '../components/pallete.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,32 +42,12 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   Future<void> fetchUserProfile(BuildContext context) async {
     String? token = await secureStorage.read(key: 'token');
     String? userId = await secureStorage.read(key: 'userId');
-    if (token == null || userId == null) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                backgroundColor: Colors.transparent,
-                content: Text(
-                  'Token or User Id not found',
-                  style: TextStyle(color: Colors.white),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              ));
-      return;
-    }
 
     try {
       var response = await http.get(
         Uri.parse(
             //  'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.183.129:8080/api/v2/GetUserById/$userId'),
+            'http://192.168.183.42:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',

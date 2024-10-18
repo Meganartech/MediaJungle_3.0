@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -8,7 +7,6 @@ import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/plan_and_payment/plan_page.dart';
-import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/service/icon_service.dart';
 import 'package:ott_project/service/service.dart';
 
@@ -28,7 +26,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   String subscriptionPlan = 'Free';
   String expiry = '';
   bool isSubscribed = false;
-  double amount = 0.0;
+  bool isSubscriptionExpired = false;
+  int amount = 0;
    bool _isSearching = false;
   List<dynamic> _searchResults = [];
   void initState() {
@@ -50,7 +49,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   Future<void> _loadSubscriptionStatus(int userId) async {
     String url = 
     //'http://localhost:8080/api/v2/paymentHistory/$userId';
-    'http://192.168.183.129:8080/api/v2/paymentHistory/$userId';
+    'http://192.168.183.42:8080/api/v2/paymentHistory/$userId';
     try {
       var response = await http.get(Uri.parse(url));
 
@@ -64,14 +63,19 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           setState(() {
             subscriptionPlan = subscriptionData['subscriptionTitle'] ?? 'Free';
             expiry = subscriptionData['expiryDate'] ?? '';
-            amount = subscriptionData['amount'] ?? 0.0;
-            isSubscribed = subscriptionPlan != 'Free';
+            amount = subscriptionData['amount'] ?? 0;
+            
+            if(expiry.isNotEmpty){
+              DateTime expiryDate = DateTime.parse(expiry);
+              isSubscriptionExpired = DateTime.now().isAfter(expiryDate);
+            }
+            isSubscribed = subscriptionPlan != 'Free' && !isSubscriptionExpired;
           });
         } else {
           setState(() {
             subscriptionPlan = 'Free';
             expiry = '';
-            amount = 0.0;
+            amount = 0;
             isSubscribed = false;
           });
         }
@@ -81,19 +85,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     } catch (e) {
       print('Error in loading subscription details:$e');
     }
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // setState(() {
-    //   subscriptionPlan = prefs.getString('subscriptionPlan') ?? 'Free';
-    // });
+  
   }
 
-  // Future<void> _updateSubscriptionStatus(String newPlan) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.setString('subscriptionPlan', newPlan);
-  //   setState(() {
-  //     subscriptionPlan = newPlan;
-  //   });
-  // }
+ 
 
   Future<void> _loadIcon() async {
     try {
@@ -110,32 +105,12 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   Future<void> fetchUserProfile(BuildContext context) async {
     String? token = await secureStorage.read(key: 'token');
     String? userId = await secureStorage.read(key: 'userId');
-    if (token == null || userId == null) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                backgroundColor: Colors.transparent,
-                content: Text(
-                  'Token or User Id not found',
-                  style: TextStyle(color: Colors.white),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              ));
-      return;
-    }
 
     try {
       var response = await http.get(
         Uri.parse(
             //    'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.183.129:8080/api/v2/GetUserById/$userId'),
+            'http://192.168.183.42:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         //),
         headers: {
@@ -189,86 +164,6 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomAppBar(onSearchChanged: handleSearchState),
-                // AppBar(
-                //   automaticallyImplyLeading: false,
-                //   backgroundColor: Colors.transparent,
-                //   title: _showSearch
-                //       ? TextField(
-                //           controller: _searchController,
-                //           style: TextStyle(color: Colors.white),
-                //           decoration: InputDecoration(
-                //             hintText: 'Search Songs...',
-                //             hintStyle: TextStyle(color: Colors.white54),
-                //             border: InputBorder.none,
-                //           ),
-                //           onChanged: (value) {},
-                //         )
-                //       : Row(
-                //           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //           children: [
-                //             SizedBox(
-                //               height: 20,
-                //             ),
-                //             if (iconData != null)
-                //               Image.memory(
-                //                 iconData!.imageBytes,
-                //                 height: 70,
-                //               )
-                //             else
-                //               Image.asset('assets/images/bgimg2.jpg',
-                //                   height: 30),
-                //             Spacer(),
-                //             IconButton(
-                //                 onPressed: () {},
-                //                 icon: Icon(
-                //                   Icons.cast_connected_rounded,
-                //                   color: kWhite,
-                //                 )),
-                //             SizedBox(
-                //               width: 10,
-                //             ),
-                //             IconButton(
-                //                 onPressed: () {},
-                //                 icon: Icon(
-                //                   Icons.notifications,
-                //                   color: kWhite,
-                //                 )),
-                //           ],
-                //         ),
-                //   actions: [
-                //     IconButton(
-                //         onPressed: () {
-                //           setState(() {
-                //             _showSearch = !_showSearch;
-                //             if (!_showSearch) {
-                //               _searchController.clear();
-                //               //_filterAudioList('');
-                //             }
-                //           });
-                //         },
-                //         icon: Icon(
-                //           Icons.search_rounded,
-                //           color: kWhite,
-                //         )),
-                //     SizedBox(
-                //       width: 10,
-                //     ),
-                //     IconButton(
-                //         onPressed: () {
-                //           Navigator.push(
-                //               context,
-                //               MaterialPageRoute(
-                //                   builder: (context) => ProfilePage()));
-                //         },
-                //         icon: Icon(
-                //           Icons.person_outline_rounded,
-                //           color: kWhite,
-                //         )),
-                //     SizedBox(
-                //       width: 10,
-                //     ),
-                //   ],
-                // ),
                 Divider(
                   color: Colors.white,
                 ),
@@ -308,58 +203,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.04,
                 ),
-                // Row(
-                //   children: [
-                //     Padding(
-                //       padding: const EdgeInsets.all(16.0),
-                //       child: Expanded(
-                //         // padding: EdgeInsets.all(16.0),
-                //         flex: 2,
-                //         child: Text(
-                //           'Subscription Plan :     $subscriptionPlan',
-                //           textAlign: TextAlign.left,
-                //           style: TextStyle(
-                //               color: kWhite,
-                //               fontSize: 16,
-                //               fontWeight: FontWeight.bold),
-                //         ),
-                //       ),
-                //     ),
-                //     if (subscriptionPlan != 'Free')
-                //       Align(
-                //         alignment: AlignmentDirectional.centerEnd,
-                //         child: Padding(
-                //           padding: EdgeInsets.only(right: 16.0, left: 40),
-                //           child: Text(
-                //             '$amount',
-                //             style: TextStyle(
-                //                 color: kWhite,
-                //                 fontSize: 16,
-                //                 fontWeight: FontWeight.bold),
-                //           ),
-                //         ),
-                //       ),
-                //   ],
-                // ),
-                // Padding(
-                //   padding: EdgeInsets.all(16.0),
-                //   child: Expanded(
-                //     flex: 2,
-                //     child: Text(
-                //       'Expiry : $expiry',
-                //       textAlign: TextAlign.center,
-                //       style: TextStyle(
-                //           color: kWhite,
-                //           fontSize: 16,
-                //           fontWeight: FontWeight.bold),
-                //     ),
-                //   ),
-                // ),
-                //Spacer(),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.18,
                 ),
-                if (!isSubscribed)
+                if (!isSubscribed && isSubscriptionExpired)
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
@@ -377,7 +224,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                 builder: (context) => PlanPage()));
                       },
                       child: Text(
-                        'Get Subscription',
+                       isSubscriptionExpired ? 'Renew Subscription' : 'Get Subscription',
                         style: TextStyle(color: kWhite),
                       ),
                     ),
@@ -391,6 +238,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   }
 
   Widget subscribeInfo(String label, String value) {
+
+    bool isExpired = label == 'Expiry' && isSubscriptionExpired;
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -412,7 +261,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           const SizedBox(width: 10),
           Expanded(
             flex: 2,
-            child: Text(value,
+            child: Text(
+              isExpired ? 'Expired' : value,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                     color: kWhite,

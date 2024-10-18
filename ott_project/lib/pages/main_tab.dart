@@ -5,10 +5,9 @@ import 'package:ott_project/pages/movie_page.dart';
 // import 'package:ott_project/pages/audio_page.dart';
 // import 'package:ott_project/pages/home_page.dart';
 import 'package:ott_project/pages/music_page.dart';
-import 'package:ott_project/pages/sample_home_page.dart';
+import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/service/service.dart';
 
-import 'video_page.dart';
 
 class MainTab extends StatefulWidget {
   const MainTab({super.key});
@@ -61,12 +60,13 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
             backgroundColor: Colors.transparent,
             body: Expanded(
               child: TabBarView(controller: controller, children: [
-                SampleHomePage(),
+               // SampleHomePage(),
                 MoviePage(),
                 MusicPage(userId: userId),
                 LibraryPage(
                   userId: userId,
                 ),
+              ProfilePage(),
               ]),
             ),
             bottomNavigationBar: Container(
@@ -86,6 +86,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
               ),
 
               child: BottomAppBar(
+                
                 color: Colors.transparent,
                 elevation: 10,
                 child: TabBar(
@@ -93,7 +94,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                   indicatorWeight: 0.01,
                   indicatorColor: Colors.transparent,
                   dividerColor: Colors.transparent,
-                  overlayColor: const MaterialStatePropertyAll(
+                  overlayColor: const WidgetStatePropertyAll(
                       Color.fromARGB(0, 14, 13, 13)),
                   unselectedLabelStyle: TextStyle(
                       color: Colors.white,
@@ -106,27 +107,13 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                       fontSize: 12,
                       fontWeight: FontWeight.w400),
                   tabs: [
-                    Tab(
-                      text: "HOME",
-                      icon: Icon(
-                        Icons.home_rounded,
-                        size: 27,
-                        color: selectTab == 0 ? Colors.green : Colors.white,
-                      ),
-
-                      // icon: Image.asset(
-                      //   "assets/images/home.png",
-                      //   width: 20,
-                      //   height: 20,
-                      //   color: selectTab == 0 ? Colors.green : Colors.white,
-                      // ),
-                    ),
+                   
                     Tab(
                       text: "MOVIE",
                       icon: Icon(
                         Icons.movie_rounded,
                         size: 27,
-                        color: selectTab == 1 ? Colors.green : Colors.white,
+                        color: selectTab == 0 ? Colors.green : Colors.white,
                       ),
                       // icon: Image.asset(
                       //   "assets/images/movie.png",
@@ -140,7 +127,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                       icon: Icon(
                         Icons.music_note_sharp,
                         size: 27,
-                        color: selectTab == 2 ? Colors.green : Colors.white,
+                        color: selectTab == 1 ? Colors.green : Colors.white,
                       ),
                       // icon: Image.asset(
                       //   "assets/images/music.png",
@@ -154,7 +141,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                       icon: Icon(
                         Icons.library_music_rounded,
                         size: 27,
-                        color: selectTab == 3 ? Colors.green : Colors.white,
+                        color: selectTab == 2 ? Colors.green : Colors.white,
                       ),
                       // icon: Image.asset(
                       //   "assets/images/library.png",
@@ -162,6 +149,15 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                       //   height: 20,
                       //   color: selectTab == 3 ? Colors.green : Colors.white,
                       // ),
+                    ),
+                     Tab(
+                      text: "Profile",
+                      icon: Icon(
+                        Icons.person_outline_rounded,
+                        size: 27,
+                        color: selectTab == 3 ? Colors.green : Colors.white,
+                      ),
+
                     ),
                   ],
                 ),

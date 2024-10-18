@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -104,6 +105,8 @@ public class VideoController {
 	
 	@Autowired
 	private AddNewCategoriesRepository addnewcategoriesrepository;
+	
+
 
 	public ResponseEntity<?> uploadVideoDescription(
 	        @RequestParam("videoTitle") String videoTitle,
@@ -731,6 +734,7 @@ public class VideoController {
 	        
 	        VideoDescription video = videoOpt.get();
 	        
+	        
 	        // Step 2: Fetch the cast and crew details based on castAndCrewList
 	        List<Long> castAndCrewIds = video.getCastandcrewlist(); // Assuming this is a list of Long IDs
 	        List<CastAndCrewModalDTO> castAndCrewDetails = new ArrayList<>();
@@ -762,21 +766,47 @@ public class VideoController {
 	        VideoScreenDTO videoScreenDTO = new VideoScreenDTO(
 	            video.getId(),
 	            video.getVideoTitle(),
+	            video.getMainVideoDuration(),
+	            video.isVideoAccessType(),
 	            categoryValues,
 	            castAndCrewDetails,
 	            video.getDescription(),
 	            matchingVideos
 	        );
-
 	        // Step 5: Return the VideoScreenDTO with all video and cast/crew details
 	        return ResponseEntity.ok(videoScreenDTO);
 	    }
+
+	    public ResponseEntity<?> getUserAccess(@RequestParam("userI") Long userId){
+	        // Step 1: Fetch the user by userId
+	        Optional<UserRegister> userOpt = userregisterrepository.findById(userId);
+	        if (!userOpt.isPresent()) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found"); // Handle case when user is not found
+	        }
+
+	        UserRegister user = userOpt.get();
+
+	        // Step 2: Check if the user has a subscription
+	        if (user.getPaymentId() != null && user.getPaymentId().getExpiryDate() != null) {
+	            LocalDate expiryDate = user.getPaymentId().getExpiryDate(); // Use directly as LocalDate
+
+	            // Check if expiry date is after the current date
+	            if (expiryDate.isAfter(LocalDate.now())) {
+	                return ResponseEntity.ok("Access granted"); // Subscription is active
+	            }
+	        }
+
+	        // If subscription is not active or expired
+	        return ResponseEntity.ok("Not Paid");
+	    }
+
+
 
 	    
 //	    public List<VideoDescriptionDTO> getVideoImagesByCategory(@RequestParam String categoryId) {
 //	        List<VideoDescriptionDTO> videoThumbnails = new ArrayList<>();
 //	       
-//	        List<Long> videoIds = videodescriptionRepository.findVideoIdsByCategoryId(categoryId);
+//	        List<Long> videoIds = videodescriptionRepository.findVideoIdsByCategoryId(categoryId); 
 //	        System.out.println(videoIds);
 //	        // Retrieve video images by the video IDs
 ////	        if (!videoIds.isEmpty()) {

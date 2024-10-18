@@ -9,7 +9,6 @@ import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/components/video_folder/video_play.dart';
 
 import '../pallete.dart';
-import 'movie_player_page.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;
@@ -149,15 +148,19 @@ class MovieCard extends StatelessWidget {
 class MoviesCard extends StatelessWidget {
   final VideoDescription movie;
   final int initialIndex;
-  //final VoidCallback onTap;
+  final VoidCallback onTap;
+  final List<int> categoryList;
+
   //final List<Movies> movies;
 
   const MoviesCard({
     Key? key,
     required this.movie,
     required this.initialIndex,
-    //required this.onTap,
-    //this.movies = const []
+    required this.onTap,
+    required this.categoryList,
+
+    
   }) : super(key: key);
 
   Widget build(BuildContext context) {
@@ -165,7 +168,7 @@ class MoviesCard extends StatelessWidget {
     // final compressedBytes = base64.decode(movie.thumbnail);
     // final decompressedBytes = ZLibDecoder().decodeBytes(compressedBytes);
     return GestureDetector(
-     // onTap: onTap,
+     onTap: onTap,
       child: Container(
         width: 100,
         //height: 500,
