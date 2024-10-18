@@ -1,5 +1,6 @@
 package com.VsmartEngine.MediaJungle.Banner;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,21 +90,43 @@ public class videoBannerController {
 	}
 
 	
+//	public ResponseEntity<List<VideoBanner>> getAllVideoBanner() {
+//	    try {
+//	        // Fetch all video banners from the database
+//	        List<VideoBanner> videoBanners = videobannerrepository.findAll();
+//
+//	        // Return the list of video banners
+//	        return ResponseEntity.ok(videoBanners);
+//	        
+//	    } catch (Exception e) {
+//
+//	        // Return an error response
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//	                             .body(null); // You might want to return a specific message here
+//	    }
+//	}
+	
 	public ResponseEntity<List<VideoBanner>> getAllVideoBanner() {
 	    try {
 	        // Fetch all video banners from the database
 	        List<VideoBanner> videoBanners = videobannerrepository.findAll();
 
-	        // Return the list of video banners
+	        // Sort the list by id
+	        videoBanners.sort(Comparator.comparing(VideoBanner::getId)); // Assuming getId() returns the id
+
+	        // Return the sorted list of video banners
 	        return ResponseEntity.ok(videoBanners);
 	        
 	    } catch (Exception e) {
+	        // Log the exception if needed
+	        e.printStackTrace(); // Optional: Print the stack trace for debugging
 
 	        // Return an error response
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                             .body(null); // You might want to return a specific message here
 	    }
 	}
+
 
 
 	   	public ResponseEntity<?> Deletevideobanner(@PathVariable("id") long id) {

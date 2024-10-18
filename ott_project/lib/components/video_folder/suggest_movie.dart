@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ott_project/components/video_folder/movie.dart';
+import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/service/movie_api_service.dart';
 
  // Assuming you have this class defined
 
 class SuggestedMoviesDrawer extends StatefulWidget {
-  final String currentCategory;
+  final int currentCategory;
 
   SuggestedMoviesDrawer({required this.currentCategory});
 
@@ -14,13 +14,14 @@ class SuggestedMoviesDrawer extends StatefulWidget {
 }
 
 class _SuggestedMoviesDrawerState extends State<SuggestedMoviesDrawer> {
-  late Future<List<Movie>> suggestedMovies;
+  late Future<List<VideoDescription>> suggestedMovies;
 
   @override
   void initState() {
     super.initState();
     suggestedMovies = MovieApiService.fetchMoviesByCategory(widget.currentCategory);
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class _SuggestedMoviesDrawerState extends State<SuggestedMoviesDrawer> {
               color: Colors.black.withOpacity(0.8),
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
-            child: FutureBuilder<List<Movie>>(
+            child: FutureBuilder<List<VideoDescription>>(
               future: suggestedMovies,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,7 +49,7 @@ class _SuggestedMoviesDrawerState extends State<SuggestedMoviesDrawer> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Center(child: Text('No suggestions available', style: TextStyle(color: Colors.white)));
                 } else {
-                  List<Movie> movies = snapshot.data!;
+                  List<VideoDescription> movies = snapshot.data!;
                   return SingleChildScrollView(
                     controller: scrollController,
                     child: Column(
@@ -127,8 +128,8 @@ class _SuggestedMoviesDrawerState extends State<SuggestedMoviesDrawer> {
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(
-                                        movie.thumbnail,
+                                      child: Image.memory(
+                                        movie.thumbnail!,
                                         width: 130,
                                         height: 100,
                                         fit: BoxFit.cover,
@@ -136,7 +137,7 @@ class _SuggestedMoviesDrawerState extends State<SuggestedMoviesDrawer> {
                                     ),
                                     SizedBox(height: 8),
                                     Text(
-                                      movie.moviename,
+                                      movie.videoTitle,
                                       style: TextStyle(color: Colors.white),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,

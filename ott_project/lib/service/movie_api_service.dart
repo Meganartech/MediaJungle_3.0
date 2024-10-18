@@ -1,8 +1,8 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:ott_project/components/video_folder/cast_crew.dart';
+import 'package:ott_project/components/video_folder/category.dart';
 import 'dart:convert';
 
 import 'package:ott_project/components/video_folder/movie.dart';
@@ -125,26 +125,30 @@ class MovieApiService {
     throw Exception('Failed to load cast images');
   }
  } 
-  static Future<List<String>> fetchCategories() async {
+  static Future<List<Category>> fetchCategories() async {
     final response = await http.get(Uri.parse('$baseUrl/GetAllCategories'));
     if (response.statusCode == 200) {
       print('Categories :${response.body}');
       List<dynamic> body = jsonDecode(response.body);
-      return body.cast<String>();
+      return body.map((json) => Category.fromJson(json)).toList();
     } else {
       throw Exception('Falied to load Categories');
     }
   }
 
-  static Future<List<Movie>> fetchMoviesByCategory(String categoryId) async {
-    final response =
-        await http.get(Uri.parse('$baseUrl/GetCategoryById/$categoryId'));
-    if (response.statusCode == 200) {
-      print('Categorize movie:${response.body}');
-      List<dynamic> body = jsonDecode(response.body);
-      return body.map((video) => Movie.fromJson(video)).toList();
-    } else {
-      throw Exception("Failed to load movies by category");
-    }
+  static Future<List<VideoDescription>> fetchMoviesByCategory(int categoryId) async {
+  final response = await http.get(Uri.parse('$baseUrl/GetCategoryById/$categoryId'));
+  print(response.statusCode);
+  if (response.statusCode == 200) {
+    print('Categorize movie: ${response.body}');
+    var body = jsonDecode(response.body);
+    VideoContainer videoContainer = VideoContainer.fromJson(body);
+
+    // Return the video descriptions list containing movies in that category
+    return videoContainer.videoDescriptions;
+  } else {
+    throw Exception("Failed to load movies by category");
   }
+}
+
 }
