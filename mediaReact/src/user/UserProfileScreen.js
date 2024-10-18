@@ -180,7 +180,7 @@ const UserProfileScreen = () => {
 
     return (
         <Layout className='container mx-auto min-h-screen overflow-y-auto'>
-            <div className='px-10 my-24 flex flex-col items-center'>
+            <div className='banner-container px-10 my-24 flex flex-col items-center'>
                 {/* Separate div for User Profile Picture */}
                 <div className="relative mb-6 flex justify-center">
                     {imageSrc ? (
