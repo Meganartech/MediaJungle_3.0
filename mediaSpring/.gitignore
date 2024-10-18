@@ -11,10 +11,14 @@ target/
 .settings
 .springBeans
 .sts4-cache
+.metadata
+.mvn
+.bin
 
 #logs
 *.log
 *.gz
+*.tmp
 
 
 ### IntelliJ IDEA ###
@@ -36,7 +40,7 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
+.vscode
 
 # Ignore video files
 *.mp4

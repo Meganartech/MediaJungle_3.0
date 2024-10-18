@@ -7,7 +7,6 @@ import 'package:ott_project/components/music_folder/currently_playing_bar.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/recently_played.dart';
 import 'package:ott_project/components/video_folder/category_bar.dart';
-import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/pages/home_page.dart';
 import 'package:ott_project/profile/profile_page.dart';

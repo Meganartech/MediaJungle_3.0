@@ -21,7 +21,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
+   <!--  <javafx.version>19</javafx.version> -->
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -68,8 +70,14 @@
 			<artifactId>isoparser</artifactId>
 			<version>1.9.56</version>
 		</dependency>
-		
-		<dependency>
+		<!-- https://mvnrepository.com/artifact/com.dorkbox/SystemTray -->
+<dependency>
+    <groupId>com.dorkbox</groupId>
+    <artifactId>SystemTray</artifactId>
+    <version>4.2.1</version>
+</dependency>
+
+			<dependency>
 			    <groupId>io.jsonwebtoken</groupId>
 			    <artifactId>jjwt-jackson</artifactId>
 			    <version>0.11.2</version> <!-- Use the same version as jjwt-api -->
@@ -116,7 +124,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		
 		<dependency>
 		   <groupId>com.razorpay</groupId>
 		   <artifactId>razorpay-java</artifactId>

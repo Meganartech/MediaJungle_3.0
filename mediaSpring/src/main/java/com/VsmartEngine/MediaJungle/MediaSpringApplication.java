@@ -5,13 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
-@EnableAsync
-public class MediaSpringApplication {
+	@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+	@EnableAsync
+	public class MediaSpringApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MediaSpringApplication.class, args);
-		
-	}
-	
+		public static void main(String[] args) {
+			SpringApplication.run(MediaSpringApplication.class, args);
+
+		}
 }
