@@ -456,6 +456,7 @@ const MoviesPage = () => {
       console.error('Error fetching video banners:', error);
     }
   };
+  console.log("videoBanners",videoBanners)
 
   // Fetch video container data
   const fetchVideoContainer = async () => {
@@ -538,7 +539,9 @@ const MoviesPage = () => {
   {videoBanners.length > 0 && (
     <div className="banner-items" style={{ transform: `translateX(-${bannerIndex * 100}%)` }}>
       {videoBanners.map((banner, index) => (
-        <div key={index} className="banner-item" onClick={() => handlePlayClick(banner.videoId)}  style={{ cursor: 'pointer' }}>
+        <div key={index} className="banner-item" 
+        // onClick={() => handlePlayClick(banner.videoId)}  
+        style={{ cursor: 'pointer' }}>
           <img src={`${API_URL}/api/v2/${banner.videoId}/videoBanner`} alt={`Banner ${index}`} />
         </div>
       ))}
