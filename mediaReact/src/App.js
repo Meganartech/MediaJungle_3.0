@@ -99,6 +99,7 @@ import AudioHomecreeenContainer from './user/Screens/AudioBanner';
 import AudioHomecreeen from './user/Screens/AudioHomescreen';
 import Aud from './admin/appptest';
 import ViewProfile from './user/ViewProfile';
+import LibraryScreen from './user/LibraryScreen';
 
 
 
@@ -221,6 +222,7 @@ const App = () => {
           {/* <Route path='videoScreen/:id' element={<VideoScreen/>} />  */}
           <Route path='userforgetpassword' element={<Userforgetpassword />} />
           <Route path='ViewProfile' element={<ViewProfile />} />
+          <Route path='libraryScreen' element={<LibraryScreen />} />
          
 
 

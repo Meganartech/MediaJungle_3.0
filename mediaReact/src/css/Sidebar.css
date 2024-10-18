@@ -1164,6 +1164,13 @@ td{
   margin-bottom: 10px;
 }
 
+/*Library Screen */
+.selectedCategory{
+  color:#2149B1;
+}
 
+.unselectedCategory{
+  color:#ffffff;
+}
 
 

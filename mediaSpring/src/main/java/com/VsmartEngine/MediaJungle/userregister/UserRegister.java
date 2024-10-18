@@ -61,6 +61,11 @@ public class UserRegister {
     @Column(name = "video_id")
     private Set<Long> favoriteVideosIds = new HashSet<>();
 	
+	@ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "watch_later_videos", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "video_id")
+    private Set<Long> watchlaterIds = new HashSet<>();
+	
 	
 	@OneToOne
 	@JoinColumn(name = "Payment_details")
@@ -71,9 +76,11 @@ public class UserRegister {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+
 	public UserRegister(long id, String username, String email, String role, String password, String confirmPassword,
 			String mobnum, LocalDate date, byte[] profile, Set<Long> favoriteAudioIds, Set<Long> favoriteVideosIds,
-			PaymentUser paymentId) {
+			Set<Long> watchlaterIds, PaymentUser paymentId) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -86,8 +93,11 @@ public class UserRegister {
 		this.profile = profile;
 		this.favoriteAudioIds = favoriteAudioIds;
 		this.favoriteVideosIds = favoriteVideosIds;
+		this.watchlaterIds = watchlaterIds;
 		this.paymentId = paymentId;
 	}
+
+
 
 	public long getId() {
 		return id;
@@ -184,5 +194,15 @@ public class UserRegister {
 	public void setPaymentId(PaymentUser paymentId) {
 		this.paymentId = paymentId;
 	}
+
+	public Set<Long> getWatchlaterIds() {
+		return watchlaterIds;
+	}
+
+	public void setWatchlaterIds(Set<Long> watchlaterIds) {
+		this.watchlaterIds = watchlaterIds;
+	}
+	
+	
 
 }
