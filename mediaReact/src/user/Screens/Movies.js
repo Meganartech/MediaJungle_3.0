@@ -103,7 +103,7 @@ const MoviesPage = () => {
   return (
     <Layout>
       {/* Banner Section Displayed at the Top */}
-<div className="banner-container">
+<div className="banner-container mt-3">
   {videoBanners.length > 0 && (
     <div className="banner-items" style={{ transform: `translateX(-${bannerIndex * 100}%)` }}>
       {videoBanners.map((banner, index) => (
