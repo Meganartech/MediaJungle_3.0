@@ -68,6 +68,21 @@ class AudioDescription {
       certificateNo: json['certificate_no'],
     );
   }
+  Map<String, dynamic> toJson(){
+    return{
+      'id':id,
+      'audioTitle' : audioTitle,
+      'movieName' : movieName,
+      'rating' : rating,
+      'description': description,
+      'productionCompany' :productionCompany,
+      'paid' : paid,
+      'audioFileName' : audioFileName,
+      'certificateName':certificateName,
+      'audioDuration' : audioDuration,
+      'certificateNo' : certificateNo
+    };
+  }
 
   Future<Uint8List?> get thumbnailImage async {
     if (thumbnail == null) {

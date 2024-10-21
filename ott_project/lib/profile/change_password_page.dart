@@ -78,8 +78,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     String? userId = await secureStorage.read(key: 'userId');
     try {
       var url = Uri.parse(
-          'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId'
-          //'http://192.168.40.165:8080/api/v2/GetUserById/$userId'
+          //'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId'
+          'http://192.168.183.42:8080/api/v2/GetUserById/$userId'
           );
       var request = http.MultipartRequest('PATCH', url);
 
@@ -151,7 +151,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       var response = await http.get(
         Uri.parse(
             //'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.40.165:8080/api/v2/GetUserById/$userId'
+            'http://192.168.183.42:8080/api/v2/GetUserById/$userId'
             //'http://localhost:8080/api/v2/GetUserById/$userId'
             ),
         headers: {
@@ -194,7 +194,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       children: [
         BackgroundImage(),
         Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.transparent, 
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,

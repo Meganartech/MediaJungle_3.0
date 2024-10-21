@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/song_player_page.dart';
 import 'package:ott_project/components/video_folder/category_bar.dart';
 import 'package:ott_project/components/video_folder/movie.dart';
+import 'package:ott_project/components/video_folder/video_play.dart';
 import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
-import 'package:ott_project/pages/audio_page.dart';
-import 'package:ott_project/pages/home_page.dart';
+import 'package:ott_project/pages/music_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/service/movie_service_page.dart';
 import 'package:ott_project/service/service.dart';
@@ -142,10 +143,10 @@ class _MoviePageState extends State<MoviePage> {
     });
     switch (category) {
       case "All":
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => HomePage()),
+        // );
         break;
       case "Movies":
         // Navigator.push(
@@ -156,7 +157,7 @@ class _MoviePageState extends State<MoviePage> {
       case "Music":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AudioPage(userId: 24)),
+          MaterialPageRoute(builder: (context) => MusicPage(userId: 24)),
         );
         break;
       case "Profile":
@@ -291,56 +292,106 @@ class _MoviePageState extends State<MoviePage> {
       ),
     );
   }
-
-  Widget _buildSearchResults() {
+Widget _buildSearchResults() {
     return Container(
       margin: EdgeInsets.only(top: 90),
       child: ListView.builder(
         itemCount: _searchResults.length,
         itemBuilder: (context, index) {
           final item = _searchResults[index];
-          if (item is Map && item['type'] == 'recent') {
-            return ListTile(
-              leading: Icon(Icons.history, color: Colors.white),
-              title: Text(item['query'], style: TextStyle(color: Colors.white)),
-              onTap: () {
-                // Perform search with this recent query
-              },
-            );
-          } else {
-            return ListTile(
-              title: Text(item is VideoDescription ? item.videoTitle : 'null',
-                  style: TextStyle(color: Colors.white)),
-              subtitle: Text(item is VideoDescription ? 'Movie' : 'Song',
-                  style: TextStyle(color: Colors.white70)),
-              onTap: () {
-                if (item is Movie) {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => VideoPlayerPage(
-                  //       movies: allMovies,
-                  //       initialIndex: allMovies.indexOf(item),
-                  //     ),
-                  //   ),
-                  // );
-                } else {
-                  if (item is Music) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SongPlayerPage(
-                                  music: item,
-                                  onChange: (p0) {},
-                                  onDislike: (p0) {},
-                                )));
-                  }
-                }
-              },
-            );
-          }
+          return ListTile(
+            title: Text(item is VideoDescription ? item.videoTitle : item is AudioDescription ? item.audioTitle : 'unknown',
+                style: TextStyle(color: Colors.white)),
+            subtitle: Text(item is VideoDescription ? 'Movie' : item is AudioDescription ? 'Song' : 'Unknown',
+                style: TextStyle(color: Colors.white70)),
+            onTap: () {
+              // if (item is VideoDescription) {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => VideoPlayerPage(
+              //         movies: _allMovies,
+              //         initialIndex: _allVideos.indexOf(item),
+              //       ),
+              //     ),
+              //   );
+              //   } 
+                // else {
+                //   if (item is AudioDescription) {
+                //     Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => SongPlayerPage(
+                //                   music: item,
+                //                   onChange: (newAudio) {
+                //                     //  Provider.of<AudioProvider>(context,listen: true)
+                //                     // .musicsetCurrentlyPlaying(
+                //                     //               newAudio,
+                //                     //               );
+                //                   },
+                //                   onDislike: (p0) {},
+                //                 )));
+                //   }
+              //}
+            },
+          );
         },
       ),
     );
   }
 }
+
+
+
+  // Widget _buildSearchResults() {
+  //   return Container(
+  //     margin: EdgeInsets.only(top: 90),
+  //     child: ListView.builder(
+  //       itemCount: _searchResults.length,
+  //       itemBuilder: (context, index) {
+  //         final item = _searchResults[index];
+  //         if (item is Map && item['type'] == 'recent') {
+  //           return ListTile(
+  //             leading: Icon(Icons.history, color: Colors.white),
+  //             title: Text(item['query'], style: TextStyle(color: Colors.white)),
+  //             onTap: () {
+  //               // Perform search with this recent query
+  //             },
+  //           );
+  //         } else {
+  //           return ListTile(
+  //             title: Text(item is VideoDescription ? item.videoTitle : 'null',
+  //                 style: TextStyle(color: Colors.white)),
+  //             subtitle: Text(item is VideoDescription ? 'Movie' : 'Song',
+  //                 style: TextStyle(color: Colors.white70)),
+  //             onTap: () {
+  //               if (item is Movie) {
+  //                 // Navigator.push(
+  //                 //   context,
+  //                 //   MaterialPageRoute(
+  //                 //     builder: (context) => VideoPlayerPage(
+  //                 //       movies: allMovies,
+  //                 //       initialIndex: allMovies.indexOf(item),
+  //                 //     ),
+  //                 //   ),
+  //                 // );
+  //               } else {
+  //                 if (item is Music) {
+  //                   Navigator.push(
+  //                       context,
+  //                       MaterialPageRoute(
+  //                           builder: (context) => SongPlayerPage(
+  //                                 music: item,
+  //                                 onChange: (p0) {},
+  //                                 onDislike: (p0) {},
+  //                               )));
+  //                 }
+  //               }
+  //             },
+  //           );
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
+

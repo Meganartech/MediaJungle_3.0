@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
 import 'package:ott_project/components/music_folder/liked_songs_page.dart';
 import 'package:ott_project/components/music_folder/listen_again.dart';
@@ -15,12 +16,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../background_image.dart';
 
 class MusicPlayerPage extends StatefulWidget {
-  final Audio audio;
+  final AudioDescription audio;
   // final bool isLiked;
   // final Function(Audio, bool) onLike;
-  final Function(Audio) onChange;
-  final List<Audio> audioList;
-  final Function(Audio) onDislike;
+  final Function(AudioDescription) onChange;
+  final List<AudioDescription> audioList;
+  final Function(AudioDescription) onDislike;
 
   MusicPlayerPage({
     Key? key,
@@ -67,9 +68,12 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       });
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      audioProvider = Provider.of<AudioProvider>(context, listen: false);
-      audioProvider.setCurrentlyPlaying(widget.audio, widget.audioList);
-      _updateListeningHistory(widget.audio);
+
+      //need to change this to audiodescription!!!!!
+
+      // audioProvider = Provider.of<AudioProvider>(context, listen: false);
+      // audioProvider.setCurrentlyPlaying(widget.audio, widget.audioList);
+      // _updateListeningHistory(widget.audio);
     });
 
     // decodeImage(widget.audio.thumbnail);
@@ -484,12 +488,14 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                   onTap: isAudioInlikedsong
                       ? null // Disable onTap if the song is already in the playlist
                       : () {
-                          audioProvider.addAudioToLikedsong(
-                              likedsong, widget.audio);
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Added to Liked Songs'),
-                          ));
+                        //need to change to audioDescription!!!
+
+                          // audioProvider.addAudioToLikedsong(
+                          //     likedsong, widget.audio);
+                          // Navigator.pop(context);
+                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          //   content: Text('Added to Liked Songs'),
+                          // ));
                         },
                   // Optionally, you can visually indicate if the song is already in the playlist
                   trailing: isAudioInlikedsong
@@ -573,8 +579,8 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                     onTap: isAudioInPlaylist
                         ? null // Disable onTap if the song is already in the playlist
                         : () {
-                            audioProvider.addAudioToPlaylist(
-                                playlist, widget.audio);
+                            // audioProvider.addAudioToPlaylist(
+                            //     playlist, widget.audio);
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text('Added to ${playlist.title}'),

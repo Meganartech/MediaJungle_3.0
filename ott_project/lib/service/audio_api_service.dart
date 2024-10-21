@@ -4,11 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:ott_project/components/music_folder/audio.dart';
 import 'dart:convert';
 
+import '../components/music_folder/audio_container.dart';
 import '../components/music_folder/music.dart';
 
 class AudioApiService with ChangeNotifier {
   static const String baseUrl =
-      //  'http://localhost:8080/api/v2';
+    //  'http://localhost:8080/api/v2';
      'http://192.168.183.42:8080/api/v2';
 
   Future<Audio> fetchAudioDetail(int id) async {
@@ -30,6 +31,17 @@ class AudioApiService with ChangeNotifier {
       //   print('Response Audio:${response.body}');
       return Music.fromJson(jsonDecode(response.body));
     } else {
+      throw Exception('Failed to load audio details');
+    }
+  }
+
+  Future<AudioDescription> fetchAudioDetails(int id) async{
+    final response = await http.get(Uri.parse('$baseUrl/getaudio/$id'));
+    print('Audiodescription:${response.statusCode}');
+    print('Audiodescription:${response.body}');
+    if(response.statusCode == 200){
+        return AudioDescription.fromJson(jsonDecode(response.body));
+    }else {
       throw Exception('Failed to load audio details');
     }
   }
