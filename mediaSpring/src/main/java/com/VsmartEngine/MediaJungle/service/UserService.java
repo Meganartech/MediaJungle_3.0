@@ -37,5 +37,15 @@ public class UserService {
         return userRegisterRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+    public void updateUser(Long userId, String username, String email, String mobnum) {
+        UserRegister user = userRegisterRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Update user details
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setMobnum(mobnum);
+
+        userRegisterRepository.save(user); // Save updated user information
+    }
 }

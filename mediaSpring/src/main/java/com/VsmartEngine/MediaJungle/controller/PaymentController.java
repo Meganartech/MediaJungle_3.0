@@ -66,92 +66,70 @@ public class PaymentController {
         }
     }
     @PostMapping("/confirmPayment")
-  public ResponseEntity<String> confirmPayment(@RequestBody Map<String, String> requestData) {
+ public ResponseEntity<String> confirmPayment(@RequestBody Map<String, String> requestData) {
     try {
         // Log received data for debugging
-    	System.out.println("Received payment data: " + requestData);
-//
-        // Extract data from the request				
-       String paymentId = requestData.get("paymentId");
+        System.out.println("Received payment data: " + requestData);
+        
+        // Extract data from the request
+        String paymentId = requestData.get("paymentId");
         String orderId = requestData.get("orderId");
-      int statusCode = Integer.parseInt(requestData.get("status")); // Parse as int
+        int statusCode = Integer.parseInt(requestData.get("status")); // Parse as int
         String subscriptionTitle = requestData.get("planname");
-        Long amount = Long.parseLong(requestData.get("amount")); // Ensure the correct case for "amount"
-      Long userId = Long.parseLong(requestData.get("userId"));
-      int tenure=Integer.parseInt(requestData.get("tenure"));
-//        String orderId="data";
-//        
-
-//        Long userId=1L;
-//        
-//         String paymentId="dta";
-//        Long amount=100l; // Changed from Amount to amount
-//         LocalDate expiryDate=LocalDate.now().plusMonths(1);
-//         String status="yes";
-//         String subscriptionTitle="data";
+        Long amount = Long.parseLong(requestData.get("amount"));
+        Long userId = Long.parseLong(requestData.get("userId"));
+        int tenure = Integer.parseInt(requestData.get("tenure"));
 
         // Validate the received payment information
         boolean isPaymentSuccessful = checkIfPaymentIsSuccessful(statusCode);
-
-        // Set status based on payment success
         String finalStatus = isPaymentSuccessful ? "success" : "failed"; 
-
-        // Log the payment status for debugging
         System.out.println("Payment Status: " + finalStatus);
 
-        // Check if the user exists and save the payment details
-//        Optional<PaymentUser> paymentUserOptional = paymentrepository.findByUserId(userId);
-//        if (paymentUserOptional.isPresent()) {
-//            PaymentUser paymentUser = paymentUserOptional.get();
-//
-//            // Set payment details
-//            paymentUser.setPaymentId(paymentId);
-//            paymentUser.setOrderId(orderId);
-//            paymentUser.setStatus(finalStatus);
-//            paymentUser.setSubscriptionTitle(subscriptionTitle);
-//            paymentUser.setAmount(amount);
-//            paymentUser.setExpiryDate(LocalDate.now().plusMonths(1)); // Set expiry date to one month from now
-//            paymentUser.setUserId(userId);
-//            // Save updated payment details
-//            paymentrepository.save(paymentUser); // Make sure paymentrepository is defined properly
-//            return new ResponseEntity<>("Payment confirmed successfully", HttpStatus.OK);
-//        } else {
-//        	  PaymentUser paymentUser = paymentUserOptional.get();
+        // Check if the user exists and retrieve their payment details
+        Optional<PaymentUser> paymentUserOptional = paymentrepository.findByUserId(userId);
+        if (paymentUserOptional.isPresent()) {
+            PaymentUser paymentUser = paymentUserOptional.get();
 
-              // Set payment details
-   
-        PaymentUser PaymentUser=new PaymentUser();
-        	PaymentUser.setPaymentId(paymentId);
-        	PaymentUser.setOrderId(orderId);
-        	PaymentUser.setStatus(finalStatus);
-        	PaymentUser.setSubscriptionTitle(subscriptionTitle);
-        	PaymentUser.setAmount(amount);
-        	PaymentUser.setUserId(userId);
-        	// Calculate expiry date
-            LocalDate currentDate = LocalDate.now();
-            PaymentUser.setExpiryDate(currentDate.plusMonths(tenure));
-              // Save updated payment details
-              paymentrepository.save(PaymentUser); 
-              Optional<UserRegister> userOptional = userregisterrepository.findById(userId);
+            // Check if the payment has expired
+            if (paymentUser.getExpiryDate().isBefore(LocalDate.now())) {
+                // Payment expired, update with new payment details
+                paymentUser.setPaymentId(paymentId);
+                paymentUser.setOrderId(orderId);
+                paymentUser.setStatus(finalStatus);
+                paymentUser.setSubscriptionTitle(subscriptionTitle);
+                paymentUser.setAmount(amount);
+                paymentUser.setUserId(userId);
+                paymentUser.setExpiryDate(LocalDate.now().plusMonths(tenure)); // Update expiry date
 
-              if (userOptional.isPresent()) {
-              UserRegister user = userOptional.get();
-              user.setPaymentId(PaymentUser);  // Set the paymentUser
-              userregisterrepository.save(user); 
-           
-            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-              } else {
-                  return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-              }
-//        }
+                // Save updated payment details
+                paymentrepository.save(paymentUser);
+                return new ResponseEntity<>("Payment confirmed successfully", HttpStatus.OK);
+            } else {
+                // Payment is still active
+                return new ResponseEntity<>("You already have an active payment. Please wait until it expires or upgrade.", HttpStatus.CONFLICT);
+            }
+        } else {
+            // Create a new payment entry
+            PaymentUser paymentUser = new PaymentUser();
+            paymentUser.setPaymentId(paymentId);
+            paymentUser.setOrderId(orderId);
+            paymentUser.setStatus(finalStatus);
+            paymentUser.setSubscriptionTitle(subscriptionTitle);
+            paymentUser.setAmount(amount);
+            paymentUser.setUserId(userId);
+            paymentUser.setExpiryDate(LocalDate.now().plusMonths(tenure)); // Set expiry date
+
+            // Save the new payment details
+            paymentrepository.save(paymentUser);
+            return new ResponseEntity<>("Payment confirmed successfully", HttpStatus.OK);
+        }
     } catch (NumberFormatException e) {
         return new ResponseEntity<>("Invalid number format", HttpStatus.BAD_REQUEST);
     } catch (Exception e) {
-        e.printStackTrace(); // Log the exception for further investigation
+        e.printStackTrace();
         return new ResponseEntity<>("An error occurred while confirming the payment", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
-
 
     // Helper method to determine payment success based on statusCode
     private boolean checkIfPaymentIsSuccessful(int statusCode) {
@@ -333,4 +311,3 @@ public class PaymentController {
     
     
     
-

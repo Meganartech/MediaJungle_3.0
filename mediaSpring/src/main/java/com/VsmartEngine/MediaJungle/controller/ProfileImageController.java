@@ -3,16 +3,17 @@ package com.VsmartEngine.MediaJungle.controller;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.http.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,7 +85,20 @@ public class ProfileImageController {
     }
     
 }
+    @PutMapping("/updateUser/{userId}")
+    public ResponseEntity<String> updateUser(
+            @PathVariable Long userId,
+            @RequestParam("username") String username,
+            @RequestParam("email") String email,
+            @RequestParam("mobnum") String mobnum) {
 
+        try {
+            userService.updateUser(userId, username, email, mobnum); // Service call to handle update logic
+            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to update user", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 @GetMapping("/GetProfileImage/{userId}")
 @ResponseBody
 public ResponseEntity<byte[]> getProfileImage(@PathVariable Long userId) {

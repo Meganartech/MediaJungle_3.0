@@ -134,11 +134,6 @@ useEffect(() => {
     }
   };
 
-
-  const handleSubscribe = () => {
-    navigate('/PlanDetails');
-  };
-
   const [index, setIndex] = useState(0); // Track the starting index of the displayed videos
   const DISPLAY_LIMIT = 5; // Number of videos to display at a time
 
@@ -165,12 +160,64 @@ useEffect(() => {
     // Store the item object in local storage as a JSON string
     localStorage.setItem('items', JSON.stringify(item));
   };
+  const [message, setMessage] = useState(""); // State to store the response message
+
+  const handleAddToWatchLater = async (id, userid) => {
+    // Prepare the data object
+    const data = {
+      videoId: id,
+      userId: Number(userid), // Ensure userid is a number
+    };
+  
+    try {
+      // Make the POST request
+      const response = await axios.post(`${API_URL}/api/v2/watchlater/video`, data);
+      console.log(response.data); // Display success message
+      
+    } catch (error) {
+      // Handle error and display message
+      if (error.response) {
+        console.error(error.response.data); // Log the error message
+      } else {
+        console.error("Error adding to watch later");
+      }
+    }
+  };
+  
+  const [isInWatchLater, setIsInWatchLater] = useState(null); // State to hold the result
+
+  useEffect(() => {
+    const checkWatchLater = async () => {
+      setLoading(true); // Start loading
+      try {
+        const response = await axios.get(`${API_URL}api/v2/getwatchlater/video`, {
+          params: {
+            videoId: id,
+            userId: userid,
+          },
+        });
+  
+        // Assuming the response returns a boolean value or a string that represents it
+        setIsInWatchLater(response.data === true); // Set boolean value
+  
+        console.log("data", response.data); // Log the response data
+      } catch (error) {
+        console.error("Error checking watch later status:", error);
+        setIsInWatchLater(null); // Reset state on error
+      } finally {
+        setLoading(false); // Set loading to false when request completes
+      }
+    };
+  
+    if (id && userid) { // Only call the API if id and userid are valid
+      checkWatchLater(); // Call the function inside useEffect
+    }
+  }, [id, userid]); // Depend on id and userid to re-run when they change
+  
+  console.log("isInWatchLater", isInWatchLater);
 
   return (
-
-  
   <Layout>
- 
      <div className="videothumbnail position-relative">
     <>
       <img src={`${API_URL}/api/v2/${id}/videothumbnail`} alt="image" className="img-fluid" />
@@ -187,7 +234,7 @@ useEffect(() => {
     )
 }
 
-        <button id="button2" className=" me-4">Add to Watch list</button>
+        <button id="button2" className=" me-4" onClick={() => handleAddToWatchLater(id, userid)}>Add to Watch list</button>
         <i className="bi bi-share-fill share-icon"></i>
       </div>
       <span className="overlay-span">Duration:&nbsp;{getall.duration}</span>

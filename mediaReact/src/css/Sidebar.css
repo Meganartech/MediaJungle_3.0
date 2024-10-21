@@ -1164,6 +1164,26 @@ td{
   margin-bottom: 10px;
 }
 
+/*Library Screen */
+/* Custom scrollbar styles for WebKit browsers */
+.content-area::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.content-area::-webkit-scrollbar-thumb {
+  background-color: #2149B1; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+}
+
+.content-area::-webkit-scrollbar-track {
+  background: transparent; /* Background color of the scrollbar track */
+}
+
+/* For Firefox */
+.content-area {
+  scrollbar-width: thin; /* Set scrollbar width to thin */
+  scrollbar-color: #2149B1 transparent; /* thumb color and track color */
+}
 
 
 

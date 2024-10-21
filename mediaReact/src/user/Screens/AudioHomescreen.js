@@ -98,7 +98,7 @@ const AudioHomescreen = () => {
   
     return (
       <Layout>
-        {categories.length ===0 ? <div>AudioContainer is empty </div> : 
+        {categories.length ===0 ? <div className='banner-container'>AudioContainer is empty </div> : 
         <div>
           { videoBanners.length === 0? <div>No banners available</div> :
           // <div className="slider-container" style={{ marginBottom: '30px' }}>

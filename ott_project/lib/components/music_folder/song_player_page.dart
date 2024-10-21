@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
 import 'package:ott_project/components/music_folder/liked_songs_page.dart';
 import 'package:ott_project/components/pallete.dart';
@@ -16,12 +17,12 @@ import 'music_listen_again.dart';
 import 'recently_played.dart';
 
 class SongPlayerPage extends StatefulWidget {
-  final Music music;
+  final AudioDescription music;
   // final bool isLiked;
   // final Function(Audio, bool) onLike;
-  final Function(Music) onChange;
-  final List<Music> musicList;
-  final Function(Music) onDislike;
+  final Function(AudioDescription) onChange;
+  final List<AudioDescription> musicList;
+  final Function(AudioDescription) onDislike;
 
   SongPlayerPage({
     Key? key,
@@ -52,7 +53,8 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
   @override
   void initState() {
     super.initState();
-    _getCurrentUserId().then((_) => _loadLikedStatus());
+    _getCurrentUserId();
+    //.then((_) => _loadLikedStatus());
     _checkLikedStatus();
     _loadBannerImage();
     audioApiService = AudioApiService();
@@ -70,9 +72,11 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
       });
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
+// need to change this to audiodescription!!!!
+
       audioProvider = Provider.of<AudioProvider>(context, listen: false);
-      audioProvider.musicsetCurrentlyPlaying(widget.music, widget.musicList);
-      _updateListeningHistory(widget.music);
+      audioProvider..setCurrentlyPlayingSong(widget.music, widget.musicList);
+      // _updateListeningHistory(widget.music);
     });
 
     // decodeImage(widget.audio.thumbnail);
@@ -87,7 +91,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
   // }
 
   Future<void> _loadBannerImage() async {
-    final image = await widget.music.bannerImage;
+    final image = await widget.music.thumbnail;
     setState(() {
       banner = image;
     });
@@ -100,20 +104,20 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
     setState(() {});
   }
 
-  Future<void> _loadLikedStatus() async {
-    if (currentUserId != null) {
-      try {
-        List<int> likedSongs =
-            await audioApiService.getLikedSongs(currentUserId!);
-        setState(() {
-          isLiked = likedSongs.contains(widget.music.id);
-          likedSongIds = likedSongs.map((id) => id.toString()).toList();
-        });
-      } catch (e) {
-        print('Error loading liked status: $e');
-      }
-    }
-  }
+  // Future<void> _loadLikedStatus() async {
+  //   if (currentUserId != null) {
+  //     try {
+  //       List<int> likedSongs =
+  //           await audioApiService.getLikedSongs(currentUserId!);
+  //       setState(() {
+  //         isLiked = likedSongs.contains(widget.music.id);
+  //         likedSongIds = likedSongs.map((id) => id.toString()).toList();
+  //       });
+  //     } catch (e) {
+  //       print('Error loading liked status: $e');
+  //     }
+  //   }
+  // }
 
   Future<void> _checkLikedStatus() async {
     setState(() {
@@ -231,7 +235,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
   Widget build(BuildContext context) {
     return Consumer<AudioProvider>(
       builder: (context, audioProvider, child) {
-        final currentAudio = audioProvider.musiccurrentlyPlaying;
+        final currentAudio = audioProvider.audioDescriptioncurrently;
         final isPlaying = audioProvider.isPlaying;
         final duration = audioProvider.duration;
         final position = audioProvider.position;
@@ -318,17 +322,18 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
                               //     }
                               //   },
                               // ),
-                              currentAudio?.banner != null
+                              currentAudio?.thumbnail != null
                                   ? Image.memory(
                                       currentAudio!
-                                          .banner!, // safely unwrapping banner since it's non-null here
+                                          .thumbnail!, // safely unwrapping banner since it's non-null here
                                       fit: BoxFit.fill,
                                     )
-                                  : Image.asset('assets/images/remo.jpg')),
+                                  : 
+                                  Image.asset('assets/icon/media_jungle.png')),
                     ),
                     SizedBox(height: 20),
                     Text(
-                      currentAudio!.songname,
+                      currentAudio!.audioTitle,
                       style: TextStyle(
                           color: kWhite,
                           fontSize: 20,
@@ -420,7 +425,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
-                          onPressed: audioProvider.toggleShuffleMusic,
+                          onPressed: audioProvider.toggleShuffleSong,
                           icon: Icon(Icons.shuffle_rounded,
                               color: audioProvider.isShuffleOn
                                   ? Colors.green
@@ -428,12 +433,12 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
                               size: 40),
                         ),
                         IconButton(
-                          onPressed: audioProvider.playPreviousMusic,
+                          onPressed: audioProvider.playPreviousSong,
                           icon: Icon(Icons.skip_previous_rounded,
                               color: Colors.white, size: 40),
                         ),
                         IconButton(
-                          onPressed: audioProvider.playPauseMusic,
+                          onPressed: audioProvider.playPauseSong,
                           icon: Icon(
                             isPlaying
                                 ? Icons.pause_circle_filled_rounded
@@ -443,12 +448,12 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
                           ),
                         ),
                         IconButton(
-                          onPressed: audioProvider.playNextMusic,
+                          onPressed: audioProvider.playNextSong,
                           icon: Icon(Icons.skip_next_rounded,
                               color: Colors.white, size: 40),
                         ),
                         IconButton(
-                          onPressed: audioProvider.toggleRepeatMusic,
+                          onPressed: audioProvider.toggleRepeatSong,
                           icon: Icon(repeatIcon, color: repeatColor, size: 40),
                         ),
                       ],
@@ -519,12 +524,12 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
                   onTap: isAudioInlikedsong
                       ? null // Disable onTap if the song is already in the playlist
                       : () {
-                          audioProvider.addMusicToLikedsong(
-                              likedsong, widget.music);
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Added to Liked Songs'),
-                          ));
+                          // audioProvider.addMusicToLikedsong(
+                          //     likedsong, widget.music);
+                          // Navigator.pop(context);
+                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          //   content: Text('Added to Liked Songs'),
+                          // ));
                         },
                   // Optionally, you can visually indicate if the song is already in the playlist
                   trailing: isAudioInlikedsong
@@ -609,8 +614,8 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
                     onTap: isAudioInPlaylist
                         ? null // Disable onTap if the song is already in the playlist
                         : () {
-                            audioProvider.addMusicToPlaylist(
-                                playlist, widget.music);
+                            // audioProvider.addMusicToPlaylist(
+                            //     playlist, widget.music);
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text('Added to ${playlist.title}'),

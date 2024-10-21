@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/category/category_service.dart';
 import 'package:ott_project/components/pallete.dart';
+import 'package:ott_project/components/video_folder/category_based_movie.dart';
 import 'package:ott_project/components/video_folder/movie.dart';
 import 'package:ott_project/components/video_folder/movie_player_page.dart';
 import 'package:ott_project/components/video_folder/movies_card.dart';
@@ -31,7 +32,9 @@ class MovieCategorySection extends StatelessWidget {
               ),
             ),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                 
+                },
                 child: Text('See more', style: TextStyle(color: Colors.green))),
           ],
         ),
@@ -94,7 +97,9 @@ void initState() {
               ),
             ),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                   Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoryBasedMovie(categoryName: widget.videoContainer.value, videoDescriptions: widget.videoContainer.videoDescriptions)));
+                },
                 child: Text('See more', style: TextStyle(color: Colors.green))),
           ],
         ),

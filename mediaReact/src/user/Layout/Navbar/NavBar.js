@@ -13,10 +13,40 @@ const NavBar = () => {
     const navigate = useNavigate();
     const[count,setcount]=useState(0);
     const [isopen,setisopen]=useState(false);
-
+    const [user, setUser] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
     const [getall,setGetAll] = useState('');
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const currentDate = new Date();
+
+    const jwtToken = sessionStorage.getItem("token");
+    const userId = Number(sessionStorage.getItem("userId")); // Convert to number
+  
    const token=sessionStorage.getItem("token")
+   useEffect(() => {
+    if (!jwtToken) {
+        setLoading(false); // If no token, don't make the fetch request
+        return;
+    }
+
+    fetch(`${API_URL}/api/v2/GetUserById/${userId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch user');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setUser(data);
+            console.log(data);
+            setLoading(false);
+        })
+        .catch(error => {
+            setError(error.message);
+            setLoading(false);
+        });
+}, [jwtToken, userId]);
 
    useEffect(() => {
     fetch(`${API_URL}/api/v2/GetsiteSettings`)
@@ -148,7 +178,12 @@ useEffect(() => {
   fetchUnreadCount();
   // Cleanup for interval
 }, [count]); 
+  // Determine if the user is fresh (no payment details)
+  const isFreshUser = !user || !user.paymentId || !user.paymentId.expiryDate;
 
+  // Check subscription status
+  const expiryDate = user?.paymentId?.expiryDate ? new Date(user.paymentId.expiryDate) : null;
+  const isExpired = expiryDate ? expiryDate < currentDate : false;
     return (
         <>
             <div className='bg-custom-color shadow-md sticky z-20'  >
@@ -164,7 +199,7 @@ useEffect(() => {
   </div>
 
   {/* Centered Search Form */}
-  <div className='col-span-5 flex justify-center items-center'>
+  <div className='col-span-4 flex items-center'>
     <form className='w-full max-w-md text-sm bg-dryGray rounded flex gap-4 items-center'>
       <button type='submit' className=' w-12 flex-colo h-12 rounded text-black'>
         <FaSearch />
@@ -175,8 +210,41 @@ useEffect(() => {
         className='font-medium placeholder:text-border text-sm w-full h-12 bg-transparent border-none px-2 text-black'
       />
     </form>
-  </div>
 
+  </div>
+  <div className='con5' > 
+            <NavLink to='/' className={Hover}>
+                            Movies
+                        </NavLink>
+                        <NavLink to='/AudioHomecreeen' className={Hover}>
+                            Music
+                        </NavLink>
+                        <NavLink to='/libraryScreen' className={Hover}>
+                            Library
+                        </NavLink>
+                        {isFreshUser ? (
+                            <div>
+                                <NavLink
+                                    to='/PlanDetails'
+                                    className="bg-new hover:bg-red-900 text-white py-2 px-8 rounded-lg w-full transition duration-300 ease-in-out"
+                                >
+                                    SUBSCRIBE
+                                </NavLink>
+                            </div>
+                        ) : isExpired ? (
+                            <div>
+                                <NavLink
+                                    to='/PlanDetails'
+                                    className="bg-new hover:bg-red-900 text-white py-2 px-8 rounded-lg w-full transition duration-300 ease-in-out"
+                                >
+                                    RENEW SUBSCRIPTION
+                                </NavLink>
+                            </div>
+                        ) : (
+                            <NavLink></NavLink>
+                        )}
+
+            </div>
   {/* Menus */}
   <div className='col-span-1 font-medium text-sm hidden xl:gap-14 2xl:gap-10 justify-between lg:flex xl:justify-end items-center'>
     <div className="relative cursor-pointer mr-2" onClick={() => { setisopen(!isopen); }}>
@@ -216,25 +284,7 @@ useEffect(() => {
                   <UserNotification setisopen={setisopen} isopen={isopen} setcount={setcount} handlemarkallasRead={handlemarkallasRead}/>
                   </div>}
             </div>
-            <div className='con5' style={{ background: 'linear-gradient(to top, #141335, #0c0d1a)'}}> 
-            <NavLink to='/' className={Hover}>
-                            Movies
-                        </NavLink>
-                        <NavLink to='/AudioHomecreeen' className={Hover}>
-                            Music
-                        </NavLink>
-                        <NavLink to='#' className={Hover}>
-                            Library
-                        </NavLink>
-                        <div style={{padding:'50px'}}>
-                        <NavLink 
-  to='/PlanDetails' 
-  className="bg-new hover:bg-red-900 text-white py-2 px-8 rounded-lg w-full transition duration-300 ease-in-out"
->
-  SUBSCRIBE
-</NavLink>
-</div>
-            </div>
+          
         </>
     )
 }

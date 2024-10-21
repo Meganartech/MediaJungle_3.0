@@ -439,39 +439,39 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
                               //   style: TextStyle(color: Colors.white70),
                               // ),
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SongPlayerPage(
-                                            music: audio,
-                                            onChange: (newAudio) {
-                                              setState(() {
-                                                int index = widget
-                                                    .playlist.music
-                                                    .indexWhere((a) => a.id == newAudio.id);
-                                                    if(index != -1){
-                                                      widget.playlist.music[index] = newAudio;
-                                                    }
-                                              });
-                                            },
-                                            onDislike: (p0) {})
-                                        //  MusicPlayerPage(
-                                        //     audio: audio,
-                                        //     audioList: widget.playlist.audios,
-                                        //     onDislike: (p0) {},
-                                        //     onChange: (newAudio) {
-                                        //       setState(() {
-                                        //         int index = widget
-                                        //             .playlist.audios
-                                        //             .indexWhere((a) =>
-                                        //                 a.id == newAudio.id);
-                                        //         if (index != -1) {
-                                        //           widget.playlist
-                                        //               .audios[index] = newAudio;
-                                        //         }
-                                        //       });
-                                        //     })
-                                        ));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => SongPlayerPage(
+                                //             music: audio,
+                                //             onChange: (newAudio) {
+                                //               setState(() {
+                                //                 int index = widget
+                                //                     .playlist.music
+                                //                     .indexWhere((a) => a.id == newAudio.id);
+                                //                     if(index != -1){
+                                //                       widget.playlist.music[index] = newAudio;
+                                //                     }
+                                //               });
+                                //             },
+                                //             onDislike: (p0) {})
+                                //         //  MusicPlayerPage(
+                                //         //     audio: audio,
+                                //         //     audioList: widget.playlist.audios,
+                                //         //     onDislike: (p0) {},
+                                //         //     onChange: (newAudio) {
+                                //         //       setState(() {
+                                //         //         int index = widget
+                                //         //             .playlist.audios
+                                //         //             .indexWhere((a) =>
+                                //         //                 a.id == newAudio.id);
+                                //         //         if (index != -1) {
+                                //         //           widget.playlist
+                                //         //               .audios[index] = newAudio;
+                                //         //         }
+                                //         //       });
+                                //         //     })
+                                //         ));
                               },
                             ),
                             // ),

@@ -8,15 +8,15 @@ import 'audio_container.dart';
 class AudioCard extends StatelessWidget {
   final AudioDescription audio;
   final int initialIndex;
-  //final VoidCallback onTap;
+  final VoidCallback onTap;
   //final List<Audio> Audio;
 
   const AudioCard({
     Key? key,
     required this.audio,
     required this.initialIndex,
-    //required this.onTap,
-    //this.Audio = const []
+    required this.onTap,
+    //this.Audio = const []   
   }) : super(key: key);
 
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class AudioCard extends StatelessWidget {
     // final compressedBytes = base64.decode(movie.thumbnail);
     // final decompressedBytes = ZLibDecoder().decodeBytes(compressedBytes);
     return GestureDetector(
-      // onTap: onTap,
+      onTap: onTap,
       child: Container(
         width: 120,
         //height: 500,

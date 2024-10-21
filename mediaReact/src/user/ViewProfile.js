@@ -15,6 +15,7 @@ const ViewProfile = () => {
     const [loading, setLoading] = useState(true);
     const [imageSrc, setImageSrc] = useState(null);
     const [editMode, setEditMode] = useState(false);
+    const [newImage, setNewImage] = useState(null); // State to store the new image file
     const [editData, setEditData] = useState({
         username: '',
         email: '',
@@ -66,20 +67,36 @@ const ViewProfile = () => {
         setEditMode(true);
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setNewImage(file); // Set the new image file
+            const imageURL = URL.createObjectURL(file);
+            setImageSrc(imageURL); // Update the preview with the new image
+        }
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setEditData({ ...editData, [name]: value });
     };
 
     const handleSaveChanges = async () => {
+        const formData = new FormData();
+        formData.append('username', editData.username);
+        formData.append('email', editData.email);
+        formData.append('mobnum', editData.mobnum);
+        if (newImage) {
+            formData.append('profileImage', newImage); // Add the new image to the form data
+        }
+
         try {
             const response = await fetch(`${API_URL}/api/v2/updateUser/${userId}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': jwtToken,
                 },
-                body: JSON.stringify(editData),
+                body: formData,
             });
 
             if (!response.ok) throw new Error('Failed to update user details');
@@ -107,7 +124,7 @@ const ViewProfile = () => {
 
     return (
         <Layout className='container mx-auto min-h-screen overflow-y-auto'>
-            <div className='px-10 my-24 flex flex-col items-center'>
+            <div className='banner-container px-10 my-24 flex flex-col items-center'>
                 <div className="relative mb-6 flex justify-center">
                     {imageSrc ? (
                         <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-yellow-600">
@@ -118,12 +135,21 @@ const ViewProfile = () => {
                             No Image
                         </div>
                     )}
-                    <div
+                    <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        id="fileInput"
+                        onChange={handleImageChange}
+                    />
+                             {editMode ? (
+                    <label
+                        htmlFor="fileInput"
                         className="absolute bottom-4 right-6 transform translate-x-1/2 translate-y-1/2 bg-white p-2 rounded-full shadow-lg cursor-pointer z-20"
                         onClick={handleEditClick}
                     >
                         <FaPen className="text-yellow-600" />
-                    </div>
+                    </label>):<label></label>}
                 </div>
 
                 {jwtToken && user ? (
@@ -139,7 +165,7 @@ const ViewProfile = () => {
                                                 name="username"
                                                 value={editData.username}
                                                 onChange={handleInputChange}
-                                                className="bg-gray-200 p-1 rounded"
+                                                className="bg-gray-200 p-1 rounded text-black"
                                             />
                                         ) : (
                                             user.username
@@ -155,7 +181,7 @@ const ViewProfile = () => {
                                                 name="email"
                                                 value={editData.email}
                                                 onChange={handleInputChange}
-                                                className="bg-gray-200 p-1 rounded"
+                                                className="bg-gray-200 p-1 rounded text-black"
                                             />
                                         ) : (
                                             user.email
@@ -171,13 +197,22 @@ const ViewProfile = () => {
                                                 name="mobnum"
                                                 value={editData.mobnum}
                                                 onChange={handleInputChange}
-                                                className="bg-gray-200 p-1 rounded"
+                                                className="bg-gray-200 p-1 rounded text-black"
                                             />
                                         ) : (
                                             user.mobnum
                                         )}
                                     </td>
                                 </tr>
+                                {!editMode && (
+                                    <tr>
+                                        <td colSpan="2" className="px-4 py-2 text-white text-center">
+                                            <button className='btn btn-primary' onClick={handleEditClick}>
+                                                Edit Profile
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
 
