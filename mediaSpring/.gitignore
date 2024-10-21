@@ -15,10 +15,21 @@ target/
 .mvn
 .bin
 
+# Eclipse specific files
+.project
+.classpath
+.settings/
+
+# Binary and generated files
+bin/
+target/
+build/
+
 #logs
 *.log
 *.gz
 *.tmp
+*.bak
 
 
 ### IntelliJ IDEA ###
@@ -29,6 +40,8 @@ target/
 
 ##logs
 *.log
+*.tmp
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
