@@ -77,22 +77,23 @@ class _SearchAudioVideoState extends State<SearchAudioVideo> {
                         ),
                       ),
                     );
-                  } else if (item is Audio) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MusicPlayerPage(
-                          audio: item,
-                          audioList: widget.allmusic,
-                          onDislike: (p0) {},
-                          onChange: (newAudio) {
-                            Provider.of<AudioProvider>(context, listen: false)
-                                .setCurrentlyPlaying(newAudio, widget.allmusic);
-                          },
-                        ),
-                      ),
-                    );
-                  }
+                  } 
+                  // else if (item is Audio) {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => MusicPlayerPage(
+                  //         audio: item,
+                  //         audioList: widget.allmusic,
+                  //         onDislike: (p0) {},
+                  //         onChange: (newAudio) {
+                  //           Provider.of<AudioProvider>(context, listen: false)
+                  //               .setCurrentlyPlaying(newAudio, widget.allmusic);
+                  //         },
+                  //       ),
+                  //     ),
+                  //   );
+                  // }
                 },
               );
             },
