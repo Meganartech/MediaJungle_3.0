@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 // import '../csstemp/addAudio.css';
-import ReactPlayer from 'react-player';
-import API_URL from '../Config';
-import { Link } from 'react-router-dom';
-import "../css/Sidebar.css";
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import "../App.css"
 import { useRef } from 'react';
+import ReactPlayer from 'react-player';
+import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import "../App.css";
+import API_URL from '../Config';
+import "../css/Sidebar.css";
 
 
 const AddAudio = () => {
@@ -41,6 +40,178 @@ const AddAudio = () => {
 
 
   const token = sessionStorage.getItem("tokenn")
+
+
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllPlans`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setgetallplan(data);
+        // console.log(data)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categoriesResponse = await axios.get(`${API_URL}/api/v2/GetAllCategories`);
+        setCategories(categoriesResponse.data);
+        // console.log(categories)
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllCertificate`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      setCertificate(data);
+      // console.log(data);
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+  }, []);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllcastandcrew`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetall(data);
+        // console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (audioId) {
+      const audiofilename = "";
+    
+      fetch(`${API_URL}/api/v2/getaudio/${audioId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          setgetalldata(data);
+          // Store the fetched data in state
+          setaudiofilename(data.audio_file_name);
+          // console.log(data);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+
+      fetch(`${API_URL}/api/v2/getaudiothumbnailsbyid/${audioId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+
+          const base64Thumbnail = data.thumbnail;
+          // console.log(base64Thumbnail)
+          
+          setThumbnail(base64Thumbnail);
+          if (base64Thumbnail) {
+            setThumbnailimageUrl(`data:image/jpeg;base64,${base64Thumbnail}`);
+          } else {
+            setThumbnailimageUrl(null);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+
+      fetch(`${API_URL}/api/v2/getbannerthumbnailsbyid/${audioId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+
+          const base64Thumbnail = data;
+          setBannerthumbnail(base64Thumbnail);
+          if (base64Thumbnail) {
+            setBannerimageUrl(`data:image/jpeg;base64,${base64Thumbnail}`);
+          } else {
+            setBannerimageUrl(null);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+
+
+    }
+
+  }, []); 
+
+    useEffect(() => {
+    fetch(`${API_URL}/api/v2/GetAllCategories`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setGetallcategory(data);
+        // console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+
+    fetch(`${API_URL}/api/v2/GetAllTag`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+
+        setGetalltag(data);
+        // console.log("data");
+        // console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+
+  }, []);
 
 
   const handleBannerImageChange = (e) => {
@@ -77,23 +248,6 @@ const AddAudio = () => {
     }
   };
 
-  useEffect(() => {
-    fetch(`${API_URL}/api/v2/GetAllPlans`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setgetallplan(data);
-        console.log(data)
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
-
 
   const handleRadioChange = (e) => {
     setSelectedOption(e.target.value);
@@ -114,7 +268,7 @@ const AddAudio = () => {
         if (result.isConfirmed) {
           navigate('/admin/Adminplan');
         } else if (result.isDismissed) {
-          console.log('Cancel was clicked');
+          // console.log('Cancel was clicked');
         }
       });
     }
@@ -127,19 +281,7 @@ const AddAudio = () => {
   };
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const categoriesResponse = await axios.get(`${API_URL}/api/v2/GetAllCategories`);
-        setCategories(categoriesResponse.data);
-        console.log(categories)
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
-    fetchData();
-  }, []);
 
   const handleRadioClick = () => {
     setSelected(!selected); // Toggle the value of 'selected'
@@ -164,10 +306,10 @@ const AddAudio = () => {
     const file = event.target.files[0];
     setAudioFile(event.target.files[0])
     setaudioFileedited(true)
-    console.log('File selected:', file);
+    // console.log('File selected:', file);
     if (file) {
       const audioUrl = URL.createObjectURL(file);
-      console.log('Video URL:', audioUrl);
+      // console.log('Video URL:', audioUrl);
       setAudioUrl(audioUrl);
     }
   };
@@ -219,91 +361,7 @@ const AddAudio = () => {
 
 
 
-  useEffect(() => {
-    fetch(`${API_URL}/api/v2/GetAllcastandcrew`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setGetall(data);
-        console.log(data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (audioId) {
-      const audiofilename = "";
-      fetch(`${API_URL}/api/v2/getaudio/${audioId}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          setgetalldata(data);
-          // Store the fetched data in state
-          setaudiofilename(data.audio_file_name);
-          console.log(data);
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-        });
-
-      fetch(`${API_URL}/api/v2/getaudiothumbnailsbyid/${audioId}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-
-          const base64Thumbnail = data.thumbnail;
-          console.log(base64Thumbnail)
-          
-          setThumbnail(base64Thumbnail);
-          if (base64Thumbnail) {
-            setThumbnailimageUrl(`data:image/jpeg;base64,${base64Thumbnail}`);
-          } else {
-            setThumbnailimageUrl(null);
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-        });
-
-      fetch(`${API_URL}/api/v2/getbannerthumbnailsbyid/${audioId}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-
-          const base64Thumbnail = data;
-          setBannerthumbnail(base64Thumbnail);
-          if (base64Thumbnail) {
-            setBannerimageUrl(`data:image/jpeg;base64,${base64Thumbnail}`);
-          } else {
-            setBannerimageUrl(null);
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-        });
-
-
-    }
-
-  }, []); 
+ 
 
 
 
@@ -347,6 +405,123 @@ const AddAudio = () => {
     const newValue = event.target.value;
     setDescription(newValue); // Updating the state using the setter function
   };
+  const styles = {
+    audiodropdownContainer: {
+      width: "100%",
+      position: "relative",
+    },
+    audiodropdownInput: {
+      width: "100%",
+      padding: "8px",
+      boxSizing: "border-box",
+    },
+    audiodropdownList: {
+      position: "absolute",
+      top: "40px",
+      left: "0",
+      width: "100%",
+      maxHeight: "150px", // Maximum height for scrollable dropdown
+      overflowY: "auto", // Enable scrolling
+      backgroundColor: "white",
+      border: "1px solid #ccc",
+      zIndex: 1,
+      scrollbarColor: "#2b2a52",
+    },
+   
+    audiodropdownItem: {
+      padding: "8px",
+      cursor: "pointer",
+    },
+  };
+
+
+  const [inputValue, setInputValue] = useState(''); // State for input value
+  const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown visibility
+  const [options, setOptions] = useState([]); // State for options fetched from the API
+  const [filteredOptions, setFilteredOptions] = useState([]); // State for filtered options
+  const dropdownRefmoviename= useRef(null);
+
+
+
+ // Fetch categories from API
+ useEffect(() => {
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/v2/GetAllCategories`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      const categoryNames = data.map(item => item.categories); // Assuming item.categories contains the category names
+      setOptions(categoryNames); // Set the full list of options
+      setFilteredOptions(categoryNames); // Set the filtered options initially
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchCategories();
+}, []); // Run once when component mounts
+
+// Toggle dropdown visibility
+const handleDropdownToggle = () => {
+  setDropdownOpen(!dropdownOpen);
+
+};
+
+ // Handle input change to filter options
+ const handleInputChange = (e) => {
+  const value = e.target.value.toLowerCase();
+  const value2=e.target.value;
+  const category = categories.find(cat => cat.categories === value2);
+  const categoryNames = categories.map(item => item.categories);
+  // Separate options that start with the value from those that contain it elsewhere
+  const startsWithValue = categoryNames.filter(option =>
+    option.toLowerCase().startsWith(value)  // Options that start with the input
+  );
+
+  const containsValue = categoryNames.filter(option =>
+    option.toLowerCase().includes(value) && !option.toLowerCase().startsWith(value)  // Options that contain but don't start with the input
+  );
+
+  // Combine the two lists, with starting matches first
+  const filtered = [...startsWithValue, ...containsValue];
+
+  setFilteredOptions(filtered); 
+  setInputValue(value);
+  setMovie_name(value);
+};
+
+const handleOptionClick = (option) => {
+  setInputValue(option);
+  setMovie_name(option);
+  setDropdownOpen(false);
+  const categoryNames = categories.map(item => item.categories);
+  // Separate options that start with the value from those that contain it elsewhere
+  const startsWithValue = categoryNames.filter(optione =>
+    optione.toLowerCase().startsWith(option)  // Options that start with the input
+  );
+  setFilteredOptions(startsWithValue); 
+  
+};
+
+ // Close dropdown if clicked outside
+ useEffect(() => {
+  const handleClickOutsidemoviename = (event) => {
+    if (dropdownRefmoviename.current && !dropdownRefmoviename.current.contains(event.target)) {
+ 
+      setDropdownOpen(false);
+    }
+  };
+  document.addEventListener('mousedown', handleClickOutsidemoviename);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutsidemoviename);
+  };
+}, []);
+
+
+
+
 
 
   const [Getallcateegory, setGetallcategory] = useState('');
@@ -400,7 +575,7 @@ const AddAudio = () => {
     setIsOpentag(!isOpentag);
   };
   const handleCheckboxChangecategory = (option) => (e) => {
-    console.log();
+    // console.log();
     const isChecked = e.target.checked;
     const id = (option.category_id);
     const name = (option.categories);// Convert ID to number
@@ -409,7 +584,7 @@ const AddAudio = () => {
       setcategorylist((prevList) => [...prevList, id]);
       setcategorylistName((prevList) => [...prevList, `${name},`]);
 
-      console.log(name);
+      // console.log(name);
     } else {
       setcategorylist((prevList) => prevList.filter((item) => item !== id));
       setcategorylistName((prevList) => prevList.filter((item) => item !== `${name},`));
@@ -417,55 +592,7 @@ const AddAudio = () => {
   };
 
 
-  useEffect(() => {
-    fetch(`${API_URL}/api/v2/GetAllCategories`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setGetallcategory(data);
-        console.log(data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
 
-    fetch(`${API_URL}/api/v2/GetAllTag`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-
-        setGetalltag(data);
-        console.log("data");
-        console.log(data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-
-    fetch(`${API_URL}/api/v2/GetAllCertificate`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setCertificate(data);
-        console.log(data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-
-  }, []);
 
   const handleCheckboxChangetag = (option) => (e) => {
     const isChecked = e.target.checked;
@@ -487,6 +614,9 @@ const AddAudio = () => {
       setMovie_name(getalldata.movie_name);
 
       const selectedCertificate = Certificate.find(cert => cert.certificate === getalldata.certificate_name);
+      // console.log(getalldata.certificate_name)
+      // console.log(Certificate.certificate)
+      // console.log("selectedCertificate"+selectedCertificate)
       
       if (selectedCertificate) {
         setCertificateid(selectedCertificate.id); // Set the ID for the select box
@@ -708,7 +838,7 @@ const AddAudio = () => {
                       <label className="custom-label">Movie Name</label>
                     </div>
                     <div className="flex-grow-1">
-                      <input
+                      {/* <input
                         type='text'
                         name='Movie Name'
                         id='Movie Name'
@@ -717,7 +847,41 @@ const AddAudio = () => {
                         placeholder="Movie Name"
                         onChange={changeMovie_name}
                         value={Movie_name}
-                      />
+                      /> */}
+                      <div className="dropdown-container" style={styles.audiodropdownContainer} ref={dropdownRefmoviename} >
+                      <input
+        type="text"
+        value={Movie_name || ''}
+        onClick={handleDropdownToggle} // Open the dropdown on input click
+        onChange={handleInputChange} // Update input value on change
+        className="form-control border border-dark border-2 input-width col-lg-12"
+        style={{ padding: '10px', cursor: 'pointer' }}
+        placeholder="Select an option"
+      />
+
+
+                            {dropdownOpen && filteredOptions.length > 0 && (
+        <div
+          className=" col-lg-12 custom-scrollbar"
+          // style={{ maxHeight: '150px', overflowY: 'auto', position: 'absolute', zIndex: 1, background: 'white', border: '1px solid #ccc' }}
+          style={styles.audiodropdownList}
+          // ref={dropdownRef}
+        >
+          {filteredOptions.map((option, idx) => (
+            <div
+              key={idx}
+              className="dropdown-item col-lg-12"
+              style={{ padding: '10px', cursor: 'pointer' }}
+              onClick={() => handleOptionClick(option)} // Set value on option click
+              // ref={dropdownRef}
+            >
+              {option}
+            </div>
+          ))}
+        </div>
+      )}
+                             <br />
+                           </div>
                     </div>
                   </div>
                 </div>
@@ -759,6 +923,7 @@ const AddAudio = () => {
 
                           setCertificateid(certificateValue);
                           setCertificate_name(certificateName);
+                          
                         }}
                       >
                         <option value="">Select Certificate</option>
