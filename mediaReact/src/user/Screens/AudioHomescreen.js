@@ -92,8 +92,8 @@ const AudioHomescreen = () => {
     // }
   
     const currentBanner = videoBanners[currentIndexBanner]; // Current banner data
-        // const audioSrc = `${API_URL}/api/v2/${filename}/file`; // Replace with your audio file path
-    const audioSrc = `https://testtomcat.vsmartengine.com/media/api/v2/${filename}/file`; // Replace with your audio file path
+        const audioSrc = `${API_URL}/api/v2/${filename}/file`; // Replace with your audio file path
+    // const audioSrc = `https://testtomcat.vsmartengine.com/media/api/v2/${filename}/file`; // Replace with your audio file path
 
   
     return (
