@@ -109,36 +109,40 @@ function Footer() {
         
         <div className="pb-3.5 sm:pb-0 col-span-1 md:col-span-2 lg:col-span-3">
           {getall.length > 0 && getall[0].logo ? (
-            <div>
-              <Link to="/">
-                <img
-                  src={`data:image/png;base64,${getall[0].logo}`}
-                  alt="logo"
-                  className="w-75% h-20" />
-              </Link>
-              <div className="flex space-x-4 mt-4">
-                {socialLinks.fbUrl && (
-                  <a href={socialLinks.fbUrl} target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faFacebookF} className="text-blue-600 text-2xl" />
-                  </a>
-                )}
-                {socialLinks.xUrl && (
-                  <a href={socialLinks.xUrl} target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faTwitter} className="text-blue-400 text-2xl" />
-                  </a>
-                )}
-                {socialLinks.youtubeUrl && (
-                  <a href={socialLinks.youtubeUrl} target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faYoutube} className="text-red-600 text-2xl" />
-                  </a>
-                )}
-                {socialLinks.linkedinUrl && (
-                  <a href={socialLinks.linkedinUrl} target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faLinkedinIn} className="text-blue-700 text-2xl" />
-                  </a>
-                )}
-              </div>
-            </div>
+        <div className="flex flex-col items-center">
+  <Link to="/" className="flex justify-center">
+    <img
+      src={`data:image/png;base64,${getall[0].logo}`}
+      alt="logo"
+      className="w-1/2 h-25"
+    />
+  </Link>
+
+  <div className="flex space-x-4 mt-4 justify-center">
+    {socialLinks.fbUrl && (
+      <a href={socialLinks.fbUrl} target="_blank" rel="noopener noreferrer">
+        <FontAwesomeIcon icon={faFacebookF} className="text-blue-600 text-2xl" />
+      </a>
+    )}
+    {socialLinks.xUrl && (
+      <a href={socialLinks.xUrl} target="_blank" rel="noopener noreferrer">
+        <FontAwesomeIcon icon={faTwitter} className="text-blue-400 text-2xl" />
+      </a>
+    )}
+    {socialLinks.youtubeUrl && (
+      <a href={socialLinks.youtubeUrl} target="_blank" rel="noopener noreferrer">
+        <FontAwesomeIcon icon={faYoutube} className="text-red-600 text-2xl" />
+      </a>
+    )}
+    {socialLinks.linkedinUrl && (
+      <a href={socialLinks.linkedinUrl} target="_blank" rel="noopener noreferrer">
+        <FontAwesomeIcon icon={faLinkedinIn} className="text-blue-700 text-2xl" />
+      </a>
+    )}
+  </div>
+</div>
+
+       
           ) : (
             <div></div>
           )}
@@ -150,20 +154,28 @@ function Footer() {
             </p>
           }
         </div>
-        <div className="flex-col mt-4">
-          <a href="" target="_blank" className='w-full' rel="noopener noreferrer">
-            <button className="bg-black text-white rounded items-center">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/512px-Google_Play_Store_badge_EN.svg.png"
-                alt="Get it on Google Play"
-                className="w-full mr-2"
-              />
-            </button>
-          </a>
-          <a href="" style={{display:"inline-block"}}>
-            <img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1522022400" alt="Download on the App Store" style={{width: "246px", height: "82px", verticalAlign:"middle", objectFit:'contain'}} />
-          </a>
-        </div>
+        <div className="flex flex-col mt-4 space-y-4 justify-center">
+  <a href="" target="_blank" className="w-full" rel="noopener noreferrer">
+    <button className="bg-black text-white rounded w-full">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/512px-Google_Play_Store_badge_EN.svg.png"
+        alt="Get it on Google Play"
+        className="w-full h-08"
+      />
+    </button>
+  </a>
+
+  <a href="" target="_blank" className="w-full" rel="noopener noreferrer">
+    <button className="bg-black text-white rounded w-full">
+      <img
+        src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1522022400"
+        alt="Download on the App Store"
+        className="w-full h-08"
+      />
+    </button>
+  </a>
+</div>
+
       </div>
     </div>
   );
