@@ -151,7 +151,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                       // ),
                     ),
                      Tab(
-                      text: "Profile",
+                      text: "Account",
                       icon: Icon(
                         Icons.person_outline_rounded,
                         size: 27,

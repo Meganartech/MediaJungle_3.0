@@ -4,6 +4,7 @@ import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/song_player_page.dart';
 import 'package:ott_project/components/video_folder/category_bar.dart';
 import 'package:ott_project/components/video_folder/movie.dart';
+import 'package:ott_project/components/video_folder/movie_player_page.dart';
 import 'package:ott_project/components/video_folder/video_play.dart';
 import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
@@ -27,9 +28,9 @@ class MoviePage extends StatefulWidget {
 
 class _MoviePageState extends State<MoviePage> {
   final Service service = Service();
-  List<Movies> allMovies = [];
+  List<VideoDescription> allMovies = [];
   final TextEditingController _searchController = TextEditingController();
-  List<Movies> _filteredMovies = [];
+  List<VideoDescription> _filteredMovies = [];
  
   Map<String, List<Movies>> _categorizedMovies = {};
 
@@ -43,6 +44,7 @@ class _MoviePageState extends State<MoviePage> {
   @override
   void initState() {
     super.initState();
+
     // _filteredMovies = _allMovies;
     // _allMovies = _fetchMovies();
 
@@ -299,23 +301,38 @@ Widget _buildSearchResults() {
         itemCount: _searchResults.length,
         itemBuilder: (context, index) {
           final item = _searchResults[index];
+          print('All Movies: ${allMovies.length}');
+ print('Search Result: ${item is VideoDescription ? item.videoTitle : item is AudioDescription ? item.audioTitle : 'unknown'}');
+
+
+// final index1 = allMovies.indexOf(item);
+// print('Index of ${item.videoTitle}: $index1');
+
+
+           if (item is VideoDescription) {
+    print('Search Result (Video): ${item.videoTitle}');
+  } else if (item is AudioDescription) {
+    print('Search Result (Audio): ${item.audioTitle}');
+  } else {
+    print('Search Result: Unknown type');
+  }
           return ListTile(
             title: Text(item is VideoDescription ? item.videoTitle : item is AudioDescription ? item.audioTitle : 'unknown',
                 style: TextStyle(color: Colors.white)),
             subtitle: Text(item is VideoDescription ? 'Movie' : item is AudioDescription ? 'Song' : 'Unknown',
                 style: TextStyle(color: Colors.white70)),
             onTap: () {
-              // if (item is VideoDescription) {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => VideoPlayerPage(
-              //         movies: _allMovies,
-              //         initialIndex: _allVideos.indexOf(item),
-              //       ),
-              //     ),
-              //   );
-              //   } 
+              if (item is VideoDescription) {
+                
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MoviesPlayerPage(videoDescriptions: allMovies,categoryId: 1,initialIndex: allMovies.indexWhere((video)=> video.id == item.id),)
+                  ),
+                );
+            
+                }
+  
                 // else {
                 //   if (item is AudioDescription) {
                 //     Navigator.push(
