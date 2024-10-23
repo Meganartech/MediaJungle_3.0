@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ott_project/components/category/category_service.dart';
 import 'package:ott_project/components/pallete.dart';
+import 'package:ott_project/components/video_folder/category_based_movie.dart';
 import 'package:ott_project/components/video_folder/movie.dart';
 import 'package:ott_project/components/video_folder/movie_player_page.dart';
 import 'package:ott_project/components/video_folder/movies_card.dart';
@@ -30,7 +32,9 @@ class MovieCategorySection extends StatelessWidget {
               ),
             ),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                 
+                },
                 child: Text('See more', style: TextStyle(color: Colors.green))),
           ],
         ),
@@ -56,15 +60,28 @@ class MovieCategorySection extends StatelessWidget {
   }
 }
 
-class MoviesCategorySection extends StatelessWidget {
+class MoviesCategorySection extends StatefulWidget {
   final VideoContainer videoContainer;
   const MoviesCategorySection({super.key, required this.videoContainer});
 
   @override
+  State<MoviesCategorySection> createState() => _MoviesCategorySectionState();
+}
+
+class _MoviesCategorySectionState extends State<MoviesCategorySection> {
+
+  @override
+void initState() {
+  super.initState();
+  CategoryService().loadCategories(); // Load categories once
+}
+
+
+  @override
   Widget build(BuildContext context) {
-    final displayedMovies = videoContainer.videoDescriptions.length > 5
-        ? videoContainer.videoDescriptions.sublist(0, 5)
-        : videoContainer.videoDescriptions;
+    final displayedMovies = widget.videoContainer.videoDescriptions.length > 5
+        ? widget.videoContainer.videoDescriptions.sublist(0, 5)
+        : widget.videoContainer.videoDescriptions;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -72,7 +89,7 @@ class MoviesCategorySection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              videoContainer.value,
+              widget.videoContainer.value,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -80,7 +97,9 @@ class MoviesCategorySection extends StatelessWidget {
               ),
             ),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                   Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoryBasedMovie(categoryName: widget.videoContainer.value, videoDescriptions: widget.videoContainer.videoDescriptions)));
+                },
                 child: Text('See more', style: TextStyle(color: Colors.green))),
           ],
         ),
@@ -94,19 +113,24 @@ class MoviesCategorySection extends StatelessWidget {
               itemCount: displayedMovies.length,
               itemBuilder: (context, index) {
                 final movie = displayedMovies[index];
-                final categoryId =movie.categoryList.isNotEmpty 
-                  ? movie.categoryList.first 
-                  : 1; 
+               
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: MoviesCard(
                     movie: displayedMovies[index],
                     onTap: () {
+                      final categoryId = CategoryService().getCategoryId(movie.categoryList, widget.videoContainer.value);
+                     // final categoryIndex = movie.categoryList.indexOf(int.parse(videoContainer.value));
+                     //  final categoryId =movie.categoryList.isNotEmpty 
+                 // ? movie.categoryList.first
+                  //: 1; 
                       Navigator.push(context, MaterialPageRoute(builder: (context)=> 
-                      MoviesPlayerPage(categoryId: categoryId,videoDescriptions: videoContainer.videoDescriptions,initialIndex: index,),));
+                      MoviesPlayerPage(categoryId: categoryId,videoDescriptions: widget.videoContainer.videoDescriptions,initialIndex: index,),));
+
+                      print('Tapped category: ${widget.videoContainer.value}, CategoryID: $categoryId');
                     },
-                    categoryList: displayedMovies[index].categoryList,
-                    //movies: videoContainer.videoDescriptions,
+                    categoryList: movie.categoryList,
+                    
                     initialIndex: index,
                   ),
                 );

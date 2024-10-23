@@ -11,10 +11,25 @@ target/
 .settings
 .springBeans
 .sts4-cache
+.metadata
+.mvn
+.bin
+
+# Eclipse specific files
+.project
+.classpath
+.settings/
+
+# Binary and generated files
+bin/
+target/
+build/
 
 #logs
 *.log
 *.gz
+*.tmp
+*.bak
 
 
 ### IntelliJ IDEA ###
@@ -25,6 +40,8 @@ target/
 
 ##logs
 *.log
+*.tmp
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -36,7 +53,7 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
+.vscode
 
 # Ignore video files
 *.mp4

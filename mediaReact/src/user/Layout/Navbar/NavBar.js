@@ -235,7 +235,7 @@ useEffect(() => {
                         <NavLink to='/AudioHomecreeen' className={Hover}>
                             Music
                         </NavLink>
-                        <NavLink to='#' className={Hover}>
+                        <NavLink to='/libraryScreen' className={Hover}>
                             Library
                         </NavLink>
                         {isFreshUser ? (

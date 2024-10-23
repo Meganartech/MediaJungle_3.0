@@ -9,11 +9,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/components/video_folder/cast_crew.dart';
+import 'package:ott_project/components/video_folder/suggest_movie.dart';
 
-import 'package:ott_project/components/video_folder/movie.dart';
 import 'package:ott_project/components/video_folder/video_container.dart';
 
 import 'package:ott_project/service/movie_api_service.dart';
+import 'package:ott_project/service/movie_service_page.dart';
 
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -39,6 +40,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
   late Future<void> _initializeVideoPlayerFuture;
   late int _currentIndex;
   List<CastCrew> castCrew = [];
+  List<VideoDescription> suggestedMovies =[];
   late MovieApiService _apiService;
   late VideoDescription _movieDetails;
   bool isFullScreen = false;
@@ -53,6 +55,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
     _currentIndex = widget.initialIndex;
     _apiService = MovieApiService();
     _initializeVideoPlayerFuture = _fetchVideoScreenDetails(widget.videoDescriptions[_currentIndex].id, widget.categoryId);
+    fetchSuggestedMovies();
   }
 
   Future<void> _fetchVideoScreenDetails(int videoId,int categoryId) async{
@@ -72,8 +75,6 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
       print('Error fetching video screen details: $e');
     }
   }
-
-
 
   Future<void> _initializeVideoPlayer(int videoId) async {
     try {
@@ -101,6 +102,32 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
       // Handle error
       return Future.error(e);
     }
+  }
+
+  void fetchSuggestedMovies() async{
+      try{
+        print('Category id for suggestion');
+        print(widget.categoryId);
+        final videoContainers  = await MovieService.fetchVideoContainer();
+
+        final matchingContainers = videoContainers.firstWhere((container)=> container.categoryId ==  widget.categoryId,orElse:()=> throw Exception('No matching category found'));
+        
+        final movies = matchingContainers.videoDescriptions;
+        for(var movie in movies){
+          await movie.fetchImage();
+           print("Movie Title: ${movie.videoTitle}, Thumbnail: ${movie.thumbnail}");
+        }
+        setState(() {
+          suggestedMovies = movies.take(5).toList();
+          for (var movie in suggestedMovies) {
+  print("Movie Title: ${movie.videoTitle}, Thumbnail: ${movie.thumbnail}");
+}
+        });
+        
+        print('Suggested movie:${suggestedMovies.length}');
+      }catch(e){
+          print('Failed to fetch suggested movies:$e');
+      }
   }
 
   @override
@@ -338,8 +365,9 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                       if (isFullScreen) Expanded(child: _buildVideoPlayer()),
                     ],
                   ),
-                  if (!isFullScreen) _buildSuggestedMoviesDrawer(),
-                  // SuggestedMoviesDrawer(currentCategory: currentCategory),
+                  if (!isFullScreen) 
+                  _buildSuggestedMoviesDrawer(),
+                  //SuggestedMoviesDrawer(currentCategory: widget.categoryId),
                 ],
               ),
             ),
@@ -438,13 +466,13 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                   child: CircularProgressIndicator(),
                 ),
               if (_showControls) buildControls(),
-              if (isDrawerOpen)
-                BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                  child: Container(
-                    color: Colors.black.withOpacity(0.3),
-                  ),
-                ),
+              // if (isDrawerOpen)
+              //   BackdropFilter(
+              //     filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+              //     child: Container(
+              //       color: Colors.black.withOpacity(0.3),
+              //     ),
+              //   ),
             ],
           ),
         ),
@@ -674,39 +702,95 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                     ),
                   ),
                   SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: List.generate(
-                        5,
-                        (index) => Container(
-                          width: 150,
-                          margin: EdgeInsets.only(right: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(
-                                  'assets/images/bgimg.jpg',
-                                  width: 130,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Movie Name',
-                                style: TextStyle(color: Colors.white),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+  scrollDirection: Axis.horizontal,
+  padding: EdgeInsets.symmetric(horizontal: 16),
+  child: Row(
+    children: List.generate(
+      suggestedMovies.length,
+      (index) => Container(
+        width: 120,
+        margin: EdgeInsets.only(right: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            GestureDetector(
+              //onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>MoviesPlayerPage(videoDescriptions: widget.videoDescriptions, categoryId: widget.categoryId))),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: FutureBuilder<Uint8List?>(
+                  future: suggestedMovies[index].thumbnailImage, // Use the thumbnailImage getter
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        width: 150,
+                        height: 200, // Adjust as needed
+                        color: Colors.grey, // Placeholder color
+                      ); // Show a placeholder while loading
+                    } else if (snapshot.hasError) {
+                      return Image.asset('assets/icon/media_jungle.png'); // Fallback image on error
+                    } else if (snapshot.hasData && snapshot.data != null) {
+                      return Container(
+                        height: 100,
+                        width: 100,
+                        child: Image.memory(snapshot.data!,fit: BoxFit.fill,)); // Display the fetched image
+                    } else {
+                      return Image.asset('assets/icon/media_jungle.png'); // Fallback image if no data
+                    }
+                  },
+                ),
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              suggestedMovies[index].videoTitle,
+              style: TextStyle(color: Colors.white),
+             // maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    ),
+  ),
+),
+
+                  
+                  // SingleChildScrollView(
+                  //   scrollDirection: Axis.horizontal,
+                  //   padding: EdgeInsets.symmetric(horizontal: 16),
+                  //   child: Row(
+                  //     children: 
+                  //     //suggestedMovies.isNotEmpty
+                  //        List.generate(
+                  //      suggestedMovies.length,
+                  //       (index) => Container(
+                  //         width: 150,
+                  //         margin: EdgeInsets.only(right: 16),
+                  //         child: Column(
+                  //           crossAxisAlignment: CrossAxisAlignment.start,
+                  //           children: [
+                  //             ClipRRect(
+                  //               borderRadius: BorderRadius.circular(8),
+                  //               child: 
+                  //               Image.asset('assets/icon/media_jungle.png')
+                                
+                  //               //Image.memory(suggestedMovies[index].thumbnail!) 
+                  //               // : Image.asset('assets/icon/media_jungle.png')
+                  //             ),
+                  //             SizedBox(height: 8),
+                  //             Text(
+                  //              suggestedMovies[index].videoTitle,
+                  //               style: TextStyle(color: Colors.white),
+                  //               maxLines: 2,
+                  //               overflow: TextOverflow.ellipsis,
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //      //: [Container(child: Text('No suggested movies available.', style: TextStyle(color: Colors.white),))],
+                  //   ),
+                  // ),
                 ],
               ),
             ),

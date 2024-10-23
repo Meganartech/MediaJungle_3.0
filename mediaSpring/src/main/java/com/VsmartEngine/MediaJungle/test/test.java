@@ -38,7 +38,9 @@ import com.VsmartEngine.MediaJungle.repository.AudioTagRepository;
 import com.VsmartEngine.MediaJungle.repository.Audioimage;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+//import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
+import org.springframework.web.bind.annotation.RequestBody;
 
 @CrossOrigin()
 @RestController
@@ -76,27 +78,45 @@ public class test {
 
 
 	@PostMapping("/test")
-	public ResponseEntity<?> testaudio(@RequestBody Audiodescription data,
+	public ResponseEntity<?> testaudio( @RequestParam("audio_title") String audioTitle,
+		    @RequestParam("Movie_name") String movieName,
+		    @RequestParam("Audio_Duration") String audioDuration,
+		    @RequestParam("Certificate_no") String certificateNo,
+		    @RequestParam("Certificate_name") String certificateName,
+		    @RequestParam("Rating") String rating,
+		    @RequestParam("paid") boolean isPaid,
+		    @RequestParam("production_company") String productionCompany,
+		    @RequestParam("Description") String description,
 			@RequestParam(value = "thumbnail", required = false) MultipartFile audio_thumbnail,
 			@RequestParam(value = "Bannerthumbnail", required = false) MultipartFile banner_thumbnail,
 			@RequestParam("castAndCrewIds") List<Long> castAndCrewIds, @RequestParam("category") List<Long> category,
 			@RequestParam("tag") List<Long> tag, @RequestParam("audioFile") MultipartFile audioFile) {
 		try {
 			String audioFilePath = fileService.saveAudioFile(audioFile);
-			data.setAudio_file_name(audioFilePath);
-			Audiodescription savedData = audio.save(data);
+			Audiodescription audiodata = new Audiodescription();
+			audiodata.setAudio_file_name(audioFilePath);
+			audiodata.setAudio_Duration(audioDuration);
+			audiodata.setAudio_title(audioTitle);
+			audiodata.setCertificate_name(certificateName);
+			audiodata.setCertificate_no(certificateNo);
+			audiodata.setDescription(description);
+			audiodata.setMovie_name(movieName);
+			audiodata.setPaid(isPaid);
+			audiodata.setProduction_company(productionCompany);
+			audiodata.setRating(rating);
+			audiodata = audio.save(audiodata);
 			AudioCastAndCrew AudioCastAndCrew = new AudioCastAndCrew();
 			;
-			AudioCastAndCrew.setAudio_id(savedData.getId());
+			AudioCastAndCrew.setAudio_id(audiodata.getId());
 			AudioCastAndCrew.setCastandcrewlist(castAndCrewIds);
 			Audiocastandcrewrepository.save(AudioCastAndCrew);
-			Category.saveCategories(savedData.getId(), category);
-			Category.savetags(savedData.getId(), tag);
+			Category.saveCategories(audiodata.getId(), category);
+			Category.savetags(audiodata.getId(), tag);
 			byte[] audiothumbnailBytes = ImageUtils.compressImage(audio_thumbnail.getBytes());
 			byte[] bannerthumbnailBytes = ImageUtils.compressImage(banner_thumbnail.getBytes());
 
 			Audioimages cast = new Audioimages();
-			cast.setAudioId(savedData.getId());
+			cast.setAudioId(audiodata.getId());
 			cast.setAudio_thumbnail(audiothumbnailBytes);
 			cast.setBannerthumbnail(bannerthumbnailBytes);
 			audioI.save(cast);
@@ -110,7 +130,16 @@ public class test {
 	}
 
 	@PostMapping("/update")
-	public ResponseEntity<?> audioupdate(@RequestBody Audiodescription data,
+	public ResponseEntity<?> audioupdate(    @RequestParam(value = "audio_id", required = false) Long audioId,
+		    @RequestParam("audio_title") String audioTitle,
+		    @RequestParam("Movie_name") String movieName,
+		    @RequestParam("Audio_Duration") String audioDuration,
+		    @RequestParam("Certificate_no") String certificateNo,
+		    @RequestParam("Certificate_name") String certificateName,
+		    @RequestParam("Rating") String rating,
+		    @RequestParam("paid") boolean isPaid,
+		    @RequestParam("production_company") String productionCompany,
+		    @RequestParam("Description") String description,
 			@RequestParam(value = "thumbnail", required = false) MultipartFile audio_thumbnail,
 			@RequestParam(value = "Bannerthumbnail", required = false) MultipartFile banner_thumbnail,
 			@RequestParam("castAndCrewIds") List<Long> castAndCrewIds, @RequestParam("category") List<Long> category,
@@ -118,17 +147,17 @@ public class test {
 			@RequestParam(value = "audioFile", required = false) MultipartFile audioFile) {
 		try {
 
-			Optional<Audiodescription> audioList = audio.findById(id);
+			Optional<Audiodescription> audioList = audio.findById(audioId);
 			Audiodescription audiodata = audioList.get();
-			audiodata.setAudio_Duration(data.getAudio_Duration());
-			audiodata.setAudio_title(data.getAudio_title());
-			audiodata.setCertificate_name(data.getCertificate_name());
-			audiodata.setCertificate_no(data.getCertificate_no());
-			audiodata.setDescription(data.getDescription());
-			audiodata.setMovie_name(data.getMovie_name());
-			audiodata.setPaid(data.getPaid());
-			audiodata.setProduction_company(data.getProduction_company());
-			audiodata.setRating(data.getRating());
+			audiodata.setAudio_Duration(audioDuration);
+			audiodata.setAudio_title(audioTitle);
+			audiodata.setCertificate_name(certificateName);
+			audiodata.setCertificate_no(certificateNo);
+			audiodata.setDescription(description);
+			audiodata.setMovie_name(movieName);
+			audiodata.setPaid(isPaid);
+			audiodata.setProduction_company(productionCompany);
+			audiodata.setRating(rating);
 			System.out.println("audioFile!=null :" + (audioFile != null));
 			if (audioFile != null) {
 				String audioFilePath = fileService.saveAudioFile(audioFile);
@@ -215,88 +244,88 @@ public class test {
 		}
 	}
 
-	@GetMapping("/getaudio/{id}")
-	public ResponseEntity<AudiolistdetailsDTO> Audiolistdetails(@PathVariable("id") long id) {
+//	@GetMapping("/getaudio/{id}")
+//	public ResponseEntity<AudiolistdetailsDTO> Audiolistdetails(@PathVariable("id") long id) {
+//
+//		Optional<Audiodescription> audioList = audio.findById(id);
+//		List<Tag> audioTag = AudioTagRepository.findByAudio_Id(id);
+//		List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(id);
+//		Optional<AudioCastAndCrew> audioCastandCrew = Audiocastandcrewrepository.findById(id);
+//		List<CastandCrewDTO> castAndCrewDTOList = new ArrayList<>();
+//		AudioCastAndCrew castandcrew = audioCastandCrew.get();
+//		List<Long> castAndCrewIds = castandcrew.getCastandcrewlist();
+//		for (Long ids : castAndCrewIds) {
+//			Optional<CastandCrew> castAndCrewOptional = CastandcrewRepository.findById(ids);
+//			if (castAndCrewOptional.isPresent()) {
+//				CastandCrew castAndCrew = castAndCrewOptional.get();
+//				// Create a DTO or simply use an object to hold the ID and Name
+//				CastandCrewDTO dto = new CastandCrewDTO(castAndCrew.getId(), castAndCrew.getName());
+//				castAndCrewDTOList.add(dto);
+//			} else {
+//				// Handle the case where the ID does not exist in the repository
+//				System.out.println("No CastandCrew found with ID: " + id);
+//			}
+//
+//		}
+//		castAndCrewDTOList.forEach(System.out::println);
+//		AudiolistdetailsDTO dto = new AudiolistdetailsDTO();
+//		if (audioList.isPresent()) {
+//			Audiodescription audio = audioList.get();
+//			dto.setId(audio.getId());
+//			dto.setAudioTitle(audio.getAudio_title());
+//			dto.setMovie_name(audio.getMovie_name());
+//			dto.setRating(audio.getRating());
+//			dto.setDescription(audio.getDescription());
+//			dto.setProduction_company(audio.getProduction_company());
+//			dto.setPaid(audio.getPaid());
+//			dto.setAudio_file_name(audio.getAudio_file_name());
+//			dto.setCertificate_name(audio.getCertificate_name());
+//			dto.setAudio_Duration(audio.getAudio_Duration());
+//			dto.setCertificate_no(audio.getCertificate_no());
+//			dto.setTag(audioTag);
+//			dto.setCategory(audioCategorie);
+//			dto.setCastandCrew(castAndCrewDTOList);
+//		} else {
+//			return ResponseEntity.notFound().build();
+//		}
+//		audioTag.forEach(System.out::println);
+//		return ResponseEntity.ok(dto);
+//	}
 
-		Optional<Audiodescription> audioList = audio.findById(id);
-		List<Tag> audioTag = AudioTagRepository.findByAudio_Id(id);
-		List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(id);
-		Optional<AudioCastAndCrew> audioCastandCrew = Audiocastandcrewrepository.findById(id);
-		List<CastandCrewDTO> castAndCrewDTOList = new ArrayList<>();
-		AudioCastAndCrew castandcrew = audioCastandCrew.get();
-		List<Long> castAndCrewIds = castandcrew.getCastandcrewlist();
-		for (Long ids : castAndCrewIds) {
-			Optional<CastandCrew> castAndCrewOptional = CastandcrewRepository.findById(ids);
-			if (castAndCrewOptional.isPresent()) {
-				CastandCrew castAndCrew = castAndCrewOptional.get();
-				// Create a DTO or simply use an object to hold the ID and Name
-				CastandCrewDTO dto = new CastandCrewDTO(castAndCrew.getId(), castAndCrew.getName());
-				castAndCrewDTOList.add(dto);
-			} else {
-				// Handle the case where the ID does not exist in the repository
-				System.out.println("No CastandCrew found with ID: " + id);
-			}
+//	@GetMapping("/getaudiodetailsdto")
+//	public ResponseEntity<List<AudiodetailsDTO>> getAudio() {
+//		List<Audiodescription> audioList = audio.findAll();
+//		List<AudiodetailsDTO> dtoList = audioList.stream().map(a -> {
+//			List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(a.getId());
+//			audioCategorie.forEach(System.out::println);
+//			String firstCategoryName = audioCategorie.isEmpty() ? "No Category" : audioCategorie.get(0).getCategories();
+//			return new AudiodetailsDTO(a.getId(), a.getAudio_title(), a.getPaid(), a.getProduction_company(),
+//					a.getRating(), firstCategoryName);
+//		}).collect(Collectors.toList());
+//		dtoList.forEach(System.out::println);
+//		return ResponseEntity.ok(dtoList);
+//	}
 
-		}
-		castAndCrewDTOList.forEach(System.out::println);
-		AudiolistdetailsDTO dto = new AudiolistdetailsDTO();
-		if (audioList.isPresent()) {
-			Audiodescription audio = audioList.get();
-			dto.setId(audio.getId());
-			dto.setAudioTitle(audio.getAudio_title());
-			dto.setMovie_name(audio.getMovie_name());
-			dto.setRating(audio.getRating());
-			dto.setDescription(audio.getDescription());
-			dto.setProduction_company(audio.getProduction_company());
-			dto.setPaid(audio.getPaid());
-			dto.setAudio_file_name(audio.getAudio_file_name());
-			dto.setCertificate_name(audio.getCertificate_name());
-			dto.setAudio_Duration(audio.getAudio_Duration());
-			dto.setCertificate_no(audio.getCertificate_no());
-			dto.setTag(audioTag);
-			dto.setCategory(audioCategorie);
-			dto.setCastandCrew(castAndCrewDTOList);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
-		audioTag.forEach(System.out::println);
-		return ResponseEntity.ok(dto);
-	}
-
-	@GetMapping("/getaudiodetailsdto")
-	public ResponseEntity<List<AudiodetailsDTO>> getAudio() {
-		List<Audiodescription> audioList = audio.findAll();
-		List<AudiodetailsDTO> dtoList = audioList.stream().map(a -> {
-			List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(a.getId());
-			audioCategorie.forEach(System.out::println);
-			String firstCategoryName = audioCategorie.isEmpty() ? "No Category" : audioCategorie.get(0).getCategories();
-			return new AudiodetailsDTO(a.getId(), a.getAudio_title(), a.getPaid(), a.getProduction_company(),
-					a.getRating(), firstCategoryName);
-		}).collect(Collectors.toList());
-		dtoList.forEach(System.out::println);
-		return ResponseEntity.ok(dtoList);
-	}
-
-	@DeleteMapping("/testaudio/{id}")
-	public ResponseEntity<String> deleteAudio(@PathVariable Long id) {
-		try {
-
-			AudioTagRepository.deletetagByAudioId(id);
-			AudioCategoriesRepository.deletecategoriesByAudioId(id);
-			Audiocastandcrewrepository.deleteById(id);
-			audioI.deleteById(id);
-			audio.deleteById(id);
-
-			if (true) {
-				return new ResponseEntity<>("Audio with ID " + id + " deleted successfully.", HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>("Audio not found with ID: " + id, HttpStatus.NOT_FOUND);
-			}
-		} catch (Exception e) {
-			return new ResponseEntity<>("An error occurred while deleting audio with ID: " + id,
-					HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+//	@DeleteMapping("/testaudio/{id}")
+//	public ResponseEntity<String> deleteAudio(@PathVariable Long id) {
+//		try {
+//
+//			AudioTagRepository.deletetagByAudioId(id);
+//			AudioCategoriesRepository.deletecategoriesByAudioId(id);
+//			Audiocastandcrewrepository.deleteById(id);
+//			audioI.deleteById(id);
+//			audio.deleteById(id);
+//
+//			if (true) {
+//				return new ResponseEntity<>("Audio with ID " + id + " deleted successfully.", HttpStatus.OK);
+//			} else {
+//				return new ResponseEntity<>("Audio not found with ID: " + id, HttpStatus.NOT_FOUND);
+//			}
+//		} catch (Exception e) {
+//			return new ResponseEntity<>("An error occurred while deleting audio with ID: " + id,
+//					HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
 
 //	@PostMapping("/afliater")
 //	public ResponseEntity<Map<String, Object>> getAfliater(@RequestBody testModel data) {

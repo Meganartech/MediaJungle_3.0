@@ -11,6 +11,7 @@ import 'package:ott_project/pages/login_page.dart';
 import 'package:provider/provider.dart';
 
 import 'components/music_folder/recently_played.dart';
+import 'pages/movie_page.dart';
 
 //import 'package:flutter_cas'
 
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => LoginPage(),
         'ForgetPassword': (context) => ForgetPassword(),
         'CreateNewAccount': (context) => SignUp(),
-        'Login': (context) => HomePage(),
+        'Login': (context) => MoviePage(),
         //'Home': (context) => MainTab(),
       },
     );
