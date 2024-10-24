@@ -201,6 +201,10 @@
         console.error('Error confirming payment:', error);
     }
 };
+
+  
+    
+    
     const [discountedAmounts, setDiscountedAmounts] = useState({}); // Track discounted amounts
 
 useEffect(() => {

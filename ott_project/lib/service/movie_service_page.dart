@@ -119,5 +119,5 @@ class MovieService {
     } else {
       throw Exception('Failed to load category names');
     }
-  }
+  } 
 }
