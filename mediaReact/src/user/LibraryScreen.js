@@ -25,20 +25,58 @@ const LibraryScreen = () => {
     fetchWatchLater();
   }, []);
 
+  console.log("watchLater",watchLater);
+
     // State to manage which item's remove button is visible
     const [visibleIndex, setVisibleIndex] = useState(null);
+    const [watchLaterList, setWatchLaterList] = useState(watchLater); // Store the watch later list
+
 
     // Function to toggle the visibility of the remove button
     const toggleRemoveButton = (index) => {
       setVisibleIndex(visibleIndex === index ? null : index);
     };
-  
-    // Function to handle removing an item
-    const handleRemove = (index) => {
-      // Logic to remove the item from watchLater
-      console.log(`Removing video at index: ${index}`);
-      // You can also call a function passed as props or dispatch an action here
+
+    const removeWatchLater = async (userId, videoId) => {
+      try {
+        const response = await axios.delete(`${API_URL}/api/v2/${userId}/removewatchlater`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          data: { videoId: videoId },  // Pass the videoId in the data object
+        });
+    
+        if (response.status === 200) {
+          console.log(response.data); // "Video removed from watchlater successfully"
+          fetchWatchLater();
+          return true; // Indicate success
+          
+        } else {
+          console.error(response.data); // Error message from the server
+          return false; // Indicate failure
+        }
+      } catch (error) {
+        console.error("Error removing video from watchlater", error);
+        return false;
+      }
     };
+    
+    
+
+  
+     // Handle removing a video and updating the UI
+  const handleRemove = async (index) => {
+    const user = Number(userid);
+    console.log("user",index,user);
+    // Call the API to remove the video
+    const isRemoved = await removeWatchLater(user, index);
+
+    if (isRemoved) {
+      // Update the local state to remove the video from the UI
+      const updatedList = watchLaterList.filter((_, i) => i !== index);
+      setWatchLaterList(updatedList);
+    }
+  };
   
 
   const renderContent = () => {
@@ -52,89 +90,58 @@ const LibraryScreen = () => {
         );
       case "watchLater":
         return (
-          // <div>
-          //   <h3>Watch Later</h3>
-          //   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' ,marginTop:'10px'}}>
-          //     {watchLater.map((item, index) => (
-          //       <div key={index} style={{
-          //         display: 'flex', 
-          //         flexDirection: 'column',
-          //         alignItems: 'center',
-          //         width: '120px',
-          //         marginBottom: '10px',
-          //         textAlign: 'center'
-          //       }}>
-          //         <img
-          //           src={`${API_URL}/api/v2/${item.videoId}/videothumbnail`}
-          //           alt="video"
-          //           style={{ width: '150px', height: '150px', borderRadius: '8px' }}
-          //         />
-          //         <p style={{ color: 'white', fontSize: '14px' }}>{item.videoTitle}</p>
-          //         {/* <button style={{
-          //           backgroundColor: '#d9534f', 
-          //           color: 'white', 
-          //           border: 'none', 
-          //           padding: '5px 10px', 
-          //           borderRadius: '5px',
-          //           cursor: 'pointer'
-          //         }}>Remove</button> */}
-                  
-          //       </div>
-          //     ))}
-          //   </div>
-          // </div>
           <div>
-      <h3>Watch Later</h3>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '10px' }}>
-        {watchLater.map((item, index) => (
-          <div key={index} style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '120px',
-            marginBottom: '10px',
-            textAlign: 'center'
-          }}>
-            <img
-              src={`${API_URL}/api/v2/${item.videoId}/videothumbnail`}
-              alt="video"
-              style={{ width: '150px', height: '150px', borderRadius: '8px' }}
-            />
-            <p style={{ color: 'white', fontSize: '14px' }}>{item.videoTitle}</p>
-            
-            <div style={{ position: 'relative' }}>
-              <div
-                onClick={() => toggleRemoveButton(index)}
-                style={{
-                  cursor: 'pointer',
-                  color: 'white',
-                  fontSize: '20px',
-                  margin: '5px 0'
-                }}
-              >
-                ⋮ {/* This represents the three vertical dots */}
-              </div>
+  <h3>Watch Later</h3>
+  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginTop: '10px' }}>
+    {watchLater.map((item, index) => (
+      <div className='watchlater' key={index}>
+        <img
+          src={`${API_URL}/api/v2/${item.videoId}/videothumbnail`}
+          alt="video"
 
-              {visibleIndex === index && (
-                <button style={{
-                  backgroundColor: '#d9534f',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  position: 'absolute',
-                  top: '20px', // Adjust as needed
-                  left: '-30px', // Adjust as needed
-                }} onClick={() => handleRemove(index)}>
-                  Remove
-                </button>
-              )}
-            </div>
+        />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          <p style={{ color: 'white', fontSize: '14px', marginRight: 'auto' }}>{item.videoTitle}</p>
+
+          {/* The three vertical dots */}
+          <div
+            onClick={() => toggleRemoveButton(index)}
+            style={{
+              cursor: 'pointer',
+              color: 'white',
+              fontSize: '20px',
+              marginLeft: '5px',
+              position: 'relative', // Keep relative positioning here for alignment with the remove button
+            }}
+          >
+            ⋮
           </div>
-        ))}
+
+          {/* Display Remove button when visibleIndex matches */}
+          {visibleIndex === index && (
+            <button className='.remove' style={{
+              
+              color: 'white',
+              border: 'none',
+              padding: '5px 10px',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              position: 'absolute', // Absolute positioning for the button
+              top: '100%',  // Position the button directly under the three dots
+              left: '50%',  // Center the button horizontally under the dots
+              transform: 'translateX(-50%)',  // Adjust centering
+              zIndex: 1  // Ensure the button appears above other elements
+            }} onClick={() => handleRemove(item.videoId)}>
+              Remove
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+    ))}
+  </div>
+</div>
+
+        
         );
       case "playlist":
         return (

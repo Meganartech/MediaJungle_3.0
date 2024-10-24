@@ -181,23 +181,63 @@ public class LibraryController {
 
 
 
+//    @DeleteMapping("/{userId}/removewatchlater")
+//    public ResponseEntity<String> removeWatchlater(@PathVariable Long userId, @RequestParam Long videoId) {
+//        try {
+//            if (videoId == null) {
+//                return new ResponseEntity<>("Invalid request data", HttpStatus.BAD_REQUEST);
+//            }
+//
+//            Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
+//            Optional<VideoDescription> optionalVideo = videodescriptionRepository.findById(videoId);
+//            
+//            if (optionalUser.isPresent() && optionalVideo.isPresent()) {
+//                UserRegister user = optionalUser.get();
+//
+//                // Remove the videoId from the user's favoriteVideosIds
+//                if (user.getWatchlaterIds().remove(videoId)) {
+//                    userregisterrepository.save(user); // Save the updated user
+//
+//                    return ResponseEntity.ok("Video removed from watchlater successfully");
+//                } else {
+//                    return ResponseEntity.badRequest().body("Video ID not found in user's watchlater");
+//                }
+//            } else {
+//                StringBuilder errorMessage = new StringBuilder();
+//
+//                if (!optionalUser.isPresent()) {
+//                    errorMessage.append("User with ID ").append(userId).append(" not found. ");
+//                }
+//                if (!optionalVideo.isPresent()) {
+//                    errorMessage.append("Video with ID ").append(videoId).append(" not found.");
+//                }
+//
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage.toString().trim());
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error removing video from watchlater: " + e.getMessage());
+//        }
+//    }
+    
+    
     @DeleteMapping("/{userId}/removewatchlater")
-    public ResponseEntity<String> removeWatchlater(@PathVariable Long userId, @RequestParam Long videoId) {
-        try {
-            if (videoId == null) {
-                return new ResponseEntity<>("Invalid request data", HttpStatus.BAD_REQUEST);
-            }
+    public ResponseEntity<String> removeWatchlater(@PathVariable Long userId, @RequestBody Map<String, Long> payload) {
+        Long videoId = payload.get("videoId");
 
+        if (videoId == null) {
+            return new ResponseEntity<>("Invalid request data", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
             Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
             Optional<VideoDescription> optionalVideo = videodescriptionRepository.findById(videoId);
-            
+
             if (optionalUser.isPresent() && optionalVideo.isPresent()) {
                 UserRegister user = optionalUser.get();
 
-                // Remove the videoId from the user's favoriteVideosIds
                 if (user.getWatchlaterIds().remove(videoId)) {
-                    userregisterrepository.save(user); // Save the updated user
-
+                    userregisterrepository.save(user);
                     return ResponseEntity.ok("Video removed from watchlater successfully");
                 } else {
                     return ResponseEntity.badRequest().body("Video ID not found in user's watchlater");
@@ -219,6 +259,7 @@ public class LibraryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error removing video from watchlater: " + e.getMessage());
         }
     }
+
 
 
 
