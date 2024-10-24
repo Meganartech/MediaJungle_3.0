@@ -68,6 +68,22 @@ const NavBar = () => {
    const handleprofile = async()=>{
     navigate('/UserProfileScreen');
    }
+   const handleRenew = () => {
+    Swal.fire({
+        title: 'Confirm Renewal',
+        text: 'Are you sure you want to renew your subscription?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#FBC740',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, renew it!',
+        cancelButtonText: 'Cancel',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            navigate('/PlanDetails'); // Redirect to renew subscription
+        }
+    });
+};
 
    const handleLogout = async () => {
     try {
@@ -236,8 +252,9 @@ useEffect(() => {
                                 <NavLink
                                     to='/PlanDetails'
                                     className="bg-new hover:bg-red-900 text-white py-2 px-8 rounded-lg w-full transition duration-300 ease-in-out"
+                                    onClick={handleRenew}
                                 >
-                                    RENEW SUBSCRIPTION
+                                    RENEW
                                 </NavLink>
                             </div>
                         ) : (

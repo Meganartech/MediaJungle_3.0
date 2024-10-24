@@ -99,4 +99,14 @@ class VideoDescription {
       print('Error in fetching image:$e');
     }
   }
+
+  @override
+  bool operator ==(Object other) {
+    // TODO: implement ==
+    if(identical(this, other)) return true;
+
+    return other is VideoDescription &&  other.id ==id && other.videoTitle == videoTitle;
+  }
+
+  int get hashCode => id.hashCode ^ videoTitle.hashCode;
 }

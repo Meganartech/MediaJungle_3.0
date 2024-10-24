@@ -24,18 +24,21 @@ const ViewProfile = () => {
 
     const loadProfileImage = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/v2/GetProfileImage/${userId}`);
-            if (!response.ok) throw new Error('Image not found');
-
+            const response = await fetch(`${API_URL}/api/v2/GetProfileImage/${userId}`);
+            if (!response.ok) {
+                throw new Error('Image not found');
+            }
+    
             const imageBlob = await response.blob();
             const imageObjectURL = URL.createObjectURL(imageBlob);
             setImageSrc(imageObjectURL);
             return () => URL.revokeObjectURL(imageObjectURL);
         } catch (err) {
             console.error('Error fetching image:', err);
-            setError(err.message);
+            setImageSrc(null); // Set imageSrc to null to use a placeholder image
         }
     };
+    
 
     useEffect(() => {
         loadProfileImage();
@@ -89,7 +92,7 @@ const ViewProfile = () => {
         if (newImage) {
             formData.append('profileImage', newImage); // Add the new image to the form data
         }
-
+    
         try {
             const response = await fetch(`${API_URL}/api/v2/updateUser/${userId}`, {
                 method: 'PUT',
@@ -98,15 +101,17 @@ const ViewProfile = () => {
                 },
                 body: formData,
             });
-
+    
             if (!response.ok) throw new Error('Failed to update user details');
-
+    
             Swal.fire({
                 icon: 'success',
                 title: 'Profile updated successfully',
                 confirmButtonColor: '#FFC107',
             });
-
+    
+            // Refresh the image from the server to get the latest version
+            await loadProfileImage();
             setUser(editData);
             setEditMode(false);
         } catch (error) {
@@ -118,31 +123,31 @@ const ViewProfile = () => {
             });
         }
     };
-
+    
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
     return (
         <Layout className='container mx-auto min-h-screen overflow-y-auto'>
             <div className='banner-container px-10 my-24 flex flex-col items-center'>
-                <div className="relative mb-6 flex justify-center">
-                    {imageSrc ? (
-                        <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-yellow-600">
-                            <img src={imageSrc} alt="User Profile" className="w-full h-full object-cover" />
-                        </div>
-                    ) : (
-                        <div className="w-32 h-32 bg-gray-200 rounded-full flex justify-center items-center text-gray-500">
-                            No Image
-                        </div>
-                    )}
-                    <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        id="fileInput"
-                        onChange={handleImageChange}
-                    />
-                             {editMode ? (
+            <div className="relative mb-6 flex justify-center">
+    {imageSrc ? (
+        <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-yellow-600">
+            <img src={imageSrc} alt="User Profile" className="w-full h-full object-cover" />
+        </div>
+    ) : (
+        <div className="relative w-32 h-32 bg-gray-200 rounded-full flex justify-center items-center text-gray-500 border-4 border-yellow-600">
+            <span>No Image</span> {/* Placeholder text for no image */}
+        </div>
+    )}
+    <input
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        id="fileInput"
+        onChange={handleImageChange}
+    />
+      {editMode ? (
                     <label
                         htmlFor="fileInput"
                         className="absolute bottom-4 right-6 transform translate-x-1/2 translate-y-1/2 bg-white p-2 rounded-full shadow-lg cursor-pointer z-20"
@@ -150,7 +155,10 @@ const ViewProfile = () => {
                     >
                         <FaPen className="text-yellow-600" />
                     </label>):<label></label>}
-                </div>
+      
+
+</div>
+
 
                 {jwtToken && user ? (
                     <div className="overflow-x-auto">

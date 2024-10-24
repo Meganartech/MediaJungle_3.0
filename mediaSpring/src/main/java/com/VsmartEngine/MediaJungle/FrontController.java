@@ -655,11 +655,11 @@ public class FrontController {
 		return PaymentController.Payment(requestData);
 	}
 
-	@PostMapping("/buy")
-	public ResponseEntity<String> updatePaymentId(@RequestBody Map<String, String> requestData) {
-
-		return PaymentController.updatePaymentId(requestData);
-	}
+//	@PostMapping("/buy")
+//	public ResponseEntity<String> updatePaymentId(@RequestBody Map<String, String> requestData) {
+//
+//		return PaymentController.updatePaymentId(requestData);
+//	}
 	
 	@GetMapping("/paymentHistory/{userId}")
 	public ResponseEntity<List<PaymentUser>> getPaymentHistory(@PathVariable Long userId) {

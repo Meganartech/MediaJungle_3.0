@@ -9,7 +9,6 @@ import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/pages/app_icon.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ott_project/service/audio_service.dart';
-
 import 'package:ott_project/service/movie_service_page.dart';
 import 'package:ott_project/service/notification_api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
