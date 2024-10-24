@@ -1207,5 +1207,15 @@ td{
   background-color: rgba(128, 128, 128, 0.6); /* Bright button background */
 }
 
+.likedsongs{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 120px;
+  margin-bottom: 10px;
+  text-align: center;
+  position: relative;
+}
+
 
 

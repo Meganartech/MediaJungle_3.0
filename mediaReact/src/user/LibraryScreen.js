@@ -9,6 +9,7 @@ import video from '../user/UserIcon/Video Playlist.png';
 const LibraryScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState("likedMusic");
   const [watchLater, setWatchlater] = useState([]);
+  const [likedSongs,setLikesSongs] = useState([]);
   const userid = sessionStorage.getItem("userId");
 
   const fetchWatchLater = async () => {
@@ -21,11 +22,24 @@ const LibraryScreen = () => {
     }
   };
 
+
+  const fetchlikedmusic = async () => {
+    try {
+      const user = Number(userid);
+      const response = await axios.get(`${API_URL}/api/v2/${user}/UserAudios`);
+      setLikesSongs(response.data);
+    } catch (error) {
+      console.error('Error fetching Watch Later videos:', error);
+    }
+  };
+
   useEffect(() => {
     fetchWatchLater();
+    fetchlikedmusic();
   }, []);
 
   console.log("watchLater",watchLater);
+  console.log("likedSongs",likedSongs);
 
     // State to manage which item's remove button is visible
     const [visibleIndex, setVisibleIndex] = useState(null);
@@ -84,9 +98,44 @@ const LibraryScreen = () => {
       case "likedMusic":
         return (
           <div>
-            <h3>Liked Music</h3>
-            {/* Add liked music rendering here */}
+            {/* <h3 style={{ position: 'sticky', top: '0', padding: '10px', zIndex: 100 }}> */}
+            <h3>
+              Liked Music
+            </h3>
+          
+  
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', marginTop: '10px' , width:'1000px'}}>
+            {likedSongs.map((item, index) => (
+              <div key={index} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <img
+                  src={`${API_URL}/api/v2/image/${item.audioId}`}
+                  alt="video"
+                  style={{ width: '50px', height: '50px' }} // You can adjust the size
+                />
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1, marginLeft: '10px' }}>
+                  <p style={{ color: 'white', fontSize: '14px', margin: '0' }}>{item.audioTitle}</p>
+                </div>
+        
+                
+                <div
+                  // onClick={() => toggleRemoveButton(index)}
+                  style={{
+                    cursor: 'pointer',
+                    color: 'white',
+                    fontSize: '20px',
+                    position: 'relative',
+                    marginLeft: 'auto' // Align the three dots to the right
+                  }}
+                >
+                  ⋮
+                </div>
+              </div>
+            ))}
+          </div> 
           </div>
+        
+        
+
         );
       case "watchLater":
         return (
@@ -157,6 +206,13 @@ const LibraryScreen = () => {
 
   return (
     <Layout>
+      <div style={{
+        marginTop:'50px',
+        marginLeft:'410px',
+
+      }}>
+      Library
+      </div>
       <div className="container d-flex" style={{ height: '70vh', alignItems: 'flex-start' }}>
         {/* Left sidebar */}
         <div className="w-25 p-3" style={{ color: "white" }}>
@@ -174,6 +230,7 @@ const LibraryScreen = () => {
     gap: '30px',
     margin: '0 auto',  // Centers the button in its parent container
     marginBottom:'50px',
+    borderRadius:'10px',
   }}
   onClick={() => setSelectedCategory("likedMusic")}
 >
@@ -194,6 +251,7 @@ const LibraryScreen = () => {
     gap: '30px',
     margin: '0 auto',  // Centers the button in its parent container
     marginBottom:'50px',
+    borderRadius:'10px',
   }}
             onClick={() => setSelectedCategory("watchLater")}
           >
@@ -214,6 +272,7 @@ const LibraryScreen = () => {
     gap: '30px',
     margin: '0 auto',  // Centers the button in its parent container
     marginBottom:'50px',
+    borderRadius:'10px',
   }}
             onClick={() => setSelectedCategory("playlist")}
           >
