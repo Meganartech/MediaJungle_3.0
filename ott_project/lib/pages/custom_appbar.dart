@@ -268,7 +268,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         height: 70,
                       )
                     else
-                      Image.asset('assets/icon/media_jungle.png', height: 50),
+                      Image.asset('assets/icon/media_jungle.png', height: 70),
                     Spacer(),
                     IconButton(
                         onPressed: () {},

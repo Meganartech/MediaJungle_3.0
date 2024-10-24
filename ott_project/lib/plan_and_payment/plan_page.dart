@@ -33,7 +33,8 @@ class _PlanPageState extends State<PlanPage> {
   String? razorpayKey;
   Map<String, bool> expandedState = {};
   int? _userId;
-  String baseUrl = 'http://192.168.183.42:8080/api/v2';
+  String baseUrl = 'https://testtomcat.vsmartengine.com/media/api/v2';
+  //'http://192.168.183.42:8080/api/v2';
   bool _isSearching = false;
   List<dynamic> _searchResults = [];
 

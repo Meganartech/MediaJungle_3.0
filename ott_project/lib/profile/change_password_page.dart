@@ -25,6 +25,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
+   bool currentVisiblePassword = false;
+   bool newVisiblePassword = false;  
+   bool confirmVisiblePassword = false;  
+
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
   String base64Image = '';
 
@@ -32,6 +36,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   void initState() {
     super.initState();
     fetchUserProfile(context);
+    currentVisiblePassword = false;
+    newVisiblePassword = false;  
+    confirmVisiblePassword = false;
     // fetchProfileImage(context as String);
   }
 
@@ -78,8 +85,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     String? userId = await secureStorage.read(key: 'userId');
     try {
       var url = Uri.parse(
-          //'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId'
-          'http://192.168.183.42:8080/api/v2/GetUserById/$userId'
+          'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId'
+          //'http://192.168.183.42:8080/api/v2/GetUserById/$userId'
           );
       var request = http.MultipartRequest('PATCH', url);
 
@@ -150,8 +157,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     try {
       var response = await http.get(
         Uri.parse(
-            //'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.183.42:8080/api/v2/GetUserById/$userId'
+            'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'
+           // 'http://192.168.183.42:8080/api/v2/GetUserById/$userId'
             //'http://localhost:8080/api/v2/GetUserById/$userId'
             ),
         headers: {
@@ -236,30 +243,48 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                       MyTextField(
                           controller: currentPasswordController,
                           icon: FontAwesomeIcons.lock,
+                         suffixIcon: IconButton(onPressed: (){
+                              setState(() {
+                                currentVisiblePassword = !currentVisiblePassword;
+                              });
+                            },
+                             icon: Icon(currentVisiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
                           hint: 'Current Password',
                           inputType: TextInputType.visiblePassword,
                           inputAction: TextInputAction.next,
-                          obscureText: false),
+                          obscureText: !currentVisiblePassword),
                       SizedBox(
                         height: 10,
                       ),
                       MyTextField(
                           controller: newPasswordController,
                           icon: FontAwesomeIcons.lock,
+                          suffixIcon: IconButton(onPressed: (){
+                              setState(() {
+                                newVisiblePassword = !newVisiblePassword;
+                              });
+                            },
+                             icon: Icon(newVisiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
                           hint: 'New Password',
                           inputType: TextInputType.visiblePassword,
                           inputAction: TextInputAction.next,
-                          obscureText: true),
+                          obscureText: !newVisiblePassword),
                       SizedBox(
                         height: 10,
                       ),
                       MyTextField(
                           controller: confirmPasswordController,
                           icon: FontAwesomeIcons.lock,
+                          suffixIcon: IconButton(onPressed: (){
+                              setState(() {
+                                confirmVisiblePassword = !confirmVisiblePassword;
+                              });
+                            },
+                             icon: Icon(confirmVisiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
                           hint: 'Confirm Password',
                           inputType: TextInputType.visiblePassword,
                           inputAction: TextInputAction.next,
-                          obscureText: true),
+                          obscureText: !confirmVisiblePassword),
                       SizedBox(height: 30),
                       Container(
                         height: size.height * 0.08,
