@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.model.User;
 import com.VsmartEngine.MediaJungle.service.UserService;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 
@@ -34,6 +35,19 @@ public class ProfileImageController {
     // Directory where files will be saved on the server
     @Value("${upload.Profile.directory}")
     private String uploadDirectory;
+    
+    @PutMapping("/updateUser/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("username") String username,
+                                         @RequestParam("email") String email, @RequestParam("mobnum") String mobnum,
+                                         @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+        // Service method to handle the update logic
+        try {
+            UserRegister user = userService.updateUser(userId, username, email, mobnum, profileImage);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user: " + e.getMessage());
+        }
+    }
 
     @PostMapping("/UploadProfileImage/{userId}")
     public ResponseEntity<?> uploadProfileImage(@PathVariable Long userId, @RequestParam("image") MultipartFile image) {
@@ -85,20 +99,7 @@ public class ProfileImageController {
     }
     
 }
-    @PutMapping("/updateUser/{userId}")
-    public ResponseEntity<String> updateUser(
-            @PathVariable Long userId,
-            @RequestParam("username") String username,
-            @RequestParam("email") String email,
-            @RequestParam("mobnum") String mobnum) {
 
-        try {
-            userService.updateUser(userId, username, email, mobnum); // Service call to handle update logic
-            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Failed to update user", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 @GetMapping("/GetProfileImage/{userId}")
 @ResponseBody
 public ResponseEntity<byte[]> getProfileImage(@PathVariable Long userId) {
