@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +29,7 @@ import com.VsmartEngine.MediaJungle.model.Audioimages;
 import com.VsmartEngine.MediaJungle.model.AudiolistdetailsDTO;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.CastandCrewDTO;
+import com.VsmartEngine.MediaJungle.model.MovieName;
 import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
 import com.VsmartEngine.MediaJungle.repository.AudioCastandCrewRepository;
@@ -37,10 +37,7 @@ import com.VsmartEngine.MediaJungle.repository.AudioCategoriesRepository;
 import com.VsmartEngine.MediaJungle.repository.AudioTagRepository;
 import com.VsmartEngine.MediaJungle.repository.Audioimage;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
-
-//import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
-import org.springframework.web.bind.annotation.RequestBody;
+import com.VsmartEngine.MediaJungle.repository.MovieNameRepository;
 
 @CrossOrigin()
 @RestController
@@ -74,6 +71,9 @@ public class test {
 	@Autowired
 	private CastandcrewRepository CastandcrewRepository;
 	
+	@Autowired
+	private MovieNameRepository MovieNameRepository;
+	
 
 
 
@@ -93,6 +93,34 @@ public class test {
 			@RequestParam("tag") List<Long> tag, @RequestParam("audioFile") MultipartFile audioFile) {
 		try {
 			String audioFilePath = fileService.saveAudioFile(audioFile);
+			long movieId=0L;
+			String lowercasemoviename=movieName;
+			lowercasemoviename.toLowerCase();
+			Long data_id =MovieNameRepository.findIDBy_Moviename(movieName);
+			Long lowercasemovienameId =this.GetMovenameId(lowercasemoviename);
+			if((data_id != null) ? true : false) {
+				movieId=data_id;
+//				System.out.println("***************************************************Exexting data");
+//				System.out.println("Exexting data"+movieId);
+			}else
+			{
+				if((lowercasemovienameId != null) ? true : false) {
+//					System.out.println("***************************************************Exexting data");
+//					System.out.println("Exexting datachanged"+movieId);
+					movieId=lowercasemovienameId;
+					Optional<MovieName> movienames=MovieNameRepository.findById(lowercasemovienameId);
+					MovieName savemoviename=movienames.get();
+					savemoviename.setMovie_name(movieName);
+					MovieNameRepository.save(savemoviename);		
+				}else {
+//					System.out.println("***************************************************Exexting data");
+//					System.out.println("New data"+movieId);
+					MovieName savemoviename= new MovieName();
+					savemoviename.setMovie_name(movieName);
+					MovieNameRepository.save(savemoviename);	
+					movieId=savemoviename.getId();
+				}
+			}
 			Audiodescription audiodata = new Audiodescription();
 			audiodata.setAudio_file_name(audioFilePath);
 			audiodata.setAudio_Duration(audioDuration);
@@ -100,7 +128,7 @@ public class test {
 			audiodata.setCertificate_name(certificateName);
 			audiodata.setCertificate_no(certificateNo);
 			audiodata.setDescription(description);
-			audiodata.setMovie_name(movieName);
+			audiodata.setMovie_name(movieId);
 			audiodata.setPaid(isPaid);
 			audiodata.setProduction_company(productionCompany);
 			audiodata.setRating(rating);
@@ -120,7 +148,7 @@ public class test {
 			cast.setAudio_thumbnail(audiothumbnailBytes);
 			cast.setBannerthumbnail(bannerthumbnailBytes);
 			audioI.save(cast);
-			System.out.println("Audio Title: ");
+//			System.out.println("Audio Title: ");
 
 			return ResponseEntity.ok().build();
 		} catch (Exception e) {
@@ -148,13 +176,45 @@ public class test {
 		try {
 
 			Optional<Audiodescription> audioList = audio.findById(audioId);
+			long movieId=0L;
+			String lowercasemoviename=movieName;
+			lowercasemoviename.toLowerCase();
+			Long data_id =MovieNameRepository.findIDBy_Moviename(movieName);
+			Long lowercasemovienameId =this.GetMovenameId(lowercasemoviename);
+			if((data_id != null) ? true : false) {
+				movieId=data_id;
+				System.out.println("***************************************************Exexting data");
+				System.out.println("Exexting data"+movieId);
+			}else
+			{
+				if((lowercasemovienameId != null) ? true : false) {
+//					System.out.println("***************************************************Exexting data");
+//					System.out.println("Exexting datachanged"+movieId);
+					movieId=lowercasemovienameId;
+					Optional<MovieName> movienames=MovieNameRepository.findById(lowercasemovienameId);
+					MovieName savemoviename=movienames.get();
+					System.out.println(savemoviename);
+					savemoviename.setMovie_name(movieName);
+					List<MovieName> movien=MovieNameRepository.findAll();
+					movien.forEach(movie -> System.out.println(movie));
+
+					MovieNameRepository.save(savemoviename);		
+				}else {
+//					System.out.println("***************************************************Exexting data");
+//					System.out.println("New data"+movieId);
+					MovieName savemoviename= new MovieName();
+					savemoviename.setMovie_name(movieName);
+					MovieNameRepository.save(savemoviename);	
+					movieId=savemoviename.getId();
+				}
+			}
 			Audiodescription audiodata = audioList.get();
 			audiodata.setAudio_Duration(audioDuration);
 			audiodata.setAudio_title(audioTitle);
 			audiodata.setCertificate_name(certificateName);
 			audiodata.setCertificate_no(certificateNo);
 			audiodata.setDescription(description);
-			audiodata.setMovie_name(movieName);
+			audiodata.setMovie_name(movieId);
 			audiodata.setPaid(isPaid);
 			audiodata.setProduction_company(productionCompany);
 			audiodata.setRating(rating);
@@ -243,68 +303,72 @@ public class test {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
 		}
 	}
+	
+	
+	@GetMapping("/getaudio/{id}")
+	public ResponseEntity<AudiolistdetailsDTO> Audiolistdetails(@PathVariable("id") long id) {
 
-//	@GetMapping("/getaudio/{id}")
-//	public ResponseEntity<AudiolistdetailsDTO> Audiolistdetails(@PathVariable("id") long id) {
-//
-//		Optional<Audiodescription> audioList = audio.findById(id);
-//		List<Tag> audioTag = AudioTagRepository.findByAudio_Id(id);
-//		List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(id);
-//		Optional<AudioCastAndCrew> audioCastandCrew = Audiocastandcrewrepository.findById(id);
-//		List<CastandCrewDTO> castAndCrewDTOList = new ArrayList<>();
-//		AudioCastAndCrew castandcrew = audioCastandCrew.get();
-//		List<Long> castAndCrewIds = castandcrew.getCastandcrewlist();
-//		for (Long ids : castAndCrewIds) {
-//			Optional<CastandCrew> castAndCrewOptional = CastandcrewRepository.findById(ids);
-//			if (castAndCrewOptional.isPresent()) {
-//				CastandCrew castAndCrew = castAndCrewOptional.get();
-//				// Create a DTO or simply use an object to hold the ID and Name
-//				CastandCrewDTO dto = new CastandCrewDTO(castAndCrew.getId(), castAndCrew.getName());
-//				castAndCrewDTOList.add(dto);
-//			} else {
-//				// Handle the case where the ID does not exist in the repository
-//				System.out.println("No CastandCrew found with ID: " + id);
-//			}
-//
-//		}
-//		castAndCrewDTOList.forEach(System.out::println);
-//		AudiolistdetailsDTO dto = new AudiolistdetailsDTO();
-//		if (audioList.isPresent()) {
-//			Audiodescription audio = audioList.get();
-//			dto.setId(audio.getId());
-//			dto.setAudioTitle(audio.getAudio_title());
-//			dto.setMovie_name(audio.getMovie_name());
-//			dto.setRating(audio.getRating());
-//			dto.setDescription(audio.getDescription());
-//			dto.setProduction_company(audio.getProduction_company());
-//			dto.setPaid(audio.getPaid());
-//			dto.setAudio_file_name(audio.getAudio_file_name());
-//			dto.setCertificate_name(audio.getCertificate_name());
-//			dto.setAudio_Duration(audio.getAudio_Duration());
-//			dto.setCertificate_no(audio.getCertificate_no());
-//			dto.setTag(audioTag);
-//			dto.setCategory(audioCategorie);
-//			dto.setCastandCrew(castAndCrewDTOList);
-//		} else {
-//			return ResponseEntity.notFound().build();
-//		}
-//		audioTag.forEach(System.out::println);
-//		return ResponseEntity.ok(dto);
-//	}
+		Optional<Audiodescription> audioList = audio.findById(id);
+		List<Tag> audioTag = AudioTagRepository.findByAudio_Id(id);
+		List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(id);
+		Optional<AudioCastAndCrew> audioCastandCrew = Audiocastandcrewrepository.findById(id);
+		List<CastandCrewDTO> castAndCrewDTOList = new ArrayList<>();
+		AudioCastAndCrew castandcrew = audioCastandCrew.get();
+		List<Long> castAndCrewIds = castandcrew.getCastandcrewlist();
+		for (Long ids : castAndCrewIds) {
+			Optional<CastandCrew> castAndCrewOptional = CastandcrewRepository.findById(ids);
+			if (castAndCrewOptional.isPresent()) {
+				CastandCrew castAndCrew = castAndCrewOptional.get();
+				// Create a DTO or simply use an object to hold the ID and Name
+				CastandCrewDTO dto = new CastandCrewDTO(castAndCrew.getId(), castAndCrew.getName());
+				castAndCrewDTOList.add(dto);
+			} else {
+				// Handle the case where the ID does not exist in the repository
+				System.out.println("No CastandCrew found with ID: " + id);
+			}
 
-//	@GetMapping("/getaudiodetailsdto")
-//	public ResponseEntity<List<AudiodetailsDTO>> getAudio() {
-//		List<Audiodescription> audioList = audio.findAll();
-//		List<AudiodetailsDTO> dtoList = audioList.stream().map(a -> {
-//			List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(a.getId());
-//			audioCategorie.forEach(System.out::println);
-//			String firstCategoryName = audioCategorie.isEmpty() ? "No Category" : audioCategorie.get(0).getCategories();
-//			return new AudiodetailsDTO(a.getId(), a.getAudio_title(), a.getPaid(), a.getProduction_company(),
-//					a.getRating(), firstCategoryName);
-//		}).collect(Collectors.toList());
-//		dtoList.forEach(System.out::println);
-//		return ResponseEntity.ok(dtoList);
-//	}
+		}
+		castAndCrewDTOList.forEach(System.out::println);
+		AudiolistdetailsDTO dto = new AudiolistdetailsDTO();
+		if (audioList.isPresent()) {
+			Audiodescription audio = audioList.get();
+			dto.setId(audio.getId());
+			dto.setAudioTitle(audio.getAudio_title());
+			
+			Optional<MovieName> data =MovieNameRepository.findById(audio.getMovie_name());
+			MovieName moviename=data.get();
+			dto.setMovie_name(moviename.getMovie_name());
+			dto.setRating(audio.getRating());
+			dto.setDescription(audio.getDescription());
+			dto.setProduction_company(audio.getProduction_company());
+			dto.setPaid(audio.getPaid());
+			dto.setAudio_file_name(audio.getAudio_file_name());
+			dto.setCertificate_name(audio.getCertificate_name());
+			dto.setAudio_Duration(audio.getAudio_Duration());
+			dto.setCertificate_no(audio.getCertificate_no());
+			dto.setTag(audioTag);
+			dto.setCategory(audioCategorie);
+			dto.setCastandCrew(castAndCrewDTOList);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+		audioTag.forEach(System.out::println);
+		return ResponseEntity.ok(dto);
+	}
+
+	@GetMapping("/getaudiodetailsdto")
+	public ResponseEntity<List<AudiodetailsDTO>> getAudio() {
+		List<Audiodescription> audioList = audio.findAll();
+		List<AudiodetailsDTO> dtoList = audioList.stream().map(a -> {
+			List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(a.getId());
+			audioCategorie.forEach(System.out::println);
+			String firstCategoryName = audioCategorie.isEmpty() ? "No Category" : audioCategorie.get(0).getCategories();
+			return new AudiodetailsDTO(a.getId(), a.getAudio_title(), a.getPaid(), a.getProduction_company(),
+					a.getRating(), firstCategoryName);
+		}).collect(Collectors.toList());
+		dtoList.forEach(System.out::println);
+		return ResponseEntity.ok(dtoList);
+	}
 
 //	@DeleteMapping("/testaudio/{id}")
 //	public ResponseEntity<String> deleteAudio(@PathVariable Long id) {
@@ -418,5 +482,80 @@ public class test {
 				
 		 return ResponseEntity.ok(audiocat);
 	}
+	@GetMapping("/movename/{moviename}")
+	public ResponseEntity<?> testmovename(@PathVariable("moviename")String movie) {
+
+		String movieName=movie;
+		long a=0L;
+		Long id =MovieNameRepository.findIDBy_Moviename(movieName);
+		a = (id != null) ? id : 0L;
+		if((id != null) ? true : false) {
+			a=id;
+		}else
+		{
+			MovieName savemoviename= new MovieName();
+			savemoviename.setMovie_name(movieName);
+			MovieNameRepository.save(savemoviename);	
+			a=savemoviename.getId();
+		}
+		
+		
+		 return ResponseEntity.ok(a);
+	}
+	@GetMapping("/movename")
+	public ResponseEntity<?> GetMovename() {
+
+		
+		List<MovieName> movienames=MovieNameRepository.findAll();
+		
+		movienames.forEach(movie -> System.out.println(movie));
+		
+		 return ResponseEntity.ok(movienames);
+	}
+	@GetMapping("/movenam")
+	public ResponseEntity<?> GetMovenamelist() {
+
+		String movien ="master";
+		List<MovieName> movienames=MovieNameRepository.findAll();
+//		movienames.forEach(movie -> movie.setMovie_name(movie.getMovie_name().toLowerCase()));
+//		movienames.forEach(movie -> System.out.println(movie));
+//		List<String> movieNamesList = movienames.stream()
+//		        .map(MovieName::getMovie_name)  // Assuming MovieName has a getMovieName() method
+//		        .collect(Collectors.toList());
+		Optional<MovieName> movieOptional = movienames.stream()
+		        .filter(movie -> movie.getMovie_name().equalsIgnoreCase(movien))
+		        .findFirst();
+		 MovieName movie = movieOptional.get();
+//		 movienames
+		
+		 return ResponseEntity.ok(movienames);
+	}
+	
+	public Long GetMovenameId(String MovieName) {
+
+		Long id=null;
+		String movien =MovieName;
+		List<MovieName> movienames=MovieNameRepository.findAll();
+//		movienames.forEach(movie -> movie.setMovie_name(movie.getMovie_name().toLowerCase()));
+//		 System.out.println("***************GetMovenameId*******************");
+//		movienames.forEach(movie -> System.out.println(movie));
+//		List<String> movieNamesList = movienames.stream()
+//		        .map(MovieName::getMovie_name)  // Assuming MovieName has a getMovieName() method
+//		        .collect(Collectors.toList());
+		Optional<MovieName> movieOptional = movienames.stream()
+		        .filter(movie -> movie.getMovie_name().equalsIgnoreCase(movien))
+		        .findFirst();
+		 
+		 if (movieOptional.isPresent()) {
+			    MovieName movie = movieOptional.get();
+			    id=movie.getId();
+			} else {
+				id=null;
+			}
+		
+		 return id;
+	}
+	
+	
 	
 }

@@ -179,19 +179,7 @@ public class AudioContainerController {
     
     
     
-    @GetMapping("/getaudiodetailsdto")
-	public ResponseEntity<List<AudiodetailsDTO>> getAudio() {
-		List<Audiodescription> audioList = audio.findAll();
-		List<AudiodetailsDTO> dtoList = audioList.stream().map(a -> {
-			List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(a.getId());
-			audioCategorie.forEach(System.out::println);
-			String firstCategoryName = audioCategorie.isEmpty() ? "No Category" : audioCategorie.get(0).getCategories();
-			return new AudiodetailsDTO(a.getId(), a.getAudio_title(), a.getPaid(), a.getProduction_company(),
-					a.getRating(), firstCategoryName);
-		}).collect(Collectors.toList());
-		dtoList.forEach(System.out::println);
-		return ResponseEntity.ok(dtoList);
-	}
+   
     
     
     @DeleteMapping("/testaudio/{id}")
@@ -215,51 +203,5 @@ public class AudioContainerController {
 		}
 	}
     
-    @GetMapping("/getaudio/{id}")
-	public ResponseEntity<AudiolistdetailsDTO> Audiolistdetails(@PathVariable("id") long id) {
-
-		Optional<Audiodescription> audioList = audio.findById(id);
-		List<Tag> audioTag = AudioTagRepository.findByAudio_Id(id);
-		List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(id);
-		Optional<AudioCastAndCrew> audioCastandCrew = Audiocastandcrewrepository.findById(id);
-		List<CastandCrewDTO> castAndCrewDTOList = new ArrayList<>();
-		AudioCastAndCrew castandcrew = audioCastandCrew.get();
-		List<Long> castAndCrewIds = castandcrew.getCastandcrewlist();
-		for (Long ids : castAndCrewIds) {
-			Optional<CastandCrew> castAndCrewOptional = CastandcrewRepository.findById(ids);
-			if (castAndCrewOptional.isPresent()) {
-				CastandCrew castAndCrew = castAndCrewOptional.get();
-				// Create a DTO or simply use an object to hold the ID and Name
-				CastandCrewDTO dto = new CastandCrewDTO(castAndCrew.getId(), castAndCrew.getName());
-				castAndCrewDTOList.add(dto);
-			} else {
-				// Handle the case where the ID does not exist in the repository
-				System.out.println("No CastandCrew found with ID: " + id);
-			}
-
-		}
-		castAndCrewDTOList.forEach(System.out::println);
-		AudiolistdetailsDTO dto = new AudiolistdetailsDTO();
-		if (audioList.isPresent()) {
-			Audiodescription audio = audioList.get();
-			dto.setId(audio.getId());
-			dto.setAudioTitle(audio.getAudio_title());
-			dto.setMovie_name(audio.getMovie_name());
-			dto.setRating(audio.getRating());
-			dto.setDescription(audio.getDescription());
-			dto.setProduction_company(audio.getProduction_company());
-			dto.setPaid(audio.getPaid());
-			dto.setAudio_file_name(audio.getAudio_file_name());
-			dto.setCertificate_name(audio.getCertificate_name());
-			dto.setAudio_Duration(audio.getAudio_Duration());
-			dto.setCertificate_no(audio.getCertificate_no());
-			dto.setTag(audioTag);
-			dto.setCategory(audioCategorie);
-			dto.setCastandCrew(castAndCrewDTOList);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
-		audioTag.forEach(System.out::println);
-		return ResponseEntity.ok(dto);
-	}
+    
 }
