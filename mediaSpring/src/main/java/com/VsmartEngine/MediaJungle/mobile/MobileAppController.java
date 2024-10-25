@@ -26,7 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.Addaudio1;
+import com.VsmartEngine.MediaJungle.model.Audiodescription;
 import com.VsmartEngine.MediaJungle.repository.AddAudioRepository;
+import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 import com.VsmartEngine.MediaJungle.userregister.TokenBlacklist;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
@@ -228,116 +230,7 @@ public class MobileAppController {
         
     //-------------------------favorite audio---------------------------
     
-    @Autowired
-    private favouriteRepository favouriterepository;
     
-    @Autowired
-    private AddAudioRepository audiorepository;
-    
-
-    @PostMapping("/mobile/favourite/audio")
-    public ResponseEntity<String> createOrder(@RequestBody Map<String, Long> requestData) {
-        try {
-            Long audioId = requestData.get("audioId");
-            Long userId = requestData.get("userId");
-
-            if (audioId == null || userId == null) {
-                return new ResponseEntity<>("Invalid request data", HttpStatus.BAD_REQUEST);
-            }
-
-            Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
-            Optional<Addaudio1> optionalAudio = audiorepository.findById(audioId);
-
-            if (optionalUser.isPresent() && optionalAudio.isPresent()) {
-                UserRegister user = optionalUser.get();
-
-                // Check if the user has already added this audioId to favorites
-                if (user.getFavoriteAudioIds().contains(audioId)) {
-                    return ResponseEntity.badRequest().body("User has already added this audio to favourites");
-                }
-
-                // Add the audioId to the user's favoriteAudioIds
-                user.getFavoriteAudioIds().add(audioId);
-                userregisterrepository.save(user);
-
-                return ResponseEntity.ok("Favourite audio added successfully");
-            } else {
-            	StringBuilder errorMessage = new StringBuilder();
-
-                if (!optionalUser.isPresent()) {
-                    errorMessage.append("User with ID ").append(userId).append(" not found. ");
-                }
-                if (!optionalAudio.isPresent()) {
-                    errorMessage.append("Audio with ID ").append(audioId).append(" not found.");
-                }
-
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage.toString().trim());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding to favourites: " + e.getMessage());
-        }
-    }
-    
-    
-        
-    @GetMapping("/mobile/{userId}/UserAudios")
-    public ResponseEntity<List<Long>> getAudioForUsermobile(@PathVariable Long userId) {
-        Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            UserRegister user = optionalUser.get();
-            // Get the set of favorite audio IDs
-            Set<Long> favoriteAudioIdsSet = user.getFavoriteAudioIds();
-            // Convert the set to a list if needed
-            List<Long> favoriteAudioIdsList = new ArrayList<>(favoriteAudioIdsSet);
-            // Return the list of audio IDs
-            return ResponseEntity.ok(favoriteAudioIdsList);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    
-    
-    @DeleteMapping("/mobile/{userId}/removeFavoriteAudio")
-    public ResponseEntity<String> removeFavoriteAudio(@PathVariable Long userId, @RequestParam Long audioId) {
-        try {
-            if (audioId == null) {
-                return new ResponseEntity<>("Invalid request data", HttpStatus.BAD_REQUEST);
-            }
-
-            Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
-            Optional<Addaudio1> optionalAudio = audiorepository.findById(audioId);
-            
-            if (optionalUser.isPresent() && optionalAudio.isPresent()) {
-                UserRegister user = optionalUser.get();
-
-                // Remove the audioId from the user's favoriteAudioIds
-                if (user.getFavoriteAudioIds().remove(audioId)) {
-                    userregisterrepository.save(user); // Save the updated user
-
-                    return ResponseEntity.ok("Audio removed from favorites successfully");
-                } else {
-                    return ResponseEntity.badRequest().body("Audio ID not found in user's favorites");
-                }
-            } else {
-                StringBuilder errorMessage = new StringBuilder();
-
-                if (!optionalUser.isPresent()) {
-                    errorMessage.append("User with ID ").append(userId).append(" not found. ");
-                }
-                if (!optionalAudio.isPresent()) {
-                    errorMessage.append("Audio with ID ").append(audioId).append(" not found.");
-                }
-
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage.toString().trim());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error removing audio from favorites: " + e.getMessage());
-        }
-    }
-
-
 
     
     

@@ -1,3 +1,4 @@
+
 package com.VsmartEngine.MediaJungle;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -42,4 +43,3 @@ public class DataSourceConfig {
          return dataSource;
      }
 }
-
