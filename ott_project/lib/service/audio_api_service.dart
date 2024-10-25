@@ -9,8 +9,9 @@ import '../components/music_folder/music.dart';
 
 class AudioApiService with ChangeNotifier {
   static const String baseUrl =
-    //  'http://localhost:8080/api/v2';
-     'http://192.168.183.42:8080/api/v2';
+  'https://testtomcat.vsmartengine.com/media/api/v2';
+    // 'http://localhost:8080/api/v2';
+  //  'http://192.168.183.42:8080/api/v2';
 
   Future<Audio> fetchAudioDetail(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/audio/$id'));
@@ -57,9 +58,13 @@ class AudioApiService with ChangeNotifier {
 
   Future<bool> likeAudio(int audioId, int userId) async {
     final url = Uri.parse('$baseUrl/mobile/favourite/audio');
+
+    print('Sending request to: $url');
+  print('Sending audioId: $audioId, userId: $userId');
     final response = await http.post(url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'audioId': audioId, 'userId': userId}));
+    print('Like response:${response.statusCode}');
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -84,6 +89,36 @@ class AudioApiService with ChangeNotifier {
     }
   }
 
+   Future<bool> unlikeAudio(int audioId, int userId) async {
+    final url = Uri.parse(
+        '$baseUrl/mobile/$userId/removeFavoriteAudio?audioId=$audioId');
+    final response = await http.delete(url);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print('Error in unlike:${response.statusCode}-${response.body}');
+      return false;
+    }
+  }
+
+  Future<AudioDescription> getSongDetails(int audioId) async{
+    try{
+    final url = Uri.parse('$baseUrl/audio/$audioId');
+    final response= await http.get(url);
+
+    if(response.statusCode== 200){
+      Map<String,dynamic> songJson = jsonDecode(response.body);
+
+      return AudioDescription.fromJson(songJson);
+    }else{
+      throw Exception('Failed to load song details');
+    }
+    }catch(e){
+      throw Exception('Error in song details : $e');
+    }
+  }
+
   Future<Audio> getAudioDetails(int audioId) async {
     final url = Uri.parse('$baseUrl/audio/$audioId');
     final response = await http.get(url);
@@ -97,16 +132,5 @@ class AudioApiService with ChangeNotifier {
     }
   }
 
-  Future<bool> unlikeAudio(int audioId, int userId) async {
-    final url = Uri.parse(
-        '$baseUrl/mobile/$userId/removeFavoriteAudio?audioId=$audioId');
-    final response = await http.delete(url);
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      print('Error in unlike:${response.statusCode}-${response.body}');
-      return false;
-    }
-  }
+ 
 }

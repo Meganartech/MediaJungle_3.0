@@ -9,6 +9,7 @@ import video from '../user/UserIcon/Video Playlist.png';
 const LibraryScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState("likedMusic");
   const [watchLater, setWatchlater] = useState([]);
+  const [likedSongs,setLikesSongs] = useState([]);
   const userid = sessionStorage.getItem("userId");
 
   const fetchWatchLater = async () => {
@@ -21,24 +22,75 @@ const LibraryScreen = () => {
     }
   };
 
+
+  const fetchlikedmusic = async () => {
+    try {
+      const user = Number(userid);
+      const response = await axios.get(`${API_URL}/api/v2/${user}/UserAudios`);
+      setLikesSongs(response.data);
+    } catch (error) {
+      console.error('Error fetching Watch Later videos:', error);
+    }
+  };
+
   useEffect(() => {
     fetchWatchLater();
+    fetchlikedmusic();
   }, []);
+
+  console.log("watchLater",watchLater);
+  console.log("likedSongs",likedSongs);
 
     // State to manage which item's remove button is visible
     const [visibleIndex, setVisibleIndex] = useState(null);
+    const [watchLaterList, setWatchLaterList] = useState(watchLater); // Store the watch later list
+
 
     // Function to toggle the visibility of the remove button
     const toggleRemoveButton = (index) => {
       setVisibleIndex(visibleIndex === index ? null : index);
     };
-  
-    // Function to handle removing an item
-    const handleRemove = (index) => {
-      // Logic to remove the item from watchLater
-      console.log(`Removing video at index: ${index}`);
-      // You can also call a function passed as props or dispatch an action here
+
+    const removeWatchLater = async (userId, videoId) => {
+      try {
+        const response = await axios.delete(`${API_URL}/api/v2/${userId}/removewatchlater`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          data: { videoId: videoId },  // Pass the videoId in the data object
+        });
+    
+        if (response.status === 200) {
+          console.log(response.data); // "Video removed from watchlater successfully"
+          fetchWatchLater();
+          return true; // Indicate success
+          
+        } else {
+          console.error(response.data); // Error message from the server
+          return false; // Indicate failure
+        }
+      } catch (error) {
+        console.error("Error removing video from watchlater", error);
+        return false;
+      }
     };
+    
+    
+
+  
+     // Handle removing a video and updating the UI
+  const handleRemove = async (index) => {
+    const user = Number(userid);
+    console.log("user",index,user);
+    // Call the API to remove the video
+    const isRemoved = await removeWatchLater(user, index);
+
+    if (isRemoved) {
+      // Update the local state to remove the video from the UI
+      const updatedList = watchLaterList.filter((_, i) => i !== index);
+      setWatchLaterList(updatedList);
+    }
+  };
   
 
   const renderContent = () => {
@@ -46,95 +98,99 @@ const LibraryScreen = () => {
       case "likedMusic":
         return (
           <div>
-            <h3>Liked Music</h3>
-            {/* Add liked music rendering here */}
+            {/* <h3 style={{ position: 'sticky', top: '0', padding: '10px', zIndex: 100 }}> */}
+            <h3>
+              Liked Music
+            </h3>
+          
+  
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', marginTop: '10px' , width:'1000px'}}>
+            {likedSongs.map((item, index) => (
+              <div key={index} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <img
+                  src={`${API_URL}/api/v2/image/${item.audioId}`}
+                  alt="video"
+                  style={{ width: '50px', height: '50px' }} // You can adjust the size
+                />
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1, marginLeft: '10px' }}>
+                  <p style={{ color: 'white', fontSize: '14px', margin: '0' }}>{item.audioTitle}</p>
+                </div>
+        
+                
+                <div
+                  // onClick={() => toggleRemoveButton(index)}
+                  style={{
+                    cursor: 'pointer',
+                    color: 'white',
+                    fontSize: '20px',
+                    position: 'relative',
+                    marginLeft: 'auto' // Align the three dots to the right
+                  }}
+                >
+                  ⋮
+                </div>
+              </div>
+            ))}
+          </div> 
           </div>
+        
+        
+
         );
       case "watchLater":
         return (
-          // <div>
-          //   <h3>Watch Later</h3>
-          //   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' ,marginTop:'10px'}}>
-          //     {watchLater.map((item, index) => (
-          //       <div key={index} style={{
-          //         display: 'flex', 
-          //         flexDirection: 'column',
-          //         alignItems: 'center',
-          //         width: '120px',
-          //         marginBottom: '10px',
-          //         textAlign: 'center'
-          //       }}>
-          //         <img
-          //           src={`${API_URL}/api/v2/${item.videoId}/videothumbnail`}
-          //           alt="video"
-          //           style={{ width: '150px', height: '150px', borderRadius: '8px' }}
-          //         />
-          //         <p style={{ color: 'white', fontSize: '14px' }}>{item.videoTitle}</p>
-          //         {/* <button style={{
-          //           backgroundColor: '#d9534f', 
-          //           color: 'white', 
-          //           border: 'none', 
-          //           padding: '5px 10px', 
-          //           borderRadius: '5px',
-          //           cursor: 'pointer'
-          //         }}>Remove</button> */}
-                  
-          //       </div>
-          //     ))}
-          //   </div>
-          // </div>
           <div>
-      <h3>Watch Later</h3>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '10px' }}>
-        {watchLater.map((item, index) => (
-          <div key={index} style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '120px',
-            marginBottom: '10px',
-            textAlign: 'center'
-          }}>
-            <img
-              src={`${API_URL}/api/v2/${item.videoId}/videothumbnail`}
-              alt="video"
-              style={{ width: '150px', height: '150px', borderRadius: '8px' }}
-            />
-            <p style={{ color: 'white', fontSize: '14px' }}>{item.videoTitle}</p>
-            
-            <div style={{ position: 'relative' }}>
-              <div
-                onClick={() => toggleRemoveButton(index)}
-                style={{
-                  cursor: 'pointer',
-                  color: 'white',
-                  fontSize: '20px',
-                  margin: '5px 0'
-                }}
-              >
-                ⋮ {/* This represents the three vertical dots */}
-              </div>
+  <h3>Watch Later</h3>
+  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginTop: '10px' }}>
+    {watchLater.map((item, index) => (
+      <div className='watchlater' key={index}>
+        <img
+          src={`${API_URL}/api/v2/${item.videoId}/videothumbnail`}
+          alt="video"
 
-              {visibleIndex === index && (
-                <button style={{
-                  backgroundColor: '#d9534f',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  position: 'absolute',
-                  top: '20px', // Adjust as needed
-                  left: '-30px', // Adjust as needed
-                }} onClick={() => handleRemove(index)}>
-                  Remove
-                </button>
-              )}
-            </div>
+        />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          <p style={{ color: 'white', fontSize: '14px', marginRight: 'auto' }}>{item.videoTitle}</p>
+
+          {/* The three vertical dots */}
+          <div
+            onClick={() => toggleRemoveButton(index)}
+            style={{
+              cursor: 'pointer',
+              color: 'white',
+              fontSize: '20px',
+              marginLeft: '5px',
+              position: 'relative', // Keep relative positioning here for alignment with the remove button
+            }}
+          >
+            ⋮
           </div>
-        ))}
+
+          {/* Display Remove button when visibleIndex matches */}
+          {visibleIndex === index && (
+            <button className='.remove' style={{
+              
+              color: 'white',
+              border: 'none',
+              padding: '5px 10px',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              position: 'absolute', // Absolute positioning for the button
+              top: '100%',  // Position the button directly under the three dots
+              left: '50%',  // Center the button horizontally under the dots
+              transform: 'translateX(-50%)',  // Adjust centering
+              zIndex: 1  // Ensure the button appears above other elements
+            }} onClick={() => handleRemove(item.videoId)}>
+              Remove
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+    ))}
+  </div>
+</div>
+
+        
         );
       case "playlist":
         return (
@@ -150,6 +206,13 @@ const LibraryScreen = () => {
 
   return (
     <Layout>
+      <div style={{
+        marginTop:'50px',
+        marginLeft:'410px',
+
+      }}>
+      Library
+      </div>
       <div className="container d-flex" style={{ height: '70vh', alignItems: 'flex-start' }}>
         {/* Left sidebar */}
         <div className="w-25 p-3" style={{ color: "white" }}>
@@ -167,6 +230,7 @@ const LibraryScreen = () => {
     gap: '30px',
     margin: '0 auto',  // Centers the button in its parent container
     marginBottom:'50px',
+    borderRadius:'10px',
   }}
   onClick={() => setSelectedCategory("likedMusic")}
 >
@@ -187,6 +251,7 @@ const LibraryScreen = () => {
     gap: '30px',
     margin: '0 auto',  // Centers the button in its parent container
     marginBottom:'50px',
+    borderRadius:'10px',
   }}
             onClick={() => setSelectedCategory("watchLater")}
           >
@@ -207,6 +272,7 @@ const LibraryScreen = () => {
     gap: '30px',
     margin: '0 auto',  // Centers the button in its parent container
     marginBottom:'50px',
+    borderRadius:'10px',
   }}
             onClick={() => setSelectedCategory("playlist")}
           >

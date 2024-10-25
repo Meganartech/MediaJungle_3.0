@@ -19,7 +19,7 @@ class Service {
   ) async {
     var uri = Uri.parse(
         // "https://testtomcat.vsmartengine.com/media/api/v2/userregister");
-       // 'http://192.168.183.42:8080/api/v2/userregister');
+       //  'http://192.168.183.42:8080/api/v2/userregister');
     'http://localhost:8080/api/v2/userregister');
     //Map<String, String> headers = {"Content-Type": "multipart/form-data"};
     var request = http.MultipartRequest('POST', uri);
@@ -81,8 +81,8 @@ class Service {
     String password,
   ) async {
     var uri = Uri.parse(
-        //"https://testtomcat.vsmartengine.com/media/api/v2/login");
-     'http://192.168.183.42:8080/api/v2/login');
+       "https://testtomcat.vsmartengine.com/media/api/v2/login");
+     //'http://192.168.183.42:8080/api/v2/login');
     //'http://localhost:8080/api/v2/login');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map data = {
@@ -94,6 +94,7 @@ class Service {
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
     if (response.statusCode == 200) {
+
       var responseData = jsonDecode(response.body);
       String token = responseData['token'];
       String userId = responseData['userId'].toString();
@@ -153,11 +154,13 @@ class Service {
 
   Future<bool> logoutUser(BuildContext context) async {
     String? token = await secureStorage.read(key: 'token');
-    var uri = Uri.parse('http://192.168.0.6:8080/api/v2/logout');
-    //  "https://testtomcat.vsmartengine.com/media/api/v2/logout");
+    var uri = Uri.parse(
+      //'http://192.168.183.42:8080/api/v2/logout');
+      "https://testtomcat.vsmartengine.com/media/api/v2/logout");
+    if(token == null) return false;
     Map<String, String> headers = {
       "Content-Type": "application/json",
-      //"Authorization": token,
+      "Authorization": token,
     };
 
     try {

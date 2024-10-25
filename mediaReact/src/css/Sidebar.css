@@ -1171,7 +1171,8 @@ td{
 }
 
 .content-area::-webkit-scrollbar-thumb {
-  background-color: #2149B1; /* Color of the scrollbar thumb */
+  /* background-color: #2149B1; Color of the scrollbar thumb */
+  background-color: black; /* Color of the scrollbar thumb */
   border-radius: 4px; /* Rounded corners for the scrollbar thumb */
 }
 
@@ -1182,7 +1183,38 @@ td{
 /* For Firefox */
 .content-area {
   scrollbar-width: thin; /* Set scrollbar width to thin */
-  scrollbar-color: #2149B1 transparent; /* thumb color and track color */
+  /* scrollbar-color: #2149B1 transparent;  */
+  scrollbar-color:black transparent;
+}
+
+.watchlater{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
+  margin-bottom: 10px;
+  text-align: center;
+  position: relative;
+}
+
+.watchlater img{
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+}
+
+.remove{
+  background-color: rgba(128, 128, 128, 0.6); /* Bright button background */
+}
+
+.likedsongs{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 120px;
+  margin-bottom: 10px;
+  text-align: center;
+  position: relative;
 }
 
 

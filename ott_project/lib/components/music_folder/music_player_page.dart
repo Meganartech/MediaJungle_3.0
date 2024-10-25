@@ -223,12 +223,12 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
   Widget build(BuildContext context) {
     return Consumer<AudioProvider>(
       builder: (context, audioProvider, child) {
-        final currentAudio = audioProvider.currentlyPlaying;
+        final currentAudio = audioProvider.audioDescriptioncurrently;
         final isPlaying = audioProvider.isPlaying;
         final duration = audioProvider.duration;
         final position = audioProvider.position;
-        final decodedImage =
-            audioProvider.getDecodedImage(currentAudio!.thumbnail);
+        // final decodedImage =
+        //     audioProvider.getDecodedImage(currentAudio!.thumbnail);
         IconData repeatIcon;
         Color repeatColor;
         switch (audioProvider.repeatMode) {
@@ -287,24 +287,25 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Image.memory(
-                          decodedImage,
-                          fit: BoxFit.fill,
-                          // width: double.infinity,
-                          // height: double.infinity,
-                        ),
+                        child: Image.asset('assets/icon/media_jungle.png'),
+                        // Image.memory(
+                        //   ,
+                        //   fit: BoxFit.fill,
+                        //   // width: double.infinity,
+                        //   // height: double.infinity,
+                        // ),
                       ),
                     ),
                     SizedBox(height: 20),
                     Text(
-                      currentAudio.songname,
+                      currentAudio!.audioTitle,
                       style: TextStyle(
                           color: kWhite,
                           fontSize: 20,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      currentAudio.categoryName,
+                      currentAudio.movieName,
                       style: TextStyle(fontSize: 16, color: Colors.white70),
                     ),
                     SizedBox(height: 20),

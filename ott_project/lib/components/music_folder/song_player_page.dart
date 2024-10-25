@@ -139,11 +139,13 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
 
   Future<void> _toggleLike() async {
     if (currentUserId == null) {
+      print('User not logged in');
       // Handle case where user is not logged in
       return;
     }
     bool success;
     if (isLiked) {
+      print('Unliking audio....');
       success =
           await audioApiService.unlikeAudio(widget.music.id, currentUserId!);
       if (success) {
@@ -155,6 +157,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Song removed')));
     } else {
+      print('Liking audio....');
       success =
           await audioApiService.likeAudio(widget.music.id, currentUserId!);
       if (success) {
@@ -163,7 +166,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
           likedSongIds.add(widget.music.id.toString());
         });
       }
-      widget.onChange(widget.music);
+      //widget.onChange(widget.music);
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Song added to likes')));
     }
@@ -300,29 +303,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child:
-                              // FutureBuilder<Uint8List?>(
-                              //   future: widget.music.bannerImage,
-                              //   //audio.bannerImage,
-
-                              //   builder: (context, snapshot) {
-                              //     if (snapshot.connectionState ==
-                              //             ConnectionState.done &&
-                              //         snapshot.hasData) {
-                              //       return Image.memory(snapshot.data!,
-                              //           width: 164, height: 155, fit: BoxFit.fill);
-                              //     } else {
-                              //       return Container(
-                              //         width: 164,
-                              //         height: 155,
-                              //         // fit: BoxFit.fill
-                              //         color: Colors.grey,
-                              //         child:
-                              //             Center(child: CircularProgressIndicator()),
-                              //       );
-                              //     }
-                              //   },
-                              // ),
-                              currentAudio?.thumbnail != null
+                            currentAudio?.thumbnail != null
                                   ? Image.memory(
                                       currentAudio!
                                           .thumbnail!, // safely unwrapping banner since it's non-null here
@@ -339,10 +320,10 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
                           fontSize: 20,
                           fontWeight: FontWeight.bold),
                     ),
-                    // Text(
-                    //   currentAudio.categoryName,
-                    //   style: TextStyle(fontSize: 16, color: Colors.white70),
-                    // ),
+                    Text(
+                      currentAudio.movieName,
+                      style: TextStyle(fontSize: 16, color: Colors.white70),
+                    ),
                     SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -596,7 +577,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => LikedSongsPage(userId: 7)));
+                            builder: (context) => LikedSongsPage(userId:1 )));
                   },
                 ),
                 ...audioProvider.mplaylists.map((playlist) {

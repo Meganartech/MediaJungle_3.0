@@ -175,38 +175,44 @@ class MoviesCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: FutureBuilder<Uint8List?>(
-                  future: movie.thumbnailImage,
-                  builder: (context, snapshot) {
-                    final thumbnail = snapshot.data;
-                    // print('thumbanail:{$thumbnail}');
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      return Image.memory(thumbnail!,
-                          width: 164, height: 130, fit: BoxFit.fill);
-                    } else {
-                      return Container(
-                        width: 164,
-                        height: 135,
-                        // fit: BoxFit.fill
-                        color: Colors.grey,
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                  }),
+            Expanded(
+              flex:8,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: FutureBuilder<Uint8List?>(
+                    future: movie.thumbnailImage,
+                    builder: (context, snapshot) {
+                      final thumbnail = snapshot.data;
+                      // print('thumbanail:{$thumbnail}');
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData) {
+                        return Image.memory(thumbnail!,
+                            width: 164, height: 130, fit: BoxFit.fill);
+                      } else {
+                        return Container(
+                          width: 164,
+                          height: 135,
+                          // fit: BoxFit.fill
+                          color: Colors.grey,
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+                    }),
+              ),
             ),
             SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-            Text(
-              movie.videoTitle,
-              style: TextStyle(
-                color: kWhite,
+            Expanded(
+              flex:2,
+              child: Text(
+                movie.videoTitle,
+                style: TextStyle(
+                  color: kWhite,
+                ),
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                // maxLines: 2,
               ),
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              // maxLines: 2,
             ),
           ],
         ),
