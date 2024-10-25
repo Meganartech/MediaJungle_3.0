@@ -22,7 +22,6 @@ const LibraryScreen = () => {
     }
   };
 
-
   const fetchlikedmusic = async () => {
     try {
       const user = Number(userid);
@@ -41,15 +40,76 @@ const LibraryScreen = () => {
   console.log("watchLater",watchLater);
   console.log("likedSongs",likedSongs);
 
-    // State to manage which item's remove button is visible
     const [visibleIndex, setVisibleIndex] = useState(null);
-    const [watchLaterList, setWatchLaterList] = useState(watchLater); // Store the watch later list
+    const [watchLaterList, setWatchLaterList] = useState(watchLater); 
+    const [likedsonglist,setlikedsonglist] = useState(likedSongs);
+    const [openMenuIndex, setOpenMenuIndex] = useState(null);
+    const [showPlaylistPopup, setShowPlaylistPopup] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null);
 
+  const [showCreatePlaylistPopup, setShowCreatePlaylistPopup] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
 
-    // Function to toggle the visibility of the remove button
+  const openCreatePlaylistPopup = () => {
+    setShowCreatePlaylistPopup(true);
+    setShowPlaylistPopup(false);
+
+  };
+
+  const closeCreatePlaylistPopup = () => {
+    setShowCreatePlaylistPopup(false);
+    setTitle(''); // Clear input on close
+    setDescription('');
+  };
+
+  const handleAddToPlaylistClick = (song) => {
+    setSelectedSong(song); // Track which song is being added to the playlist
+    setShowPlaylistPopup(true); // Show the playlist pop-up
+    setOpenMenuIndex(false);
+  };
+
+  const closePopup = () => {
+    setShowPlaylistPopup(false); // Close the playlist pop-up
+    setSelectedSong(null); // Reset selected song
+  };
+
+const toggleRemovesongButton = (index) => {
+  // Toggle the visibility of the menu for the specific item
+  setOpenMenuIndex(openMenuIndex === index ? null : index);
+};
+
     const toggleRemoveButton = (index) => {
       setVisibleIndex(visibleIndex === index ? null : index);
     };
+
+    const removeFavoriteAudio = async (userId, audioId) => {
+      try {
+        const formData = new FormData();
+        formData.append("audioId", audioId); // Append audioId as a form field
+    
+        const response = await axios.delete(`${API_URL}/api/v2/${userId}/removeFavoriteAudio`, {
+          data: formData, // Pass FormData as the request body
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
+        if (response.status === 200) {
+        console.log(response.data); // Show success message on completion
+        fetchlikedmusic();
+        return true;
+        }
+      } catch (error) {
+        if (error.response) {
+          alert(error.response.data); // Error response from server
+        } else if (error.request) {
+          alert("No response from server. Please try again.");
+        } else {
+          alert("Error occurred: " + error.message);
+        }
+      }
+    };
+    
 
     const removeWatchLater = async (userId, videoId) => {
       try {
@@ -91,6 +151,16 @@ const LibraryScreen = () => {
       setWatchLaterList(updatedList);
     }
   };
+
+  const handlesongRemove = async (index) => {
+    const user = Number(userid);
+    const isRemoved = await removeFavoriteAudio(user, index);
+    if (isRemoved) {
+      // Update the local state to remove the video from the UI
+      const updatedList = likedsonglist.filter((_, i) => i !== index);
+      setlikedsonglist(updatedList);
+    }
+  }
   
 
   const renderContent = () => {
@@ -98,50 +168,206 @@ const LibraryScreen = () => {
       case "likedMusic":
         return (
           <div>
-            {/* <h3 style={{ position: 'sticky', top: '0', padding: '10px', zIndex: 100 }}> */}
-            <h3>
-              Liked Music
-            </h3>
-          
-  
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', marginTop: '10px' , width:'1000px'}}>
-            {likedSongs.map((item, index) => (
-              <div key={index} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <img
-                  src={`${API_URL}/api/v2/image/${item.audioId}`}
-                  alt="video"
-                  style={{ width: '50px', height: '50px' }} // You can adjust the size
-                />
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1, marginLeft: '10px' }}>
-                  <p style={{ color: 'white', fontSize: '14px', margin: '0' }}>{item.audioTitle}</p>
-                </div>
-        
-                
-                <div
-                  // onClick={() => toggleRemoveButton(index)}
-                  style={{
-                    cursor: 'pointer',
-                    color: 'white',
-                    fontSize: '20px',
-                    position: 'relative',
-                    marginLeft: 'auto' // Align the three dots to the right
-                  }}
-                >
-                  ⋮
-                </div>
-              </div>
-            ))}
-          </div> 
-          </div>
-        
-        
+      <h3>Liked Music</h3>
 
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', marginTop: '30px', width: '1000px' }}>
+        {likedSongs.map((item, index) => (
+          <div
+            key={index}
+            style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}
+          >
+            {/* Image */}
+            <img
+              src={`${API_URL}/api/v2/image/${item.audioId}`}
+              alt="video"
+              style={{ width: '50px', height: '50px' }}
+            />
+
+            {/* Song Title */}
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1, marginLeft: '10px' }}>
+              <p style={{ color: 'white', fontSize: '14px', margin: '0' }}>{item.audioTitle}</p>
+            </div>
+
+            {/* Three dots icon */}
+            <div
+              onClick={() => toggleRemovesongButton(index)}
+              style={{
+                cursor: 'pointer',
+                color: 'white',
+                fontSize: '20px',
+                position: 'relative',
+                marginLeft: 'auto',
+              }}
+            >
+              ⋮
+            </div>
+
+            {/* Menu (Remove and Add to Playlist) */}
+            {openMenuIndex === index && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '1%', // Show it below the three dots
+                  right: '10px', // Align it to the left of the three dots
+                  backgroundColor: 'grey',
+                  color: 'white',
+                  borderRadius: '5px',
+                }}
+              >
+                <p onClick={() => handlesongRemove(item.audioId)} style={{ cursor: 'pointer', margin: '0', padding: '5px 10px' }}>
+                  Remove
+                </p>
+                <p
+                  onClick={() => handleAddToPlaylistClick(item)}
+                  style={{ cursor: 'pointer', margin: '0', padding: '5px 10px' }}
+                >
+                  Add to Playlist
+                </p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+       {showPlaylistPopup && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            color: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            zIndex: 20,
+            width: '300px',
+          }}
+        >
+          <button 
+            onClick={openCreatePlaylistPopup}
+            style={{
+              backgroundColor: 'white',
+              color: 'black',
+              padding: '10px',
+              borderRadius: '5px',
+              marginBottom: '10px'
+            }}
+          >
+            Create Playlist
+          </button>
+          <div style={{ marginBottom: '10px' }}>
+            <p>Morning Vibes</p>
+            <p>Workout Hits</p>
+            <p>Evening Relax</p>
+          </div>
+          <button onClick={() => setShowPlaylistPopup(false)} 
+            style={{ padding: '10px', backgroundColor: 'white', color: 'black', border: 'none', cursor: 'pointer' }}>
+            Close
+          </button>
+        </div>
+      )}
+
+      {/* Create New Playlist Pop-up */}
+      {showCreatePlaylistPopup && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            color: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            zIndex: 30,
+            width: '300px',
+          }}
+        >
+          <h4 style={{textAlign:'center'}}>New Playlist</h4>
+
+          {/* Title Input */}
+<div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+  <label className="mt-3" style={{ color: 'white', fontSize: '14px', marginRight: '60px' }}>Title</label>
+  <input 
+    type="text"
+    value={title}
+    onChange={(e) => setTitle(e.target.value)}
+    style={{
+      flex: 1, // Reduces the input width
+      // maxWidth: '200px', // Optional: sets a maximum width
+      border: 'none',
+      borderBottom: '1px solid white',
+      backgroundColor: 'transparent',
+      color: 'white',
+      outline: 'none',
+      paddingBottom: '5px'
+    }}
+  />
+</div>
+
+
+
+          {/* Description Input */}
+<div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+  <label style={{ color: 'white', fontSize: '14px', marginRight: '10px' }}>Description</label>
+  <input 
+    type="text"
+    value={description}
+    onChange={(e) => setDescription(e.target.value)}
+    style={{
+      flex: 1, // Make input take available space
+      border: 'none',
+      borderBottom: '1px solid white',
+      backgroundColor: 'transparent',
+      color: 'white',
+      outline: 'none',
+      paddingBottom: '5px'
+    }}
+  />
+</div>
+
+          {/* Cancel and Create Buttons */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+            <button 
+              onClick={closeCreatePlaylistPopup}
+              style={{
+                padding: '10px',
+                backgroundColor: 'gray',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={() => {
+                // Add playlist creation logic here
+                closeCreatePlaylistPopup();
+              }}
+              style={{
+                padding: '10px',
+                backgroundColor: 'green',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Create
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
         );
       case "watchLater":
         return (
           <div>
   <h3>Watch Later</h3>
-  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginTop: '10px' }}>
+  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginTop: '30px' }}>
     {watchLater.map((item, index) => (
       <div className='watchlater' key={index}>
         <img
@@ -262,7 +488,7 @@ const LibraryScreen = () => {
           <button 
   className="mb-4 p-3"
   style={{
-    height: '100px',  // Increased height
+    height: '100px',  
     width: '75%',     // 75% width of the parent container
     backgroundColor: selectedCategory === "playlist" ? "#2149B1" : "gray",
     color: "white",
@@ -281,27 +507,14 @@ const LibraryScreen = () => {
           </button>
         </div>
 
-        {/* Content Area
-        <div className="content-area w-75 p-3" 
-             style={{ 
-               color: "white", 
-               display: 'flex', 
-               flexDirection: 'column', 
-               alignItems: 'flex-start', 
-               justifyContent: 'flex-start',  // Added to align to the top
-               minHeight: '100vh' 
-              }}>
-          {renderContent()}
-        </div> */}
-
 <div className="content-area w-75 p-3" 
   style={{ 
     color: "white", 
     display: 'flex', 
     flexDirection: 'column', 
     alignItems: 'flex-start', 
-    maxHeight: '500px',  // Set the max height to control scrolling
-    overflowY: 'auto',   // Enables vertical scrolling
+    maxHeight: '500px',  
+    overflowY: 'auto', 
   }}
 >
   {renderContent()}
