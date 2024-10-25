@@ -7,7 +7,9 @@ class VideoContainer {
   final int categoryId;
   final List<VideoDescription> videoDescriptions;
 
-  VideoContainer({required this.value, required this.videoDescriptions,required this.categoryId});
+  VideoContainer({required this.value, required this.videoDescriptions,
+  required this.categoryId
+  });
 
   factory VideoContainer.fromJson(Map<String, dynamic> json) {
     var list = json['videoDescriptions'] as List;

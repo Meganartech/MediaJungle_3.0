@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/category/category_service.dart';
 import 'package:ott_project/components/video_folder/movie_player_page.dart';
@@ -59,33 +60,38 @@ class _CategoryBasedMovieState extends State<CategoryBasedMovie> {
           // ),
         ),
 
-        Expanded(
-          child: Padding(padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.20,
+        // Expanded(
+         // child: 
+          Padding(
+          padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.20,
           right: MediaQuery.sizeOf(context).width * 0.08,
           left: MediaQuery.sizeOf(context).width * 0.08,
           ),
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-          crossAxisSpacing: 20,
-          //mainAxisSpacing: 20,
-          childAspectRatio: 4/5
+           child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                crossAxisSpacing: 30,
+                //mainAxisSpacing: 20,
+                childAspectRatio: 0.8,
+                
+                ),
+                itemCount: widget.videoDescriptions.length,
+                
+                 itemBuilder: (context,index){
+                  final movie = widget.videoDescriptions[index];
+                
+                  return MoviesCard(movie: movie, 
+                    initialIndex: index, 
+                    onTap: (){
+                      final categoryId = CategoryService().getCategoryId(movie.categoryList, widget.categoryName);
+                                    
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>MoviesPlayerPage(videoDescriptions: widget.videoDescriptions, categoryId: categoryId,initialIndex: index,)));
+                    }, categoryList: movie.categoryList);
+                  //);
+                 }
+                 ),
           ),
-          itemCount: widget.videoDescriptions.length,
-           itemBuilder: (context,index){
-            final movie = widget.videoDescriptions[index];
-          
-            return MoviesCard(movie: movie, 
-            initialIndex: index, 
-            onTap: (){
-              final categoryId = CategoryService().getCategoryId(movie.categoryList, widget.categoryName);
-          
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>MoviesPlayerPage(videoDescriptions: widget.videoDescriptions, categoryId: categoryId,initialIndex: index,)));
-            }, categoryList: movie.categoryList);
-           }
-           ),
-          ),
-        )
+    
       ],
     ),
    );

@@ -23,11 +23,13 @@ class _LoginPageState extends State<LoginPage> {
   bool _isChecked = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool visiblePassword = false;
 
   final Service service = Service();
   @override
   void initState() {
     loadUserEmailPassword();
+    visiblePassword =  false;
     super.initState();
   }
 
@@ -82,16 +84,23 @@ class _LoginPageState extends State<LoginPage> {
                             hint: 'Enter Email',
                             obscureText: false,
                             icon: FontAwesomeIcons.envelope,
+                            
                             inputType: TextInputType.emailAddress,
                             inputAction: TextInputAction.next,
                           ),
                           MyTextField(
                             controller: passwordController,
                             hint: 'Enter Password',
-                            obscureText: true,
+                            obscureText: !visiblePassword,
                             icon: FontAwesomeIcons.lock,
                             inputType: TextInputType.visiblePassword,
                             inputAction: TextInputAction.done,
+                            suffixIcon: IconButton(onPressed: (){
+                              setState(() {
+                                visiblePassword = !visiblePassword;
+                              });
+                            },
+                             icon: Icon(visiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
                           ),
                         ]),
                     Row(

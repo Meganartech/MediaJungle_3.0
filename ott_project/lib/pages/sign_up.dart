@@ -27,6 +27,8 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController confirmpasswordController =
       TextEditingController();
   final TextEditingController mobilenumberController = TextEditingController();
+   bool visiblePassword = false;
+   bool confirmVisiblePassword = false;
   File? _imageFile;
   final Service service = Service();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -43,6 +45,14 @@ class _SignUpState extends State<SignUp> {
       // Handle errors here, e.g. show a dialog or snackbar
       print("Image pick error: $e");
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    visiblePassword = false;
+    confirmVisiblePassword = false;
+    super.initState();
   }
 
   @override
@@ -151,10 +161,17 @@ class _SignUpState extends State<SignUp> {
                       MyTextField(
                         controller: passwordController,
                         icon: FontAwesomeIcons.lock,
+                        
                         hint: 'Password',
                         inputType: TextInputType.visiblePassword,
+                       suffixIcon: IconButton(onPressed: (){
+                              setState(() {
+                                visiblePassword = !visiblePassword;
+                              });
+                            },
+                             icon: Icon(visiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
                         inputAction: TextInputAction.next,
-                        obscureText: true,
+                        obscureText: !visiblePassword,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return '  Please enter password';
@@ -167,8 +184,14 @@ class _SignUpState extends State<SignUp> {
                         icon: FontAwesomeIcons.lock,
                         hint: 'Confirm Password',
                         inputType: TextInputType.visiblePassword,
+                        suffixIcon: IconButton(onPressed: (){
+                              setState(() {
+                                confirmVisiblePassword = !confirmVisiblePassword;
+                              });
+                            },
+                             icon: Icon(confirmVisiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
                         inputAction: TextInputAction.done,
-                        obscureText: true,
+                        obscureText: !confirmVisiblePassword,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return '  Please enter confirm password';

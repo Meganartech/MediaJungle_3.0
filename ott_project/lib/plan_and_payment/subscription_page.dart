@@ -48,8 +48,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
   Future<void> _loadSubscriptionStatus(int userId) async {
     String url = 
+    'https://testtomcat.vsmartengine.com/media/api/v2/paymentHistory/$userId';
     //'http://localhost:8080/api/v2/paymentHistory/$userId';
-    'http://192.168.183.42:8080/api/v2/paymentHistory/$userId';
+    //'http://192.168.183.42:8080/api/v2/paymentHistory/$userId';
     try {
       var response = await http.get(Uri.parse(url));
 
@@ -109,8 +110,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     try {
       var response = await http.get(
         Uri.parse(
-            //    'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.183.42:8080/api/v2/GetUserById/$userId'),
+           'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+           // 'http://192.168.183.42:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         //),
         headers: {
@@ -206,7 +207,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.18,
                 ),
-                if (!isSubscribed && isSubscriptionExpired)
+                if (!isSubscribed || isSubscriptionExpired)
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
