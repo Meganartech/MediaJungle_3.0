@@ -9,9 +9,9 @@ import '../components/music_folder/music.dart';
 
 class AudioApiService with ChangeNotifier {
   static const String baseUrl =
-  'https://testtomcat.vsmartengine.com/media/api/v2';
-    // 'http://localhost:8080/api/v2';
-  //  'http://192.168.183.42:8080/api/v2';
+  //'https://testtomcat.vsmartengine.com/media/api/v2';
+  //  'http://localhost:8080/api/v2';
+    'http://192.168.2.215:8080/api/v2';
 
   Future<Audio> fetchAudioDetail(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/audio/$id'));
@@ -38,10 +38,13 @@ class AudioApiService with ChangeNotifier {
 
   Future<AudioDescription> fetchAudioDetails(int id) async{
     final response = await http.get(Uri.parse('$baseUrl/getaudio/$id'));
-    print('Audiodescription:${response.statusCode}');
-    print('Audiodescription:${response.body}');
+    print('Fetch Audiodescription Response:${response.statusCode}');
+    print('Fetch Audiodescription:${response.body}');
     if(response.statusCode == 200){
-        return AudioDescription.fromJson(jsonDecode(response.body));
+
+      var jsonResponse = jsonDecode(response.body);
+      print('Decoded JSon:$jsonResponse');
+        return AudioDescription.fromJson(jsonResponse);
     }else {
       throw Exception('Failed to load audio details');
     }
@@ -57,7 +60,7 @@ class AudioApiService with ChangeNotifier {
   }
 
   Future<bool> likeAudio(int audioId, int userId) async {
-    final url = Uri.parse('$baseUrl/mobile/favourite/audio');
+    final url = Uri.parse('$baseUrl/favourite/audio');
 
     print('Sending request to: $url');
   print('Sending audioId: $audioId, userId: $userId');
@@ -74,14 +77,14 @@ class AudioApiService with ChangeNotifier {
   }
 
   Future<List<int>> getLikedSongs(int userId) async {
-    final url = Uri.parse('$baseUrl/mobile/$userId/UserAudios');
+    final url = Uri.parse('$baseUrl/$userId/UserAudios');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       List<dynamic> likedAudiosJson = jsonDecode(response.body);
       //  print(response.body);
 
-      return likedAudiosJson.map((audio) => audio as int).toList();
+      return likedAudiosJson.map((audio) => audio['audioId'] as int).toList();
 
       //return likedAudiosJson.map((audio) => audio['id'].toString()).toList();
     } else {
@@ -91,7 +94,7 @@ class AudioApiService with ChangeNotifier {
 
    Future<bool> unlikeAudio(int audioId, int userId) async {
     final url = Uri.parse(
-        '$baseUrl/mobile/$userId/removeFavoriteAudio?audioId=$audioId');
+        '$baseUrl/$userId/removeFavoriteAudio?audioId=$audioId');
     final response = await http.delete(url);
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -107,6 +110,8 @@ class AudioApiService with ChangeNotifier {
     final url = Uri.parse('$baseUrl/audio/$audioId');
     final response= await http.get(url);
 
+     print('response:${response.statusCode}');
+    print('Audio:${response.body}');
     if(response.statusCode== 200){
       Map<String,dynamic> songJson = jsonDecode(response.body);
 
@@ -122,7 +127,7 @@ class AudioApiService with ChangeNotifier {
   Future<Audio> getAudioDetails(int audioId) async {
     final url = Uri.parse('$baseUrl/audio/$audioId');
     final response = await http.get(url);
-
+   
     if (response.statusCode == 200) {
       Map<String, dynamic> audioJson = jsonDecode(response.body);
 

@@ -4,7 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
-import 'package:ott_project/components/music_folder/liked_songs_page.dart';
+import 'package:ott_project/components/library/liked_songs_page.dart';
 import 'package:ott_project/components/music_folder/listen_again.dart';
 import 'package:ott_project/components/music_folder/recently_played_manager.dart';
 import 'package:ott_project/components/pallete.dart';
@@ -304,10 +304,10 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                           fontSize: 20,
                           fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      currentAudio.movieName,
-                      style: TextStyle(fontSize: 16, color: Colors.white70),
-                    ),
+                    // Text(
+                    //   currentAudio.movieName,
+                    //   style: TextStyle(fontSize: 16, color: Colors.white70),
+                    // ),
                     SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

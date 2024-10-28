@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/library/playlist_page.dart';
 import 'package:ott_project/components/library/watch_list_page.dart';
-import 'package:ott_project/components/music_folder/liked_songs_page.dart';
+import 'package:ott_project/components/library/liked_songs_page.dart';
 
 import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
@@ -98,7 +98,7 @@ class _LibraryPageState extends State<LibraryPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => WatchListPage()),
+                                builder: (context) => WatchListPage(userId: widget.userId,)),
                           );
                         }),
                   ],

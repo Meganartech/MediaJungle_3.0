@@ -70,9 +70,9 @@ class _CategoryBasedMovieState extends State<CategoryBasedMovie> {
            child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                crossAxisSpacing: 30,
-                //mainAxisSpacing: 20,
-                childAspectRatio: 0.8,
+                  crossAxisSpacing: 35,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 0.62,
                 
                 ),
                 itemCount: widget.videoDescriptions.length,

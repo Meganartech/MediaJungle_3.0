@@ -86,7 +86,7 @@ class AudioProvider with ChangeNotifier {
     if(currentIndex >= 0 && currentIndex < audio_playlist.length){
       try{
         final currentSong = audio_playlist[currentIndex];
-        audioUrl = await AudioApiService().fetchAudioStreamUrl(currentSong.audioFileName);
+        audioUrl = await AudioApiService().fetchAudioStreamUrl(currentSong.audioFileName!);
         if(audioUrl != null){
           await audioPlayer.setSource(UrlSource(audioUrl!));
           notifyListeners();
@@ -166,7 +166,7 @@ class AudioProvider with ChangeNotifier {
       try {
         final currentAudio = audio_playlist[currentIndex];
         audioUrl =
-            await AudioApiService().fetchAudioStreamUrl(currentAudio.audioFileName);
+            await AudioApiService().fetchAudioStreamUrl(currentAudio.audioFileName!);
         await audioPlayer.stop();
         await audioPlayer.play(UrlSource(audioUrl!));
         isPlaying = true;
