@@ -10,6 +10,7 @@ const LibraryScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState("likedMusic");
   const [watchLater, setWatchlater] = useState([]);
   const [likedSongs,setLikesSongs] = useState([]);
+  const [playlist, setPlaylist] = useState([]);
   const userid = sessionStorage.getItem("userId");
 
   const fetchWatchLater = async () => {
@@ -32,13 +33,27 @@ const LibraryScreen = () => {
     }
   };
 
+  const fetchPlaylist = async () => {
+    try {
+      const user = Number(userid);
+      const response = await axios.get(`${API_URL}/api/v2/user/${user}/playlists`);
+      setPlaylist(response.data);
+    } catch (error) {
+      console.error('Error fetching Watch Later videos:', error);
+    }
+  };
+
+
+
   useEffect(() => {
     fetchWatchLater();
     fetchlikedmusic();
+    fetchPlaylist();
   }, []);
 
   console.log("watchLater",watchLater);
   console.log("likedSongs",likedSongs);
+  console.log("playlist",playlist);
 
     const [visibleIndex, setVisibleIndex] = useState(null);
     const [watchLaterList, setWatchLaterList] = useState(watchLater); 
@@ -57,16 +72,41 @@ const LibraryScreen = () => {
 
   };
 
-  const closeCreatePlaylistPopup = () => {
+  const closeCreatePlaylistPopup = (audioId) => {
     setShowCreatePlaylistPopup(false);
     setTitle(''); // Clear input on close
     setDescription('');
   };
 
-  const handleAddToPlaylistClick = (song) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const user = Number(userid); // Ensure userid is a number
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('userId', user);
+    formData.append('audioId', selectedSong.audioId);
+
+    try {
+        const response = await axios.post(`${API_URL}api/v2/createplaylistid`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Automatically handled by axios with FormData
+            },
+        });
+        console.log(`Playlist created with ID: ${response.data.id}`);
+        // Optionally, close the pop-up or reset fields
+        closeCreatePlaylistPopup(); // Close the pop-up after successful creation
+    } catch (error) {
+        console.error(error);
+        // Optionally, show an error message to the user
+    }
+};
+
+const handleAddToPlaylistClick = (song) => {
     setSelectedSong(song); // Track which song is being added to the playlist
     setShowPlaylistPopup(true); // Show the playlist pop-up
     setOpenMenuIndex(false);
+    console.log("selected song",song)
   };
 
   const closePopup = () => {
@@ -161,6 +201,22 @@ const toggleRemovesongButton = (index) => {
       setlikedsonglist(updatedList);
     }
   }
+
+  const handleAddAudio = async (playlistIndex, audioId) => {
+     // Assuming your playlist has an `id` field
+    try {
+      // Send a POST request to add the audio ID to the specified playlist
+      const response = await axios.post(`${API_URL}/api/v2/${playlistIndex}/audio/${audioId}`);
+      console.log('Audio added to playlist:', response.data);
+      
+      // Optionally, you can update the state to reflect the changes
+      // e.g., you might want to refresh the playlists or update UI accordingly
+  
+    } catch (error) {
+      console.error('Error adding audio to playlist:', error);
+      // Optionally, show an error message to the user
+    }
+  };
   
 
   const renderContent = () => {
@@ -242,6 +298,7 @@ const toggleRemovesongButton = (index) => {
             borderRadius: '8px',
             zIndex: 20,
             width: '300px',
+            textAlign:'center'
           }}
         >
           <button 
@@ -251,16 +308,38 @@ const toggleRemovesongButton = (index) => {
               color: 'black',
               padding: '10px',
               borderRadius: '5px',
-              marginBottom: '10px'
+              marginBottom: '10px',
             }}
           >
             Create Playlist
           </button>
-          <div style={{ marginBottom: '10px' }}>
-            <p>Morning Vibes</p>
-            <p>Workout Hits</p>
-            <p>Evening Relax</p>
-          </div>
+          <div style={{ marginBottom: '10px' ,marginLeft:'90px'}}>
+    <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'center' }}>
+        {playlist.map((title, index) => (
+            <li key={index} 
+            onClick={() => handleAddAudio(title.id, selectedSong.audioId)}
+            style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', // Center items together
+                width: '100%', // Full width for equal spacing
+                marginBottom: '10px' 
+            }}>
+                <img 
+                    src={vector} 
+                    alt="icon" 
+                    style={{ width: '20px', height: '20px', marginRight: '10px' }} // Reduced margin
+                />
+                <span style={{ flex: 1, textAlign: 'left' }}>{title.title}</span>
+            </li>
+        ))}
+    </ul>
+</div>
+
+
+
+
+
           <button onClick={() => setShowPlaylistPopup(false)} 
             style={{ padding: '10px', backgroundColor: 'white', color: 'black', border: 'none', cursor: 'pointer' }}>
             Close
@@ -343,10 +422,7 @@ const toggleRemovesongButton = (index) => {
               Cancel
             </button>
             <button 
-              onClick={() => {
-                // Add playlist creation logic here
-                closeCreatePlaylistPopup();
-              }}
+               onClick={handleSubmit} // Calls the handleSubmit function
               style={{
                 padding: '10px',
                 backgroundColor: 'green',
