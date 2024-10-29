@@ -1,7 +1,10 @@
 package com.VsmartEngine.MediaJungle.Library;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Objects;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.VsmartEngine.MediaJungle.exception.ResourceNotFoundException;
+import com.VsmartEngine.MediaJungle.model.Audiodescription;
+import com.VsmartEngine.MediaJungle.repository.AddAudioRepository;
+import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -22,6 +28,9 @@ public class PlaylistController {
 	
 	@Autowired
 	private PlaylistRepository playlistrepository;
+	
+	@Autowired
+	private AddAudiodescription audio ;
 	
 	@PostMapping("/createplaylist")
     public ResponseEntity<Playlist> createPlaylist(
@@ -81,6 +90,45 @@ public class PlaylistController {
         return ResponseEntity.ok(playlists);
     }
     
+//    @GetMapping("/{id}/getPlaylistaudio")
+//    public ResponseEntity<List<Playlist>> getplaylistidsongs(@PathVariable Long id) {
+//    	List<Playlist> playlists = playlistrepository.findByPlaylist(id);
+//    	return ResponseEntity.ok(playlists);
+//    }
+    
+    
+    @GetMapping("/{id}/getPlaylistWithAudioDetails")
+    public ResponseEntity<List<playlistDTO>> getPlaylistWithAudioDetails(@PathVariable Long id) {
+        List<Playlist> playlists = playlistrepository.findByPlaylist(id);
+
+        // Map each Playlist to a PlaylistDTO with audio details
+        List<playlistDTO> playlistDTOs = playlists.stream().map(playlist -> {
+            // Convert audioIds to a list of LikedsongsDTO
+            List<LikedsongsDTO> audioDetails = playlist.getAudioIds().stream()
+                .map(audioId -> {
+                    Optional<Audiodescription> optionalAudio = audio.findById(audioId);
+                    if (optionalAudio.isPresent()) {
+                        Audiodescription audioDescription = optionalAudio.get();
+                        return new LikedsongsDTO(audioDescription.getId(), audioDescription.getAudio_title());
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)  // Filter out any null values
+                .collect(Collectors.toList());
+
+            // Create and return a PlaylistDTO with audio details
+            return new playlistDTO(
+                playlist.getUserId(),
+                playlist.getTitle(),
+                playlist.getDescription(),
+                audioDetails
+            );
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(playlistDTOs);
+    }
+
+
     
 
 

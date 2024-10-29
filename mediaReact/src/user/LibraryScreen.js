@@ -12,6 +12,7 @@ const LibraryScreen = () => {
   const [likedSongs,setLikesSongs] = useState([]);
   const [playlist, setPlaylist] = useState([]);
   const userid = sessionStorage.getItem("userId");
+ 
 
   const fetchWatchLater = async () => {
     try {
@@ -88,7 +89,7 @@ const LibraryScreen = () => {
     formData.append('audioId', selectedSong.audioId);
 
     try {
-        const response = await axios.post(`${API_URL}api/v2/createplaylistid`, formData, {
+        const response = await axios.post(`${API_URL}/api/v2/createplaylistid`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data', // Automatically handled by axios with FormData
             },
@@ -96,9 +97,10 @@ const LibraryScreen = () => {
         console.log(`Playlist created with ID: ${response.data.id}`);
         // Optionally, close the pop-up or reset fields
         closeCreatePlaylistPopup(); // Close the pop-up after successful creation
-    } catch (error) {
-        console.error(error);
-        // Optionally, show an error message to the user
+        fetchPlaylist();
+      } catch (error) {
+        console.error("Error creating playlist:", error.response?.data || error.message);
+    
     }
 };
 
@@ -217,6 +219,25 @@ const toggleRemovesongButton = (index) => {
       // Optionally, show an error message to the user
     }
   };
+
+   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+
+  const handleImageClick = async (item) =>  {
+    // Set the selected playlist to display its details
+    console.log(item);
+    try {
+      const response = await axios.get(`${API_URL}/api/v2/${item}/getPlaylistWithAudioDetails`);
+      setSelectedPlaylist(response.data);
+      console.log("item",response.data)
+    } catch (error) {
+      console.error('Error fetching Watch Later videos:', error);
+    }
+  };
+
+  const handleBackToPlaylists = () => {
+    // Clear the selected playlist to show all playlists again
+    setSelectedPlaylist(null);
+  };
   
 
   const renderContent = () => {
@@ -241,7 +262,7 @@ const toggleRemovesongButton = (index) => {
 
             {/* Song Title */}
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1, marginLeft: '10px' }}>
-              <p style={{ color: 'white', fontSize: '14px', margin: '0' }}>{item.audioTitle}</p>
+              <p style={{ color: 'white', fontSize: '14px', margin: '0' }}>{item.audio_title}</p>
             </div>
 
             {/* Three dots icon */}
@@ -313,32 +334,50 @@ const toggleRemovesongButton = (index) => {
           >
             Create Playlist
           </button>
-          <div style={{ marginBottom: '10px' ,marginLeft:'90px'}}>
+          <div style={{
+    marginBottom: '10px',
+    marginLeft: '90px',
+    overflowY: 'auto',
+    maxHeight: '160px',
+    scrollbarWidth: 'thin', // For Firefox
+    scrollbarColor: 'darkgrey black', // Track color (black) and thumb color (dark grey) for Firefox
+}}>
+    <style>
+        {`
+        /* For WebKit browsers (Chrome, Safari, etc.) */
+        div::-webkit-scrollbar {
+            width: 8px;
+        }
+        div::-webkit-scrollbar-track {
+            background: black; /* Scrollbar track color */
+        }
+        div::-webkit-scrollbar-thumb {
+            background-color: darkgrey; /* Scrollbar thumb color */
+            border-radius: 4px;
+        }
+        `}
+    </style>
     <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'center' }}>
         {playlist.map((title, index) => (
             <li key={index} 
-            onClick={() => handleAddAudio(title.id, selectedSong.audioId)}
-            style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', // Center items together
-                width: '100%', // Full width for equal spacing
-                marginBottom: '10px' 
-            }}>
+                onClick={() => handleAddAudio(title.id, selectedSong.audioId)}
+                style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    width: '100%',
+                    marginBottom: '10px'
+                }}>
                 <img 
                     src={vector} 
                     alt="icon" 
-                    style={{ width: '20px', height: '20px', marginRight: '10px' }} // Reduced margin
+                    style={{ width: '20px', height: '20px', marginRight: '10px' }}
                 />
                 <span style={{ flex: 1, textAlign: 'left' }}>{title.title}</span>
             </li>
         ))}
     </ul>
 </div>
-
-
-
-
 
           <button onClick={() => setShowPlaylistPopup(false)} 
             style={{ padding: '10px', backgroundColor: 'white', color: 'black', border: 'none', cursor: 'pointer' }}>
@@ -490,16 +529,111 @@ const toggleRemovesongButton = (index) => {
       </div>
     ))}
   </div>
-</div>
-
-        
+</div>       
         );
       case "playlist":
         return (
           <div>
             <h3>Playlists</h3>
             {/* Add playlist rendering here */}
+{selectedPlaylist ? ( <div>
+          {/* Playlist content view */}
+          <button onClick={handleBackToPlaylists}>
+  <i className="fas fa-arrow-left" style={{ marginRight: '5px' }}></i>
+</button>
+
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', marginTop: '30px', width: '1000px' }}>
+      {selectedPlaylist[0].audioDetails && selectedPlaylist[0].audioDetails.length > 0 ? (
+        selectedPlaylist[0].audioDetails.map((audio, index) => (
+            <div
+            key={index}
+            style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}
+          >
+            {/* Image */}
+            <img
+              src={`${API_URL}/api/v2/image/${audio.audioId}`}
+              alt="video"
+              style={{ width: '50px', height: '50px' }}
+            />
+
+            {/* Song Title */}
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1, marginLeft: '10px' }}>
+              <p style={{ color: 'white', fontSize: '14px', margin: '0' }}>{audio.audio_title}</p>
+            </div>
+
+            {/* Three dots icon */}
+            <div
+              onClick={() => toggleRemovesongButton(index)}
+              style={{
+                cursor: 'pointer',
+                color: 'white',
+                fontSize: '20px',
+                position: 'relative',
+                marginLeft: 'auto',
+              }}
+            >
+              ⋮
+            </div>
+
+           
           </div>
+        ))
+      ) : (
+        <p>No audio details available.</p>
+      )}
+    </div>
+        </div>): 
+            
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginTop: '30px' }}>
+    {playlist.map((item, index) => (
+      <div className='watchlater' key={index}>
+        <img
+          src={`${API_URL}/api/v2/image/${item.audioIds[0]}`}
+          alt="video"
+          onClick={() => handleImageClick(item.id)}
+          style={{ cursor: 'pointer' }}
+        />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          <p style={{ color: 'white', fontSize: '14px', marginRight: 'auto' }}>{item.title}</p>
+
+          {/* The three vertical dots */}
+          <div
+            onClick={() => toggleRemoveButton(index)}
+            style={{
+              cursor: 'pointer',
+              color: 'white',
+              fontSize: '20px',
+              marginLeft: '5px',
+              position: 'relative', // Keep relative positioning here for alignment with the remove button
+            }}
+          >
+            ⋮
+          </div>
+
+          {/* Display Remove button when visibleIndex matches */}
+          {visibleIndex === index && (
+            <button className='.remove' style={{
+              
+              color: 'white',
+              border: 'none',
+              padding: '5px 10px',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              position: 'absolute', // Absolute positioning for the button
+              top: '100%',  // Position the button directly under the three dots
+              left: '50%',  // Center the button horizontally under the dots
+              transform: 'translateX(-50%)',  // Adjust centering
+              zIndex: 1  // Ensure the button appears above other elements
+            }} onClick={() => handleRemove(item.videoId)}>
+              Remove
+            </button>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+    }
+</div>
         );
       default:
         return null;
