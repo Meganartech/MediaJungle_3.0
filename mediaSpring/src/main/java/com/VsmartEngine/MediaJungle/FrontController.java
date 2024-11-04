@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,15 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.Banner.VideoBanner;
-import com.VsmartEngine.MediaJungle.Banner.VideoBannerRequest;
 import com.VsmartEngine.MediaJungle.Banner.videoBannerController;
 import com.VsmartEngine.MediaJungle.Container.VideoContainer;
 import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
@@ -33,13 +35,17 @@ import com.VsmartEngine.MediaJungle.controller.CategoryController;
 import com.VsmartEngine.MediaJungle.controller.CertificateController;
 import com.VsmartEngine.MediaJungle.controller.EmployeeController;
 import com.VsmartEngine.MediaJungle.controller.FeatureController;
+import com.VsmartEngine.MediaJungle.controller.FooterSettingsController;
 import com.VsmartEngine.MediaJungle.controller.LanguageController;
 import com.VsmartEngine.MediaJungle.controller.LicenseController;
 import com.VsmartEngine.MediaJungle.controller.PaymentController;
 import com.VsmartEngine.MediaJungle.controller.PaymentSettingController;
 import com.VsmartEngine.MediaJungle.controller.PlanDescriptionController;
 import com.VsmartEngine.MediaJungle.controller.PlanDetailsController;
+import com.VsmartEngine.MediaJungle.controller.PlanFeatureMergeController;
+import com.VsmartEngine.MediaJungle.controller.ProfileImageController;
 import com.VsmartEngine.MediaJungle.controller.TagController;
+import com.VsmartEngine.MediaJungle.controller.TenureController;
 import com.VsmartEngine.MediaJungle.controller.UserWithStatus;
 import com.VsmartEngine.MediaJungle.controller.VideoCastAndCrewController;
 import com.VsmartEngine.MediaJungle.model.AddCertificate;
@@ -58,11 +64,12 @@ import com.VsmartEngine.MediaJungle.model.Othersettings;
 import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
 import com.VsmartEngine.MediaJungle.model.PlanDetails;
+import com.VsmartEngine.MediaJungle.model.PlanFeatureMerge;
 import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.model.Seosettings;
 import com.VsmartEngine.MediaJungle.model.Sitesetting;
-import com.VsmartEngine.MediaJungle.model.SocialSettings;
 import com.VsmartEngine.MediaJungle.model.Tag;
+import com.VsmartEngine.MediaJungle.model.Tenure;
 import com.VsmartEngine.MediaJungle.model.UserListWithStatus;
 import com.VsmartEngine.MediaJungle.model.VideoCastAndCrew;
 // import com.VsmartEngine.MediaJungle.model.VideoDescription;
@@ -73,7 +80,6 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterDTO;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
-import com.VsmartEngine.MediaJungle.video.VideoDescriptionDTO;
 import com.VsmartEngine.MediaJungle.video.VideoImageController;
 import com.VsmartEngine.MediaJungle.video.VideoScreenDTO;
 
@@ -97,7 +103,12 @@ public class FrontController {
 	@Autowired
 	private FeatureController FeatureController;
 
-
+	@Autowired
+	private TenureController TenureController;
+	@Autowired
+	private ProfileImageController ProfileImageController;
+	@Autowired
+	private FooterSettingsController FooterSettingsController;
 	@Autowired
 	private CategoryController CategoryController;
 
@@ -149,6 +160,8 @@ public class FrontController {
 	@Autowired
 	private videoBannerController videobannercontroller;
 	
+	@Autowired
+	private PlanFeatureMergeController PlanFeatureMergeController;
 	
 	@PostMapping("/AdminRegister")
 	public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
@@ -668,11 +681,91 @@ public class FrontController {
 	  
 	}
 	
+	   @PostMapping("/confirmPayment")
+	   public ResponseEntity<Map<String, String>> confirmPayment(@RequestBody Map<String, String> requestData) {
+	   return PaymentController.confirmPayment(requestData);
+	   }
+	
+	   @GetMapping("GetPlanDetailsByUserId/{userId}")
+	    public ResponseEntity<Map<String, String>> getPlanDetailsByUserId(@PathVariable Long userId) {
+		   return PaymentController.getPlanDetailsByUserId(userId);
+	   }
+       @PostMapping("/submit")
+       public ResponseEntity<?> submitFooterSettings(
+           @RequestParam("aboutUsHeaderScript") String aboutUsHeaderScript,
+           @RequestParam("aboutUsBodyScript") String aboutUsBodyScript,
+           @RequestParam("featureBox1HeaderScript") String featureBox1HeaderScript,
+           @RequestParam("featureBox1BodyScript") String featureBox1BodyScript,
+           @RequestParam("featureBox2HeaderScript") String featureBox2HeaderScript,
+           @RequestParam("featureBox2BodyScript") String featureBox2BodyScript,
+           @RequestParam("aboutUsImage") MultipartFile aboutUsImage,  // Updated to handle aboutUsImage
+           @RequestParam("contactUsEmail") String contactUsEmail,
+           @RequestParam("contactUsBodyScript") String contactUsBodyScript,
+           @RequestParam("callUsPhoneNumber") String callUsPhoneNumber,
+           @RequestParam("callUsBodyScript") String callUsBodyScript,
+           @RequestParam("locationMapUrl") String locationMapUrl,
+           @RequestParam("locationAddress") String locationAddress,
+           @RequestParam("contactUsImage") MultipartFile contactUsImage,
+           @RequestParam("appUrlPlaystore") String appUrlPlaystore,
+           @RequestParam("appUrlAppStore") String appUrlAppStore,
+           @RequestParam("copyrightInfo") String copyrightInfo
+       ) {
+    	   return FooterSettingsController.submitFooterSettings(aboutUsHeaderScript,aboutUsBodyScript,featureBox1HeaderScript,featureBox1BodyScript,featureBox2HeaderScript,featureBox2BodyScript,
+    			   aboutUsImage,contactUsEmail,contactUsBodyScript,callUsPhoneNumber,callUsBodyScript,locationMapUrl,locationAddress,contactUsImage,appUrlPlaystore,appUrlAppStore,copyrightInfo);
+       }   
+	
+       
+//       @PostMapping("/plans")
+//       public ResponseEntity<PlanDetails> getPlanById(@PathVariable Long id) {
+//       return PlanDetailsController.getPlanById(id);
+//       }
+       @PutMapping("/planfeaturemerge")
+       public ResponseEntity<List<PlanFeatureMerge>> updatePlanFeatureMerge( @RequestBody List<PlanFeatureMerge> planFeatureMerges){
+    		   	return PlanFeatureMergeController.updatePlanFeatureMerge(planFeatureMerges);
+}
+       
+       @PatchMapping("/planfeaturemerge")
+       public ResponseEntity<List<PlanFeatureMerge>> patchPlanFeatureMerge(
+               @RequestBody List<PlanFeatureMerge> planFeatureMerges) {
+       return PlanFeatureMergeController.patchPlanFeatureMerge(planFeatureMerges);
+       }
+       @DeleteMapping("/planfeaturemerge")
+       public ResponseEntity<HttpStatus> deleteFeaturesByPlanId(
+               @RequestParam Long planId) {
+       return PlanFeatureMergeController.deleteFeaturesByPlanId(planId);
+       }
+       
+
+       @GetMapping("/GetFeaturesByPlanId")
+       public ResponseEntity<List<PlanFeatureMerge>> getFeaturesByPlanId(@RequestParam Long planId) {
+    	   return PlanFeatureMergeController.getFeaturesByPlanId(planId);
+       }
+       
+       @PutMapping("/updateUser/{userId}")
+       public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("username") String username,
+                                            @RequestParam("email") String email, @RequestParam("mobnum") String mobnum,
+                                            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+    	   return ProfileImageController.updateUser(userId, username,email, mobnum,profileImage);
+       }
+
+       @PostMapping("/UploadProfileImage/{userId}")
+       public ResponseEntity<?> uploadProfileImage(@PathVariable Long userId, @RequestParam("image") MultipartFile image) {
+    	   return ProfileImageController.uploadProfileImage(userId,image);
+       }
+       @GetMapping("/GetProfileImage/{userId}")
+       @ResponseBody
+       public ResponseEntity<byte[]> getProfileImage(@PathVariable Long userId) {
+    	   return ProfileImageController.getProfileImage(userId);
+       }
 	@PostMapping("/AddrazorpayId")
 	public ResponseEntity<?>  Addpaymentsetting (@RequestParam("razorpay_key") String razorpay_key,
 			@RequestParam("razorpay_secret_key")String razorpay_secret_key,
 			@RequestHeader("Authorization") String token){
 		return PaymentSettingController.Addpaymentsetting(razorpay_key, razorpay_secret_key, token);
+	}
+	@GetMapping("/GetPlanById/{id}")
+	public ResponseEntity<PlanDetails> getPlanById(@PathVariable Long id) {
+		return PlanDetailsController.getPlanById(id);
 	}
 
 	@GetMapping("/getrazorpay")
@@ -681,12 +774,42 @@ public class FrontController {
 		return PaymentSettingController.getAllrazorpay();
 	}
 
+    @DeleteMapping("/plans/{planId}")
+    public ResponseEntity<?> deletePlan(@PathVariable Long planId, @RequestHeader("Authorization") String token) {
+    	
+    	return PlanDetailsController.deletePlan(planId, token);
+    }
 	@PatchMapping("/Editrazorpay/{id}")
 	public ResponseEntity<String> editrazorpay(@PathVariable Long id , @RequestBody Paymentsettings updatedrazorpay,
 			@RequestHeader("Authorization") String token){
 		return PaymentSettingController.editrazorpay(id, updatedrazorpay, token);
 	}
 
+	
+	@GetMapping("/tenures")
+public List<Tenure> getAllTenures()
+	{
+		return TenureController.getAllTenures();
+	}
+
+	 @PostMapping("/addtenure")
+public Tenure createTenure( @RequestBody Tenure tenure) {
+		 return TenureController.createTenure(tenure);
+	 }
+	 @GetMapping("/tenures/{id}")
+	 public ResponseEntity<Tenure> getTenureById(@PathVariable long id){
+		 return TenureController.getTenureById(id);
+	 }
+	 
+	 @PutMapping("/edittenure/{id}")
+	 public ResponseEntity<Tenure> updateTenure(@PathVariable long id,@RequestBody Tenure tenureDetails){
+		 return TenureController.updateTenure(id,tenureDetails);
+	 }
+
+@DeleteMapping("/deletetenure/{id}")
+public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
+	return TenureController.deleteTenure(id);
+}
 	@PostMapping("/AddPlanDescription")
 	public ResponseEntity<?> addPlanDescription(@RequestParam("description") String description,
 	        @RequestHeader("Authorization") String token) {
@@ -731,16 +854,12 @@ public class FrontController {
 		return PlanDetailsController.getAllPlanDetails();
 	}
 
-	@GetMapping("/GetPlanById/{id}")
-	public ResponseEntity<PlanDetails> getPlanById(@PathVariable Long id) {
-		return PlanDetailsController.getPlanById(id);
-	}
-
-	@DeleteMapping("/DeletePlan/{planId}")
-	public ResponseEntity<?> deletePlan(@PathVariable Long planId, @RequestHeader("Authorization") String token) {
-
-		return PlanDetailsController.deletePlan(planId, token);
-	}
+//
+//	@DeleteMapping("/DeletePlan/{planId}")
+//	public ResponseEntity<?> deletePlan(@PathVariable Long planId, @RequestHeader("Authorization") String token) {
+//
+//		return PlanDetailsController.deletePlan(planId, token);
+//	}
 
 	@PatchMapping("/editPlans/{planId}")
     public ResponseEntity<String> editplans(@PathVariable Long planId, @RequestBody PlanDetails updatedPlanDetails,@RequestHeader("Authorization") String token) {

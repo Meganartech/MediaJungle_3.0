@@ -118,7 +118,6 @@ public class PlanDetailsController {
     }
 
 
-    @DeleteMapping("/plans/{planId}")
     public ResponseEntity<?> deletePlan(@PathVariable Long planId, @RequestHeader("Authorization") String token) {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
