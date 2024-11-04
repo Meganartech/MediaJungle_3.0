@@ -66,7 +66,7 @@ class MusicCategorySection extends StatelessWidget {
                     },
                     audio: displayedAudio[index],
                     //movies: videoContainer.videoDescriptions,
-                    initialIndex: index,
+                    initialIndex: index, 
                   ),
                 );
               }),
