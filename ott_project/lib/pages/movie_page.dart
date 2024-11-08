@@ -180,117 +180,122 @@ class _MoviePageState extends State<MoviePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          BackgroundImage(),
-          CustomAppBar(
-            onSearchChanged: handleSearchState,
-          ),
-          _isSearching
-              ? _buildSearchResults()
-              : Container(
-                  padding: const EdgeInsets.all(16.0),
-                  margin: EdgeInsets.only(top: 90),
-                  child: RefreshIndicator(
-                    onRefresh: _refreshMovies,
-                    child:
-                        // Padding(
-                        //   padding: const EdgeInsets.all(16.0),
-                        //   child:
-                        Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Divider(
-                          color: Colors.white,
-                          height: 1,
-                        ),
-                        SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.01,
-                        ),
-                        CategoryBar(
-                            selectedCategory: selectedCategory,
-                            onCategorySelected: _navigateToCategory),
-                        SizedBox(
-                          height: 7,
-                        ),
-                        const Divider(
-                          color: Colors.white,
-                          height: 1,
-                        ),
-                       
-                        Expanded(
-                          child: _searchController.text.isNotEmpty &&
-                                  _filteredMovies.isEmpty
-                              ? Center(
-                                  child: Text(
-                                    'No movies found',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                )
-                              
-                              : FutureBuilder<List<VideoContainer>>(
-                                  future: MovieService.fetchVideoContainer(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    } else if (snapshot.hasError) {
-                                      return Center(
-                                          child: Text(
-                                        'Error: ${snapshot.error}',
-                                        style: TextStyle(color: Colors.white),
-                                      ));
-                                    } else if (!snapshot.hasData ||
-                                        snapshot.data!.isEmpty) {
-                                      return Center(
-                                        child: Text(
-                                          'No movies found',
+    return WillPopScope(
+      onWillPop: () async{
+        return false;  
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            BackgroundImage(),
+            CustomAppBar(
+              onSearchChanged: handleSearchState,
+            ),
+            _isSearching
+                ? _buildSearchResults()
+                : Container(
+                    padding: const EdgeInsets.all(16.0),
+                    margin: EdgeInsets.only(top: 90),
+                    child: RefreshIndicator(
+                      onRefresh: _refreshMovies,
+                      child:
+                          // Padding(
+                          //   padding: const EdgeInsets.all(16.0),
+                          //   child:
+                          Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Divider(
+                            color: Colors.white,
+                            height: 1,
+                          ),
+                          SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.01,
+                          ),
+                          CategoryBar(
+                              selectedCategory: selectedCategory,
+                              onCategorySelected: _navigateToCategory),
+                          SizedBox(
+                            height: 7,
+                          ),
+                          const Divider(
+                            color: Colors.white,
+                            height: 1,
+                          ),
+                         
+                          Expanded(
+                            child: _searchController.text.isNotEmpty &&
+                                    _filteredMovies.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'No movies found',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                
+                                : FutureBuilder<List<VideoContainer>>(
+                                    future: MovieService.fetchVideoContainer(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Center(
+                                            child: Text(
+                                          'Error: ${snapshot.error}',
                                           style: TextStyle(color: Colors.white),
-                                        ),
-                                      );
-                                    } else {
-                                      // final movie = snapshot.data!;
-                                      // final categories = movie
-                                      //     .expand((movie) => movie.categories)
-                                      //     .toSet()
-                                      //     .toList();
-                                      final videoContainer = snapshot.data!;
-                                      print(
-                                          'Video container details:${videoContainer}');
-                                      return ListView.builder(
-                                          itemCount: videoContainer.length,
-                                          itemBuilder: (context, index) {
-                                            final container =
-                                                videoContainer[index];
-                                            // final containerVideos =
-                                            //     container.video;
-                                            return Column(
-                                              children: [
-                                                MoviesCategorySection(
-                                                  videoContainer: container,
-                                                ),
-                                                SizedBox(
-                                                  height:
-                                                      MediaQuery.sizeOf(context)
-                                                              .height *
-                                                          0.02,
-                                                ),
-                                              ],
-                                            );
-                                          });
-                                    }
-                                  },
-                                ),
-                        ),
-                      ],
+                                        ));
+                                      } else if (!snapshot.hasData ||
+                                          snapshot.data!.isEmpty) {
+                                        return Center(
+                                          child: Text(
+                                            'No movies found',
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                        );
+                                      } else {
+                                        // final movie = snapshot.data!;
+                                        // final categories = movie
+                                        //     .expand((movie) => movie.categories)
+                                        //     .toSet()
+                                        //     .toList();
+                                        final videoContainer = snapshot.data!;
+                                        print(
+                                            'Video container details:${videoContainer}');
+                                        return ListView.builder(
+                                            itemCount: videoContainer.length,
+                                            itemBuilder: (context, index) {
+                                              final container =
+                                                  videoContainer[index];
+                                              // final containerVideos =
+                                              //     container.video;
+                                              return Column(
+                                                children: [
+                                                  MoviesCategorySection(
+                                                    videoContainer: container,
+                                                  ),
+                                                  SizedBox(
+                                                    height:
+                                                        MediaQuery.sizeOf(context)
+                                                                .height *
+                                                            0.02,
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                      }
+                                    },
+                                  ),
+                          ),
+                        ],
+                      ),
+                      //),
                     ),
-                    //),
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }

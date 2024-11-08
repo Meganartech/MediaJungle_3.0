@@ -12,9 +12,12 @@ import 'package:ott_project/components/video_folder/cast_crew.dart';
 import 'package:ott_project/components/video_folder/suggest_movie.dart';
 
 import 'package:ott_project/components/video_folder/video_container.dart';
+import 'package:ott_project/components/video_folder/watch_later.dart';
 
 import 'package:ott_project/service/movie_api_service.dart';
 import 'package:ott_project/service/movie_service_page.dart';
+import 'package:ott_project/service/service.dart';
+import 'package:ott_project/service/watch_later_service.dart';
 
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -42,20 +45,26 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
   List<CastCrew> castCrew = [];
   List<VideoDescription> suggestedMovies =[];
   late MovieApiService _apiService;
+  late WatchLaterService _watchLater;
   late VideoDescription _movieDetails;
   bool isFullScreen = false;
   bool _showControls = true;
   final String currentCategory = '';
   Timer? _hideControlsTimer;
-  String baseUrl = 'http';
+  bool isInWatchList = false;
+  bool isAddingtoWatchList= false;
+  late int userId;
+  
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
     _apiService = MovieApiService();
+    _watchLater = WatchLaterService();
     _initializeVideoPlayerFuture = _fetchVideoScreenDetails(widget.videoDescriptions[_currentIndex].id, widget.categoryId);
     fetchSuggestedMovies();
+    _initializeUserWatchList();
   }
 
   Future<void> _fetchVideoScreenDetails(int videoId,int categoryId) async{
@@ -129,6 +138,86 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
           print('Failed to fetch suggested movies:$e');
       }
   }
+
+  Future<void>  _initializeUserWatchList() async{
+    try{
+      final currentUser = await Service().getLoggedInUserId();
+      if(currentUser!= null){
+        userId = currentUser;
+        await _checkWatchLaterStatus();
+      }else{
+        print('User not logged in');
+      }
+    }catch (e) {
+      print('Error initializing user watchlist: $e');
+    }
+  }
+
+  Future<void> _checkWatchLaterStatus() async{
+  try{
+    final watchList = await _watchLater.getWatchLaterVideos(userId);
+    setState(() {
+      isInWatchList = watchList.any((item)=> item.videoId == _movieDetails.id);
+    });
+    
+  }catch (e) {
+    print('Error checking watchlist status: $e');
+  }
+    }
+
+  Future<void> _toggleWatchLater() async{
+    if(isAddingtoWatchList) return;
+    if(userId == null){
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please log in to use watchlist feature'),
+          action: SnackBarAction(
+            label: 'Login',
+            onPressed: () {
+              // Navigate to login screen
+              Navigator.pushNamed(context, '/login');
+            },
+          ),
+        ),
+      );
+      return;
+    }
+    setState(() {
+      isAddingtoWatchList = true;
+    });
+    try{
+      if(isInWatchList){
+        await _watchLater.removeWatchLater(_movieDetails.id, userId);
+      }else{
+        await _watchLater.addToWatchLater(_movieDetails.id, userId);
+      }
+      setState(() {
+        isInWatchList = !isInWatchList;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(isInWatchList 
+            ? 'Added to your watchlist' 
+            : 'Removed from your watchlist'
+          ),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      print('Error toggling watchlist: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update your watchlist'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }finally{
+      setState(() {
+        isAddingtoWatchList = false;
+      });
+    }
+    }
+  
 
   @override
   void dispose() {
@@ -352,14 +441,14 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (!isFullScreen)
-                      //   AppBar(
-                      //     backgroundColor: Colors.transparent,
-                      //     elevation: 0,
-                      //     leading: IconButton(
-                      //       icon: Icon(Icons.arrow_back, color: Colors.white),
-                      //       onPressed: () => Navigator.pop(context),
-                      //     ),
-                      //  ),
+                        AppBar(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          leading: IconButton(
+                            icon: Icon(Icons.arrow_back, color: Colors.white),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                       ),
                       if (!isFullScreen) _buildVideoPlayer(),
                       if (!isFullScreen) _buildMovieDetails(),
                       if (isFullScreen) Expanded(child: _buildVideoPlayer()),
@@ -550,7 +639,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
           Row(
             children: [
               Container(
-                width: 170,
+                //width: 170,
                 child: Text(
                   _movieDetails.videoTitle,
                   style: TextStyle(
@@ -611,7 +700,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                             style: TextStyle(color: Colors.white, fontSize: 12),
                             textAlign: TextAlign.center,
                             softWrap: true,
-                            maxLines: 2,
+                            //maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -633,6 +722,42 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
         ],
       ),
     );
+  }
+
+  Widget _buildWatchLaterButton(){
+    if(userId == null){
+      return ElevatedButton.icon(
+        onPressed: () {
+          Navigator.pushNamed(context, '/login');
+        },
+        icon: Icon(
+          Icons.login,
+          color: Colors.white,
+        ),
+        label: Text(
+          'Login to Add',
+          style: TextStyle(color: Colors.white),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color.fromARGB(255, 65, 65, 100),
+        ),
+      );
+    }
+    return ElevatedButton.icon(
+                          onPressed: isAddingtoWatchList ? null : _toggleWatchLater,
+                          icon: Icon(
+                            isInWatchList ? Icons.check :
+                            Icons.add_box_outlined,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            isInWatchList ? 'Added To Watchlater' : 'Add To Watchlater',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isInWatchList ?  Color.fromARGB(255, 65, 65, 100 ) : Color.fromARGB(255, 65, 65, 100),
+                          ),
+                        );
   }
 
   bool isDrawerOpen = false;
@@ -675,6 +800,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+
                         ElevatedButton.icon(
                           onPressed: () {
                             _showShareOptions(context);
@@ -691,20 +817,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                             backgroundColor: Color.fromARGB(255, 65, 65, 100),
                           ),
                         ),
-                        ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.add_box_outlined,
-                            color: Colors.white,
-                          ),
-                          label: Text(
-                            'Add To Watchlist',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 65, 65, 100),
-                          ),
-                        ),
+                        _buildWatchLaterButton(),
                       ],
                     ),
                   ),

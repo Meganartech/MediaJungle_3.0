@@ -306,10 +306,8 @@ class _SignUpState extends State<SignUp> {
 
     if (isRegistered) {
       // Registration success, navigate to login page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+      Navigator.pushAndRemoveUntil(
+              context, MaterialPageRoute(builder: (context) => const LoginPage()),(route)=> false);
     } else {
       // Handle registration failure
       showValidationDialog("Registration failed. Please try again.");

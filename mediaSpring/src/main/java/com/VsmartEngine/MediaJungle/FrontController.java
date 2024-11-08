@@ -28,6 +28,12 @@ import com.VsmartEngine.MediaJungle.Banner.videoBannerController;
 import com.VsmartEngine.MediaJungle.Container.VideoContainer;
 import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.Container.VideoContainerDTO;
+import com.VsmartEngine.MediaJungle.Library.LibraryController;
+import com.VsmartEngine.MediaJungle.Library.LikedsongsDTO;
+import com.VsmartEngine.MediaJungle.Library.Playlist;
+import com.VsmartEngine.MediaJungle.Library.PlaylistController;
+import com.VsmartEngine.MediaJungle.Library.WatchLaterDTO;
+import com.VsmartEngine.MediaJungle.Library.playlistDTO;
 import com.VsmartEngine.MediaJungle.controller.AddUserController;
 import com.VsmartEngine.MediaJungle.controller.AudioController1;
 import com.VsmartEngine.MediaJungle.controller.CastandcrewController;
@@ -162,6 +168,13 @@ public class FrontController {
 	
 	@Autowired
 	private PlanFeatureMergeController PlanFeatureMergeController;
+  @Autowired
+	private PlaylistController playlistcontroller;
+	
+	@Autowired
+	private LibraryController librarycontroller;
+	
+
 	
 	@PostMapping("/AdminRegister")
 	public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
@@ -1206,81 +1219,108 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 		   	public ResponseEntity<?> Deletevideobanner(@PathVariable("id") long id) {
 		    	return videobannercontroller.Deletevideobanner(id);
 		    }
-//		 @GetMapping("/{filename}/file")
-//			public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
-//
-//				return AudioController.getAudioFi(filename, request);
-//			}
-		
-//		
-
-//		@PostMapping("/updatedescriprion")
-//		public ResponseEntity<VideoDescription> updatedescription(
-//		        @RequestParam("Movie_name") String moviename,
-//		        @RequestParam("description") String description,
-//		        @RequestParam("tags") String tags,
-//		        @RequestParam("category") String category,
-//		        @RequestParam("certificate") String certificate,
-//		        @RequestParam("Language") String language,
-//		        @RequestParam("Duration") String duration,
-//		        @RequestParam("Year") String year,
-//		        @RequestParam(value = "paid", required = false) boolean paid,
-//		        @RequestParam("id") long id,
-//		        @RequestHeader("Authorization") String token) {
-//			
-//			return VideoController.updatedescription(moviename, description, tags, category, certificate, language, duration, year, paid, id, token);
-//		}
-//		
-//		@PostMapping("/postit")
-//		public Videos uploadingVideo(@RequestParam("video") MultipartFile video) throws IOException
-//		{
-//			
-//			return VideoController.uploadingVideo(video);
-//		}
-//		
-//		@GetMapping(value = "/play/{id}")
-//		 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
-//			
-//			return VideoController.getVideo(id, request);
-//
-//		}
-//		
-//		@GetMapping(value = "/updatevideo")
-//		public ResponseEntity<String> updateById() throws IOException {
-//			
-//			return VideoController.updateById();
-//		}		
-//		 @GetMapping(value = "/videogetall")
-//		    public ResponseEntity<List<VideoDescription>> videogetall() {
-//			 
-//			 return VideoController.videogetall();
-//		 }
-//		 
-//		 @GetMapping("/GetvideoThumbnail")
-//		    public ResponseEntity<List<byte[]>> getAllThumbnails() {
-//			 
-//			 return VideoController.getAllThumbnail();
-//			 
-//		 }
-		 
-//		 @DeleteMapping("/video/{id}")
-//		 public ResponseEntity<?> deleteVideoById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
-//			 
-//			 return VideoController.deleteVideoById(id, token);
-//		 }
-//		 
-//		
-//		 
-//		 @GetMapping("/GetThumbnailsByid/{id}")
-//		    public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
-//			 
-//			 return VideoController.getThumbnailsById(id);
-//		 }
-//		 
-//		 @GetMapping("/GetAllThumbnaill")
-//		    public ResponseEntity<List<byte[]>> getAllThumbnaill() {
-//			 
-//			 return VideoController.getAllThumbnaill();
-//		 }
-
+		    
+		    //-----------------libary controller--------------------------------------
+		    
+		    @PostMapping("/favourite/audio")
+		    public ResponseEntity<String> createOrder(@RequestBody Map<String, Long> requestData) {
+		    	return librarycontroller.createOrder(requestData);
+		    }
+		    
+		    @GetMapping("/{userId}/UserAudios")
+		    public ResponseEntity<List<LikedsongsDTO>> getAudioForUsermobile(@PathVariable Long userId) {
+		    	return librarycontroller.getAudioForUsermobile(userId);
+		    }
+		    
+		    @DeleteMapping("/{userId}/removeFavoriteAudio")
+		    public ResponseEntity<String> removeFavoriteAudio(@PathVariable Long userId, @RequestParam Long audioId) {
+		    	return librarycontroller.removeFavoriteAudio(userId, audioId);
+		    }
+		    
+		//  ---------------------------------watchlater----------------------------------------------
+		    
+		    @PostMapping("/watchlater/video")
+		    public ResponseEntity<String> watchlaterVideo(@RequestBody Map<String, Long> requestData) {
+		    	return librarycontroller.watchlaterVideo(requestData);
+		    }
+		    
+		    @GetMapping("/getwatchlater/video")
+		    public ResponseEntity<String> getwatchlaterVideo(@RequestParam Long videoId, @RequestParam Long userId) {
+		    	return librarycontroller.getwatchlaterVideo(videoId, userId);
+		    }
+		    
+		    @GetMapping("/{userId}/Watchlater")
+		    public ResponseEntity<List<WatchLaterDTO>> getVideosForWatchlater(@PathVariable Long userId) {
+		    	return librarycontroller.getVideosForWatchlater(userId);
+		    }
+		    
+		    @DeleteMapping("/{userId}/removewatchlater")
+		    public ResponseEntity<String> removeWatchlater(@PathVariable Long userId, @RequestBody Map<String, Long> payload) {
+		    	return librarycontroller.removeWatchlater(userId, payload);
+		    }
+		    
+		    //---------- playlist--------------------------------------------------------------------------
+//		    
+//		    @PostMapping("/createplaylist")
+//		    public ResponseEntity<Playlist> createPlaylist(
+//		        @RequestParam String title, @RequestParam String description,@RequestParam Long userId) {
+//		    	return playlistcontroller.createPlaylist(title, description, userId);
+//		    }
+//		    
+//		    @PostMapping("/{playlistId}/audio/{audioId}")
+//		    public ResponseEntity<Playlist> addAudioIdToPlaylist(
+//		        @PathVariable Long playlistId, @PathVariable Long audioId) {
+//		    	return playlistcontroller.addAudioIdToPlaylist(playlistId, audioId);
+//		    }
+//		    
+//		    @PostMapping("/createplaylistid")
+//		    public ResponseEntity<Playlist> createPlaylistwithid(
+//		        @RequestParam String title, 
+//		        @RequestParam String description,
+//		        @RequestParam Long audioId,
+//		        @RequestParam Long userId) {
+//		    	return playlistcontroller.createPlaylistwithid(title, description, audioId, userId);
+//		    }
+//		    
+//		    @GetMapping("/user/{userId}/playlists")
+//		    public ResponseEntity<List<Playlist>> getPlaylistsByUserId(@PathVariable Long userId) {
+//		    	return playlistcontroller.getPlaylistsByUserId(userId);
+//		    }
+//		    
+//		    @GetMapping("/{Id}/playlists")
+//		    public ResponseEntity<Playlist> getPlaylists(@PathVariable Long Id) {
+//		    	return playlistcontroller.getPlaylists(Id);
+//		    }
+//		    
+//		    @GetMapping("/{id}/getPlaylistWithAudioDetails")
+//		    public ResponseEntity<List<playlistDTO>> getPlaylistWithAudioDetails(@PathVariable Long id) {
+//		    	return playlistcontroller.getPlaylistWithAudioDetails(id);
+//		    }
+//		    
+//		    @DeleteMapping("/{id}/delete/playlist")
+//		    public ResponseEntity<String> deletePlaylist(@PathVariable Long id) {
+//		    	return playlistcontroller.deletePlaylist(id);
+//		    }
+//		    
+//		    @DeleteMapping("/{playlistId}/audio/{audioId}/delete")
+//		    public ResponseEntity<Void> removeAudioFromPlaylist(@PathVariable Long playlistId, @PathVariable Long audioId) {
+//		    	return playlistcontroller.removeAudioFromPlaylist(playlistId, audioId);
+//		    }
+//		    
+//		    @PatchMapping("/editplaylist/{Id}")
+//		    public ResponseEntity<String> updatePlaylist(
+//		            @PathVariable Long Id,
+//		            @RequestParam(value = "title", required = false) String title,
+//		            @RequestParam(value = "description", required = false) String description){
+//		    	return playlistcontroller.updatePlaylist(Id, title, description);
+//		    }
+//		    
+//		    @PatchMapping("/{playlistId}/moveAudioToPlaylist/{audioId}/{movedPlaylistId}")
+//		    public ResponseEntity<String> moveAudioToAnotherPlaylist(
+//		            @PathVariable Long playlistId, 
+//		            @PathVariable Long audioId, 
+//		            @PathVariable Long movedPlaylistId) {
+//		    	return playlistcontroller.moveAudioToAnotherPlaylist(playlistId, audioId, movedPlaylistId);
+//		    }
+		    
 }
