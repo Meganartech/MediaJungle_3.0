@@ -5,7 +5,7 @@ import java.util.List;
 public class playlistDTO {
 	
 	private Long userId;
-
+	private Long playlistId;
     private String title;
     private String description;
     
@@ -16,13 +16,19 @@ public class playlistDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public playlistDTO(Long userId, String title, String description, List<LikedsongsDTO> audioDetails) {
+	
+
+	public playlistDTO(Long userId, Long playlistId, String title, String description,
+			List<LikedsongsDTO> audioDetails) {
 		super();
 		this.userId = userId;
+		this.playlistId = playlistId;
 		this.title = title;
 		this.description = description;
 		this.audioDetails = audioDetails;
 	}
+
+
 
 	public Long getUserId() {
 		return userId;
@@ -54,6 +60,18 @@ public class playlistDTO {
 
 	public void setAudioDetails(List<LikedsongsDTO> audioDetails) {
 		this.audioDetails = audioDetails;
+	}
+
+
+
+	public Long getPlaylistId() {
+		return playlistId;
+	}
+
+
+
+	public void setPlaylistId(Long playlistId) {
+		this.playlistId = playlistId;
 	}
     
     

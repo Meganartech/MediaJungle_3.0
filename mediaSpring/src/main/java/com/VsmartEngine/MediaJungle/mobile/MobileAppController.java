@@ -37,8 +37,6 @@ import com.VsmartEngine.MediaJungle.video.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
-
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v2/")
@@ -53,8 +51,6 @@ public class MobileAppController {
     @Autowired
     private TokenBlacklist tokenBlacklist;
     
-   
-	
 	@PostMapping("/register/mobile")
     public ResponseEntity<UserRegister> registerMobile(@RequestParam("username") String username,
                                                        @RequestParam("email") String email,
