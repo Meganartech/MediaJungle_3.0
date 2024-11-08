@@ -603,7 +603,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
     );
   }
 
-  void _showCreatePlaylistDialog(BuildContext context) {
+   void _showCreatePlaylistDialog(BuildContext context,{int? audioId}) {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
     showDialog(
@@ -615,44 +615,39 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
             backgroundColor: Color.fromARGB(119, 68, 66, 66),
             title: Text('New playlist', style: TextStyle(color: Colors.white)),
             content: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.7,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: titleController,
-                      decoration: InputDecoration(
-                        hintText: 'Title',
-                        hintStyle: TextStyle(color: Colors.white60),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white60),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      hintText: 'Title',
+                      hintStyle: TextStyle(color: Colors.white60),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white60),
                       ),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller: descriptionController,
-                      decoration: InputDecoration(
-                        hintText: 'Description',
-                        hintStyle: TextStyle(color: Colors.white60),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white60),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
                       ),
-                      style: TextStyle(color: Colors.white),
                     ),
-                  ],
-                ),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      hintText: 'Description',
+                      hintStyle: TextStyle(color: Colors.white60),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white60),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
               ),
             ),
             actions: [
@@ -667,11 +662,21 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                   if (title.isNotEmpty) {
                     final audioProvider =
                         Provider.of<AudioProvider>(context, listen: false);
-                    audioProvider.createPlaylist(title, description);
-                    Navigator.pop(context);
+                        if(audioId != null){
+            audioProvider.createPlayListWithAudioId(title, description, audioId);
+             Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Playlist "$title" created')),
                     );
+                        }else{
+                          audioProvider.createPlayList(title, description);
+                           Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Playlist "$title" created')),
+                    );
+                        }
+                    
+                   
                   }
                 },
                 child: Text('Create', style: TextStyle(color: Colors.white)),
@@ -682,4 +687,84 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       },
     );
   }
+
+  // void _showCreatePlaylistDialog(BuildContext context) {
+  //   final TextEditingController titleController = TextEditingController();
+  //   final TextEditingController descriptionController = TextEditingController();
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return BackdropFilter(
+  //         filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+  //         child: AlertDialog(
+  //           backgroundColor: Color.fromARGB(119, 68, 66, 66),
+  //           title: Text('New playlist', style: TextStyle(color: Colors.white)),
+  //           content: SingleChildScrollView(
+  //             child: ConstrainedBox(
+  //               constraints: BoxConstraints(
+  //                 maxHeight: MediaQuery.of(context).size.height * 0.7,
+  //               ),
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: [
+  //                   TextField(
+  //                     controller: titleController,
+  //                     decoration: InputDecoration(
+  //                       hintText: 'Title',
+  //                       hintStyle: TextStyle(color: Colors.white60),
+  //                       enabledBorder: UnderlineInputBorder(
+  //                         borderSide: BorderSide(color: Colors.white60),
+  //                       ),
+  //                       focusedBorder: UnderlineInputBorder(
+  //                         borderSide: BorderSide(color: Colors.white),
+  //                       ),
+  //                     ),
+  //                     style: TextStyle(color: Colors.white),
+  //                   ),
+  //                   SizedBox(height: 10),
+  //                   TextField(
+  //                     controller: descriptionController,
+  //                     decoration: InputDecoration(
+  //                       hintText: 'Description',
+  //                       hintStyle: TextStyle(color: Colors.white60),
+  //                       enabledBorder: UnderlineInputBorder(
+  //                         borderSide: BorderSide(color: Colors.white60),
+  //                       ),
+  //                       focusedBorder: UnderlineInputBorder(
+  //                         borderSide: BorderSide(color: Colors.white),
+  //                       ),
+  //                     ),
+  //                     style: TextStyle(color: Colors.white),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context),
+  //               child: Text('Cancel', style: TextStyle(color: Colors.white)),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 final title = titleController.text;
+  //                 final description = descriptionController.text;
+  //                 if (title.isNotEmpty) {
+  //                   final audioProvider =
+  //                       Provider.of<AudioProvider>(context, listen: false);
+  //                   audioProvider.createPlaylist(title, description);
+  //                   Navigator.pop(context);
+  //                   ScaffoldMessenger.of(context).showSnackBar(
+  //                     SnackBar(content: Text('Playlist "$title" created')),
+  //                   );
+  //                 }
+  //               },
+  //               child: Text('Create', style: TextStyle(color: Colors.white)),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

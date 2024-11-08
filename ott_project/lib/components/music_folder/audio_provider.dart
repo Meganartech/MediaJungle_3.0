@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ott_project/components/library/audio_playlist.dart';
 import 'package:ott_project/components/music_folder/audio.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/music.dart';
@@ -11,6 +13,7 @@ import 'package:ott_project/components/music_folder/playlist.dart';
 import 'package:ott_project/components/music_folder/recently_played.dart';
 import 'package:ott_project/components/music_folder/recently_played_manager.dart';
 import 'package:ott_project/service/audio_api_service.dart';
+import 'package:ott_project/service/playlist_service.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,11 +57,16 @@ class AudioProvider with ChangeNotifier {
   AudioDescription? get audioDescriptioncurrently => _audioDescriptioncurrently;
   List<AudioDescription> audio_playlist=[];
   List<AudioDescription> originalaudioPlaylist =[];
+  List<AudioPlaylist> audioPlaylists=[];
+  List<AudioPlaylist> get aplaylists => audioPlaylists;
 
-  // String newPlaylistTitle = '';
-  // String newPlaylistDescription = '';
+   final PlaylistService playlistService;
+   final _secureStorage = FlutterSecureStorage();
 
-  AudioProvider() {
+  
+
+  AudioProvider(this.playlistService) {
+    
     loadMusicPlaylists();
     audioPlayer.onDurationChanged.listen((newDuration) {
       duration = newDuration;
@@ -73,11 +81,10 @@ class AudioProvider with ChangeNotifier {
     audioPlayer.onPlayerComplete.listen((_) {
       isPlaying = false;
       notifyListeners();
-    });
-
-    audioPlayer.onPlayerComplete.listen((_) {
       handleAudioCompletion();
     });
+
+   
   }
 
   //audio description providers
@@ -256,7 +263,7 @@ Future<void> playNextSong() async {
       _recentlyPlayedManager.addRecentlyPlayed(playList[currentIndex]);
     }
   }
-//play prevoues audio
+//play previous audio
   Future<void> playPreviousSong() async {
     if (_repeatModeSong == RepeatMode.one) {
       await playSong();
@@ -289,6 +296,42 @@ Future<void> playNextSong() async {
       notifyListeners();
     }
   }
+// audio playlist creation
+Future <void> createPlayList(String title,String description) async{
+ if (playlistService == null) {
+        throw Exception('PlaylistService is not initialized.');
+      }
+try{
+ 
+
+  String? userIDStr = await _secureStorage.read(key: 'userId');
+  if(userIDStr == null){
+     throw Exception('User ID not found. Please log in again.');
+  }
+  final userId = int.parse(userIDStr);
+  AudioPlaylist audioPlaylist = await playlistService.createPlayList(title: title, description: description, userId: userId);
+  notifyListeners();
+}catch (e) {
+      debugPrint('Failed to create playlist: $e');
+      throw Exception('Error creating playlist: $e');
+    }
+}
+
+Future <void> createPlayListWithAudioId(String title,String description,int audioId) async{
+try{
+  String? userIDStr = await _secureStorage.read(key: 'userId');
+  if(userIDStr == null){
+     throw Exception('User ID not found. Please log in again.');
+  }
+  final userId = int.parse(userIDStr);
+  AudioPlaylist audioPlaylist = await playlistService.createPlayListWithAudioId(title: title, description: description, userId: userId,audioId: audioId);
+  notifyListeners();
+}catch (e) {
+      debugPrint('Failed to create playlist: $e');
+      throw Exception('Error creating playlist: $e');
+    }
+}
+
 
 
 // audio class providers

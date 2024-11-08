@@ -8,6 +8,7 @@ import 'package:ott_project/pages/Sign_up.dart';
 import 'package:ott_project/pages/forget_password.dart';
 
 import 'package:ott_project/pages/login_page.dart';
+import 'package:ott_project/service/playlist_service.dart';
 import 'package:provider/provider.dart';
 
 import 'components/music_folder/recently_played.dart';
@@ -19,7 +20,8 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AudioProvider()),
+        Provider<PlaylistService>(create:(_) => PlaylistService()),
+        ChangeNotifierProvider(create: (context) => AudioProvider(Provider.of<PlaylistService>(context, listen: false))),
         ChangeNotifierProvider(create: (context) => RecentlyPlayed()),
       ],
       child: const MyApp(),

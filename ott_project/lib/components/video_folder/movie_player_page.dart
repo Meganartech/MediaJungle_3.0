@@ -12,7 +12,7 @@ import 'package:ott_project/components/video_folder/cast_crew.dart';
 import 'package:ott_project/components/video_folder/suggest_movie.dart';
 
 import 'package:ott_project/components/video_folder/video_container.dart';
-import 'package:ott_project/components/video_folder/watch_later.dart';
+import 'package:ott_project/components/library/watch_later.dart';
 
 import 'package:ott_project/service/movie_api_service.dart';
 import 'package:ott_project/service/movie_service_page.dart';
