@@ -172,7 +172,7 @@ const NavBar = () => {
                           <img
                               src={`data:image/png;base64,${getall[0].logo}`}
                               alt="logo"
-                              className="h-20 w-32 lg:h-20 w-auto object-contain "
+                              className="h-20 lg:h-20 w-auto object-contain "
                           />
                       </Link>
                   ) : null}

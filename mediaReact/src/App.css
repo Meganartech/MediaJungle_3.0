@@ -12121,3 +12121,108 @@ input[type="text"], input[type="file"] {
     }
 
 }
+/* Default styles for larger screens */
+.banner-container .banner-items {
+  display: flex;
+  transition: transform 0.5s ease-in-out; 
+}
+
+.banner-item {
+  flex: 0 0 100%; /* Each banner item takes up full width */
+}
+
+.container-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.customcontainer {
+  flex: 1;
+  min-width: 300px;
+}
+
+.items {
+  display: flex;
+  transition: transform 0.3s ease; 
+  flex-wrap: nowrap; /* Ensure the videos stay in one row */
+  gap: 15px;
+}
+
+.item {
+  flex: 0 0 auto; /* Prevent items from shrinking */
+  margin-right: 10px; /* Optional: space between items */
+  min-width: 200px; /* Adjust the min-width for each video item */
+  text-align: center;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  /* Adjust banner size for mobile */
+  .banner-container .banner-items {
+    display: flex;
+    transition: transform 0.5s ease-in-out; /* Stack the banners vertically */
+  }
+
+  .banner-item img {
+    width: 100%; /* Adjust banner image to take full width */
+    height: auto;
+  }
+
+  /* Adjust the container to be more mobile-friendly */
+  .container-list {
+    display: block; /* Stack items vertically */
+    padding: 10px;
+  }
+
+  .customcontainer {
+    min-width: 100%; /* Full width on mobile */
+    margin-bottom: 20px; /* Add space between containers */
+  }
+
+  /* Keep videos in a row with the arrow buttons */
+  .items {
+    display: flex; /* Keep videos in a row */
+    transition: transform 0.3s ease; /* Smooth transition when sliding */
+    width: 100%;
+    flex-wrap: nowrap; /* Ensure no wrapping */
+    justify-content: space-between; /* Distribute space between the videos */
+  }
+
+  .item {
+    flex: 0 0 auto; /* Prevent items from shrinking */
+  margin-right: 10px; /* Optional: space between items */
+    min-width: 20%; /* Reduce width for mobile screens */
+ 
+  }
+
+  /* Adjust navigation buttons (Left and Right) */
+  .navigation button {
+    display: block;
+    margin: 10px auto; /* Center align buttons */
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .banner-container {
+    padding: 0 10px;
+    height:250px;
+  }
+
+  .item {
+    flex: 1;
+    min-width: 100%; /* Ensure items are side by side on small screens */
+    margin-right: 5px; /* Reduce margin on small screens */
+  }
+
+  .navigation button {
+    width: 40px; /* Smaller navigation buttons */
+  }
+}

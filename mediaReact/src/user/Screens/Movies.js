@@ -50,22 +50,22 @@ const MoviesPage = () => {
 
     return () => clearInterval(interval); // Clear interval on component unmount
   }, [videoBanners.length]);
-
-  // Navigate to the next set of videos
   const handleNext = (category) => {
     setCurrentIndex((prevIndex) => {
-      const newIndex = (prevIndex[category] || 0) + 1;
+      const newIndex = (prevIndex[category] || 0) + 1;  // Increment the index
+      console.log(`Next: Category: ${category}, New Index: ${newIndex}`); // Log new index
       return { ...prevIndex, [category]: newIndex };
     });
   };
-
-  // Navigate to the previous set of videos
+  
   const handlePrevious = (category) => {
     setCurrentIndex((prevIndex) => {
-      const newIndex = Math.max(0, (prevIndex[category] || 0) - 1);
+      const newIndex = Math.max(0, (prevIndex[category] || 0) - 1);  // Decrement the index
+      console.log(`Previous: Category: ${category}, New Index: ${newIndex}`); // Log new index
       return { ...prevIndex, [category]: newIndex };
     });
   };
+  
 
 
   const [play, setPlay] = useState(false); // Define state for play
@@ -139,7 +139,7 @@ const MoviesPage = () => {
                       <img
                         src={leftarrowIcon}
                         alt="left arrow icon"
-                        style={{ width: "30px", height: "30px" }}
+                        style={{ width: "30px", height: "30px",cursor:"pointer" }}
                       />
                     </button>
 
@@ -189,7 +189,8 @@ const MoviesPage = () => {
                       <img
                         src={rightarrowIcon}
                         alt="right arrow icon"
-                        style={{ width: "30px", height: "30px" }}
+                        style={{ width: "30px", height: "30px", cursor:"pointer"
+                         }}
                       />
                     </button>
                   </div>
