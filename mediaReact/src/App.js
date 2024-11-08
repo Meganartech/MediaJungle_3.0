@@ -7,6 +7,7 @@ import "./css/sb-admin-2.css";
 import "./css/style.css";
 // import './index.css';
 import API_URL from './Config';
+import { Toaster } from 'react-hot-toast'; // Import Toaster
 
 
 
@@ -189,6 +190,15 @@ const App = () => {
 
     <div >
        {/* <Router> */}
+       <Toaster
+  position="top-right"
+  reverseOrder={false}
+  toastOptions={{
+    style: {
+      marginTop: '100px', // Adjust the margin-top as needed
+    },
+  }}
+/>  {/* Place Toaster for notifications */}
         <Routes>
 
 {/*         

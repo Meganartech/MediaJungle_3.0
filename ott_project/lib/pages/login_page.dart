@@ -7,6 +7,7 @@ import 'package:ott_project/components/myTextField.dart';
 
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/main_tab.dart';
+import 'package:ott_project/pages/movie_page.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -146,14 +147,14 @@ class _LoginPageState extends State<LoginPage> {
                                   TextStyle(fontSize: 16, color: Colors.white),
                             ),
                           ),
-                        ),
+                        ), 
                       ],
                     ),
-                    SizedBox(
+                    SizedBox( 
                       height: 15,
                     ),
                     Container(
-                      height: size.height * 0.07,
+                      height: size.height * 0.07,    
                       width: size.width * 0.8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
@@ -272,7 +273,7 @@ class _LoginPageState extends State<LoginPage> {
           saveUserCredentials(email, password);
         }
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: ((context) => MainTab())));
+            context, MaterialPageRoute(builder: ((context) => MainTab ())));
       }
     } else {
       showDialog(

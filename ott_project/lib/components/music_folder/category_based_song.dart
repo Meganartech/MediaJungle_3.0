@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/background_image.dart';
-import 'package:ott_project/components/category/category_service.dart';
+
 import 'package:ott_project/components/music_folder/audio_card.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
-import 'package:ott_project/components/music_folder/song_player_page.dart';
+
 import 'package:ott_project/pages/custom_appbar.dart';
 
 class CategoryBasedSong extends StatefulWidget {
@@ -56,9 +56,9 @@ class _CategoryBasedSongState extends State<CategoryBasedSong> {
           child: GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-          crossAxisSpacing: 20,
-          //mainAxisSpacing: 20,
-          childAspectRatio: 3/4
+          crossAxisSpacing: 35,
+          mainAxisSpacing: 20,
+          childAspectRatio: 0.65,
           ),
           itemCount: widget.audioDescriptions.length,
            itemBuilder: (context,index){
