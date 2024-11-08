@@ -123,6 +123,7 @@ const AddAudio = () => {
           setgetalldata(data);
           // Store the fetched data in state
           setaudiofilename(data.audio_file_name);
+         
           // console.log(data);
         })
         .catch(error => {
@@ -435,7 +436,6 @@ const AddAudio = () => {
   };
 
 
-  const [inputValue, setInputValue] = useState(''); // State for input value
   const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown visibility
   const [options, setOptions] = useState([]); // State for options fetched from the API
   const [filteredOptions, setFilteredOptions] = useState([]); // State for filtered options
@@ -445,61 +445,72 @@ const AddAudio = () => {
 
  // Fetch categories from API
  useEffect(() => {
-  const fetchCategories = async () => {
+  const fetchMovieNames = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/v2/GetAllCategories`);
+      const response = await fetch(`${API_URL}/api/v2/movename`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      const categoryNames = data.map(item => item.categories); // Assuming item.categories contains the category names
-      setOptions(categoryNames); // Set the full list of options
-      setFilteredOptions(categoryNames); // Set the filtered options initially
+      const MovieNames = data.map(item => item.movie_name); // Assuming item.categories contains the category names
+      setOptions(MovieNames); // Set the full list of options
+      setFilteredOptions(MovieNames); // Set the filtered options initially
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
-  fetchCategories();
+  fetchMovieNames();
 }, []); // Run once when component mounts
 
 // Toggle dropdown visibility
 const handleDropdownToggle = () => {
   setDropdownOpen(!dropdownOpen);
-
+  const MovieNames = options;
+  
+  // Separate options that start with the value from those that contain it elsewhere
+  if(Movie_name!=null){
+  const startsWithValue = MovieNames.filter(optione =>
+    optione.toLowerCase().startsWith(Movie_name.toLowerCase())  // Options that start with the input
+  );
+  setFilteredOptions(startsWithValue); 
+}
+  // console.log(Movie_name)
 };
 
  // Handle input change to filter options
  const handleInputChange = (e) => {
+  
   const value = e.target.value.toLowerCase();
   const value2=e.target.value;
-  const category = categories.find(cat => cat.categories === value2);
-  const categoryNames = categories.map(item => item.categories);
+  const MovieNames = options;
+
+
   // Separate options that start with the value from those that contain it elsewhere
-  const startsWithValue = categoryNames.filter(option =>
+  const startsWithValue = MovieNames.filter(option =>
     option.toLowerCase().startsWith(value)  // Options that start with the input
   );
 
-  const containsValue = categoryNames.filter(option =>
+  const containsValue = MovieNames.filter(option =>
     option.toLowerCase().includes(value) && !option.toLowerCase().startsWith(value)  // Options that contain but don't start with the input
   );
 
   // Combine the two lists, with starting matches first
   const filtered = [...startsWithValue, ...containsValue];
-
+ 
   setFilteredOptions(filtered); 
-  setInputValue(value);
-  setMovie_name(value);
+  setDropdownOpen(true);
+  setMovie_name(value2);
 };
 
 const handleOptionClick = (option) => {
-  setInputValue(option);
   setMovie_name(option);
   setDropdownOpen(false);
-  const categoryNames = categories.map(item => item.categories);
+  const MovieNames = options;
+  
   // Separate options that start with the value from those that contain it elsewhere
-  const startsWithValue = categoryNames.filter(optione =>
-    optione.toLowerCase().startsWith(option)  // Options that start with the input
+  const startsWithValue = MovieNames.filter(optione =>
+    optione.toLowerCase().startsWith(option.toLowerCase())  // Options that start with the input
   );
   setFilteredOptions(startsWithValue); 
   
@@ -612,6 +623,7 @@ const handleOptionClick = (option) => {
     if (getalldata) {
       setaudio_title(getalldata.audioTitle); 
       setMovie_name(getalldata.movie_name);
+      
 
       const selectedCertificate = Certificate.find(cert => cert.certificate === getalldata.certificate_name);
       // console.log(getalldata.certificate_name)

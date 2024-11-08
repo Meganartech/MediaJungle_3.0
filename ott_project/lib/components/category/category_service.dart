@@ -36,21 +36,4 @@ class CategoryService {
     return categoryIds.isNotEmpty ? categoryIds.first : 1;
   }
 
-  //   String getCategoryName(String categoryName) {
-  //   for (String category_name in categoryName) {
-  //     // Find the category name for this ID
-  //     final matchingCategory = _categories.firstWhere(
-  //       (category) => category.id == categoryId,
-  //       orElse: () => Category(id: 0, category_name: 'Unknown'),
-  //     );
-
-  //     // Check if the category name matches the current category
-  //     if (matchingCategory.category_name == categoryName) {
-  //       return categoryId;
-  //     }
-  //   }
-
-  //   // If no match, return the first in the list or default
-  //   return categoryIds.isNotEmpty ? categoryIds.first : 1;
-  // }
 }

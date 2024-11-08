@@ -352,14 +352,14 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (!isFullScreen)
-                        AppBar(
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                          leading: IconButton(
-                            icon: Icon(Icons.arrow_back, color: Colors.white),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ),
+                      //   AppBar(
+                      //     backgroundColor: Colors.transparent,
+                      //     elevation: 0,
+                      //     leading: IconButton(
+                      //       icon: Icon(Icons.arrow_back, color: Colors.white),
+                      //       onPressed: () => Navigator.pop(context),
+                      //     ),
+                      //  ),
                       if (!isFullScreen) _buildVideoPlayer(),
                       if (!isFullScreen) _buildMovieDetails(),
                       if (isFullScreen) Expanded(child: _buildVideoPlayer()),
@@ -453,7 +453,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
     return SafeArea(
       child: Center(
         child: AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
+          aspectRatio: 16/9,
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -465,7 +465,22 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                 Center(
                   child: CircularProgressIndicator(),
                 ),
-              if (_showControls) buildControls(),
+              if(_showControls) ...[
+  //             Positioned(
+  //               top:16,
+  //               left:0,
+  //               child:IconButton(icon: Icon(Icons.arrow_back_rounded,color: Colors.white,),
+  //               onPressed:(){
+  //                 if(Navigator.canPop(context)){
+  //                 Navigator.pop(context);
+  //                 }else{
+  //                   print('No page');
+  //                 }
+                  
+  // }),
+  //             ),
+             buildControls(),
+              ],
               // if (isDrawerOpen)
               //   BackdropFilter(
               //     filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
@@ -545,35 +560,31 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 80,
-              ),
+              // SizedBox(height: 8),
               // Text(
-              //   '${_movieDetails.duration}',
+              //   '${_movieDetails.mainVideoDuration}',
               //   style: TextStyle(color: Colors.grey),
               // ),
             ],
           ),
-          SizedBox(height: 8),
-          // Text(
-          //   '${_movieDetails.language} | ${_movieDetails.category}',
-          //   // ${_movieDetails.year}',
-          //   style: TextStyle(
-          //     fontSize: 16,
-          //     color: Colors.grey,
-          //   ),
-          // ),
-          SizedBox(height: 40),
+         
+             SizedBox(height: 8),
+              Text(
+                '${_movieDetails.mainVideoDuration}',
+                style: TextStyle(color: Colors.grey),
+              ),
+          SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
           Text(
             'Cast And Crew',
             style: TextStyle(
               fontSize: 16,
+              fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
           SizedBox(height: 8),
           Container(
-            height: 110,
+            height: MediaQuery.sizeOf(context).height * 0.12,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: castCrew.length,
@@ -610,8 +621,15 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                 }),
           ),
           SizedBox(
-            height: 16,
+            height: MediaQuery.sizeOf(context).height * 0.02,
           ),
+          Text('Description',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16),),
+           SingleChildScrollView(
+             child: Text(
+                  '${_movieDetails.description}',
+                  style: TextStyle(color: Colors.grey),
+                ),
+           ),
         ],
       ),
     );
@@ -621,8 +639,8 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
 
   Widget _buildSuggestedMoviesDrawer() {
     return DraggableScrollableSheet(
-      initialChildSize: 0.1,
-      minChildSize: 0.1,
+      initialChildSize: 0.2,
+      minChildSize: 0.15,
       maxChildSize: 0.5,
       builder: (context, scrollController) {
         return GestureDetector(
@@ -644,7 +662,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                   Center(
                     child: Container(
                       width: 40,
-                      height: 5,
+                      height: 3,
                       margin: EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.grey,

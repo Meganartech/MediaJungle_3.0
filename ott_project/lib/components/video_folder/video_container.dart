@@ -7,7 +7,9 @@ class VideoContainer {
   final int categoryId;
   final List<VideoDescription> videoDescriptions;
 
-  VideoContainer({required this.value, required this.videoDescriptions,required this.categoryId});
+  VideoContainer({required this.value, required this.videoDescriptions,
+  required this.categoryId
+  });
 
   factory VideoContainer.fromJson(Map<String, dynamic> json) {
     var list = json['videoDescriptions'] as List;
@@ -99,4 +101,14 @@ class VideoDescription {
       print('Error in fetching image:$e');
     }
   }
+
+  @override
+  bool operator ==(Object other) {
+    // TODO: implement ==
+    if(identical(this, other)) return true;
+
+    return other is VideoDescription &&  other.id ==id && other.videoTitle == videoTitle;
+  }
+
+  int get hashCode => id.hashCode ^ videoTitle.hashCode;
 }

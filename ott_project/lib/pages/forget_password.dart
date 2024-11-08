@@ -7,13 +7,29 @@ import 'package:ott_project/components/myTextField.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:http/http.dart' as http;
 
-class ForgetPassword extends StatelessWidget {
+class ForgetPassword extends StatefulWidget {
   ForgetPassword({super.key});
 
+  @override
+  State<ForgetPassword> createState() => _ForgetPasswordState();
+}
+
+class _ForgetPasswordState extends State<ForgetPassword> {
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
+
   final TextEditingController confirmPasswordController =
       TextEditingController();
+
+  bool visiblePassword = false;
+
+   bool confirmVisiblePassword = false;
+
+ void initState(){
+  visiblePassword = false;
+  confirmVisiblePassword = false;
+ }
 
   Future<void> resetPassword(BuildContext context) async {
     final String email = emailController.text;
@@ -116,8 +132,14 @@ class ForgetPassword extends StatelessWidget {
                           icon: FontAwesomeIcons.lock,
                           hint: 'New Password',
                           inputType: TextInputType.visiblePassword,
+                         suffixIcon: IconButton(onPressed: (){
+                              setState(() {
+                                visiblePassword = !visiblePassword;
+                              });
+                            },
+                             icon: Icon(visiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
                           inputAction: TextInputAction.next,
-                          obscureText: true),
+                          obscureText: !visiblePassword),
                       SizedBox(
                         height: 10,
                       ),
@@ -126,8 +148,14 @@ class ForgetPassword extends StatelessWidget {
                           icon: FontAwesomeIcons.lock,
                           hint: 'Confirm Password',
                           inputType: TextInputType.visiblePassword,
+                          suffixIcon: IconButton(onPressed: (){
+                              setState(() {
+                                confirmVisiblePassword = !confirmVisiblePassword;
+                              });
+                            },
+                             icon: Icon(confirmVisiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
                           inputAction: TextInputAction.next,
-                          obscureText: true),
+                          obscureText: !confirmVisiblePassword),
                       SizedBox(height: 30),
                       Container(
                         height: size.height * 0.08,

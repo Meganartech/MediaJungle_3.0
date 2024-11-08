@@ -11781,7 +11781,7 @@ nav {
   justify-content: flex-end;
   display:flex;
   align-items: center;
-  gap:70px;
+  gap:20px;
 
 }
 .contain {
@@ -12101,4 +12101,23 @@ input[type="text"], input[type="file"] {
 .button-container .btn {
   /* Optional: Additional styling for the button */
   margin-left: 10px; /* Adjust this if needed */
+}
+@media (max-width: 576px) {
+    .con5 {
+      justify-content: space-between;
+    }
+
+    /* Display burger icon */
+    .burger-icon {
+      display: block;
+    }
+    .mobile-logo {
+      width: 180px;
+      height: 60px;
+  }
+    /* Full-width search bar */
+    .search-bar {
+      width: 100%;
+    }
+
 }

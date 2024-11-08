@@ -5,6 +5,7 @@ import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/music_folder/audio.dart';
+import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/music_player_page.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/service/audio_api_service.dart';
@@ -23,6 +24,7 @@ class LikedSongsPage extends StatefulWidget {
 
 class _LikedSongsPageState extends State<LikedSongsPage> {
   List<Audio> _filteredLikedSongs = [];
+  List<AudioDescription> _filterLikedAudio = [];
   //bool _isFetching = false;
   //Future<List<Audio>>? _futureLikedSongs;
   final TextEditingController _searchController = TextEditingController();
@@ -30,10 +32,17 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
   //bool _showSearch = false;
   AppIcon? iconData;
   late StreamController<List<Audio>> likedSongsController;
+  late StreamController<List<AudioDescription>> likedAudioController;
+  
   @override
   void initState() {
     likedSongsController = StreamController<List<Audio>>();
+    likedAudioController = StreamController<List<AudioDescription>>();
+    _fetchLikedAudios();
     _fetchLikedSongs();
+    _searchController.addListener((){
+      _filterLikedAudios(_searchController.text);
+    });
     _searchController.addListener(() {
       _filterLikedSongs(_searchController.text);
     });
@@ -58,6 +67,7 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
       }
     });
   }
+ 
 
   Future<List<Audio>> _fetchLikedSongs() async {
     try {
@@ -77,6 +87,42 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
     }
   }
 
+  // new Audio like methods(AudioDescription)
+
+   void _filterLikedAudios(String query){
+    setState(() {
+      if(query.isEmpty){
+        _fetchLikedAudios().then((audios)=> _filterLikedAudio = audios);
+        Text('No audio found');
+      }else{
+        _fetchLikedAudios().then((audios){
+          _filterLikedAudio = audios.where((audio){
+            final audioName = audio.audioTitle.toLowerCase();
+            final input = query.toLowerCase();
+            return audioName.contains(input);
+          }).toList();
+        });
+      }
+    });
+  }
+
+  Future<List<AudioDescription>> _fetchLikedAudios() async{
+    try{
+      List<int> likedAudioIds = await AudioApiService().getLikedSongs(widget.userId);
+       print('Fetched ids: ${likedAudioIds.length}');
+       List<AudioDescription> likedAudio = await Future.wait(
+        likedAudioIds.map((id) => AudioApiService().getSongDetails(id)));
+       print('Fetched audio: ${likedAudio.length}'); 
+       likedAudioController.add(likedAudio);
+       _filterLikedAudio = likedAudio;
+       return _filterLikedAudio;
+    }catch (e) {
+      print('Failed to fetch liked songs: $e');
+      likedAudioController.addError(e);
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,8 +134,8 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
               children: [
                 //CustomAppBar(),
                 Expanded(
-                  child: StreamBuilder<List<Audio>>(
-                      stream: likedSongsController.stream,
+                  child: StreamBuilder<List<AudioDescription>>(
+                      stream: likedAudioController.stream,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -111,23 +157,23 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
                             child: ListView.builder(
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (context, index) {
-                                  Audio song = snapshot.data![index];
-                                  final compressedBytes =
-                                      base64.decode(song.thumbnail);
-                                  final decompressedBytes = ZLibDecoder()
-                                      .decodeBytes(compressedBytes);
+                                  AudioDescription song = snapshot.data![index];
+                                  // final compressedBytes =
+                                  //     base64.decode(song.);
+                                  // final decompressedBytes = ZLibDecoder()
+                                  //     .decodeBytes(compressedBytes);
                                   return ListTile(
                                     leading: Image.memory(
-                                      Uint8List.fromList(decompressedBytes),
+                                      song.thumbnail!,
                                       width: 50,
                                       height: 50,
                                       fit: BoxFit.fill,
                                     ),
                                     title: Text(
-                                      song.songname,
+                                      song.audioTitle,
                                       style: TextStyle(color: kWhite),
                                     ),
-                                    subtitle: Text(song.categoryName),
+                                    subtitle: Text(song.movieName),
                                     subtitleTextStyle:
                                         TextStyle(color: Colors.white60),
                                     onTap: () {

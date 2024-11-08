@@ -2,9 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:ott_project/components/pallete.dart';
 
 class MyTextField extends StatefulWidget {
-  const MyTextField(
+
+  final IconData icon;
+  IconButton? suffixIcon;
+  final String hint;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final TextInputType inputType;
+  final TextInputAction inputAction;
+  final bool obscureText;
+  final TextEditingController? confirmPasswordController;
+   MyTextField(
       {super.key,
       required this.icon,
+      this.suffixIcon,
       required this.hint,
       this.controller,
       required this.inputType,
@@ -13,14 +24,7 @@ class MyTextField extends StatefulWidget {
       this.validator,
       this.confirmPasswordController});
 
-  final IconData icon;
-  final String hint;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final TextInputType inputType;
-  final TextInputAction inputAction;
-  final bool obscureText;
-  final TextEditingController? confirmPasswordController;
+  
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -62,6 +66,7 @@ class _MyTextFieldState extends State<MyTextField> {
                           color: kWhite,
                         ),
                       ),
+                      suffixIcon: widget.suffixIcon,
                       hintText: widget.hint,
                       hintStyle: Theme.of(context)
                           .textTheme

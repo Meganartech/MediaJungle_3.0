@@ -34,5 +34,11 @@ public class MovieName {
 		Movie_name = movie_name;
 	}
 
+	@Override
+	public String toString() {
+		return "MovieName [id=" + id + ", Movie_name=" + Movie_name + "]";
+	}
+
+	
 	
 }

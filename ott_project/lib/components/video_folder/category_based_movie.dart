@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/category/category_service.dart';
 import 'package:ott_project/components/video_folder/movie_player_page.dart';
@@ -40,44 +41,57 @@ class _CategoryBasedMovieState extends State<CategoryBasedMovie> {
         BackgroundImage(),
         CustomAppBar(onSearchChanged: handleSearchState),
         Padding(
-          padding:  EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.15,
+         padding:  EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.10,
           left: MediaQuery.sizeOf(context).width * 0.02,
           ),
-          child: Row(
-            children: [
-              IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back_rounded,color: Colors.white,)),
-              Text(widget.categoryName + '  Movies',style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 22),),
-            ],
-          ),
+          child: IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back_rounded,color: Colors.white,)),
         ),
 
-        Expanded(
-          child: Padding(padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.20,
-          right: MediaQuery.sizeOf(context).width * 0.06,
-          left: MediaQuery.sizeOf(context).width * 0.06,
+        Padding(
+          padding:  EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.15,
+          left: MediaQuery.sizeOf(context).width * 0.07,
           ),
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-          crossAxisSpacing: 20,
-          //mainAxisSpacing: 20,
-          childAspectRatio: 3/4
+          child: 
+          // Row(
+          //   children: [
+              //IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back_rounded,color: Colors.white,)),
+              Text(widget.categoryName + '  Movies',style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 22),),
+          //   ],
+          // ),
+        ),
+
+        // Expanded(
+         // child: 
+          Padding(
+          padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.20,
+          right: MediaQuery.sizeOf(context).width * 0.08,
+          left: MediaQuery.sizeOf(context).width * 0.08,
           ),
-          itemCount: widget.videoDescriptions.length,
-           itemBuilder: (context,index){
-            final movie = widget.videoDescriptions[index];
-          
-            return MoviesCard(movie: movie, 
-            initialIndex: index, 
-            onTap: (){
-              final categoryId = CategoryService().getCategoryId(movie.categoryList, widget.categoryName);
-          
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>MoviesPlayerPage(videoDescriptions: widget.videoDescriptions, categoryId: categoryId,initialIndex: index,)));
-            }, categoryList: movie.categoryList);
-           }
-           ),
+           child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                crossAxisSpacing: 30,
+                //mainAxisSpacing: 20,
+                childAspectRatio: 0.8,
+                
+                ),
+                itemCount: widget.videoDescriptions.length,
+                
+                 itemBuilder: (context,index){
+                  final movie = widget.videoDescriptions[index];
+                
+                  return MoviesCard(movie: movie, 
+                    initialIndex: index, 
+                    onTap: (){
+                      final categoryId = CategoryService().getCategoryId(movie.categoryList, widget.categoryName);
+                                    
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>MoviesPlayerPage(videoDescriptions: widget.videoDescriptions, categoryId: categoryId,initialIndex: index,)));
+                    }, categoryList: movie.categoryList);
+                  //);
+                 }
+                 ),
           ),
-        )
+    
       ],
     ),
    );
