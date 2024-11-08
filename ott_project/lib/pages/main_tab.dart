@@ -58,8 +58,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
           int userId = snapshot.data!;
           return Scaffold(
             backgroundColor: Colors.transparent,
-            body: Expanded(
-              child: TabBarView(controller: controller, children: [
+            body:  TabBarView(controller: controller, children: [
                // SampleHomePage(),
                 MoviePage(),
                 MusicPage(userId: userId),
@@ -68,8 +67,10 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                 ),
               ProfilePage(),
               ]),
-            ),
+            
             bottomNavigationBar: Container(
+              width: MediaQuery.sizeOf(context).width * 0.02,
+              height: MediaQuery.sizeOf(context).height * 0.09,
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.vertical(
@@ -85,14 +86,16 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                 ],
               ),
 
-              child: BottomAppBar(
+              // child: BottomAppBar(
                 
-                color: Colors.transparent,
-                elevation: 10,
-                child: TabBar(
+              //   color: Colors.pink,
+              //   elevation: 10,
+                child: 
+                TabBar(
                   controller: controller,
+
                   indicatorWeight: 0.01,
-                  indicatorColor: Colors.transparent,
+                  indicatorColor: Colors.black,
                   dividerColor: Colors.transparent,
                   overlayColor: const WidgetStatePropertyAll(
                       Color.fromARGB(0, 14, 13, 13)),
@@ -161,7 +164,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
-              ),
+              //),
               // ),
             ),
           );

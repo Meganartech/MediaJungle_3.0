@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/library/playlist_page.dart';
 import 'package:ott_project/components/library/watch_list_page.dart';
-import 'package:ott_project/components/music_folder/liked_songs_page.dart';
+import 'package:ott_project/components/library/liked_songs_page.dart';
 
 import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
@@ -41,72 +41,77 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          BackgroundImage(),
-          Column(
-            children: [
-               CustomAppBar(onSearchChanged: (p0, p1) {
-                 
-               },),
-
-              SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      leading: Icon(
-                        Icons.favorite,
-                        color: Colors.white,
-                      ),
-                      title: Text('Liked Songs',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LikedSongsPage(
-                                    userId: widget.userId,
-                                  )),
-                        ).then((value) => setState(() {}));
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.playlist_add, color: Colors.white),
-                      title: Text('Playlists',
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PlayListPage()),
-                        );
-                      },
-                    ),
-                    ListTile(
-                        leading: Icon(Icons.video_library_rounded,
-                            color: Colors.white),
-                        title: Text('Watchlater',
+    return WillPopScope(
+      onWillPop: () async{
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            BackgroundImage(),
+            Column(
+              children: [
+                 CustomAppBar(onSearchChanged: (p0, p1) {
+                   
+                 },),
+      
+                SizedBox(
+                  height: 40,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          Icons.favorite,
+                          color: Colors.white,
+                        ),
+                        title: Text('Liked Songs',
                             style: TextStyle(color: Colors.white)),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => WatchListPage()),
+                                builder: (context) => LikedSongsPage(
+                                      userId: widget.userId,
+                                    )),
+                          ).then((value) => setState(() {}));
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.playlist_add, color: Colors.white),
+                        title: Text('Playlists',
+                            style: TextStyle(color: Colors.white)),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlayListPage()),
                           );
-                        }),
-                  ],
+                        },
+                      ),
+                      ListTile(
+                          leading: Icon(Icons.video_library_rounded,
+                              color: Colors.white),
+                          title: Text('Watchlater',
+                              style: TextStyle(color: Colors.white)),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WatchListPage(userId: widget.userId,)),
+                            );
+                          }),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
