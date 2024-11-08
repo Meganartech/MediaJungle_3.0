@@ -171,7 +171,7 @@ class MoviesCard extends StatelessWidget {
      onTap: onTap,
       child: Container(
         width: 100,
-        //height: 500,
+        //height: 500,lib/components/video_folder/movies_card.dart
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -187,7 +187,7 @@ class MoviesCard extends StatelessWidget {
                       if (snapshot.connectionState == ConnectionState.done &&
                           snapshot.hasData) {
                         return Image.memory(thumbnail!,
-                            width: 164, height: 130, fit: BoxFit.fill);
+                            width: 160, height: 130, fit: BoxFit.fill);
                       } else {
                         return Container(
                           width: 164,

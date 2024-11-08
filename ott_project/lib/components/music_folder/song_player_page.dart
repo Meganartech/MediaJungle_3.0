@@ -5,7 +5,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
-import 'package:ott_project/components/music_folder/liked_songs_page.dart';
+import 'package:ott_project/components/library/liked_songs_page.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/service/audio_api_service.dart';
 import 'package:ott_project/service/service.dart';
@@ -53,8 +53,8 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
   @override
   void initState() {
     super.initState();
-    _getCurrentUserId();
-    //.then((_) => _loadLikedStatus());
+    _getCurrentUserId()
+    .then((_) => _loadLikedStatus());
     _checkLikedStatus();
     _loadBannerImage();
     audioApiService = AudioApiService();
@@ -83,7 +83,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
   }
 
   // Future<void> _initializeUserAndLikedStatus() async {
-  //   await _getCurrentUSerId();
+  //   await _getCurrentUserId();
   //   if (currentUserId != null) {
   //     await _fetchLikedAudios();
   //     _checkIfLiked();
@@ -104,20 +104,20 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
     setState(() {});
   }
 
-  // Future<void> _loadLikedStatus() async {
-  //   if (currentUserId != null) {
-  //     try {
-  //       List<int> likedSongs =
-  //           await audioApiService.getLikedSongs(currentUserId!);
-  //       setState(() {
-  //         isLiked = likedSongs.contains(widget.music.id);
-  //         likedSongIds = likedSongs.map((id) => id.toString()).toList();
-  //       });
-  //     } catch (e) {
-  //       print('Error loading liked status: $e');
-  //     }
-  //   }
-  // }
+  Future<void> _loadLikedStatus() async {
+    if (currentUserId != null) {
+      try {
+        List<int> likedSongs =
+            await audioApiService.getLikedSongs(currentUserId!);
+        setState(() {
+          isLiked = likedSongs.contains(widget.music.id);
+          likedSongIds = likedSongs.map((id) => id.toString()).toList();
+        });
+      } catch (e) {
+        print('Error loading liked status: $e');
+      }
+    }
+  }
 
   Future<void> _checkLikedStatus() async {
     setState(() {
@@ -156,7 +156,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
       }
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Song removed')));
-    } else {
+    } else {  
       print('Liking audio....');
       success =
           await audioApiService.likeAudio(widget.music.id, currentUserId!);
@@ -170,15 +170,17 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Song added to likes')));
     }
-    // if (!success) {
-    //   print('Falied to like/unike');
-    //   //Navigator.pop(context, isLiked);
-    // } else {
-    //   // Show error message to user
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Failed to like audio. Please try again.')),
-    //   );
-    // }
+if (success) {
+    // Notify parent of the like status change
+    widget.onChange(widget.music);
+
+    // Pass the updated like status to parent page when closing
+    Navigator.pop(context, isLiked);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to update like status')),
+    );
+  }
   }
 
   // Future<void> _saveLikeStatus(int audioId, bool isLiked) async {
@@ -320,10 +322,10 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
                           fontSize: 20,
                           fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      currentAudio.movieName,
-                      style: TextStyle(fontSize: 16, color: Colors.white70),
-                    ),
+                    // Text(
+                    //   currentAudio.movieName,
+                    //   style: TextStyle(fontSize: 16, color: Colors.white70),
+                    // ),
                     SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
