@@ -6,7 +6,7 @@ import 'package:ott_project/components/music_folder/audio_provider.dart';
 
 import 'package:ott_project/pages/Sign_up.dart';
 import 'package:ott_project/pages/forget_password.dart';
-import 'package:ott_project/pages/home_page.dart';
+
 import 'package:ott_project/pages/login_page.dart';
 import 'package:provider/provider.dart';
 

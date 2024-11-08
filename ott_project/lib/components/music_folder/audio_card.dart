@@ -26,32 +26,35 @@ class AudioCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 120,
+        width: 100,
         //height: 500,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: FutureBuilder<Uint8List?>(
-                  future: audio.thumbnailImage,
-                  builder: (context, snapshot) {
-                    final thumbnail = snapshot.data;
-                    // print('thumbanail:{$thumbnail}');
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      return Image.memory(thumbnail!,
-                          width: 164, height: 130, fit: BoxFit.fill);
-                    } else {
-                      return Container(
-                        width: 164,
-                        height: 135,
-                        // fit: BoxFit.fill
-                        color: Colors.grey,
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                  }),
+            Expanded(
+              flex: 8,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: FutureBuilder<Uint8List?>(
+                    future: audio.thumbnailImage,
+                    builder: (context, snapshot) {
+                      final thumbnail = snapshot.data;
+                      // print('thumbanail:{$thumbnail}');
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData) {
+                        return Image.memory(thumbnail!,
+                            width: 164, height: 130, fit: BoxFit.fill);
+                      } else {
+                        return Container(
+                          width: 164,
+                          height: 135,
+                          // fit: BoxFit.fill
+                          color: Colors.grey,
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+                    }),
+              ),
             ),
             SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
             Text(

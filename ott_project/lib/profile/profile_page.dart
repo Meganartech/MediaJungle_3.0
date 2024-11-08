@@ -104,209 +104,214 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        BackgroundImage(),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            // leading: IconButton(
-            //     onPressed: () {
-            //       Navigator.pop(context);
-            //     },
-            //     icon: Icon(
-            //       Icons.arrow_back_rounded,
-            //       color: kWhite,
-            //     )),
+    return WillPopScope(
+      onWillPop: () async{
+        return false;
+      },
+      child: Stack(
+        children: [
+          BackgroundImage(),
+          Scaffold(
             backgroundColor: Colors.transparent,
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  GestureDetector(
-                    //onTap: _pickProfilePicture,
-                    child: CircleAvatar(
-                      backgroundColor: const Color.fromARGB(255, 51, 49, 49),
-                      radius: 50,
-                      backgroundImage: base64Image.isNotEmpty
-                          ? Image.memory(base64Decode(base64Image)).image
-                          : null,
-                      // child: base64Image.isEmpty
-                      //     ? Icon(
-                      //         Icons.person,
-                      //         size: 50,
-                      //         color: Colors.white,
-                      //       )
-                      //     : null,
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              // leading: IconButton(
+              //     onPressed: () {
+              //       Navigator.pop(context);
+              //     },
+              //     icon: Icon(
+              //       Icons.arrow_back_rounded,
+              //       color: kWhite,
+              //     )),
+              backgroundColor: Colors.transparent,
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      //onTap: _pickProfilePicture,
+                      child: CircleAvatar(
+                        backgroundColor: const Color.fromARGB(255, 51, 49, 49),
+                        radius: 50,
+                        backgroundImage: base64Image.isNotEmpty
+                            ? Image.memory(base64Decode(base64Image)).image
+                            : null,
+                        // child: base64Image.isEmpty
+                        //     ? Icon(
+                        //         Icons.person,
+                        //         size: 50,
+                        //         color: Colors.white,
+                        //       )
+                        //     : null,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.02,
-                  ),
-                  Text(
-                    usernameController.text,
-                    style: TextStyle(color: kWhite),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.04,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.subscriptions_rounded,
-                      color: Colors.white70,
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.02,
                     ),
-                    title: Text(
-                      'Subscription Plan',
+                    Text(
+                      usernameController.text,
                       style: TextStyle(color: kWhite),
                     ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SubscriptionPage()));
-                    },
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.02,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.password_rounded,
-                      color: Colors.white70,
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.04,
                     ),
-                    title: Text(
-                      'Change Password',
-                      style: TextStyle(color: kWhite),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChangePasswordPage()));
-                    },
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.02,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.edit_document,
-                      color: Colors.white70,
-                    ),
-                    title: Text(
-                      'Profile',
-                      style: TextStyle(color: kWhite),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ViewProfilePage(onProfileUpdated: () {
-                                    fetchUserProfile(context);
-                                  })));
-                    },
-                  ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.09),
-
-                  // const SizedBox(height: 16.0),
-                  SizedBox(
-                    //width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _handleLogout(context);
+                    ListTile(
+                      leading: Icon(
+                        Icons.subscriptions_rounded,
+                        color: Colors.white70,
+                      ),
+                      title: Text(
+                        'Subscription Plan',
+                        style: TextStyle(color: kWhite),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SubscriptionPage()));
                       },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14)),
-                        padding: EdgeInsets.symmetric(
-                            horizontal:
-                                MediaQuery.sizeOf(context).height * 0.07,
-                            vertical: 15),
-                        backgroundColor: Color.fromARGB(174, 93, 104, 195),
-                        foregroundColor: kWhite,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.logout_outlined,
-                            size: 20,
-                            color: kWhite,
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Text('Logout'),
-                        ],
-                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.02,
-                  ),
-                  SizedBox(
-                    // width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Account Deletion!!'),
-                              content: Text(
-                                  'Are you sure want to delete your account?'),
-                              actions: [
-                                TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text('Cancel')),
-                                TextButton(
-                                    onPressed: () {
-                                      _handleLogout(context);
-                                    },
-                                    child: Text('Ok'))
-                              ],
-                            );
-                          },
-                        );
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.02,
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.password_rounded,
+                        color: Colors.white70,
+                      ),
+                      title: Text(
+                        'Change Password',
+                        style: TextStyle(color: kWhite),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChangePasswordPage()));
                       },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14)),
-                        padding: EdgeInsets.symmetric(
-                            horizontal:
-                                MediaQuery.sizeOf(context).height * 0.04,
-                            vertical: 15),
-                        backgroundColor: Color.fromARGB(174, 93, 104, 195),
-                        foregroundColor: kWhite,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.02,
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.edit_document,
+                        color: Colors.white70,
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.delete_sweep_rounded,
-                            size: 20,
-                            color: kWhite,
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Text('Delete Account'),
-                        ],
+                      title: Text(
+                        'Profile',
+                        style: TextStyle(color: kWhite),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ViewProfilePage(onProfileUpdated: () {
+                                      fetchUserProfile(context);
+                                    })));
+                      },
+                    ),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.09),
+      
+                    // const SizedBox(height: 16.0),
+                    SizedBox(
+                      //width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _handleLogout(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
+                          padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  MediaQuery.sizeOf(context).height * 0.07,
+                              vertical: 15),
+                          backgroundColor: Color.fromARGB(174, 93, 104, 195),
+                          foregroundColor: kWhite,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.logout_outlined,
+                              size: 20,
+                              color: kWhite,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text('Logout'),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.02,
+                    ),
+                    SizedBox(
+                      // width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Account Deletion!!'),
+                                content: Text(
+                                    'Are you sure want to delete your account?'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text('Cancel')),
+                                  TextButton(
+                                      onPressed: () {
+                                        _handleLogout(context);
+                                      },
+                                      child: Text('Ok'))
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
+                          padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  MediaQuery.sizeOf(context).height * 0.04,
+                              vertical: 15),
+                          backgroundColor: Color.fromARGB(174, 93, 104, 195),
+                          foregroundColor: kWhite,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.delete_sweep_rounded,
+                              size: 20,
+                              color: kWhite,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text('Delete Account'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

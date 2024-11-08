@@ -104,108 +104,113 @@ class _MusicPageState extends State<MusicPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          BackgroundImage(),
-          CustomAppBar(
-            onSearchChanged: handleSearchState,
-          ),
-          _isSearching
-              ? _buildSearchResults()
-              : Container(
-                  padding: const EdgeInsets.all(16.0),
-                  margin: EdgeInsets.only(top: 90),
-                  child: Column(
-                    children: [
-                      // Padding(
-                      //   padding: const EdgeInsets.all(16.0),
-                      //   child:
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Divider(
-                            color: Colors.white,
-                            height: 1,
-                          ),
-                          SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.01,
-                        ),
-                          CategoryBar(
-                              selectedCategory: 'Music',
-                              onCategorySelected: _navigateToCategory),
-                          SizedBox(
-                            height: 7,
-                          ),
-                          const Divider(
-                            color: Colors.white,
-                            height: 1,
-                          ),
-                          
-                        ],
-                      ),
-                      //),
-                      //),
-                      Expanded(
-                        child: ListView(                       
+    return WillPopScope(
+      onWillPop: () async{
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            BackgroundImage(),
+            CustomAppBar(
+              onSearchChanged: handleSearchState,
+            ),
+            _isSearching
+                ? _buildSearchResults()
+                : Container(
+                    padding: const EdgeInsets.all(16.0),
+                    margin: EdgeInsets.only(top: 90),
+                    child: Column(
+                      children: [
+                        // Padding(
+                        //   padding: const EdgeInsets.all(16.0),
+                        //   child:
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            if (_searchController.text.isNotEmpty &&
-                                _filteredAudios.isEmpty)
-                              Center(
-                                child: Text(
-                                  'No audios found',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              )
-                            else ...[
-                              SizedBox(
-                                height: 500,
-                                child: _buildMusicCategories(),
-                              ),
-                             
-                            ]
+                            const Divider(
+                              color: Colors.white,
+                              height: 1,
+                            ),
+                            SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.01,
+                          ),
+                            CategoryBar(
+                                selectedCategory: 'Music',
+                                onCategorySelected: _navigateToCategory),
+                            SizedBox(
+                              height: 7,
+                            ),
+                            const Divider(
+                              color: Colors.white,
+                              height: 1,
+                            ),
+                            
                           ],
-                          //),
-                          // ),
                         ),
-                      ),
-
-                      Consumer<AudioProvider>(
-                        builder: (context, audioProvider, child) {
-                          return audioProvider.audioDescriptioncurrently != null
-                              ? CurrentlyPlayingBar(
-                                  audioCurrentlyPlaying:
-                                      audioProvider.audioDescriptioncurrently,
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SongPlayerPage(
-                                            music: audioProvider.audioDescriptioncurrently!,                                              
-                                            onChange: (newAudio) {
-                                              audioProvider
-                                                  .setCurrentlyPlayingSong(
-                                                      newAudio,
-                                                      audioProvider
-                                                          .audio_playlist);
-                                            },
-                                            onDislike: ((audio) {
-                                              handleDislike(audio, context);
-                                            }),
-                                          ),
-                                        ));
-                                  },
+                        //),
+                        //),
+                        Expanded(
+                          child: ListView(                       
+                            children: [
+                              if (_searchController.text.isNotEmpty &&
+                                  _filteredAudios.isEmpty)
+                                Center(
+                                  child: Text(
+                                    'No audios found',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 )
-                              : Container();
-                        },
-                      ),
-                    ],
-
-                    //),
+                              else ...[
+                                SizedBox(
+                                  height: 500,
+                                  child: _buildMusicCategories(),
+                                ),
+                               
+                              ]
+                            ],
+                            //),
+                            // ),
+                          ),
+                        ),
+      
+                        Consumer<AudioProvider>(
+                          builder: (context, audioProvider, child) {
+                            return audioProvider.audioDescriptioncurrently != null
+                                ? CurrentlyPlayingBar(
+                                    audioCurrentlyPlaying:
+                                        audioProvider.audioDescriptioncurrently,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SongPlayerPage(
+                                              music: audioProvider.audioDescriptioncurrently!,                                              
+                                              onChange: (newAudio) {
+                                                audioProvider
+                                                    .setCurrentlyPlayingSong(
+                                                        newAudio,
+                                                        audioProvider
+                                                            .audio_playlist);
+                                              },
+                                              onDislike: ((audio) {
+                                                handleDislike(audio, context);
+                                              }),
+                                            ),
+                                          ));
+                                    },
+                                  )
+                                : Container();
+                          },
+                        ),
+                      ],
+      
+                      //),
+                    ),
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }

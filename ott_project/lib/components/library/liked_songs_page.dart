@@ -132,6 +132,7 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
               children: [
                 //CustomAppBar(),
                 Expanded(
+                  flex:8,
                   child: StreamBuilder<List<AudioDescription>>(
                       stream: likedAudioController.stream,
                       builder: (context, snapshot) {
@@ -192,8 +193,7 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
                                         style: TextStyle(color: kWhite),
                                       ),
                                       // subtitle: Text(song.movieName),
-                                      subtitleTextStyle:
-                                          TextStyle(color: Colors.white60),
+                                      
                                       onTap: () {
                                         Navigator.push(
                                             context,
