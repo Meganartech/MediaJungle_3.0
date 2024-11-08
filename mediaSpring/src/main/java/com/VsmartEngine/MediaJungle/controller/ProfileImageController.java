@@ -36,7 +36,7 @@ public class ProfileImageController {
     @Value("${upload.Profile.directory}")
     private String uploadDirectory;
     
-    @PutMapping("/updateUser/{userId}")
+   
     public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("username") String username,
                                          @RequestParam("email") String email, @RequestParam("mobnum") String mobnum,
                                          @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
@@ -49,7 +49,6 @@ public class ProfileImageController {
         }
     }
 
-    @PostMapping("/UploadProfileImage/{userId}")
     public ResponseEntity<?> uploadProfileImage(@PathVariable Long userId, @RequestParam("image") MultipartFile image) {
         // Check if the file is empty
         if (image.isEmpty()) {
@@ -100,8 +99,7 @@ public class ProfileImageController {
     
 }
 
-@GetMapping("/GetProfileImage/{userId}")
-@ResponseBody
+
 public ResponseEntity<byte[]> getProfileImage(@PathVariable Long userId) {
     try {
         // Retrieve the user by userId

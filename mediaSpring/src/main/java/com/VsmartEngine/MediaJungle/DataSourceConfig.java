@@ -1,20 +1,20 @@
 
 package com.VsmartEngine.MediaJungle;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import javax.sql.DataSource;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 @Configuration
 public class DataSourceConfig {
-
     @Value("${upload.sqlport.directory}")
     private String configFilePath;
 
