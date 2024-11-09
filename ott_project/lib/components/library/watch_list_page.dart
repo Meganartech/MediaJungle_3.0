@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/video_folder/movie_player_page.dart';
 import 'package:ott_project/components/video_folder/video_container.dart';
-import 'package:ott_project/components/video_folder/watch_later.dart';
+import 'package:ott_project/components/library/watch_later.dart';
 import 'package:ott_project/service/movie_api_service.dart';
 import 'package:ott_project/service/watch_later_service.dart';
 
