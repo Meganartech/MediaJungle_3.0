@@ -10,7 +10,7 @@ class AudioPlaylist {
   List<AudioDescription>? _cachedAudios;
 
   AudioPlaylist({required this.id,required this.userId, required this.audioIds,required this.description,required this.title});
-
+ 
   factory AudioPlaylist.fromJson(Map<String, dynamic> json){
     return AudioPlaylist(id:json['id'] as int, userId:json['userId'], audioIds:json['audioIds'] != null ? (json['audioIds'] as List<dynamic>).map((item)=> item as int).toList() : [],
             description:json['description'] , title:json['title'] );
@@ -28,7 +28,7 @@ class AudioPlaylist {
     try{
       List<AudioDescription> audioList =[];
       for(int audioId in audioIds){
-        final audio = await AudioApiService().fetchAudioDetails(id);
+        final audio = await AudioApiService().fetchAudioDetails(audioId);
         if(audio != null){
           audioList.add(audio);
         }

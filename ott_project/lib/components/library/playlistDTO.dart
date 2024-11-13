@@ -17,4 +17,9 @@ class PlaylistDTO {
       description: json['description'], 
       audioDetails: (json['audioDetails'] as List).map((item)=>LikedsongsDTO.fromJson(item)).toList());
   }
+
+  @override
+  String toString(){
+    return 'PlaylistDTO(userId:$userId,title:$title,description:$description,audioDetails:$audioDetails)';
+  }
 }

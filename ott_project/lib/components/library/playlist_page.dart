@@ -37,6 +37,7 @@ class _PlayListPageState extends State<PlayListPage> {
   TextEditingController _searchController = TextEditingController();
   AppIcon? iconData;
   late Future<List<AudioPlaylist>> _playList;
+   final GlobalKey _menuKey = GlobalKey();
  
 
   Future<void> _loadIcon() async {
@@ -66,12 +67,61 @@ class _PlayListPageState extends State<PlayListPage> {
    }    
   }
 
+  void _showMenu(BuildContext context,int playlistId) {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset.zero, ancestor: overlay),
+        button.localToGlobal(button.size.center(Offset.zero), ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    showMenu(
+      context: context,
+      position: position,
+      items: [
+        PopupMenuItem(
+          value: 'edit',
+          child: 
+              Text('Edit'),
+            
+          
+        ),
+        PopupMenuItem(
+          value: 'delete',
+          child:
+              Text('Delete'),
+            
+        ),
+      ],
+    ).then((value) async{
+      if (value == 'edit') {
+        print('Edit selected');
+      } else if (value == 'delete') {
+        print('Delete selected');
+        //final playlist = PlaylistService().getPlaylistById(playlistId);
+        String result =await  PlaylistService().deletePlaylist(playlistId);
+        print(result);
+        ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(content: Text(result)),
+);
+  setState(() {
+    _playList = _playList.then((list){
+      list.removeWhere((playlist)=> playlist.id == playlistId);
+      return list;
+    });
+  });
+      }
+    });
+  } 
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AudioProvider>(builder: (context, audioProvider, child) {
       
-      //final audioplaylists = audioProvider.aplaylists;
-
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -185,13 +235,15 @@ class _PlayListPageState extends State<PlayListPage> {
                             decorationStyle: TextDecorationStyle.solid),
                       ),
                       IconButton(
-                          onPressed: () {
+                          onPressed: () async{
                             final currentAudioId = audioProvider.audioDescriptioncurrently?.id;
                             if(currentAudioId != null){
                               _showCreatePlaylistDialog(context,audioId: currentAudioId);
+                             
                             }else{
                               _showCreatePlaylistDialog(context);
                             }
+                            await  _fetchPlaylists();
                           },
                           icon: Icon(
                             Icons.add_rounded,
@@ -259,6 +311,7 @@ class _PlayListPageState extends State<PlayListPage> {
                                       ],
                                     ),
                                     child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
@@ -309,16 +362,35 @@ class _PlayListPageState extends State<PlayListPage> {
                                               )),
                                         ),
                                       
-                                        SizedBox(
-                                          width: 20,
-                                        ),
+                                        // SizedBox(
+                                        //   width: 20,
+                                        // ),
                                         Text(
                                           playlist.title,
                                           style: TextStyle(
                                               color: kWhite,
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold),
-                                        )
+                                        ),
+                                        SizedBox(width: MediaQuery.sizeOf(context).width * 0.09,),
+                                        IconButton(
+                                        
+                                          onPressed: ()=> _showMenu(context,playlist.id)
+                                           
+                                          // showMenu(context: context, position:  RelativeRect.fromDirectional(textDirection: TextDirection.ltr, start: 100, top: 100, end: 100, bottom: 100), 
+                                          // items:[
+                                          //   PopupMenuItem(value:'edit',child: Text('Edit')),
+                                          //   PopupMenuItem(value:'delete',child: Text('Delete'))
+                                          // ]
+                                          // ).then((value){
+                                          //   if(value == 'edit'){
+                                          //     print('Edit is selected');
+                                          //   }else if(value == 'delete'){
+                                          //     print('Delete is selected');
+                                          //   }
+                                          // });
+                                          //}
+                                        , icon: Icon(Icons.more_vert_rounded,color: Colors.white,))
                                       ],
                                     ),
                                   ),
@@ -431,7 +503,7 @@ class _PlayListPageState extends State<PlayListPage> {
                       SnackBar(content: Text('Playlist "$title" created')),
                     );
                         }
-                    
+                    _fetchPlaylists(); 
                    
                   }
                 },

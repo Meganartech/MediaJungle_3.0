@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ott_project/components/library/audio_playlist.dart';
 import 'package:ott_project/components/library/playlistDTO.dart';
+import 'package:ott_project/service/audio_api_service.dart';
+
+import '../components/music_folder/audio_container.dart';
+import '../components/music_folder/playlist.dart';
 
 
 class PlaylistService {
@@ -62,6 +66,22 @@ class PlaylistService {
       }
   }
 
+  Future<Playlist> getPlaylistById(int playlistId) async{
+    final url = Uri.parse('$baseUrl/$playlistId/playlists');
+    try{
+    final response = await http.get(url);
+    print('Playlist id:${response.statusCode}');
+    if(response.statusCode==200){
+      final data = jsonDecode(response.body);
+      return Playlist.fromJson(data);
+    }else{
+      throw Exception('Error to load playlist');
+    }
+    }catch(e){
+      throw Exception('Error to fetch playlist by id:$e');
+    }
+  }
+
   // get playlists by userid
   Future<List<AudioPlaylist>> getPlaylistsByUserId(int userId) async{
     final url = Uri.parse('$baseUrl/user/$userId/playlists');
@@ -89,5 +109,42 @@ class PlaylistService {
       throw Exception('Failed to get audio details');
     }
   }
+
+Future<List<AudioDescription>> getAudioDetailsForPlaylist(List<int> audioIds) async {
+  List<AudioDescription> audioDetailsList = [];
+
+  try {
+    for (int audioId in audioIds) {
+      final audio = await AudioApiService().fetchAudioDetails(audioId);
+      if (audio != null) {
+        audioDetailsList.add(audio);
+      }
+    }
+  } catch (e) {
+    print("Error fetching audio details: $e");
+  }
+
+  return audioDetailsList;
+}
+
+//delete playlist
+Future<String> deletePlaylist(int id) async{
+  final url = Uri.parse('$baseUrl/$id/delete/playlist');
+  try{
+    final response = await http.delete(url);
+    print('Delete playlist response:${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if(response.statusCode == 200){
+      return 'Playlist deleted successfully';
+    }else if(response.statusCode ==404){
+      return "Playlist not found";
+    }else{
+      return 'Something went wrong';
+    }
+  }catch(e){
+    return 'Error:${e.toString()}';
+  }
+}
 
 }

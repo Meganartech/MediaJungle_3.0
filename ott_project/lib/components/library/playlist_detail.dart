@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -6,10 +8,13 @@ import 'package:ott_project/components/library/playlistDTO.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/profile/profile_page.dart';
+import 'package:ott_project/service/audio_api_service.dart';
 import 'package:ott_project/service/icon_service.dart';
 import 'package:ott_project/service/playlist_service.dart';
+import '../music_folder/audio_container.dart';
 import '../music_folder/song_player_page.dart';
 import 'audio_playlist.dart';
+import 'likedSongsDTO.dart';
 
 
 class PlaylistDetailsPage extends StatefulWidget {
@@ -36,11 +41,11 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
   PlaylistDTO? _playlist;
   bool _isLoading = true;
   String? _error;
+  Map<int,Uint8List> audioImages = {};
 
   Future<void> _loadIcon() async {
     try {
       final icon = await IconService.fetchIcon();
-
       setState(() {
         iconData = icon;
       });
@@ -49,6 +54,7 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
     }
   }
 
+ 
   Future<void> _loadPlaylistDetails() async {
     try {
       setState(() {
@@ -57,13 +63,21 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
       }); 
 
       final List<PlaylistDTO> playlistData = await PlaylistService().getPlaylistWithAudioDetails(widget.playlistId);
+      print('PlaylistData from playlistdto:$playlistData');
       
       // Assuming the first item is our playlist since we queried by ID
       if (playlistData.isNotEmpty) {
+        final playlist = playlistData.first;
+        print('Playlist data: $_playlist');
+        print('Audio details: ${_playlist?.audioDetails}');
         setState(() {
-          _playlist = playlistData.first;
-          _isLoading = false;
+          _playlist = playlist;        
+          //_isLoading = false;
         });
+        await _loadAudioImages(playlist.audioDetails);
+        setState(() {
+        _isLoading = false;
+      });
       } else {
         setState(() {
           _error = 'Playlist not found';
@@ -78,9 +92,53 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
     }
   }
 
+  Future<void> _loadAudioImages(List<LikedsongsDTO> audioDetails) async{
+    for(var audio in audioDetails){
+       print('Loading image for audio: ${audio.audioId}');
+      try{
+        final audioDesc = await AudioApiService().fetchAudioDetails(audio.audioId);
+        if(audioDesc != null){
+          
+            final image = await audioDesc.thumbnailImage;
+            print('Playlist image:$image');
+            if(image != null){
+              setState(() {
+                audioImages[audio.audioId] = image;
+              });     
+              print('Image loaded for ${audio.audioId}');  
+            }
+        }
+      }catch (e) {
+        print('Error loading image for audio ${audio.audioId}: $e');
+      }
+    }
+  }
+
+   Widget buildAudioImage(LikedsongsDTO audio){
+    final audioImage = audioImages[audio.audioId];
+    print('Audio ID: ${audio.audioId}, Image: $audioImage'); 
+    if(audioImage != null){
+      
+      return Image.memory(
+        audioImage,
+        height: 50,
+        width: 50,
+        fit: BoxFit.cover,
+      );
+    }
+    return Container(
+      height: 50,
+      width: 50,
+      child: Icon(Icons.music_note_rounded,color: Colors.white,),
+    );
+  }
+
+ 
   @override
   Widget build(BuildContext context) {
-
+     if (_isLoading) {
+    return Center(child: CircularProgressIndicator());
+  }
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
@@ -175,7 +233,7 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  _playlist?.title ?? 'Untitled Playlist',
+                  _playlist!.title ?? 'Untitled Playlist',
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -185,85 +243,70 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
               Expanded(
                 // child: Padding(
                 //   padding: const EdgeInsets.all(3.0),
-                child: _playlist!.audioDetails.isEmpty 
-                                     ?  Text(
+                
+                child: _playlist == null || _playlist!.audioDetails.isEmpty
+                ? Center(
+                  child: _playlist == null 
+                        ? CircularProgressIndicator()
+                                     :  Text(
                           'No songs in this playlist',
                           style: TextStyle(color: Colors.white),
                         )
-                      
+                )
                     : ListView.builder(
                         itemCount: _playlist!.audioDetails.length,
                         itemBuilder: (context, index) {
                           final audio = _playlist!.audioDetails[index];
-                          print('Audio in playlists:${audio}');
-                          // final compressedBytes =
-                          //     base64.decode(audio.thumbnail);
-                          // final decompressedBytes =
-                          //     ZLibDecoder().decodeBytes(compressedBytes);
+                          print('Audio in playlists:$audio');
+                          
                           return SizedBox(
-                            // child: Container(
-                            //   margin: EdgeInsets.symmetric(
-                            //     vertical: 5,
-                            //   ),
-                            //   decoration: BoxDecoration(
-                            //     color: Colors.white30.withOpacity(0.1),
-                            //     borderRadius: BorderRadius.circular(5),
-                            //   ),
-                            // padding: EdgeInsets.only(
-                            //     top: 50, right: 20, left: 20),
+                          
                             child: ListTile(
                               leading: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: Image.asset('assets/icon/media_jungle.png')
-                                // child: FutureBuilder<Uint8List?>(
-                                //   //future: audio.thumbnailImage,
-                                //   future:
-                                //   //audio.bannerImage,
-
-                                //   builder: (context, snapshot) {
-                                //     if (snapshot.connectionState ==
-                                //             ConnectionState.done &&
-                                //         snapshot.hasData) {
-                                //       return Image.memory(snapshot.data!,
-                                //           width: 50,
-                                //           height: 50,
-                                //           fit: BoxFit.fill);
-                                //     } else {
-                                //       return Container(
-                                //         width: 164,
-                                //         height: 155,
-                                //         // fit: BoxFit.fill
-                                //         color: Colors.grey,
-                                //         child: Center(
-                                //             child: CircularProgressIndicator()),
-                                //       );
-                                //     }
-                                //   },
-                                // ),
+                                child: buildAudioImage(audio),
+                                
                               ),
                               title: Text( 
                                 audio.audioTitle,
                                 style: TextStyle(color: Colors.white),
                               ),
                               
-                              onTap: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => SongPlayerPage(
-                                //             music: widget.playlist.audios,
-                                //             onChange: (newAudio) {
-                                //               setState(() {
-                                //                 int index = widget
-                                //                     .playlist.audios
-                                //                     .indexWhere((a) => a.id == newAudio.id);
-                                //                     if(index != -1){
-                                //                       widget.playlist.audios[index] = newAudio;
-                                //                     }
-                                //               });
-                                //             },
-                                //             onDislike: (p0) {})
-                                //     ));
+                              onTap: () async{
+                                try{
+                                final selectedAudioId = widget.playlist.audioIds[index];
+                                final List<AudioDescription> audioDetailsList = await PlaylistService().getAudioDetailsForPlaylist(widget.playlist.audioIds);
+                                print('Audio details 1: $audioDetailsList');
+                                final selectedAudio = audioDetailsList.firstWhere((audio)=> audio.id == selectedAudioId);
+                                print('SelectedAudio:$selectedAudio');
+                                if(selectedAudio != null){
+                                   print('SelectedAudio:$selectedAudio');
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SongPlayerPage(
+                                            music: selectedAudio,
+                                            onChange: (newAudio) {
+                                              setState(() {
+                                                int index = 
+                                                //_playlist!.audioDetails.indexOf(newAudio.id as LikedsongsDTO);
+                                                widget
+                                                    .playlist.audioIds
+                                                    .indexOf(newAudio.id);
+                                                    if(index != -1){
+                                                      //_playlist!.audioDetails[index] = newAudio.id as LikedsongsDTO;
+                                                      widget.playlist.audioIds[index] = newAudio.id;
+                                                    }
+                                              });
+                                            },
+                                            onDislike: (p0) {})
+                                    ));
+                                }else{
+                                  print("Audio details not found for ID: $selectedAudioId");
+                                }
+                                }catch(e){
+                                   print("Error fetching audio details: $e");
+                                }
                               },
                             ),
                             // ),

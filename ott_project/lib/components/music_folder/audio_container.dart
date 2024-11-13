@@ -57,7 +57,7 @@ class AudioDescription {
   factory AudioDescription.fromJson(Map<String, dynamic> json) {
     return AudioDescription(
       id: json['id'] ?? 0,
-      audioTitle: json['audio_title'] ?? '',
+      audioTitle: json['audioTitle'] ?? '',
      // movieName: json['movie_name'] as String,
       rating: json['rating']?.toString(),
       description: json['description']?.toString(),
@@ -83,6 +83,11 @@ class AudioDescription {
       'audioDuration' : audioDuration,
       'certificateNo' : certificateNo
     };
+  }
+
+  @override
+  String toString(){
+    return 'AudioDescription(id:$id,audioTitle:$audioTitle,rating:$rating,description:$description,audioFileName:$audioFileName)';
   }
 
   Future<Uint8List?> get thumbnailImage async {

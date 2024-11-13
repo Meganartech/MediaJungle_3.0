@@ -10,4 +10,9 @@ class LikedsongsDTO {
       audioTitle: json['audio_title'],
     );
   }
+
+  @override
+  String toString(){
+    return 'LikedsongsDTO(audioId:$audioId,audioTitle:$audioTitle)';
+  }
 }

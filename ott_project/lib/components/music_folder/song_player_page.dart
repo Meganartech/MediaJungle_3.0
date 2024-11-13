@@ -141,8 +141,17 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
       // Handle case where user is not logged in
       return;
     }
+
+    // setState(() {
+    //   isLiked = !isLiked;
+    //   if(isLiked){
+    //     likedSongIds.add(widget.music.id.toString());
+    //   }else{
+    //     likedSongIds.remove(widget.music.id.toString());
+    //   }
+    // });
     bool success;
-    if (isLiked) {
+    if (isLiked) { 
       print('Unliking audio....');
       success =
           await audioApiService.unlikeAudio(widget.music.id, currentUserId!);
@@ -248,8 +257,8 @@ if (success) {
       builder: (context, audioProvider, child) {
         final currentAudio = audioProvider.audioDescriptioncurrently;
         final isPlaying = audioProvider.isPlaying;
-        final duration = audioProvider.duration;
-        final position = audioProvider.position;
+        final duration = audioProvider.duration ?? Duration.zero;
+        final position = audioProvider.position ?? Duration.zero;
         // final decodedImage =
         //     audioProvider.getDecodedImage(currentAudio!.thumbnail);
         IconData repeatIcon;
@@ -322,7 +331,8 @@ if (success) {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      currentAudio!.audioTitle,
+                      'Song name',
+                      //currentAudio!.audioTitle,
                       style: TextStyle(
                           color: kWhite,
                           fontSize: 20,
