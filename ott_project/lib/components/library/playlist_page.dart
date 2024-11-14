@@ -87,8 +87,6 @@ class _PlayListPageState extends State<PlayListPage> {
           value: 'edit',
           child: 
               Text('Edit'),
-            
-          
         ),
         PopupMenuItem(
           value: 'delete',
@@ -100,6 +98,11 @@ class _PlayListPageState extends State<PlayListPage> {
     ).then((value) async{
       if (value == 'edit') {
         print('Edit selected');
+        final playlistDetails = await PlaylistService().getPlaylistById(playlistId);
+        if(playlistDetails != null){
+          _showEditPlaylistDialog(context,playlistId: playlistId,initialtitle: playlistDetails['title'] ?? '',initialdescription: playlistDetails['description']??'');
+          await _fetchPlaylists();
+        }
       } else if (value == 'delete') {
         print('Delete selected');
         //final playlist = PlaylistService().getPlaylistById(playlistId);
@@ -117,6 +120,80 @@ class _PlayListPageState extends State<PlayListPage> {
       }
     });
   } 
+
+
+  void _showEditPlaylistDialog(BuildContext context,{required int playlistId,String? initialtitle, String? initialdescription}) {
+    final TextEditingController titleController = TextEditingController(text: initialtitle);
+    final TextEditingController descriptionController = TextEditingController(text: initialdescription);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: AlertDialog(
+            backgroundColor: Color.fromARGB(119, 68, 66, 66),
+            title: Text('Edit playlist', style: TextStyle(color: Colors.white)),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      hintText: 'Title',       
+                      hintStyle: TextStyle(color: Colors.white60),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white60),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      hintText: 'Description',
+                      hintStyle: TextStyle(color: Colors.white60),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white60),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel', style: TextStyle(color: Colors.white)),
+              ),
+              TextButton(
+                onPressed: () async {
+                  final title = titleController.text;
+                  final description = descriptionController.text;
+                  if (title.isNotEmpty) {
+                    await PlaylistService().updatePlaylist(playlistId, title, description);
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Playlist Updated successfully')));
+                    _fetchPlaylists(); 
+                   
+                  }
+                },
+                child: Text('Save', style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,17 +274,7 @@ class _PlayListPageState extends State<PlayListPage> {
                     SizedBox(
                       width: 10,
                     ),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfilePage()));
-                        },
-                        icon: Icon(
-                          Icons.person_outline_rounded,
-                          color: kWhite,
-                        )),
+                   
                     SizedBox(
                       width: 10,
                     ),
@@ -376,20 +443,7 @@ class _PlayListPageState extends State<PlayListPage> {
                                         IconButton(
                                         
                                           onPressed: ()=> _showMenu(context,playlist.id)
-                                           
-                                          // showMenu(context: context, position:  RelativeRect.fromDirectional(textDirection: TextDirection.ltr, start: 100, top: 100, end: 100, bottom: 100), 
-                                          // items:[
-                                          //   PopupMenuItem(value:'edit',child: Text('Edit')),
-                                          //   PopupMenuItem(value:'delete',child: Text('Delete'))
-                                          // ]
-                                          // ).then((value){
-                                          //   if(value == 'edit'){
-                                          //     print('Edit is selected');
-                                          //   }else if(value == 'delete'){
-                                          //     print('Delete is selected');
-                                          //   }
-                                          // });
-                                          //}
+                                        
                                         , icon: Icon(Icons.more_vert_rounded,color: Colors.white,))
                                       ],
                                     ),

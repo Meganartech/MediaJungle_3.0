@@ -57,7 +57,7 @@ class AudioDescription {
   factory AudioDescription.fromJson(Map<String, dynamic> json) {
     return AudioDescription(
       id: json['id'] ?? 0,
-      audioTitle: json['audioTitle'] ?? '',
+      audioTitle: json['audio_title'] ?? '',
      // movieName: json['movie_name'] as String,
       rating: json['rating']?.toString(),
       description: json['description']?.toString(),

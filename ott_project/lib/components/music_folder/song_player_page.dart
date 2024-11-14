@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/library/audio_playlist.dart';
+import 'package:ott_project/components/library/playlistDTO.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
 import 'package:ott_project/components/library/liked_songs_page.dart';
@@ -20,6 +21,7 @@ import 'recently_played.dart';
 
 class SongPlayerPage extends StatefulWidget {
   final AudioDescription music;
+  // final PlaylistDTO playlist;
   // final bool isLiked;
   // final Function(Audio, bool) onLike;
   final Function(AudioDescription) onChange;
@@ -29,6 +31,7 @@ class SongPlayerPage extends StatefulWidget {
   SongPlayerPage({
     Key? key,
     required this.music,
+    //required this.playlist,
     // required this.onLike,
     // required this.isLiked,
     this.musicList = const [],
@@ -51,7 +54,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
   late AudioApiService audioApiService;
   List<String> likedSongIds = [];
   Uint8List? banner;
-  late Future<List<AudioPlaylist>> _playList;
+
 
   @override
   void initState() {
@@ -89,13 +92,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
     // decodeImage(widget.audio.thumbnail);
   }
 
-  // Future<void> _initializeUserAndLikedStatus() async {
-  //   await _getCurrentUserId();
-  //   if (currentUserId != null) {
-  //     await _fetchLikedAudios();
-  //     _checkIfLiked();
-  //   }
-  // }
+
 
 
   Future<void> _loadBannerImage() async {
@@ -142,14 +139,6 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
       return;
     }
 
-    // setState(() {
-    //   isLiked = !isLiked;
-    //   if(isLiked){
-    //     likedSongIds.add(widget.music.id.toString());
-    //   }else{
-    //     likedSongIds.remove(widget.music.id.toString());
-    //   }
-    // });
     bool success;
     if (isLiked) { 
       print('Unliking audio....');
@@ -236,20 +225,7 @@ if (success) {
     ].join(":");
   }
 
-  // Future<void> _fetchPlaylists() async{
-  //  try{
-  //     final userId =await Service().getLoggedInUserId();
-  //     print('UserId: ${userId}');
-  //     if(userId != null){
-  //     final playlists = await PlaylistService().getPlaylistsByUserId(userId);
-  //     setState(() {
-  //       _playList = Future.value(playlists);
-  //     });
-  //     }
-  //  }catch(e){
-  //   print('Error fetching playlists: $e');
-  //  }   
-  // }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -257,8 +233,8 @@ if (success) {
       builder: (context, audioProvider, child) {
         final currentAudio = audioProvider.audioDescriptioncurrently;
         final isPlaying = audioProvider.isPlaying;
-        final duration = audioProvider.duration ?? Duration.zero;
-        final position = audioProvider.position ?? Duration.zero;
+        final duration = audioProvider.duration ;
+        final position = audioProvider.position ;
         // final decodedImage =
         //     audioProvider.getDecodedImage(currentAudio!.thumbnail);
         IconData repeatIcon;
@@ -331,8 +307,8 @@ if (success) {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      'Song name',
-                      //currentAudio!.audioTitle,
+                     // 'songname',
+                      currentAudio!.audioTitle,
                       style: TextStyle(
                           color: kWhite,
                           fontSize: 20,

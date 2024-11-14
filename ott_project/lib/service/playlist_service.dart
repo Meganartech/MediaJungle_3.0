@@ -66,14 +66,17 @@ class PlaylistService {
       }
   }
 
-  Future<Playlist> getPlaylistById(int playlistId) async{
+  Future<Map<String, String>?> getPlaylistById(int playlistId) async{
     final url = Uri.parse('$baseUrl/$playlistId/playlists');
     try{
     final response = await http.get(url);
     print('Playlist id:${response.statusCode}');
     if(response.statusCode==200){
       final data = jsonDecode(response.body);
-      return Playlist.fromJson(data);
+      return{
+        'title' : data['title'],
+        'description':data['description']
+      };
     }else{
       throw Exception('Error to load playlist');
     }
@@ -110,21 +113,35 @@ class PlaylistService {
     }
   }
 
-Future<List<AudioDescription>> getAudioDetailsForPlaylist(List<int> audioIds) async {
-  List<AudioDescription> audioDetailsList = [];
+// Future<List<AudioDescription>> getAudioDetailsForPlaylist(List<int> audioIds) async {
+//   List<AudioDescription> audioDetailsList = [];
 
+//   try {
+//     for (int audioId in audioIds) {
+//       final audio = await AudioApiService().fetchAudioDetails(audioId);
+//       if (audio != null) {
+//         audioDetailsList.add(audio);
+//       }
+//     }
+//   } catch (e) {
+//     print("Error fetching audio details: $e");
+//   }
+
+//   return audioDetailsList;
+// }
+Future<List<AudioDescription>> getAudioDetailsForPlaylist(List<int> audioIds) async {
   try {
-    for (int audioId in audioIds) {
-      final audio = await AudioApiService().fetchAudioDetails(audioId);
-      if (audio != null) {
-        audioDetailsList.add(audio);
-      }
-    }
+    // Use Future.wait to fetch all audio details in parallel
+    final List<AudioDescription> audioDetailsList = await Future.wait(
+      audioIds.map((audioId) => AudioApiService().fetchAudioDetails(audioId))
+    );
+    
+    print('Fetched ${audioDetailsList.length} audio details');
+    return audioDetailsList;
   } catch (e) {
     print("Error fetching audio details: $e");
+    throw e; // Rethrow to handle in UI
   }
-
-  return audioDetailsList;
 }
 
 //delete playlist
@@ -144,6 +161,65 @@ Future<String> deletePlaylist(int id) async{
     }
   }catch(e){
     return 'Error:${e.toString()}';
+  }
+}
+
+Future<void> updatePlaylist(int playlistId,String title,String description) async{
+final url = Uri.parse('$baseUrl/editplaylist/$playlistId');
+try{
+  final response = await http.patch(url,
+  body: {
+    if(title != null) 'title':title,
+        if(description != null) 'description':description,
+  },
+  );
+  if(response.statusCode == 200){
+    print('Playlist updated successfully');
+  }else if(response.statusCode == 404){
+     print('Playlist not found');
+    }else{
+      print('Failed to load playlist');
+    }
+}catch(e){
+  print('Playlist edit error:$e');
+  
+}
+return null;
+}
+
+Future<void> removeAudioFromPlaylist(int playlistId,int audioId) async{
+
+  final url = Uri.parse('$baseUrl/$playlistId/audio/$audioId/delete');
+
+  try{
+    final response = await http.delete(url);
+    if(response.statusCode == 200){
+      print('Audio removed from playlist');
+    }else if(response.statusCode == 404){
+      print('Audio not found');
+    }else{
+      print('Failed to remove audio');
+    }
+  }catch(e){
+    print('Error removing audio:$e');
+  }
+}
+
+Future<void> moveAudioToPlaylist(int playlistId,int audioId,int movedPlaylistId) async{
+
+  final url = Uri.parse('$baseUrl/$playlistId/moveAudioToPlaylist/$audioId/$movedPlaylistId');
+
+  try{
+    final response = await http.patch(url);
+    if(response.statusCode ==200){
+      print('Audio moved from $playlistId to playlist:$movedPlaylistId');
+    }else if(response.statusCode == 404){
+      print('Playlist not found');
+    }else{
+      print('Failed to move audio');
+    }
+  }catch(e){
+    print('Error moving audio:$e');
   }
 }
 
