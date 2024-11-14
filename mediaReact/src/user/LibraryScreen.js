@@ -587,24 +587,24 @@ console.log("visibleplaylist",visibleplaylist)
     }}
   >
     {/* Centered "Create Playlist" Button */}
-    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-      <button 
-        onClick={openCreatePlaylistPopup}
-        style={{
-          backgroundColor: 'white',
-          color: 'black',
-          padding: '10px',
-          borderRadius: '5px',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: '8px',
-        }}
-      >
-        <img src={plus} alt="plus" style={{ width: '20px', height: '20px' }} />
-        Create Playlist
-      </button>
-    </div>
+    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }} className="create-playlist-container">
+  <button 
+    onClick={openCreatePlaylistPopup}
+    style={{
+      backgroundColor: 'white',
+      color: 'black',
+      padding: '10px',
+      borderRadius: '5px',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: '8px',
+    }}
+  >
+    <img src={plus} alt="plus" style={{ width: '20px', height: '20px' }} />
+    Create Playlist
+  </button>
+</div>
 
     {/* Centered Playlist Items */}
     <div style={{
@@ -836,7 +836,7 @@ console.log("visibleplaylist",visibleplaylist)
       case "playlist":
         return (
           <div>
-            <h3 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',gap:'800px' }}>
+            <h3 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',gap:'800px' }} className='playlisthead'>
     Playlists
     {/* Create Playlist Button */}
     {/* Centered "Create Playlist" Button */}
@@ -1326,100 +1326,107 @@ Cancel
 
   return (
     <Layout>
-      <div style={{
-        marginTop:'50px',
-        marginLeft:'410px',
-
-      }}>
+    <div style={{
+      marginTop: '50px',
+      marginLeft: '410px',
+    }}>
       Library
-      </div>
-      <div className="container d-flex" style={{ height: '70vh', alignItems: 'flex-start' }}>
-        {/* Left sidebar */}
-        <div className="w-25 p-3" style={{ color: "white" }}>
-
+    </div>
+    <div className="container d-flex" style={{
+      height: '70vh',
+      alignItems: 'flex-start',
+      flexWrap: 'wrap', // Allow elements to wrap on smaller screens
+    }}>
+      {/* Left sidebar */}
+      <div className="w-25 p-3" style={{
+        color: "white",
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px',
+      }}>
         <button 
-  className="p-3"
-  style={{
-    height: '110px',  // Increased height
-    width: '75%',     // 75% width of the parent container
-    backgroundColor: selectedCategory === "likedMusic" ? "#2149B1" : "rgba(50, 50, 50, 0.5)",
-    display: 'flex',
-    flexDirection: 'column', // Stack elements vertically
-    // alignItems: 'center',
-    justifyContent: 'center', // Center contents inside the button
-    gap: '10px',             // Smaller gap between elements
-    margin: '0 auto',        // Centers the button in its parent container
-    marginBottom:'50px',
-    borderRadius:'10px',
-  }}
-  onClick={() => setSelectedCategory("likedMusic")}
->
-  <img src={Thumbs} alt="thumbs" style={{ width: '30px' }} />
-  Liked Music
-  <span>{likedSongs && likedSongs.length > 0 ? likedSongs.length : 0} Songs</span>
-</button>
-
-         <button 
-  className="p-3"
-  style={{
-    height: '110px',  // Increased height
-    width: '75%',     // 75% width of the parent container
-    backgroundColor: selectedCategory === "watchLater" ? "#2149B1" : "rgba(50, 50, 50, 0.5)",
-    display: 'flex',
-    flexDirection: 'column', // Stack elements vertically
-    // alignItems: 'center',
-    justifyContent: 'center', // Center contents inside the button
-    gap: '10px',             // Smaller gap between elements
-    margin: '0 auto',        // Centers the button in its parent container
-    marginBottom:'50px',
-    borderRadius:'10px',
-  }}
-            onClick={() => setSelectedCategory("watchLater")}
-          >
-            <img src={video} alt="video" style={{ width: '30px' }} />
-            Watch Later
-            <span>{watchLater && watchLater.length > 0 ? watchLater.length : 0} Videos</span>
-          </button>
-
-          <button 
-  className="mb-4 p-3"
-  style={{
-    height: '110px',  
-    width: '75%',     // 75% width of the parent container
-    backgroundColor: selectedCategory === "playlist" ? "#2149B1" : 'rgba(50, 50, 50, 0.5)',
-    color: "white",
-    display: 'flex',
-    flexDirection: 'column', // Stack elements vertically
-    // alignItems: 'center',
-    justifyContent: 'center', // Center contents inside the button
-    gap: '10px',             // Smaller gap between elements
-    margin: '0 auto',        // Centers the button in its parent container
-    marginBottom:'50px',
-    borderRadius:'10px',
-  }}
-  onClick={() => setSelectedCategory("playlist")}
->
-  <img src={vector} alt="playlist" style={{ width: '30px' }} />
-  <span>Playlist</span>
-  <span>{playlist && playlist.length > 0 ? playlist.length : 0} lists</span>
-</button>
-
-        </div>
-
-<div className="content-area w-75 p-3" 
-  style={{ 
-    color: "white", 
-    display: 'flex', 
-    flexDirection: 'column', 
-    alignItems: 'flex-start', 
-    maxHeight: '500px',  
-    overflowY: 'auto', 
-  }}
->
-  {renderContent()}
-</div>
-
+          className="p-3"
+          style={{
+            height: '110px', 
+            width: '75%', 
+            backgroundColor: selectedCategory === "likedMusic" ? "#2149B1" : "rgba(50, 50, 50, 0.5)",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '10px',
+            margin: '0 auto',
+            marginBottom: '50px',
+            borderRadius: '10px',
+          }}
+          onClick={() => setSelectedCategory("likedMusic")}
+        >
+          <img src={Thumbs} alt="thumbs" style={{ width: '30px' }} />
+          {/* Text removed for mobile view */}
+          <span className="d-none d-sm-block">Liked Music</span> {/* Hide text on mobile */}
+          <span className="d-none d-sm-block">{likedSongs && likedSongs.length > 0 ? likedSongs.length : 0} Songs</span> {/* Hide text on mobile */}
+        </button>
+  
+        <button 
+          className="p-3"
+          style={{
+            height: '110px', 
+            width: '75%', 
+            backgroundColor: selectedCategory === "watchLater" ? "#2149B1" : "rgba(50, 50, 50, 0.5)",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '10px',
+            margin: '0 auto',
+            marginBottom: '50px',
+            borderRadius: '10px',
+          }}
+          onClick={() => setSelectedCategory("watchLater")}
+        >
+          <img src={video} alt="video" style={{ width: '30px' }} />
+          {/* Text removed for mobile view */}
+          <span className="d-none d-sm-block">Watch Later</span>
+          <span className="d-none d-sm-block">{watchLater && watchLater.length > 0 ? watchLater.length : 0} Videos</span>
+        </button>
+  
+        <button 
+          className="mb-4 p-3"
+          style={{
+            height: '110px',  
+            width: '75%', 
+            backgroundColor: selectedCategory === "playlist" ? "#2149B1" : 'rgba(50, 50, 50, 0.5)',
+            color: "white",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '10px',
+            margin: '0 auto',
+            marginBottom: '50px',
+            borderRadius: '10px',
+          }}
+          onClick={() => setSelectedCategory("playlist")}
+        >
+          <img src={vector} alt="playlist" style={{ width: '30px' }} />
+          {/* Text removed for mobile view */}
+          <span className="d-none d-sm-block">Playlist</span>
+          <span className="d-none d-sm-block">{playlist && playlist.length > 0 ? playlist.length : 0} lists</span>
+        </button>
       </div>
+  
+      {/* Right content area */}
+      <div className="content-area w-75 p-3" 
+        style={{ 
+          color: "white", 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'flex-start', 
+          maxHeight: '500px',  
+          overflowY: 'auto', 
+          flex: '1 1 75%',  // Takes 75% width on larger screens
+        }}
+      >
+        {renderContent()}
+      </div>
+    </div>
     </Layout>
   );
 };

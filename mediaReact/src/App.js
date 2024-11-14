@@ -101,6 +101,7 @@ import AudioHomecreeen from './user/Screens/AudioHomescreen';
 import Aud from './admin/appptest';
 import ViewProfile from './user/ViewProfile';
 import LibraryScreen from './user/LibraryScreen';
+import AudioHomescreen from './user/Screens/AudioHomescreen';
 
 
 
@@ -203,7 +204,7 @@ const App = () => {
 
 {/*         
             <Route path='/' element={{hasSignedUp ?{navigate("/Home")} : {navigate("/admin/addUser")}} />} /> */}
-<Route path='AudioHomecreeen' element= {<AudioHomecreeen/>} />
+<Route path='AudioHomescreen' element= {<AudioHomescreen/>} />
             <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<MoviesPage/>} />} />
           {/* <Route path='/' element={<Home  />} /> */}
 

@@ -12226,3 +12226,18 @@ img {
     width: 40px; /* Smaller navigation buttons */
   }
 }
+@media (max-width: 768px) {
+  button {
+    height: auto !important;  /* Remove height */
+    width: auto !important;   /* Remove width */
+    padding: 20px;            /* Adjust padding if necessary */
+  }
+
+  button img {
+    width: 40px; /* Adjust icon size on mobile if needed */
+  }
+  .playlisthead {
+    display: block; /* Change to block for mobile */
+    gap: 0; /* Remove the large gap in mobile */
+  }
+}
