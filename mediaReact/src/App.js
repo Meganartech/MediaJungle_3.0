@@ -88,7 +88,7 @@ import Edittenure from './admin/Edittenure';
 import PlanFeatures from './admin/PlanFeatures';
 import AddFeature from './admin/AddFeature';
 import EditFeature from './admin/EditFeature';
-import MusicPage from './user/Screens/MusicPage';
+// import MusicPage from './user/Screens/MusicPage';
 import Library from './user/Screens/Library';
 import PrivacyPolicy from './user/Screens/PrivacyPolicy';
 import Banner_setting from './admin/Banner_setting';
@@ -101,6 +101,8 @@ import AudioHomecreeen from './user/Screens/AudioHomescreen';
 import Aud from './admin/appptest';
 import ViewProfile from './user/ViewProfile';
 import LibraryScreen from './user/LibraryScreen';
+import MusicScreen from './user/Screens/MusicScreen';
+
 
 
 
@@ -212,7 +214,8 @@ const App = () => {
 
           <Route path='Home' element={<Home />} />
           
-          <Route path='MusicPage' element={<MusicPage />} />
+          {/* <Route path='MusicPage' element={<MusicPage />} /> */}
+          <Route path='MusicPage' element={<MusicScreen />} />
           <Route path='Library' element={<Library />} />
           <Route path='VideoHomescreen' element={<VideoHomescreen />} />
           {/* <Route path='Homescreen' element={<Videosam />} /> */}

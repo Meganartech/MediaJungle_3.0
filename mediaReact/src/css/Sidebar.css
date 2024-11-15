@@ -1217,5 +1217,185 @@ td{
   position: relative;
 }
 
+/*music page */
+ .music-player {
+  display: flex;
+  max-width: 100%;
+  padding: 70px;
+  color: white;
+}
 
+.left-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.album-art {
+  width: 100%;
+  max-width: 300px;
+  height:300px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.controls {
+  display: flex;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.control-button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.control-button:hover {
+  color: #e50914;
+}
+
+.right-side {
+  flex: 2 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.song-list {
+  list-style: none;
+  padding: 50px;
+}
+
+.song-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
+.song-list li.active {
+  background-color: #444;
+  font-weight: bold;
+}
+
+.song-list li:hover {
+  background-color: #333;
+}
+
+.song-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.song-duration {
+  color: #999;
+  font-size: 14px;
+  margin-left: auto;
+}
+
+.song-artist {
+  font-size: 12px;
+  color: #bbb;
+  margin-top: 5px;
+}
+
+
+
+/* 
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #292447;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+.bottom-bar-art {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 15px;
+}
+
+.bottom-bar-info {
+  flex: 1;
+}
+
+.bottom-bar-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.bottom-bar-artist {
+  font-size: 14px;
+  color: #d1d1e0;
+}
+
+.bottom-bar .control-button {
+  margin-left: 15px;
+  padding: 10px;
+  font-size: 18px;
+} */
+
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #292447;
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.progress-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background-color: red;
+  transition: width 0.1s linear;
+}
+
+.bottom-bar-art {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 15px;
+}
+
+.bottom-bar-info {
+  flex: 1;
+}
+
+.bottom-bar-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.bottom-bar-artist {
+  font-size: 14px;
+  color: #d1d1e0;
+}
+
+.bottom-bar .control-button {
+  margin-left: 15px;
+  padding: 10px;
+  font-size: 18px;
+} 
 

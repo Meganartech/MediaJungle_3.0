@@ -1329,6 +1329,7 @@ Cancel
       <div style={{
         marginTop:'50px',
         marginLeft:'410px',
+        fontSize:'25px',
 
       }}>
       Library
