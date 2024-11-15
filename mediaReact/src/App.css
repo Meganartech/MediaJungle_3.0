@@ -12241,3 +12241,57 @@ img {
     gap: 0; /* Remove the large gap in mobile */
   }
 }
+
+  .library-footer {
+    display: none;
+    position: fixed;
+    bottom: 60px; /* Adjust based on your main footer height */
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .library-footer button {
+    background-color: rgba(50, 50, 50, 0.5);
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    flex: 1;
+    margin: 0 5px;
+    text-align: center;
+  }
+
+  .library-footer button.active-footer-btn {
+    background-color: #2149B1;
+  }
+
+  @media (min-width: 768px) {
+    .library-footer {
+      display: none; /* Show footer for mobile only */
+    }
+  }
+
+  @media(max-width: 768px){
+   
+    .divss{
+   display:none !important;
+    }
+ .playlisthead{
+  gap:0 !important;
+ }
+   .sss{
+    margin-left:30px !important;
+   }
+   .div22{
+    margin-top:10px !important;
+   }
+  .content-area{
+    display: block !important;
+  }
+  }
