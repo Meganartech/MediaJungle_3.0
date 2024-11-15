@@ -18,6 +18,7 @@ import 'package:ott_project/service/playlist_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../service/service.dart';
+import '../library/likedSongsDTO.dart';
 
 enum RepeatMode { off, all, one }
 
@@ -95,7 +96,9 @@ class AudioProvider with ChangeNotifier {
     if(currentIndex >= 0 && currentIndex < audio_playlist.length){
       try{
         final currentSong = audio_playlist[currentIndex];
+        print('currentsong:$currentSong');
         audioUrl = await AudioApiService().fetchAudioStreamUrl(currentSong.audioFileName!);
+        print('Audio url:$audioUrl');
         if(audioUrl != null){
           await audioPlayer.setSource(UrlSource(audioUrl!));
           notifyListeners();
@@ -109,7 +112,7 @@ class AudioProvider with ChangeNotifier {
   }
   // Updates the currently playing audio description
 
-  void _updateCurrentlyPlayingSong(AudioDescription audioDescription){
+  void updateCurrentlyPlayingSong(AudioDescription audioDescription){
     _audioDescriptioncurrently = audioDescription;
     notifyListeners();
   }
@@ -123,11 +126,26 @@ class AudioProvider with ChangeNotifier {
       }
       _audioDescriptioncurrently = audioDescription;
       audio_playlist = newPlaylist;
-      currentIndex = audio_playlist.indexOf(audioDescription);
+      currentIndex = audio_playlist.indexWhere((audio)=> audio.id == audioDescription.id);
+       if (currentIndex == -1) {
+        print('Error: Selected audio not found in playlist');
+        return;
+      }
       await _saveCurrentlyPlayingSong();
       notifyListeners();
       await prepareSong();
    }
+
+    List<AudioDescription> convertPlaylistToAudioDescriptions(List<LikedsongsDTO> playlistItems) {
+    return playlistItems.map((item) => AudioDescription(
+      id: item.audioId,
+      audioTitle: item.audioTitle,
+      paid: false,
+      audioFileName: audioDescriptioncurrently!.audioFileName,
+      
+      )).toList();
+  }
+
 
   // Save currently playing audio to shared preferences
   Future<void> _saveCurrentlyPlayingSong() async{
@@ -169,7 +187,7 @@ class AudioProvider with ChangeNotifier {
 
   Future<void> playSong() async {
     print('Current Index: $currentIndex');
-    print('Playlist Length: ${playList.length}');
+    print('Playlist Length: ${audio_playlist.length}');
 
     if (currentIndex >= 0 && currentIndex < audio_playlist.length) {
       try {
@@ -179,7 +197,7 @@ class AudioProvider with ChangeNotifier {
         await audioPlayer.stop();
         await audioPlayer.play(UrlSource(audioUrl!));
         isPlaying = true;
-        _updateCurrentlyPlayingSong(currentAudio);
+        updateCurrentlyPlayingSong(currentAudio);
         notifyListeners();
       } catch (e) {
         print('Error playing audio: $e');
@@ -199,7 +217,7 @@ class AudioProvider with ChangeNotifier {
         if (audioUrl == null && _audioDescriptioncurrently != null) {
           // audioUrl = await AudioApiService()
           //     .fetchAudioStreamUrl(_currentlyPlaying!.fileName);
-          await prepareAudio();
+          await prepareSong();
         }
         await audioPlayer.resume();
         isPlaying = true;
@@ -216,13 +234,16 @@ class AudioProvider with ChangeNotifier {
 
   void toggleShuffleSong() {
     _isShuffleOn = !_isShuffleOn;
+    print('Shuffle:$_isShuffleOn');
     if (_isShuffleOn) {
-      //_originalPlaylist = List.from(playList);
-      playList.shuffle();
-      currentIndex = audio_playlist.indexOf(_audioDescriptioncurrently!);
+      originalaudioPlaylist = List.from(audio_playlist);
+      print('original audio playlist:$originalaudioPlaylist');
+      audio_playlist.shuffle();
+      currentIndex = audio_playlist.indexOf(audioDescriptioncurrently!);
+      print('Current song:$currentIndex');
     } else {
       audio_playlist = List.from(originalaudioPlaylist);
-      currentIndex = audio_playlist.indexOf(_audioDescriptioncurrently!);
+      currentIndex = audio_playlist.indexOf(audioDescriptioncurrently!);
     }
     notifyListeners();
   }
@@ -245,7 +266,7 @@ class AudioProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //Play next audio
+  //Play next audio description
 
 Future<void> playNextSong() async {
     if (_repeatModeSong == RepeatMode.one) {
@@ -259,13 +280,13 @@ Future<void> playNextSong() async {
         print('End of playlist reached.');
         return;
       }
-      _updateCurrentlyPlayingSong(audio_playlist[currentIndex]);
+      updateCurrentlyPlayingSong(audio_playlist[currentIndex]);
       notifyListeners();
       await playSong();
       _recentlyPlayedManager.addRecentlyPlayed(playList[currentIndex]);
     }
   }
-//play previous audio
+//play previous audio description
   Future<void> playPreviousSong() async {
     if (_repeatModeSong == RepeatMode.one) {
       await playSong();
@@ -278,7 +299,7 @@ Future<void> playNextSong() async {
         print('Beginning of playlist reached.');
         return;
       }
-      _updateCurrentlyPlayingSong(audio_playlist[currentIndex]);
+      updateCurrentlyPlayingSong(audio_playlist[currentIndex]);
       notifyListeners();
       await playSong();
       _recentlyPlayedManager.addRecentlyPlayed(playList[currentIndex]);

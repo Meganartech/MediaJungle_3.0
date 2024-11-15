@@ -37,12 +37,13 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
     super.initState();
     _loadIcon();
     _loadPlaylistDetails();
+    
   }
 
   bool _showSearch = false;
   TextEditingController _searchController = TextEditingController();
   AppIcon? iconData;
-  PlaylistDTO? _playlist;
+  List<PlaylistDTO> _playlists=[];
   bool _isLoading = true;
   String? _error;
   Map<int,Uint8List> audioImages = {};
@@ -71,14 +72,18 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
       
       // Assuming the first item is our playlist since we queried by ID
       if (playlistData.isNotEmpty) {
-        final playlist = playlistData.first;
-        print('Playlist data: $playlist');
+       await Future.wait(playlistData.map((playlist)async{
+          print('Playlist data: $playlist');
         print('Audio details: ${playlist.audioDetails}');
+        await _loadAudioImages(playlist.audioDetails);
+        return playlist;
+       }));
+        
         setState(() {
-          _playlist = playlist;        
+          _playlists = playlistData;        
           //_isLoading = false;
         });
-        await _loadAudioImages(playlist.audioDetails);
+        
         setState(() {
         _isLoading = false;
       });
@@ -152,22 +157,24 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
     showMenu(
       context: context,
       position: position,
+      color:Colors.grey[500],
       items: [
         PopupMenuItem(
           value: 'move',
           child: 
-              Text('Move'),
+              Text('Move',style: TextStyle(color: Colors.white),),
         ),
         PopupMenuItem(
           value: 'remove',
           child:
-              Text('Remove'),
+              Text('Remove',style: TextStyle(color: Colors.white)),
         ),
       ],
     ).then((value) async{
       if (value == 'move') {
         print('move selected');
         _showMoveDialog(context, movedPlaylistId, audio.audioId);
+
         // _loadPlaylistDetails();
       
       } else if (value == 'remove') {
@@ -399,28 +406,15 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
                         color: kWhite,
                       )),
                   SizedBox(
-                    width: 10,
+                    width: 15,
                   ),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProfilePage()));
-                      },
-                      icon: Icon(
-                        Icons.person_outline_rounded,
-                        color: kWhite,
-                      )),
-                  SizedBox(
-                    width: 10,
-                  ),
+                
                 ],
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  _playlist!.title ?? 'Untitled Playlist',
+                  _playlists.first.title ?? 'Untitled Playlist',
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -428,9 +422,9 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
                 ),
               ),
               Expanded(
-               child: _playlist == null || _playlist!.audioDetails.isEmpty
+               child:  _playlists.first.audioDetails.isEmpty
                 ? Center(
-                  child: _playlist == null 
+                  child: _playlists.isEmpty 
                         ? CircularProgressIndicator()
                                      :  Text(
                           'No songs in this playlist',
@@ -438,9 +432,9 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
                         )
                 )
                     : ListView.builder(
-                        itemCount: _playlist!.audioDetails.length,
+                        itemCount: _playlists.first.audioDetails.length,
                         itemBuilder: (context, index) {
-                          final audio = _playlist!.audioDetails[index];
+                          final audio = _playlists.first.audioDetails[index];
                           print('Audio in playlists:$audio');
                           
                           return SizedBox(
@@ -458,8 +452,8 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
                               trailing: Builder(builder: (context)=> IconButton(
                                 onPressed: () => _showMenu(context,
                                 audio,
-                                _playlist!.playlistId,
-                                _playlist!.playlistId
+                                _playlists.first.playlistId,
+                                _playlists.first.playlistId
                                 
                                 ),
                                icon: Icon(Icons.more_vert_rounded,color: Colors.white,)),),
@@ -475,20 +469,32 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
                                       );
 
                                 
-                                final selectedAudioId = _playlist!.audioDetails[index].audioId;
+                                final selectedAudioId = _playlists.first.audioDetails[index].audioId;
                                 final AudioDescription selectedAudio = await AudioApiService().fetchAudioDetails(selectedAudioId);
-
+                                
                                 await selectedAudio.fetchImage();
-                                 Navigator.pop(context);
-                                //final selectedAudio = _playlist!.audioDetails[index];
-                                //  final selectedAudio = audioDetailsList.firstWhere((audio)=> audio.id == selectedAudioId,orElse:() {
-                                //    throw Exception("Audio details not found for ID: $selectedAudioId");
-                                // },);
-                                //print('SelectedAudio:$selectedAudio');
-                              //  final selectedAudio = audioDetailsList.first;
+                          
+                              final audioProvider = Provider.of<AudioProvider>(context, listen: false);
+                              audioProvider.updateCurrentlyPlayingSong(selectedAudio);
+                             final playlistAudios = audioProvider.convertPlaylistToAudioDescriptions(_playlists.first.audioDetails);
+                             await audioProvider.setCurrentlyPlayingSong(selectedAudio, playlistAudios);
+
+                          print('Audio Provider State:');
+                          print('Current Audio: ${audioProvider.audioDescriptioncurrently?.audioTitle}');
+                          print('Thumbnail Present: ${audioProvider.audioDescriptioncurrently?.thumbnail != null}');
+
+                          // Dismiss loading dialog
+                          if (context.mounted && Navigator.canPop(context)) {
+                            Navigator.pop(context);
+                          }
+                          // Set thumbnail if available
+                          // if (selectedAudio.thumbnail != null) {
+                          //   p.thumbnail = selectedAudio.thumbnail;
+                          // }
                                  print('Playlist SelectedAudio:$selectedAudio');
                                  print('Selected Audio Title: ${selectedAudio.audioTitle}');
-  print('Selected Audio Thumbnail: ${selectedAudio.thumbnail}');
+                                 if(!context.mounted) return;
+                                 print('Selected Audio Thumbnail: ${selectedAudio.thumbnail}');
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -496,18 +502,21 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
                                           music: selectedAudio,
                                           onChange: (newAudio) {
                                             setState(() {
+
                                               int index = 
-                                              _playlist!.audioDetails.indexWhere((audio)=>audio.audioId == newAudio.id);
+                                              _playlists.first.audioDetails.indexWhere((audio)=>audio.audioId == newAudio.id);
+                                              print('Song index:$index');
                                               // widget
                                               //     .playlist.audioIds
                                               //     .indexOf(newAudio.id);
                                                   if(index != -1){
-                                                    _playlist!.audioDetails[index] = LikedsongsDTO(audioId: newAudio.id, audioTitle: newAudio.audioTitle);
+                                                    _playlists.first.audioDetails[index] = LikedsongsDTO(audioId: newAudio.id, audioTitle: newAudio.audioTitle);
                                                     //widget.playlist.audioIds[index] = newAudio.id;
                                                   }
                                             });
                                           },
-                                          onDislike: (p0) {})
+                                          onDislike: (p0) {}
+                                          )
                                   ));
                                                               }catch(e){
                                    print("Error fetching audio details: $e");

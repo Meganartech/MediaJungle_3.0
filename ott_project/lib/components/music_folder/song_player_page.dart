@@ -239,11 +239,11 @@ if (success) {
         //     audioProvider.getDecodedImage(currentAudio!.thumbnail);
         IconData repeatIcon;
         Color repeatColor;
-        switch (audioProvider.repeatMode) {
+        switch (audioProvider.repeatModeSong) {
           case RepeatMode.off:
             repeatIcon = Icons.repeat;
             repeatColor = Colors.white;
-            break;
+            break; 
           case RepeatMode.all:
             repeatIcon = Icons.repeat;
             repeatColor = Colors.green;
@@ -485,36 +485,36 @@ if (success) {
                   audioProvider.fetchPlaylists();
                 },
               ),
-              ...audioProvider.aplaylists.map((likedsong) {
-                // final isAudioInlikedsong =
-                //     likedsong.audios.any((audio) => audio.id == widget.music.id);
-                return ListTile(
-                  leading: Icon(
-                    Icons.favorite_outline_rounded,
-                    color: Colors.white,
-                  ),
-                  title: Text(
-                    'Add to Liked Songs',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  // onTap: isAudioInlikedsong
-                  //     ? null // Disable onTap if the song is already in the playlist
-                  //     : () {
-                  //         // audioProvider.addMusicToLikedsong(
-                  //         //     likedsong, widget.music);
-                  //         // Navigator.pop(context);
-                  //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //         //   content: Text('Added to Liked Songs'),
-                  //         // ));
-                  //       },
-                  // Optionally, you can visually indicate if the song is already in the playlist
-                  // trailing: isAudioInlikedsong
-                  //     ? Icon(Icons.check,
-                  //         color: Colors
-                  //             .green) // A checkmark to show the song is already added
-                  //     : null,
-                );
-              }).toList(),
+              // ...audioProvider.aplaylists.map((likedsong) {
+              //   // final isAudioInlikedsong =
+              //   //     likedsong.audios.any((audio) => audio.id == widget.music.id);
+              //   return ListTile(
+              //     leading: Icon(
+              //       Icons.favorite_outline_rounded,
+              //       color: Colors.white,
+              //     ),
+              //     title: Text(
+              //       'Add to Liked Songs',
+              //       style: TextStyle(color: Colors.white),
+              //     ),
+              //     // onTap: isAudioInlikedsong
+              //     //     ? null // Disable onTap if the song is already in the playlist
+              //     //     : () {
+              //     //         // audioProvider.addMusicToLikedsong(
+              //     //         //     likedsong, widget.music);
+              //     //         // Navigator.pop(context);
+              //     //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              //     //         //   content: Text('Added to Liked Songs'),
+              //     //         // ));
+              //     //       },
+              //     // Optionally, you can visually indicate if the song is already in the playlist
+              //     // trailing: isAudioInlikedsong
+              //     //     ? Icon(Icons.check,
+              //     //         color: Colors
+              //     //             .green) // A checkmark to show the song is already added
+              //     //     : null,
+              //   );
+              // }).toList(),
               ListTile(
                 leading: Icon(Icons.share_rounded,
                     color: const Color.fromARGB(255, 229, 191, 191)),
@@ -621,15 +621,18 @@ void _showCreatePlaylistDialog(BuildContext context,{int? audioId}) {
     final TextEditingController descriptionController = TextEditingController();
     showDialog(
       context: context,
+
       builder: (BuildContext context) {
         return BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
           child: AlertDialog(
-            backgroundColor: Color.fromARGB(119, 68, 66, 66),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            backgroundColor: Color.fromARGB(69, 178, 174, 174),
             title: Text('New playlist', style: TextStyle(color: Colors.white)),
             content: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+               
                 children: [
                   TextField(
                     controller: titleController,

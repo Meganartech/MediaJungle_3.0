@@ -67,59 +67,7 @@ class _PlayListPageState extends State<PlayListPage> {
    }    
   }
 
-  void _showMenu(BuildContext context,int playlistId) {
-    final RenderBox button = context.findRenderObject() as RenderBox;
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
-    final RelativeRect position = RelativeRect.fromRect(
-      Rect.fromPoints(
-        button.localToGlobal(Offset.zero, ancestor: overlay),
-        button.localToGlobal(button.size.center(Offset.zero), ancestor: overlay),
-      ),
-      Offset.zero & overlay.size,
-    );
-
-    showMenu(
-      context: context,
-      position: position,
-      items: [
-        PopupMenuItem(
-          value: 'edit',
-          child: 
-              Text('Edit'),
-        ),
-        PopupMenuItem(
-          value: 'delete',
-          child:
-              Text('Delete'),
-            
-        ),
-      ],
-    ).then((value) async{
-      if (value == 'edit') {
-        print('Edit selected');
-        final playlistDetails = await PlaylistService().getPlaylistById(playlistId);
-        if(playlistDetails != null){
-          _showEditPlaylistDialog(context,playlistId: playlistId,initialtitle: playlistDetails['title'] ?? '',initialdescription: playlistDetails['description']??'');
-          await _fetchPlaylists();
-        }
-      } else if (value == 'delete') {
-        print('Delete selected');
-        //final playlist = PlaylistService().getPlaylistById(playlistId);
-        String result =await  PlaylistService().deletePlaylist(playlistId);
-        print(result);
-        ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(content: Text(result)),
-);
-  setState(() {
-    _playList = _playList.then((list){
-      list.removeWhere((playlist)=> playlist.id == playlistId);
-      return list;
-    });
-  });
-      }
-    });
-  } 
 
 
   void _showEditPlaylistDialog(BuildContext context,{required int playlistId,String? initialtitle, String? initialdescription}) {
@@ -131,7 +79,7 @@ class _PlayListPageState extends State<PlayListPage> {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
           child: AlertDialog(
-            backgroundColor: Color.fromARGB(119, 68, 66, 66),
+            backgroundColor: Color.fromARGB(69, 178, 174, 174),
             title: Text('Edit playlist', style: TextStyle(color: Colors.white)),
             content: SingleChildScrollView(
               child: Column(
@@ -272,12 +220,10 @@ class _PlayListPageState extends State<PlayListPage> {
                           color: kWhite,
                         )),
                     SizedBox(
-                      width: 10,
+                      width: 15  ,
                     ),
                    
-                    SizedBox(
-                      width: 10,
-                    ),
+                    
                   ],
                 ),
                 SizedBox(
@@ -440,17 +386,58 @@ class _PlayListPageState extends State<PlayListPage> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(width: MediaQuery.sizeOf(context).width * 0.09,),
-                                        IconButton(
+                                        // IconButton(
                                         
-                                          onPressed: ()=> _showMenu(context,playlist.id)
-                                        
-                                        , icon: Icon(Icons.more_vert_rounded,color: Colors.white,))
+                                        //   onPressed: (){
+                                            PopupMenuButton<Map<String, dynamic>>(
+                                              color: Colors.grey[600],
+                                                onSelected: (value) async{
+                                                  final action = value['action'];
+                                                  final playlistId = value['playlistId'];
+
+                                                  if (action == 'edit') {
+                                                    // Handle edit action
+                                                    print('Edit playlist with ID: $playlistId');
+                                                    final playlistDetails = await PlaylistService().getPlaylistById(playlistId);
+                                                    if(playlistDetails != null){
+                                                      _showEditPlaylistDialog(context,
+                                                      playlistId: playlistId,initialtitle: playlistDetails['title'] ?? '',
+                                                      initialdescription: playlistDetails['description']??'');
+                                                      await _fetchPlaylists();
+                                                    }
+                                                  } else if (action == 'delete') {
+                                                    // Handle delete action
+                                                    print('Delete playlist with ID: $playlistId');
+                                                     String result =await  PlaylistService().deletePlaylist(playlistId);
+                                                          print(result);
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(content: Text(result)),
+                                                  );
+                                                    setState(() {
+                                                      _playList = _playList.then((list){
+                                                        list.removeWhere((playlist)=> playlist.id == playlistId);
+                                                        return list;
+                                                      });
+                                                    });
+                                                  }
+                                                },
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: {'action': 'edit', 'playlistId': playlist.id},
+                                                    child: Text('Edit',style: TextStyle(color: Colors.white)),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: {'action': 'delete', 'playlistId': playlist.id},
+                                                    child: Text('Delete',style: TextStyle(color: Colors.white)),
+                                                  ),
+                                                ],
+                                                icon: Icon(Icons.more_vert_rounded, color: Colors.white),                         
+                                              ),
                                       ],
                                     ),
                                   ),
                                 );
-                                      }
-                                
+                              },
                               );
                               //);
                             });
@@ -493,7 +480,8 @@ class _PlayListPageState extends State<PlayListPage> {
       builder: (BuildContext context) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-          child: AlertDialog(
+          child: AlertDialog(           
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             backgroundColor: Color.fromARGB(119, 68, 66, 66),
             title: Text('New playlist', style: TextStyle(color: Colors.white)),
             content: SingleChildScrollView(

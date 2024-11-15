@@ -207,7 +207,7 @@ class _MoviePageState extends State<MoviePage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const Divider(
-                            color: Colors.white,
+                            color: Colors.white54,
                             height: 1,
                           ),
                           SizedBox(
@@ -220,7 +220,7 @@ class _MoviePageState extends State<MoviePage> {
                             height: 7,
                           ),
                           const Divider(
-                            color: Colors.white,
+                            color: Colors.white54,
                             height: 1,
                           ),
                          

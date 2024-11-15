@@ -105,24 +105,24 @@ class AudioApiService with ChangeNotifier {
     }
   }
 
-  Future<AudioDescription> getSongDetails(int audioId) async{
-    try{
-    final url = Uri.parse('$baseUrl/audio/$audioId');
-    final response= await http.get(url);
+  // Future<AudioDescription> getSongDetail(int audioId) async{
+  //   try{
+  //   final url = Uri.parse('$baseUrl/audio/$audioId');
+  //   final response= await http.get(url);
 
-     print('response:${response.statusCode}');
-    print('Audio:${response.body}');
-    if(response.statusCode== 200){
-      Map<String,dynamic> songJson = jsonDecode(response.body);
+  //    print('response:${response.statusCode}');
+  //   print('Audio:${response.body}');
+  //   if(response.statusCode== 200){
+  //     Map<String,dynamic> songJson = jsonDecode(response.body);
 
-      return AudioDescription.fromJson(songJson);
-    }else{
-      throw Exception('Failed to load song details');
-    }
-    }catch(e){
-      throw Exception('Error in song details : $e');
-    }
-  }
+  //     return AudioDescription.fromJson(songJson);
+  //   }else{
+  //     throw Exception('Failed to load song details');
+  //   }
+  //   }catch(e){
+  //     throw Exception('Error in song details : $e');
+  //   }
+  // }
 
   Future<Audio> getAudioDetails(int audioId) async {
     final url = Uri.parse('$baseUrl/audio/$audioId');

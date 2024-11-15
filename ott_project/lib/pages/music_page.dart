@@ -130,7 +130,7 @@ class _MusicPageState extends State<MusicPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Divider(
-                              color: Colors.white,
+                              color: Colors.white54,
                               height: 1,
                             ),
                             SizedBox(
@@ -143,7 +143,7 @@ class _MusicPageState extends State<MusicPage> {
                               height: 7,
                             ),
                             const Divider(
-                              color: Colors.white,
+                              color: Colors.white54,
                               height: 1,
                             ),
                             
