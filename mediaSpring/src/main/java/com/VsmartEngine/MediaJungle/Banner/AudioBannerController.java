@@ -97,11 +97,11 @@ public class AudioBannerController {
 	    	audiobannerrepository.deleteById(id);
 	    	return ResponseEntity.ok().build();
 	   	}
-        
+       
         
         @GetMapping("/getaudiodetails/{movie_name}")
         public ResponseEntity<?> getaudiodetailsbyId(@PathVariable("movie_name") long movie_name){
-        	List<Audiodescription> optionaladddescription = audio.findMovie_nameById(movie_name);
+        	List<Audiodescription> optionaladddescription = audio.findMovie_nameById(movie_name); 
         	
         	 if (!optionaladddescription.isEmpty()) {
         	        return ResponseEntity.ok(optionaladddescription); // Return the list if found

@@ -88,8 +88,7 @@ import Edittenure from './admin/Edittenure';
 import PlanFeatures from './admin/PlanFeatures';
 import AddFeature from './admin/AddFeature';
 import EditFeature from './admin/EditFeature';
-// import MusicPage from './user/Screens/MusicPage';
-import Library from './user/Screens/Library';
+
 import PrivacyPolicy from './user/Screens/PrivacyPolicy';
 import Banner_setting from './admin/Banner_setting';
 import Footer_setting from './admin/Footer_setting';
@@ -214,9 +213,9 @@ const App = () => {
 
           <Route path='Home' element={<Home />} />
           
-          {/* <Route path='MusicPage' element={<MusicPage />} /> */}
+          
           <Route path='MusicPage' element={<MusicScreen />} />
-          <Route path='Library' element={<Library />} />
+         
           <Route path='VideoHomescreen' element={<VideoHomescreen />} />
           {/* <Route path='Homescreen' element={<Videosam />} /> */}
           <Route path='test' element={<Test/>} />
