@@ -12,7 +12,7 @@ import com.VsmartEngine.MediaJungle.dto.DiscountRequest;
 
 @RestController
 @RequestMapping("/api/v2")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class DiscountController {
 	   @PostMapping("/calculateDiscount")
 	    public ResponseEntity<Double> calculateDiscount(@RequestBody DiscountRequest request) {

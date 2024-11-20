@@ -194,7 +194,7 @@ const NavBar = () => {
                          {/* Center Menu (for Desktop) */}
               <div className="hidden lg:flex gap-8 flex-grow justify-center space-x-6">
                   <NavLink to="/" className={Hover}>Movies</NavLink>
-                  <NavLink to="/AudioHomecreeen" className={Hover}>Music</NavLink>
+                  <NavLink to="/AudioHomeScreen" className={Hover}>Music</NavLink>
                   <NavLink to="/libraryScreen" className={Hover}>Library</NavLink>
               </div>
               
@@ -243,7 +243,7 @@ const NavBar = () => {
                       <FaBell className="w-6 h-6 text-white hover:text-red-900 transition duration-300 ease-in-out" />
                   </div>
                   {/* Profile Icon */}
-                  {token ? (
+                  {/* {token ? (
                       <div className="relative">
                           <div className="flex items-center gap-2" onClick={toggleDropdown}>
                               <CgUser className="w-8 h-8" />
@@ -257,7 +257,7 @@ const NavBar = () => {
                       </div>
                   ) : (
                       <NavLink to="/UserLogin" className={hover}><FaUser /></NavLink>
-                  )}
+                  )} */}
               </div>
                {/* Burger Icon for Mobile */}
    <div className="lg:hidden flex items-left">
@@ -275,7 +275,7 @@ const NavBar = () => {
               <div className="lg:hidden bg-custom-color w-full absolute top-16 left-0 z-10 transition-all duration-300 ease-out">
                   <div className="flex flex-col items-center py-4 space-y-4">
                       <NavLink to="/" className={Hover}>Movies</NavLink>
-                      <NavLink to="/AudioHomecreeen" className={Hover}>Music</NavLink>
+                      <NavLink to="/AudioHomeScreen" className={Hover}>Music</NavLink>
                       <NavLink to="/libraryScreen" className={Hover}>Library</NavLink>
                       {isFreshUser ? (
                           <NavLink to="/PlanDetails" className="bg-new hover:bg-red-900 text-white py-2 px-4 rounded-lg transition duration-300 ease-in-out">SUBSCRIBE</NavLink>

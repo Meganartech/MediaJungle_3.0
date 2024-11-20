@@ -19,7 +19,7 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
 
 @RestController
 @RequestMapping("/api/v2/footer-settings")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
     public class FooterSettingsController {
 
         @Autowired

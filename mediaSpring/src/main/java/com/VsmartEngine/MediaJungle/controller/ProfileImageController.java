@@ -26,7 +26,7 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 
 @RestController
 @RequestMapping("/api/v2/")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class ProfileImageController {
 
 	// Add this to the top of your controller

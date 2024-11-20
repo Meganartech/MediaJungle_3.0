@@ -34,7 +34,7 @@ import com.razorpay.RazorpayException;
 
 @RestController
 @RequestMapping("/api/v2/")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class PaymentController {
 
     @Value("${rzp_currency}")
