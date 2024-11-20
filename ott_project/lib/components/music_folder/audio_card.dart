@@ -39,6 +39,7 @@ class AudioCard extends StatelessWidget {
                     future: audio.thumbnailImage,
                     builder: (context, snapshot) {
                       final thumbnail = snapshot.data;
+                      print('Audioname:${audio.audioTitle}');
                       // print('thumbanail:{$thumbnail}');
                       if (snapshot.connectionState == ConnectionState.done &&
                           snapshot.hasData) {
@@ -57,6 +58,7 @@ class AudioCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+       
             Text(
               audio.audioTitle,
               style: TextStyle(

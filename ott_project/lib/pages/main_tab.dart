@@ -86,10 +86,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                 ],
               ),
 
-              // child: BottomAppBar(
-                
-              //   color: Colors.pink,
-              //   elevation: 10,
+           
                 child: 
                 TabBar(
                   controller: controller,
@@ -118,12 +115,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                         size: 27,
                         color: selectTab == 0 ? Colors.green : Colors.white,
                       ),
-                      // icon: Image.asset(
-                      //   "assets/images/movie.png",
-                      //   width: 20,
-                      //   height: 20,
-                      //   color: selectTab == 1 ? Colors.green : Colors.white,
-                      // ),
+                      
                     ),
                     Tab(
                       text: "MUSIC",
@@ -132,12 +124,7 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                         size: 27,
                         color: selectTab == 1 ? Colors.green : Colors.white,
                       ),
-                      // icon: Image.asset(
-                      //   "assets/images/music.png",
-                      //   width: 20,
-                      //   height: 20,
-                      //   color: selectTab == 2 ? Colors.green : Colors.white,
-                      // ),
+                    
                     ),
                     Tab(
                       text: "LIBRARY",
@@ -146,15 +133,10 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                         size: 27,
                         color: selectTab == 2 ? Colors.green : Colors.white,
                       ),
-                      // icon: Image.asset(
-                      //   "assets/images/library.png",
-                      //   width: 20,
-                      //   height: 20,
-                      //   color: selectTab == 3 ? Colors.green : Colors.white,
-                      // ),
+                     
                     ),
                      Tab(
-                      text: "Account",
+                      text: "ACCOUNT",
                       icon: Icon(
                         Icons.person_outline_rounded,
                         size: 27,

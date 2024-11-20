@@ -38,8 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-              'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-           // 'http://192.168.183.42:8080/api/v2/GetUserById/$userId'),
+           //   'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+            'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         //),
         headers: {
@@ -253,58 +253,58 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(
                       height: MediaQuery.sizeOf(context).height * 0.02,
                     ),
-                    SizedBox(
-                      // width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Account Deletion!!'),
-                                content: Text(
-                                    'Are you sure want to delete your account?'),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text('Cancel')),
-                                  TextButton(
-                                      onPressed: () {
-                                        _handleLogout(context);
-                                      },
-                                      child: Text('Ok'))
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14)),
-                          padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  MediaQuery.sizeOf(context).height * 0.04,
-                              vertical: 15),
-                          backgroundColor: Color.fromARGB(174, 93, 104, 195),
-                          foregroundColor: kWhite,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.delete_sweep_rounded,
-                              size: 20,
-                              color: kWhite,
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text('Delete Account'),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // SizedBox(
+                    //   // width: double.infinity,
+                    //   child: ElevatedButton(
+                    //     onPressed: () {
+                    //       showDialog(
+                    //         context: context,
+                    //         builder: (BuildContext context) {
+                    //           return AlertDialog(
+                    //             title: Text('Account Deletion!!'),
+                    //             content: Text(
+                    //                 'Are you sure want to delete your account?'),
+                    //             actions: [
+                    //               TextButton(
+                    //                   onPressed: () => Navigator.pop(context),
+                    //                   child: Text('Cancel')),
+                    //               TextButton(
+                    //                   onPressed: () {
+                    //                     _handleLogout(context);
+                    //                   },
+                    //                   child: Text('Ok'))
+                    //             ],
+                    //           );
+                    //         },
+                    //       );
+                    //     },
+                    //     style: ElevatedButton.styleFrom(
+                    //       shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(14)),
+                    //       padding: EdgeInsets.symmetric(
+                    //           horizontal:
+                    //               MediaQuery.sizeOf(context).height * 0.04,
+                    //           vertical: 15),
+                    //       backgroundColor: Color.fromARGB(174, 93, 104, 195),
+                    //       foregroundColor: kWhite,
+                    //     ),
+                    //     child: Row(
+                    //       mainAxisSize: MainAxisSize.min,
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: [
+                    //         Icon(
+                    //           Icons.delete_sweep_rounded,
+                    //           size: 20,
+                    //           color: kWhite,
+                    //         ),
+                    //         const SizedBox(
+                    //           width: 8,
+                    //         ),
+                    //         Text('Delete Account'),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

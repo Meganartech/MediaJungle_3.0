@@ -1,6 +1,6 @@
-import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/service/playlist_service.dart';
 import 'package:ott_project/service/service.dart';
 import 'package:flutter/material.dart';
@@ -28,13 +28,16 @@ class _PlayListPageState extends State<PlayListPage> {
   void initState() {
     super.initState();
     _loadIcon();
+    _playList = Future.value([]);
     _fetchPlaylists();
+    CircularProgressIndicator();
   }
 
   bool _showSearch = false;
   TextEditingController _searchController = TextEditingController();
   AppIcon? iconData;
   late Future<List<AudioPlaylist>> _playList;
+   final GlobalKey _menuKey = GlobalKey();
  
 
   Future<void> _loadIcon() async {
@@ -61,17 +64,89 @@ class _PlayListPageState extends State<PlayListPage> {
       }
    }catch(e){
     print('Error fetching playlists: $e');
-   }  
+   }    
+  }
 
-  
+
+
+
+  void _showEditPlaylistDialog(BuildContext context,{required int playlistId,String? initialtitle, String? initialdescription}) {
+    final TextEditingController titleController = TextEditingController(text: initialtitle);
+    final TextEditingController descriptionController = TextEditingController(text: initialdescription);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: AlertDialog(
+            backgroundColor: Color.fromARGB(69, 178, 174, 174),
+            title: Text('Edit playlist', style: TextStyle(color: Colors.white)),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      hintText: 'Title',       
+                      hintStyle: TextStyle(color: Colors.white60),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white60),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      hintText: 'Description',
+                      hintStyle: TextStyle(color: Colors.white60),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white60),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel', style: TextStyle(color: Colors.white)),
+              ),
+              TextButton(
+                onPressed: () async {
+                  final title = titleController.text;
+                  final description = descriptionController.text;
+                  if (title.isNotEmpty) {
+                    await PlaylistService().updatePlaylist(playlistId, title, description);
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Playlist Updated successfully')));
+                    _fetchPlaylists(); 
+                   
+                  }
+                },
+                child: Text('Save', style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AudioProvider>(builder: (context, audioProvider, child) {
       
-      final audioplaylists = audioProvider.aplaylists;
-
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -145,22 +220,10 @@ class _PlayListPageState extends State<PlayListPage> {
                           color: kWhite,
                         )),
                     SizedBox(
-                      width: 10,
+                      width: 15  ,
                     ),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfilePage()));
-                        },
-                        icon: Icon(
-                          Icons.person_outline_rounded,
-                          color: kWhite,
-                        )),
-                    SizedBox(
-                      width: 10,
-                    ),
+                   
+                    
                   ],
                 ),
                 SizedBox(
@@ -185,12 +248,15 @@ class _PlayListPageState extends State<PlayListPage> {
                             decorationStyle: TextDecorationStyle.solid),
                       ),
                       IconButton(
-                          onPressed: () {
-                            if(audioplaylists.isNotEmpty && audioplaylists.first.audios.isNotEmpty){
-                              _showCreatePlaylistDialog(context,audioId: audioplaylists.first.audios.first.id);
+                          onPressed: () async{
+                            final currentAudioId = audioProvider.audioDescriptioncurrently?.id;
+                            if(currentAudioId != null){
+                              _showCreatePlaylistDialog(context,audioId: currentAudioId);
+                             
                             }else{
                               _showCreatePlaylistDialog(context);
                             }
+                            await  _fetchPlaylists();
                           },
                           icon: Icon(
                             Icons.add_rounded,
@@ -215,99 +281,163 @@ class _PlayListPageState extends State<PlayListPage> {
       if (!snapshot.hasData || snapshot.data!.isEmpty) {
         return Center(child: Text('No playlists available', style: TextStyle(color: kWhite)));
       }
+                    print('Snapshot data:${snapshot.data}');
+
                    final audioplaylist = snapshot.data!;
+
+                   print('AudioPlaylist:$audioplaylist');
+
                    return  ListView.builder(
                           
                             itemCount: audioplaylist.length,
                             itemBuilder: (context, index) {
                               final playlist = audioplaylist[index];
-                              final playlistImage = playlist.audios.isNotEmpty ?
-                                  playlist.audios.first.thumbnailImage : null;
-                             
-                              return GestureDetector(
-                                onTap: () {
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) =>
-                                  //             PlaylistDetailsPage(
-                                  //                 playlist: playlist)));
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(12),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.transparent,
-                                        spreadRadius: 2,
-                                        blurRadius: 5,
-                                        offset: Offset(0, 3),
-                                      ),
-                                    ],
+                              print('playlist: $playlist');
+                             // final audioList = playlist.audios;
+                            
+                              return FutureBuilder<List<AudioDescription>>(
+                                      future:playlist.getAudios(),
+                                      builder: (context, audioSnapshot) {
+                                        final playlistImage = audioSnapshot.hasData && audioSnapshot.data!.isNotEmpty
+                                        ? audioSnapshot.data![0].thumbnailImage : null;
+                                        return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                PlaylistDetailsPage(
+                                                    playlist: playlist,playlistId: playlist.id,)));
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.transparent,
+                                          spreadRadius: 2,
+                                          blurRadius: 5,
+                                          offset: Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        SafeArea(
+                                          child: ClipRRect(
+                                              borderRadius: BorderRadius.vertical(
+                                                  top: Radius.circular(12.0),
+                                                  bottom: Radius.circular(12.0)),
+                                              child: Container(
+                                                width: 75,
+                                                height: 75,
+                                                
+                                                child: playlistImage != null
+                                                    ? FutureBuilder<Uint8List?>(
+                                                        future: playlistImage,
+                                                        //audio.bannerImage,
+                                                        builder:
+                                                            (context, snapshot) {
+                                                          if (snapshot.connectionState ==
+                                                                  ConnectionState
+                                                                      .done &&
+                                                              snapshot.hasData) {
+                                                            return Image.memory(
+                                                                snapshot.data!,
+                                                                width: 50,
+                                                                height: 50,
+                                                                fit: BoxFit.fill);
+                                                          } else {
+                                                            return 
+                                                            Container(
+                                                              width: 164,
+                                                              height: 155,
+                                                              // fit: BoxFit.fill
+                                                              color: Colors.grey,
+                                                              child: Center(
+                                                                  child:
+                                                                      CircularProgressIndicator()),
+                                                            );
+                                                          }
+                                                        },
+                                                      )
+                                                    : 
+                                                    Icon(
+                                                        Icons.music_note_rounded,
+                                                        color: Colors.white,
+                                                        size: 50,
+                                                      ),
+                                              )),
+                                        ),
+                                      
+                                        // SizedBox(
+                                        //   width: 20,
+                                        // ),
+                                        Text(
+                                          playlist.title,
+                                          style: TextStyle(
+                                              color: kWhite,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(width: MediaQuery.sizeOf(context).width * 0.09,),
+                                        // IconButton(
+                                        
+                                        //   onPressed: (){
+                                            PopupMenuButton<Map<String, dynamic>>(
+                                              color: Colors.grey[600],
+                                                onSelected: (value) async{
+                                                  final action = value['action'];
+                                                  final playlistId = value['playlistId'];
+
+                                                  if (action == 'edit') {
+                                                    // Handle edit action
+                                                    print('Edit playlist with ID: $playlistId');
+                                                    final playlistDetails = await PlaylistService().getPlaylistById(playlistId);
+                                                    if(playlistDetails != null){
+                                                      _showEditPlaylistDialog(context,
+                                                      playlistId: playlistId,initialtitle: playlistDetails['title'] ?? '',
+                                                      initialdescription: playlistDetails['description']??'');
+                                                      await _fetchPlaylists();
+                                                    }
+                                                  } else if (action == 'delete') {
+                                                    // Handle delete action
+                                                    print('Delete playlist with ID: $playlistId');
+                                                     String result =await  PlaylistService().deletePlaylist(playlistId);
+                                                          print(result);
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(content: Text(result)),
+                                                  );
+                                                    setState(() {
+                                                      _playList = _playList.then((list){
+                                                        list.removeWhere((playlist)=> playlist.id == playlistId);
+                                                        return list;
+                                                      });
+                                                    });
+                                                  }
+                                                },
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: {'action': 'edit', 'playlistId': playlist.id},
+                                                    child: Text('Edit',style: TextStyle(color: Colors.white)),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: {'action': 'delete', 'playlistId': playlist.id},
+                                                    child: Text('Delete',style: TextStyle(color: Colors.white)),
+                                                  ),
+                                                ],
+                                                icon: Icon(Icons.more_vert_rounded, color: Colors.white),                         
+                                              ),
+                                      ],
+                                    ),
                                   ),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SafeArea(
-                                        child: ClipRRect(
-                                            borderRadius: BorderRadius.vertical(
-                                                top: Radius.circular(12.0),
-                                                bottom: Radius.circular(12.0)),
-                                            child: Container(
-                                              width: 75,
-                                              height: 75,
-                                              child: playlistImage != null
-                                                  ? FutureBuilder<Uint8List?>(
-                                                      future: playlistImage,
-                                                      //audio.bannerImage,
-                                                      builder:
-                                                          (context, snapshot) {
-                                                        if (snapshot.connectionState ==
-                                                                ConnectionState
-                                                                    .done &&
-                                                            snapshot.hasData) {
-                                                          return Image.memory(
-                                                              snapshot.data!,
-                                                              width: 50,
-                                                              height: 50,
-                                                              fit: BoxFit.fill);
-                                                        } else {
-                                                          return Container(
-                                                            width: 164,
-                                                            height: 155,
-                                                            // fit: BoxFit.fill
-                                                            color: Colors.grey,
-                                                            child: Center(
-                                                                child:
-                                                                    CircularProgressIndicator()),
-                                                          );
-                                                        }
-                                                      },
-                                                    )
-                                                  : Icon(
-                                                      Icons.music_note_rounded,
-                                                      color: Colors.white,
-                                                      size: 50,
-                                                    ),
-                                            )),
-                                      ),
-                                    
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Text(
-                                        playlist.title,
-                                        style: TextStyle(
-                                            color: kWhite,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                );
+                              },
                               );
                               //);
                             });
@@ -350,7 +480,8 @@ class _PlayListPageState extends State<PlayListPage> {
       builder: (BuildContext context) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-          child: AlertDialog(
+          child: AlertDialog(           
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             backgroundColor: Color.fromARGB(119, 68, 66, 66),
             title: Text('New playlist', style: TextStyle(color: Colors.white)),
             content: SingleChildScrollView(
@@ -414,7 +545,7 @@ class _PlayListPageState extends State<PlayListPage> {
                       SnackBar(content: Text('Playlist "$title" created')),
                     );
                         }
-                    
+                    _fetchPlaylists(); 
                    
                   }
                 },

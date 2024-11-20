@@ -5,7 +5,7 @@ import 'package:ott_project/components/notification/notification.dart';
 class NotificationApiService {
   static const String baseUrl = 
  // 'http://localhost:8080/api/v2';
-    'http://192.168.183.129:8080/api/v2';
+    'http://192.168.156.243:8080/api/v2';
 
   Future<List<Notifications>> fetchNotification(String token) async {
     final response = await http.get(

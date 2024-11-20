@@ -17,6 +17,9 @@ import 'package:ott_project/service/playlist_service.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../service/service.dart';
+import '../library/likedSongsDTO.dart';
+
 enum RepeatMode { off, all, one }
 
 class AudioProvider with ChangeNotifier {
@@ -93,7 +96,9 @@ class AudioProvider with ChangeNotifier {
     if(currentIndex >= 0 && currentIndex < audio_playlist.length){
       try{
         final currentSong = audio_playlist[currentIndex];
+        print('currentsong:$currentSong');
         audioUrl = await AudioApiService().fetchAudioStreamUrl(currentSong.audioFileName!);
+        print('Audio url:$audioUrl');
         if(audioUrl != null){
           await audioPlayer.setSource(UrlSource(audioUrl!));
           notifyListeners();
@@ -107,7 +112,7 @@ class AudioProvider with ChangeNotifier {
   }
   // Updates the currently playing audio description
 
-  void _updateCurrentlyPlayingSong(AudioDescription audioDescription){
+  void updateCurrentlyPlayingSong(AudioDescription audioDescription){
     _audioDescriptioncurrently = audioDescription;
     notifyListeners();
   }
@@ -121,11 +126,26 @@ class AudioProvider with ChangeNotifier {
       }
       _audioDescriptioncurrently = audioDescription;
       audio_playlist = newPlaylist;
-      currentIndex = audio_playlist.indexOf(audioDescription);
+      currentIndex = audio_playlist.indexWhere((audio)=> audio.id == audioDescription.id);
+       if (currentIndex == -1) {
+        print('Error: Selected audio not found in playlist');
+        return;
+      }
       await _saveCurrentlyPlayingSong();
       notifyListeners();
       await prepareSong();
    }
+
+    List<AudioDescription> convertPlaylistToAudioDescriptions(List<LikedsongsDTO> playlistItems) {
+    return playlistItems.map((item) => AudioDescription(
+      id: item.audioId,
+      audioTitle: item.audioTitle,
+      paid: false,
+      audioFileName: audioDescriptioncurrently!.audioFileName,
+      
+      )).toList();
+  }
+
 
   // Save currently playing audio to shared preferences
   Future<void> _saveCurrentlyPlayingSong() async{
@@ -167,7 +187,7 @@ class AudioProvider with ChangeNotifier {
 
   Future<void> playSong() async {
     print('Current Index: $currentIndex');
-    print('Playlist Length: ${playList.length}');
+    print('Playlist Length: ${audio_playlist.length}');
 
     if (currentIndex >= 0 && currentIndex < audio_playlist.length) {
       try {
@@ -177,7 +197,7 @@ class AudioProvider with ChangeNotifier {
         await audioPlayer.stop();
         await audioPlayer.play(UrlSource(audioUrl!));
         isPlaying = true;
-        _updateCurrentlyPlayingSong(currentAudio);
+        updateCurrentlyPlayingSong(currentAudio);
         notifyListeners();
       } catch (e) {
         print('Error playing audio: $e');
@@ -197,7 +217,7 @@ class AudioProvider with ChangeNotifier {
         if (audioUrl == null && _audioDescriptioncurrently != null) {
           // audioUrl = await AudioApiService()
           //     .fetchAudioStreamUrl(_currentlyPlaying!.fileName);
-          await prepareAudio();
+          await prepareSong();
         }
         await audioPlayer.resume();
         isPlaying = true;
@@ -214,13 +234,16 @@ class AudioProvider with ChangeNotifier {
 
   void toggleShuffleSong() {
     _isShuffleOn = !_isShuffleOn;
+    print('Shuffle:$_isShuffleOn');
     if (_isShuffleOn) {
-      //_originalPlaylist = List.from(playList);
-      playList.shuffle();
-      currentIndex = audio_playlist.indexOf(_audioDescriptioncurrently!);
+      originalaudioPlaylist = List.from(audio_playlist);
+      print('original audio playlist:$originalaudioPlaylist');
+      audio_playlist.shuffle();
+      currentIndex = audio_playlist.indexOf(audioDescriptioncurrently!);
+      print('Current song:$currentIndex');
     } else {
       audio_playlist = List.from(originalaudioPlaylist);
-      currentIndex = audio_playlist.indexOf(_audioDescriptioncurrently!);
+      currentIndex = audio_playlist.indexOf(audioDescriptioncurrently!);
     }
     notifyListeners();
   }
@@ -243,7 +266,7 @@ class AudioProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //Play next audio
+  //Play next audio description
 
 Future<void> playNextSong() async {
     if (_repeatModeSong == RepeatMode.one) {
@@ -257,13 +280,13 @@ Future<void> playNextSong() async {
         print('End of playlist reached.');
         return;
       }
-      _updateCurrentlyPlayingSong(audio_playlist[currentIndex]);
+      updateCurrentlyPlayingSong(audio_playlist[currentIndex]);
       notifyListeners();
       await playSong();
       _recentlyPlayedManager.addRecentlyPlayed(playList[currentIndex]);
     }
   }
-//play previous audio
+//play previous audio description
   Future<void> playPreviousSong() async {
     if (_repeatModeSong == RepeatMode.one) {
       await playSong();
@@ -276,7 +299,7 @@ Future<void> playNextSong() async {
         print('Beginning of playlist reached.');
         return;
       }
-      _updateCurrentlyPlayingSong(audio_playlist[currentIndex]);
+      updateCurrentlyPlayingSong(audio_playlist[currentIndex]);
       notifyListeners();
       await playSong();
       _recentlyPlayedManager.addRecentlyPlayed(playList[currentIndex]);
@@ -310,6 +333,7 @@ try{
   }
   final userId = int.parse(userIDStr);
   AudioPlaylist audioPlaylist = await playlistService.createPlayList(title: title, description: description, userId: userId);
+ audioPlaylists.add(audioPlaylist);
   notifyListeners();
 }catch (e) {
       debugPrint('Failed to create playlist: $e');
@@ -325,12 +349,97 @@ try{
   }
   final userId = int.parse(userIDStr);
   AudioPlaylist audioPlaylist = await playlistService.createPlayListWithAudioId(title: title, description: description, userId: userId,audioId: audioId);
+  audioPlaylists.add(audioPlaylist);
+  await fetchUserPlaylists();
   notifyListeners();
 }catch (e) {
       debugPrint('Failed to create playlist: $e');
       throw Exception('Error creating playlist: $e');
     }
 }
+
+Future<void> fetchUserPlaylists() async {
+  try {
+    String? userIDStr = await _secureStorage.read(key: 'userId');
+    if (userIDStr == null) {
+      throw Exception('User ID not found. Please log in again.');
+    }
+    final userId = int.parse(userIDStr);
+
+    // Fetch playlists from backend
+    final fetchedPlaylists = await playlistService.getPlaylistsByUserId(userId);
+    audioPlaylists = fetchedPlaylists;
+
+    notifyListeners();
+  } catch (e) {
+    debugPrint('Failed to fetch playlists: $e');
+    throw Exception('Error fetching playlists: $e');
+  }
+}
+
+Future<void> loadPlaylistsFromLocal() async {
+  final prefs = await SharedPreferences.getInstance();
+  final playlistJsonList = prefs.getStringList('playlists') ?? [];
+  
+  if (playlistJsonList.isNotEmpty) {
+    audioPlaylists = playlistJsonList
+        .map((jsonString) => AudioPlaylist.fromJson(jsonDecode(jsonString)))
+        .toList();
+    notifyListeners();
+  }
+}
+
+
+
+  Future<void> fetchPlaylists() async{
+   try{
+      final userId =await Service().getLoggedInUserId();
+      print('UserId: ${userId}');
+      if(userId != null){
+      final playlists = await PlaylistService().getPlaylistsByUserId(userId);
+      audioPlaylists = playlists;
+      notifyListeners();
+      
+      }
+   }catch(e){
+    print('Error fetching playlists: $e');
+   }   
+  }
+
+  //save audio playlist
+   Future<void> _saveaudiosPlaylists() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String> playlistJsonList = audioPlaylists
+        .map((aplaylist) => jsonEncode(aplaylist.toJson()))
+        .toList();
+        print('Saving Playlists: $playlistJsonList');
+    prefs.setStringList('playlists', playlistJsonList);
+  }
+
+  Future<void> addAudiosToPlaylist(AudioPlaylist playlist,int audioId) async {
+    
+    // if (music.thumbnailImage == null && playlist.audios.isNotEmpty) {
+    // playlist.imageUrl = audio.thumbnail;
+    // }
+  // final initialAudioIds = List<int>.from(playlist.audioIds);
+    try{
+      playlist.audioIds.add(audioId);
+      notifyListeners();
+
+      final playlistService = PlaylistService();
+      await playlistService.addAudiosToPlaylist(playlist.id, audioId);
+      await _saveaudiosPlaylists();
+      notifyListeners();
+    }catch (e) {
+    // Rollback local changes if backend update fails
+   // playlist.audioIds = initialAudioIds;
+    await _saveaudiosPlaylists();
+    notifyListeners();
+
+    throw Exception('Failed to add audio to playlist on server: $e');
+  }
+    notifyListeners();
+  }
 
 
 
@@ -565,7 +674,7 @@ try{
     notifyListeners();
   }
 
-  Future<void> createPlaylist(String title, String description) async {
+  Future<void> createPlaylistAudio(String title, String description) async {
     final newPlaylist =
         Playlist(title: title, description: description, audios: []);
     _playlists.add(newPlaylist);

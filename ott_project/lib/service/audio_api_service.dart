@@ -11,7 +11,7 @@ class AudioApiService with ChangeNotifier {
   static const String baseUrl =
   //'https://testtomcat.vsmartengine.com/media/api/v2';
   //  'http://localhost:8080/api/v2';
-    'http://192.168.118.29:8080/api/v2';
+    'http://192.168.156.243:8080/api/v2';
 
   Future<Audio> fetchAudioDetail(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/audio/$id'));
@@ -82,7 +82,7 @@ class AudioApiService with ChangeNotifier {
 
     if (response.statusCode == 200) {
       List<dynamic> likedAudiosJson = jsonDecode(response.body);
-      //  print(response.body);
+        print('LikedSongs:$likedAudiosJson');
 
       return likedAudiosJson.map((audio) => audio['audioId'] as int).toList();
 
@@ -105,24 +105,24 @@ class AudioApiService with ChangeNotifier {
     }
   }
 
-  Future<AudioDescription> getSongDetails(int audioId) async{
-    try{
-    final url = Uri.parse('$baseUrl/audio/$audioId');
-    final response= await http.get(url);
+  // Future<AudioDescription> getSongDetail(int audioId) async{
+  //   try{
+  //   final url = Uri.parse('$baseUrl/audio/$audioId');
+  //   final response= await http.get(url);
 
-     print('response:${response.statusCode}');
-    print('Audio:${response.body}');
-    if(response.statusCode== 200){
-      Map<String,dynamic> songJson = jsonDecode(response.body);
+  //    print('response:${response.statusCode}');
+  //   print('Audio:${response.body}');
+  //   if(response.statusCode== 200){
+  //     Map<String,dynamic> songJson = jsonDecode(response.body);
 
-      return AudioDescription.fromJson(songJson);
-    }else{
-      throw Exception('Failed to load song details');
-    }
-    }catch(e){
-      throw Exception('Error in song details : $e');
-    }
-  }
+  //     return AudioDescription.fromJson(songJson);
+  //   }else{
+  //     throw Exception('Failed to load song details');
+  //   }
+  //   }catch(e){
+  //     throw Exception('Error in song details : $e');
+  //   }
+  // }
 
   Future<Audio> getAudioDetails(int audioId) async {
     final url = Uri.parse('$baseUrl/audio/$audioId');
