@@ -51,7 +51,6 @@ public class PlaylistController {
         return ResponseEntity.ok(playlists);
     }
 	
-	
 	// Add an audio ID to a playlist
     @PostMapping("/{playlistId}/audio/{audioId}")
     public ResponseEntity<Playlist> addAudioIdToPlaylist(
@@ -63,6 +62,7 @@ public class PlaylistController {
             Playlist playlists = playlistrepository.save(playlist);
         return ResponseEntity.ok(playlists);
     }
+    
     
     @PostMapping("/createplaylistid")
     public ResponseEntity<Playlist> createPlaylistwithid(
