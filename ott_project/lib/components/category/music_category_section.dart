@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/category_based_song.dart';
-import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/song_player_page.dart';
 import 'package:ott_project/components/pallete.dart';
 
@@ -48,9 +47,7 @@ class MusicCategorySection extends StatelessWidget {
                 child: Text('See more', style: TextStyle(color: Colors.green))),
           ],
         ),
-        // SizedBox(
-        //   height: MediaQuery.sizeOf(context).height * 0.01,
-        // ),
+       
         SizedBox(
           height: MediaQuery.sizeOf(context).height * 0.22,
           child: ListView.builder(
@@ -65,7 +62,6 @@ class MusicCategorySection extends StatelessWidget {
                      SongPlayerPage(music: displayedAudio[index], onChange: onTap, onDislike: (_){},musicList: audioContainer.audiolist,)));
                     },
                     audio: displayedAudio[index],
-                    //movies: videoContainer.videoDescriptions,
                     initialIndex: index, 
                   ),
                 );

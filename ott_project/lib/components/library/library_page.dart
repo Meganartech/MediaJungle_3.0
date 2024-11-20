@@ -55,9 +55,12 @@ class _LibraryPageState extends State<LibraryPage> {
                  CustomAppBar(onSearchChanged: (p0, p1) {
                    
                  },),
-      
+                 SizedBox(
+                  height: MediaQuery.sizeOf(context).height *0.04,
+                ),
+                Text('Library',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.white),),
                 SizedBox(
-                  height: 40,
+                  height: MediaQuery.sizeOf(context).height *0.04,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -115,115 +118,4 @@ class _LibraryPageState extends State<LibraryPage> {
       ),
     );
   }
-
-  // void _showCreatePlaylistDialog(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         backgroundColor: Colors.black,
-  //         title: Text('New Playlist', style: TextStyle(color: Colors.white)),
-  //         content: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             TextField(
-  //               decoration: InputDecoration(
-  //                 hintText: 'Title',
-  //                 hintStyle: Theme.of(context)
-  //                     .textTheme
-  //                     .bodyMedium!
-  //                     .copyWith(color: Colors.white60),
-  //               ),
-  //               style: TextStyle(color: Colors.white),
-  //             ),
-  //             SizedBox(height: 10),
-  //             TextField(
-  //               decoration: InputDecoration(
-  //                 hintText: 'Description',
-  //                 hintStyle: Theme.of(context)
-  //                     .textTheme
-  //                     .bodyMedium!
-  //                     .copyWith(color: Colors.white60),
-  //               ),
-  //               style: TextStyle(color: Colors.white),
-  //             ),
-  //           ],
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context);
-  //             },
-  //             child: Text('Cancel', style: TextStyle(color: Colors.white)),
-  //           ),
-  //           TextButton(
-  //             onPressed: () {
-  //               // Handle create playlist logic
-  //               Navigator.pop(context);
-  //             },
-  //             child: Text('Create', style: TextStyle(color: Colors.white)),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  // void _showCreateWatchListDialog(BuildContext context) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           backgroundColor: Colors.black,
-  //           title: Text(
-  //             'New WatchList',
-  //             style: TextStyle(color: Colors.white),
-  //           ),
-  //           content: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               TextField(
-  //                 decoration: InputDecoration(
-  //                   hintText: 'Title',
-  //                   hintStyle: Theme.of(context)
-  //                       .textTheme
-  //                       .bodyMedium!
-  //                       .copyWith(color: Colors.white60),
-  //                 ),
-  //                 style: TextStyle(color: Colors.white),
-  //               ),
-  //               SizedBox(
-  //                 height: 10,
-  //               ),
-  //               TextField(
-  //                 decoration: InputDecoration(
-  //                     hintText: 'Description',
-  //                     hintStyle: Theme.of(context)
-  //                         .textTheme
-  //                         .bodyMedium!
-  //                         .copyWith(color: Colors.white60)),
-  //                 style: TextStyle(color: Colors.white),
-  //               ),
-  //             ],
-  //           ),
-  //           actions: [
-  //             TextButton(
-  //                 onPressed: () {},
-  //                 child: Text(
-  //                   'Cancel',
-  //                   style: TextStyle(color: Colors.white),
-  //                 )),
-  //             // SizedBox(
-  //             //   width: 4,
-  //             // ),
-  //             TextButton(
-  //                 onPressed: () {},
-  //                 child: Text(
-  //                   'Create',
-  //                   style: TextStyle(color: Colors.white),
-  //                 )),
-  //           ],
-  //         );
-  //       });
-  // }
 }

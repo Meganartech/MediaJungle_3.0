@@ -230,13 +230,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             ? Image.memory(base64Decode(base64Image)).image
                             : const AssetImage('assets/images/bg1.jpg'),
                       ),
-                      const SizedBox(height: 5),
+                       SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                       Text(
                         usernameController.text,
                         style: TextStyle(color: kWhite),
                       ),
                       SizedBox(
-                        height: size.height * 0.09,
+                        height: MediaQuery.sizeOf(context).height * 0.06,
                       ),
 
                       //SizedBox(height: 15),
@@ -254,7 +254,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           inputAction: TextInputAction.next,
                           obscureText: !currentVisiblePassword),
                       SizedBox(
-                        height: 10,
+                        height: MediaQuery.sizeOf(context).height * 0.01,
                       ),
                       MyTextField(
                           controller: newPasswordController,
@@ -270,7 +270,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           inputAction: TextInputAction.next,
                           obscureText: !newVisiblePassword),
                       SizedBox(
-                        height: 10,
+                        height: MediaQuery.sizeOf(context).height * 0.01,
                       ),
                       MyTextField(
                           controller: confirmPasswordController,
@@ -285,10 +285,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           inputType: TextInputType.visiblePassword,
                           inputAction: TextInputAction.next,
                           obscureText: !confirmVisiblePassword),
-                      SizedBox(height: 30),
+                      SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
                       Container(
                         height: size.height * 0.08,
-                        width: size.width * 0.8,
+                        width: size.width * 0.6,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
                             color: Colors.blueGrey.shade300),

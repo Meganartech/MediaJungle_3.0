@@ -38,8 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-           //   'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
+            'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+         //   'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         //),
         headers: {
@@ -242,8 +242,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               size: 20,
                               color: kWhite,
                             ),
-                            const SizedBox(
-                              width: 8,
+                             SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02,
                             ),
                             Text('Logout'),
                           ],
@@ -316,7 +316,18 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _handleLogout(BuildContext context) async {
-    bool success = await service.logoutUser(context);
+
+    showDialog(context: context, builder: (BuildContext context){
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text('Are you sure you want to logout?',style: TextStyle(fontSize: 16,color: Colors.black),),
+          actions: [
+            TextButton(onPressed: (){
+              Navigator.pop(context);
+            }, child: Text('Cancel',style: TextStyle(color:Colors.black),)),
+
+            TextButton(onPressed: () async {
+              bool success = await service.logoutUser(context);
     if (success) {
       // Navigate to the login screen upon successful logout
       Navigator.pushReplacement(
@@ -328,6 +339,11 @@ class _ProfilePageState extends State<ProfilePage> {
       // For example, show an error message
       _showErrorDialog(context, 'Logout failed', 'Please try again.');
     }
+
+            }, child: Text('Logout',style: TextStyle(color: Colors.black),)),
+          ],
+        );
+    });
   }
 
   void _showErrorDialog(BuildContext context, String title, String message) {

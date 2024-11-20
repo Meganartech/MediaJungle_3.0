@@ -41,73 +41,79 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
   // }
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<int?>(
-      future: userId,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        } else if (snapshot.hasError || snapshot.data == null) {
-          return Scaffold(
-            body: Center(
-                child: Text('Failed to load user ID or user not logged in')),
-          );
-        } else {
-          int userId = snapshot.data!;
-          return Scaffold(
-            backgroundColor: Colors.transparent,
-            body:  TabBarView(controller: controller, children: [
-               // SampleHomePage(),
-                MoviePage(),
-                MusicPage(userId: userId),
-                LibraryPage(
-                  userId: userId,
-                ),
-              ProfilePage(),
-              ]),
-            
-            bottomNavigationBar: Container(
-              width: MediaQuery.sizeOf(context).width * 0.02,
-              height: MediaQuery.sizeOf(context).height * 0.09,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(25),
-                  bottom: Radius.circular(25),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, -3),
-                    blurRadius: 10,
-                    color: Colors.black.withOpacity(0.1),
+Widget build(BuildContext context) {
+  return FutureBuilder<int?>(
+    future: userId,
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      } else if (snapshot.hasError || snapshot.data == null) {
+        return Scaffold(
+          body: Center(
+            child: Text('Failed to load user ID or user not logged in'),
+          ),
+        );
+      } else {
+        int userId = snapshot.data!;
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Column(
+            children: [
+              // Main content area for the TabBarView
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.sizeOf(context).height * 0.00),
+                  child: TabBarView(
+                    controller: controller,
+                    children: [
+                      MoviePage(),
+                      MusicPage(userId: userId),
+                      LibraryPage(userId: userId),
+                      ProfilePage(),
+                    ],
                   ),
-                ],
+                ),
               ),
-
-           
-                child: 
-                TabBar(
+              // TabBar at the bottom
+              Container(
+                height: MediaQuery.sizeOf(context).height * 0.10,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(25),
+                    bottom: Radius.circular(25),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, -3),
+                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child: TabBar(
                   controller: controller,
-
                   indicatorWeight: 0.01,
                   indicatorColor: Colors.black,
                   dividerColor: Colors.transparent,
                   overlayColor: const WidgetStatePropertyAll(
                       Color.fromARGB(0, 14, 13, 13)),
                   unselectedLabelStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700),
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
                   labelColor: Colors.green,
                   unselectedLabelColor: Colors.white,
                   labelStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400),
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
                   tabs: [
-                   
                     Tab(
                       text: "MOVIE",
                       icon: Icon(
@@ -115,7 +121,6 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                         size: 27,
                         color: selectTab == 0 ? Colors.green : Colors.white,
                       ),
-                      
                     ),
                     Tab(
                       text: "MUSIC",
@@ -124,7 +129,6 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                         size: 27,
                         color: selectTab == 1 ? Colors.green : Colors.white,
                       ),
-                    
                     ),
                     Tab(
                       text: "LIBRARY",
@@ -133,25 +137,142 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
                         size: 27,
                         color: selectTab == 2 ? Colors.green : Colors.white,
                       ),
-                     
                     ),
-                     Tab(
+                    Tab(
                       text: "ACCOUNT",
                       icon: Icon(
                         Icons.person_outline_rounded,
                         size: 27,
                         color: selectTab == 3 ? Colors.green : Colors.white,
                       ),
-
                     ),
                   ],
                 ),
-              //),
-              // ),
-            ),
-          );
-        }
-      },
-    );
-  }
+              ),
+            ],
+          ),
+        );
+      }
+    },
+  );
+}
+
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return FutureBuilder<int?>(
+  //     future: userId,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Scaffold(
+  //           body: Center(child: CircularProgressIndicator()),
+  //         );
+  //       } else if (snapshot.hasError || snapshot.data == null) {
+  //         return Scaffold(
+  //           body: Center(
+  //               child: Text('Failed to load user ID or user not logged in')),
+  //         );
+  //       } else {
+  //         int userId = snapshot.data!;
+  //         return Scaffold(
+  //           backgroundColor: Colors.transparent,
+  //           body:  Padding(
+  //             padding:  EdgeInsets.only(bottom: MediaQuery.sizeOf(context).height * 0.09),
+  //             child: TabBarView(controller: controller, children: [
+  //                // SampleHomePage(),
+  //                 MoviePage(),
+  //                 MusicPage(userId: userId),
+  //                 LibraryPage(
+  //                   userId: userId,
+  //                 ),
+  //               ProfilePage(),
+  //               ]),
+  //           ),
+            
+  //           bottomNavigationBar: Container(
+  //             width: MediaQuery.sizeOf(context).width * 0.02,
+  //             height: MediaQuery.sizeOf(context).height * 0.10,
+  //             decoration: BoxDecoration(
+  //               color: Colors.transparent,
+  //               borderRadius: BorderRadius.vertical(
+  //                 top: Radius.circular(25),
+  //                 bottom: Radius.circular(25),
+  //               ),
+  //               boxShadow: [
+  //                 BoxShadow(
+  //                   offset: Offset(0, -3),
+  //                   blurRadius: 10,
+  //                   color: Colors.black.withOpacity(0.1),
+  //                 ),
+  //               ],
+  //             ),
+
+           
+  //               child: 
+  //               TabBar(
+  //                 controller: controller,
+
+  //                 indicatorWeight: 0.01,
+  //                 indicatorColor: Colors.black,
+  //                 dividerColor: Colors.transparent,
+  //                 overlayColor: const WidgetStatePropertyAll(
+  //                     Color.fromARGB(0, 14, 13, 13)),
+  //                 unselectedLabelStyle: TextStyle(
+  //                     color: Colors.white,
+  //                     fontSize: 12,
+  //                     fontWeight: FontWeight.w700),
+  //                 labelColor: Colors.green,
+  //                 unselectedLabelColor: Colors.white,
+  //                 labelStyle: TextStyle(
+  //                     color: Colors.white,
+  //                     fontSize: 12,
+  //                     fontWeight: FontWeight.w400),
+  //                 tabs: [
+                   
+  //                   Tab(
+  //                     text: "MOVIE",
+  //                     icon: Icon(
+  //                       Icons.movie_rounded,
+  //                       size: 27,
+  //                       color: selectTab == 0 ? Colors.green : Colors.white,
+  //                     ),
+                      
+  //                   ),
+  //                   Tab(
+  //                     text: "MUSIC",
+  //                     icon: Icon(
+  //                       Icons.music_note_sharp,
+  //                       size: 27,
+  //                       color: selectTab == 1 ? Colors.green : Colors.white,
+  //                     ),
+                    
+  //                   ),
+  //                   Tab(
+  //                     text: "LIBRARY",
+  //                     icon: Icon(
+  //                       Icons.library_music_rounded,
+  //                       size: 27,
+  //                       color: selectTab == 2 ? Colors.green : Colors.white,
+  //                     ),
+                     
+  //                   ),
+  //                    Tab(
+  //                     text: "ACCOUNT",
+  //                     icon: Icon(
+  //                       Icons.person_outline_rounded,
+  //                       size: 27,
+  //                       color: selectTab == 3 ? Colors.green : Colors.white,
+  //                     ),
+
+  //                   ),
+  //                 ],
+  //               ),
+  //             //),
+  //             // ),
+  //           ),
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 }

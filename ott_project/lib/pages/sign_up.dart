@@ -49,7 +49,6 @@ class _SignUpState extends State<SignUp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     visiblePassword = false;
     confirmVisiblePassword = false;
     super.initState();
@@ -69,7 +68,7 @@ class _SignUpState extends State<SignUp> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: size.width * 0.3,
+                    height: MediaQuery.sizeOf(context).height * 0.10,
                   ),
                   Stack(
                     children: [
@@ -93,8 +92,8 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       Positioned(
-                        bottom: size.height * 0.002,
-                        left: size.width * 0.53,
+                        bottom: MediaQuery.sizeOf(context).height * 0.002,
+                        left: MediaQuery.sizeOf(context).width * 0.52,
                         child: IconButton(
                           onPressed: _pickImage,
                           icon: Icon(
@@ -106,7 +105,7 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                   SizedBox(
-                    height: size.width * 0.1,
+                    height:  MediaQuery.sizeOf(context).height * 0.03,
                   ),
                   Column(
                     children: [
@@ -200,10 +199,10 @@ class _SignUpState extends State<SignUp> {
                         },
                         confirmPasswordController: passwordController,
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height:  MediaQuery.sizeOf(context).height * 0.03),
                       Container(
-                        height: size.height * 0.07,
-                        width: size.width * 0.8,
+                        height: MediaQuery.sizeOf(context).height * 0.07,
+                        width: MediaQuery.sizeOf(context).width * 0.6,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
                             color: Colors.blueGrey.shade300),
@@ -233,7 +232,7 @@ class _SignUpState extends State<SignUp> {
                             )),
                       ),
                       SizedBox(
-                        height: 20,
+                        height:  MediaQuery.sizeOf(context).height * 0.02,
                       ),
                       Row(
                         children: [
@@ -245,8 +244,8 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 10,
+                       SizedBox(
+                        height: MediaQuery.sizeOf(context).height * 0.01,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -265,7 +264,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 15),
+                      SizedBox(height:  MediaQuery.sizeOf(context).height * 0.01),
                     ],
                   ),
                 ],
@@ -305,6 +304,7 @@ class _SignUpState extends State<SignUp> {
     bool isRegistered = await registerUser(context);
 
     if (isRegistered) {
+      clearInputFields();
       // Registration success, navigate to login page
       Navigator.pushAndRemoveUntil(
               context, MaterialPageRoute(builder: (context) => const LoginPage()),(route)=> false);
@@ -354,5 +354,12 @@ class _SignUpState extends State<SignUp> {
         );
       },
     );
+  }
+  void clearInputFields(){
+    usernameController.clear();
+     emailController.clear();
+        mobilenumberController.clear();
+        passwordController.clear();
+        confirmpasswordController.clear();
   }
 }

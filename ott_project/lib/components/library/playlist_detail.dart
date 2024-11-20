@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
+
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -9,7 +8,7 @@ import 'package:ott_project/components/library/playlistDTO.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/app_icon.dart';
-import 'package:ott_project/profile/profile_page.dart';
+
 import 'package:ott_project/service/audio_api_service.dart';
 import 'package:ott_project/service/icon_service.dart';
 import 'package:ott_project/service/playlist_service.dart';
@@ -362,7 +361,7 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
                     : Row(                        
                         children: [
                           SizedBox(
-                            height: 20,
+                            height: MediaQuery.sizeOf(context).height * 0.02,
                           ),
                           if (iconData != null)
                             Image.memory(
@@ -379,7 +378,7 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
                                 color: kWhite,
                               )),
                           SizedBox(
-                            width: 10,
+                            width:  MediaQuery.sizeOf(context).width * 0.04,
                           ),
                           IconButton(
                               onPressed: () {},
@@ -406,7 +405,7 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
                         color: kWhite,
                       )),
                   SizedBox(
-                    width: 15,
+                    width: MediaQuery.sizeOf(context).width * 0.05,
                   ),
                 
                 ],
@@ -414,7 +413,7 @@ class _PlaylistDetailsPageState extends State<PlaylistDetailsPage> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  _playlists.first.title ?? 'Untitled Playlist',
+                  _playlists.first.title  ,
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

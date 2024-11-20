@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
+import 'package:ott_project/components/music_folder/audio_provider.dart';
 import 'package:ott_project/components/music_folder/music.dart';
 import 'package:ott_project/components/music_folder/song_player_page.dart';
 import 'package:ott_project/components/video_folder/category_bar.dart';
@@ -10,8 +11,11 @@ import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
 import 'package:ott_project/pages/music_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
+import 'package:ott_project/service/audio_service.dart';
+import 'package:ott_project/service/movie_api_service.dart';
 import 'package:ott_project/service/movie_service_page.dart';
 import 'package:ott_project/service/service.dart';
+import 'package:provider/provider.dart';
 import '../components/background_image.dart';
 import '../components/category/movie_category_section.dart';
 
@@ -29,10 +33,10 @@ class MoviePage extends StatefulWidget {
 class _MoviePageState extends State<MoviePage> {
   final Service service = Service();
   List<VideoDescription> allMovies = [];
+  List<AudioDescription> allSongs =[];
   final TextEditingController _searchController = TextEditingController();
   List<VideoDescription> _filteredMovies = [];
  
-  Map<String, List<Movies>> _categorizedMovies = {};
 
   //int _selectedIndex = 1;
   String selectedCategory = "Movies";
@@ -44,17 +48,15 @@ class _MoviePageState extends State<MoviePage> {
   @override
   void initState() {
     super.initState();
-
-    // _filteredMovies = _allMovies;
-    // _allMovies = _fetchMovies();
-
+    loadMovies();
+    loadSongs();    
     _loadIcon();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    //_allMovies = MovieService().getMoviesWithCategories();
+   
     //_fetchMovies();
   }
 
@@ -70,74 +72,53 @@ class _MoviePageState extends State<MoviePage> {
     }
   }
 
+  Future<void> loadMovies() async {
+  try {
+    // Fetch the video containers
+    List<VideoContainer> videoContainers = await MovieService.fetchVideoContainer();
+
+    // Extract VideoDescription objects from the containers and populate allMovies
+    allMovies = videoContainers
+        .expand((container) => container.videoDescriptions)
+        .toList();
+  print('all movies:${allMovies}');
+    // Ensure the UI updates after data is fetched
+    setState(() {});
+  } catch (e) {
+    print('Error fetching movies: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to load movies. Please try again.')),
+    );
+  }
+}
+ Future<void> loadSongs() async {
+  try {
+    // Fetch the video containers
+    List<AudioContainer> audioContainers = await AudioService.fetchAudioContainer();
+
+    // Extract VideoDescription objects from the containers and populate allMovies
+    allSongs = audioContainers
+        .expand((container) => container.audiolist)
+        .toList();
+  print('all movies:${allSongs}');
+    // Ensure the UI updates after data is fetched
+    setState(() {});
+  } catch (e) {
+    print('Error fetching songs: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to load songs. Please try again.')),
+    );
+  }
+}
+
+
+
   
 
   Future<void> _refreshMovies() async {
-    // await _fetchMovies();
+     await loadMovies();
   }
 
-  void _categorizeMovies(List<Movies> movies) {
-    _categorizedMovies.clear();
-    for (var movie in movies) {
-      if (!_categorizedMovies.containsKey(movie.categories)) {
-        //_categorizedMovies[movie.categories] = [];
-      }
-      _categorizedMovies[movie.categories]!.add(movie);
-    }
-    // _filterCategoriesForDisplay();
-  }
-
-  // void _filterCategoriesForDisplay() {
-  //   List<String> moviePageDesiredCategories = [
-  //     'Popular',
-  //     'Action',
-  //     'Comedy',
-  //     'Horror',
-  //   ];
-  //   _moviePageCategories = moviePageDesiredCategories.where((category) {
-  //     return _categorizedMovies.containsKey(category) &&
-  //         _categorizedMovies[category]!.isNotEmpty;
-  //   }).toList();
-  // }
-
-  // void _filterMovies(String query) {
-  //   setState(() {
-  //     if (query.isEmpty) {
-  //       _filteredMovies = _categorizedMovies.values.expand((i) => i).toList();
-  //     } else {
-  //       final Map<String, Movie> uniqueMovies = {};
-  //       final input = query.toLowerCase();
-  //       for (var categoryMovie in _categorizedMovies.values) {
-  //         for (var movie in categoryMovie) {
-  //           final movieName = movie.moviename.toLowerCase();
-  //           final words = movieName.split(' ');
-  //           if (movieName.contains(input) ||
-  //               words.any((word) => word.startsWith(input))) {
-  //             uniqueMovies.putIfAbsent(movieName, () => movie);
-  //           }
-  //         }
-  //       }
-  //       _filteredMovies = uniqueMovies.values.toList();
-  //       // _filteredMovies =
-  //       //     _categorizedMovies.values.expand((movies) => movies).where((movie) {
-  //       //   final movieName = movie.moviename.toLowerCase();
-  //       //   final input = query.toLowerCase();
-  //       //   return movieName.contains(input);
-  //       // }).toList();
-  //     }
-  //   });
-  // }
-
-  // void _onSearchChanged(String query) {
-  //   setState(() {
-  //     if (query.isEmpty) {
-  //       _filteredMovies = allMovies;
-  //     } else {
-  //       _filteredMovies = allMovies.where((movie) =>
-  //           movie.moviename.toLowerCase().contains(query.toLowerCase())).to;
-  //     }
-  //   });
-  // }
 
   void _navigateToCategory(String category) {
     setState(() {
@@ -200,9 +181,6 @@ class _MoviePageState extends State<MoviePage> {
                     child: RefreshIndicator(
                       onRefresh: _refreshMovies,
                       child:
-                          // Padding(
-                          //   padding: const EdgeInsets.all(16.0),
-                          //   child:
                           Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -217,7 +195,7 @@ class _MoviePageState extends State<MoviePage> {
                               selectedCategory: selectedCategory,
                               onCategorySelected: _navigateToCategory),
                           SizedBox(
-                            height: 7,
+                            height: MediaQuery.sizeOf(context).height * 0.01,
                           ),
                           const Divider(
                             color: Colors.white54,
@@ -276,12 +254,6 @@ class _MoviePageState extends State<MoviePage> {
                                                   MoviesCategorySection(
                                                     videoContainer: container,
                                                   ),
-                                                  SizedBox(
-                                                    height:
-                                                        MediaQuery.sizeOf(context)
-                                                                .height *
-                                                            0.02,
-                                                  ),
                                                 ],
                                               );
                                             });
@@ -315,6 +287,7 @@ Widget _buildSearchResults() {
 
 
            if (item is VideoDescription) {
+
     print('Search Result (Video): ${item.videoTitle}');
   } else if (item is AudioDescription) {
     print('Search Result (Audio): ${item.audioTitle}');
@@ -328,33 +301,39 @@ Widget _buildSearchResults() {
                 style: TextStyle(color: Colors.white70)),
             onTap: () {
               if (item is VideoDescription) {
-                
+                if(allMovies.isNotEmpty){
+                final movieIndex = allMovies.indexWhere((video)=> video.id == item.id);
+                print('Movie index:$movieIndex');
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MoviesPlayerPage(videoDescriptions: allMovies,categoryId: 1,initialIndex: allMovies.indexWhere((video)=> video.id == item.id),)
+                    builder: (context) => MoviesPlayerPage(
+                      videoDescriptions: allMovies,
+                      categoryId: (item.categoryList.isNotEmpty && index < item.categoryList.length) ? item.categoryList[index] : 0,
+                      initialIndex: movieIndex)
                   ),
                 );
-            
+                }
                 }
   
-                // else {
-                //   if (item is AudioDescription) {
-                //     Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (context) => SongPlayerPage(
-                //                   music: item,
-                //                   onChange: (newAudio) {
-                //                     //  Provider.of<AudioProvider>(context,listen: true)
-                //                     // .musicsetCurrentlyPlaying(
-                //                     //               newAudio,
-                //                     //               );
-                //                   },
-                //                   onDislike: (p0) {},
-                //                 )));
-                //   }
-              //}
+                else {
+                  if (item is AudioDescription) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SongPlayerPage(
+                                music: item,
+                                  musicList: allSongs,
+                                  onChange: (newAudio) {
+                                     Provider.of<AudioProvider>(context,listen: true)
+                                    .setCurrentlyPlayingSong(
+                                                  newAudio,_searchResults.cast<AudioDescription>(),
+                                                  );
+                                  },
+                                  onDislike: (p0) {},
+                                )));
+                  }
+              }
             },
           );
         },

@@ -46,9 +46,9 @@ class _LoginPageState extends State<LoginPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 10,
-                    ),
+                    // SizedBox(
+                    //   height: MediaQuery.sizeOf(context).height * 0.01,
+                    // ),
                     Center(
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -125,16 +125,14 @@ class _LoginPageState extends State<LoginPage> {
                             },
                           ),
                         ),
-                        SizedBox(
-                          width: 0,
-                        ),
+                       
                         Text(
                           'Remember me',
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
 
                         SizedBox(
-                          width: 40,
+                          width: MediaQuery.sizeOf(context).width * 0.12,
                         ),
                         Container(
                           alignment: Alignment(1.0, 0.0),
@@ -151,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     SizedBox( 
-                      height: 15,
+                      height: MediaQuery.sizeOf(context).height * 0.02,
                     ),
                     Container(
                       height: size.height * 0.07,    
@@ -186,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: handleLogin,
                     ),*/
                     SizedBox(
-                      height: 20,
+                      height: MediaQuery.sizeOf(context).height * 0.02,
                     ),
                     Row(
                       children: [
@@ -219,8 +217,8 @@ class _LoginPageState extends State<LoginPage> {
                     // Square(
                     //     onTap: googleLogin,
                     //     imagePath: 'assets/images/google.jpg'),
-                    const SizedBox(
-                      height: 20,
+                     SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.02,
                     ),
 
                     Row(
@@ -232,9 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: const Color.fromARGB(255, 248, 243, 243),
                           ),
                         ),
-                        const SizedBox(
-                          width: 4,
-                        ),
+                        
                       ],
                     ),
                     GestureDetector(
@@ -250,9 +246,7 @@ class _LoginPageState extends State<LoginPage> {
                                 bottom: BorderSide(width: 1, color: kWhite))),
                       ),
                     ),
-                    SizedBox(
-                      height: 3,
-                    ),
+                    
                   ],
                 ),
               ),
@@ -272,6 +266,8 @@ class _LoginPageState extends State<LoginPage> {
         if (_isChecked) {
           saveUserCredentials(email, password);
         }
+        emailController.clear();
+        passwordController.clear();
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: ((context) => MainTab ())));
       }

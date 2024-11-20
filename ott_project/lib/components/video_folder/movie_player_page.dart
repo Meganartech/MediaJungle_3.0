@@ -1,19 +1,11 @@
 import 'dart:async';
-
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/components/video_folder/cast_crew.dart';
-import 'package:ott_project/components/video_folder/suggest_movie.dart';
-
 import 'package:ott_project/components/video_folder/video_container.dart';
-import 'package:ott_project/components/library/watch_later.dart';
-
 import 'package:ott_project/service/movie_api_service.dart';
 import 'package:ott_project/service/movie_service_page.dart';
 import 'package:ott_project/service/service.dart';
@@ -657,12 +649,12 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
             ],
           ),
          
-             SizedBox(height: 8),
+             SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
               Text(
                 '${_movieDetails.mainVideoDuration}',
                 style: TextStyle(color: Colors.grey),
               ),
-          SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
+          SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
           Text(
             'Cast And Crew',
             style: TextStyle(
@@ -671,7 +663,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
               color: Colors.white,
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
           Container(
             height: MediaQuery.sizeOf(context).height * 0.12,
             child: ListView.builder(
@@ -690,7 +682,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                           backgroundImage: cast.image != null ? MemoryImage(cast.image!) :   AssetImage('assets/icon/thupaki.png') as ImageProvider
                                                 ),
                         SizedBox(
-                          height: 6,
+                          height: MediaQuery.sizeOf(context).height * 0.01,
                         ),
                         Container(
                           // padding: EdgeInsets.symmetric(horizontal: 8),
@@ -845,7 +837,12 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              //onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>MoviesPlayerPage(videoDescriptions: widget.videoDescriptions, categoryId: widget.categoryId))),
+              onTap: () async{
+                  print('Category Id:${widget.categoryId},Index:$index');
+               Navigator.push(context,MaterialPageRoute(
+                builder: (context)=>
+                MoviesPlayerPage(videoDescriptions: widget.videoDescriptions, categoryId: widget.categoryId,initialIndex: index,)));
+                },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: FutureBuilder<Uint8List?>(
@@ -871,13 +868,17 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                 ),
               ),
             ),
-            SizedBox(height: 8),
-            Text(
-              suggestedMovies[index].videoTitle,
-              style: TextStyle(color: Colors.white),
-             // maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
+            Padding(
+                 padding:  EdgeInsets.only(left: MediaQuery.sizeOf(context).width * 0.02),
+                 child: Text(
+                  suggestedMovies[index].videoTitle,
+                  style: TextStyle(color: Colors.white),
+                 // maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                               ),
+               ),
+            
           ],
         ),
       ),

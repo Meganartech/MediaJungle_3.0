@@ -103,11 +103,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: size.height * 0.01,
+                        height: size.height * 0.03,
                       ),
                       Text('Forget Password', style: kBodyText),
                       SizedBox(
-                        height: size.height * 0.09,
+                        height: size.height * 0.07,
                       ),
                       Container(
                         width: size.width * 0.9,
@@ -125,7 +125,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                           inputAction: TextInputAction.next,
                           obscureText: false),
                       SizedBox(
-                        height: 10,
+                        height: MediaQuery.sizeOf(context).height * 0.01,
                       ),
                       MyTextField(
                           controller: passwordController,
@@ -141,7 +141,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                           inputAction: TextInputAction.next,
                           obscureText: !visiblePassword),
                       SizedBox(
-                        height: 10,
+                        height: MediaQuery.sizeOf(context).height * 0.01,
                       ),
                       MyTextField(
                           controller: confirmPasswordController,
@@ -156,10 +156,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                              icon: Icon(confirmVisiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
                           inputAction: TextInputAction.next,
                           obscureText: !confirmVisiblePassword),
-                      SizedBox(height: 30),
+                      SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
                       Container(
                         height: size.height * 0.08,
-                        width: size.width * 0.8,
+                        width: size.width * 0.6,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
                             color: Colors.blueGrey.shade300),

@@ -256,7 +256,6 @@ if (success) {
         return Stack(
           children: [
             BackgroundImage(),
-            SizedBox(height: 10),
             Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
@@ -305,7 +304,7 @@ if (success) {
                                   : 
                                   Image.asset('assets/icon/media_jungle.png')),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                     Text(
                      // 'songname',
                       currentAudio!.audioTitle,
@@ -318,7 +317,7 @@ if (success) {
                     //   currentAudio.movieName,
                     //   style: TextStyle(fontSize: 16, color: Colors.white70),
                     // ),
-                    SizedBox(height: 20),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -369,7 +368,7 @@ if (success) {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                     Slider(
                       min: 0,
                       max: duration.inSeconds.toDouble(),
@@ -395,7 +394,7 @@ if (success) {
                         ],
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -648,7 +647,7 @@ void _showCreatePlaylistDialog(BuildContext context,{int? audioId}) {
                     ),
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                   TextField(
                     controller: descriptionController,
                     decoration: InputDecoration(

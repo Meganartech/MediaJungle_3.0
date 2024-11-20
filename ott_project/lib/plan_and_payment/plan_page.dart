@@ -420,7 +420,7 @@ class _PlanPageState extends State<PlanPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: 20,
+                        height:  MediaQuery.sizeOf(context).height * 0.01,
                       ),
                       Text(
                         'Select Your Plan',
@@ -430,15 +430,15 @@ class _PlanPageState extends State<PlanPage> {
                             fontWeight: FontWeight.bold),
                       ),
                       SizedBox(
-                        height: 20,
+                        height:  MediaQuery.sizeOf(context).height * 0.04,
                       ),
                       ...plan.map((plans) => _buildPlanSection(plans)).toList(),
                       SizedBox(
-                        height: 16,
+                        height:  MediaQuery.sizeOf(context).height * 0.02,
                       ),
                       if (selectedPlan.isNotEmpty) _buildSelectedPlanDetails(),
                       SizedBox(
-                        height: 16,
+                        height:  MediaQuery.sizeOf(context).height * 0.02,
                       ),
                     ],
                   ),
@@ -511,7 +511,7 @@ class _PlanPageState extends State<PlanPage> {
                       color: Colors.white,
                     ),
                     FeatureList(planId: plan.id),
-                    SizedBox(height: 16),
+                    SizedBox(height:  MediaQuery.sizeOf(context).height * 0.02),
                     Wrap(
                       runSpacing: 8.0,
                       spacing: 8.0,
@@ -536,7 +536,7 @@ class _PlanPageState extends State<PlanPage> {
                             ));
                       }).toList(),
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height:  MediaQuery.sizeOf(context).height * 0.02),
                   ],
                 ),
               ),
@@ -607,7 +607,7 @@ class _PlanPageState extends State<PlanPage> {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
             Text(
               'Rs: $price',
               style: const TextStyle(
@@ -634,7 +634,7 @@ class _PlanPageState extends State<PlanPage> {
     return Column(
       children: [
         SizedBox(
-          height: 20,
+          height:  MediaQuery.sizeOf(context).height * 0.01,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -659,7 +659,7 @@ class _PlanPageState extends State<PlanPage> {
           ],
         ),
         SizedBox(
-          height: 8,
+          height:  MediaQuery.sizeOf(context).height * 0.01,
         ),
         Align(
           alignment: Alignment.centerLeft,

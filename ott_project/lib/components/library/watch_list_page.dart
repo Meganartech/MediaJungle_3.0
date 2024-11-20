@@ -25,7 +25,6 @@ class _WatchListPageState extends State<WatchListPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     watchlaterController = StreamController<List<WatchLater>>();
     _loadWatchLater();
@@ -61,6 +60,12 @@ return Scaffold(
       body: Stack(  
         children: [
           BackgroundImage(),
+          Padding(padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.10,
+          left: MediaQuery.sizeOf(context).width * 0.35),
+          child: Text('Watch Later',textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
+          ),
+         
           Expanded(
             child: StreamBuilder(stream: watchlaterController.stream, 
             builder: (context,snapshot){
@@ -83,7 +88,7 @@ return Scaffold(
                               await Future.delayed(Duration(seconds: 2));
                             },
                             child: Padding(
-                              padding:  EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.10,
+                              padding:  EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.15,
                               left:  MediaQuery.sizeOf(context).width * 0.05,),
                               child: ListView.builder(
                                 itemCount: watchLaterVideos.length,

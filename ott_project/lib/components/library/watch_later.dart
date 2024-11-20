@@ -8,4 +8,4 @@ class WatchLater {
   factory WatchLater.fromJson(Map<String,dynamic> json){
     return WatchLater(videoId: json['videoId'], videoTitle: json['videoTitle']);
   }
-}
+}  
