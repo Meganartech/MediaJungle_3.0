@@ -2,10 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import Layout from '../Layout/Layout';
 import axios from 'axios';
 import API_URL from '../../Config';
-import { FaPlay, FaPause, FaForward, FaBackward, FaTimes ,FaPlus} from 'react-icons/fa';
+import { FaPlay, FaPause, FaForward, FaBackward, FaTimes, FaRedo} from 'react-icons/fa';
 import { Toaster, toast } from 'react-hot-toast';
 import plus from '../UserIcon/plus button playlist.png';
-import vector from '../UserIcon/Vector.png';
+import vector from '../UserIcon/list.png';
+import pluslist from '../UserIcon/playlist.png';
+import share from '../UserIcon/share.png';
+import icon from '../UserIcon/like.png';
+import repeat from '../UserIcon/Vector.png';
+import suffle from '../UserIcon/Vector-1.png';
+import { BsShuffle } from "react-icons/bs"; // Import Shuffle Icon from Bootstrap Icons
+import { BiArrowRepeat } from "react-icons/bi"; // Repeat icon from Bootstrap Icons
+
 
 const MusicScreen = () => {
   const musicid = localStorage.getItem('item');
@@ -19,9 +27,22 @@ const MusicScreen = () => {
   const userId = sessionStorage.getItem("userId");
 
   const audioRef = useRef(null);
-  const currentSong = musiclist[currentSongIndex];
+  // const currentSong = musiclist[currentSongIndex];
   const [playlist, setPlaylist] = useState([]);
+  const [currentSong,setCurrentSong] = useState('');
+  const [isShuffle, setIsShuffle] = useState(false); // Shuffle state
+  const [isRepeat, setIsRepeat] = useState(false); // Repeat state
+  const [volume, setVolume] = useState(1); // Default volume is 1 (full volume)
+  const [isSliderVisible, setIsSliderVisible] = useState(false); // State for volume slider visibility
+  
 
+
+  useEffect(() => {
+    if (musiclist.length > 0 && currentSongIndex >= 0) {
+      setCurrentSong(musiclist[currentSongIndex]);
+    }
+  }, [musiclist, currentSongIndex]);
+  
   const fetchPlaylist = async () => {
     try {
       const user = Number(userId);
@@ -34,7 +55,8 @@ const MusicScreen = () => {
 
   const fetchMusicList = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/v2/getaudiodetails/${musicid}`);
+      const user = Number(userId);
+      const response = await axios.get(`${API_URL}/api/v2/getaudiodetails/${musicid}/${user}`);
       setMusiclist(response.data);
       if (response.data.length > 0) {
         setBottomBarSong(response.data[0]);
@@ -49,31 +71,32 @@ const MusicScreen = () => {
     fetchPlaylist();
   }, []);
 
+  // Update audio source whenever the current song changes
   useEffect(() => {
     if (currentSong) {
       const audioSrc = `${API_URL}/api/v2/${currentSong.audio_file_name}/file`;
       if (audioRef.current) {
         audioRef.current.src = audioSrc;
       }
+      // Automatically play the song if isPlaying is true
+      if (isPlaying) {
+        audioRef.current.play().catch((err) =>
+          console.error("Error playing audio:", err)
+        );
+      }
     }
-  }, [currentSong]);
+  }, [currentSong, API_URL, isPlaying]);
 
-  useEffect(() => {
-    const audio = audioRef.current;
 
-    if (audio) {
-      const updateTime = () => setCurrentTime(audio.currentTime);
-      const setAudioDuration = () => setDuration(audio.duration);
+  const toggleShuffle = () => {
+    setIsShuffle((prev) => !prev);
+  };
 
-      audio.addEventListener('timeupdate', updateTime);
-      audio.addEventListener('loadedmetadata', setAudioDuration);
+   // Function to handle repeat toggling
+   const toggleRepeat = () => {
+    setIsRepeat((prev) => !prev);
+  };
 
-      return () => {
-        audio.removeEventListener('timeupdate', updateTime);
-        audio.removeEventListener('loadedmetadata', setAudioDuration);
-      };
-    }
-  }, []);
 
   const playSong = () => {
     const audio = audioRef.current;
@@ -82,7 +105,9 @@ const MusicScreen = () => {
         if (prevState) {
           audio.pause();
         } else {
-          audio.play();
+          audio.play().catch((err) =>
+            console.error("Error playing audio:", err)
+          );
         }
       }
       return !prevState;
@@ -92,27 +117,67 @@ const MusicScreen = () => {
 
   const playPrevious = () => {
     if (musiclist.length > 0) {
-      const previousIndex = currentSongIndex > 0 ? currentSongIndex - 1 : musiclist.length - 1;
+      const previousIndex =
+        currentSongIndex > 0 ? currentSongIndex - 1 : musiclist.length - 1;
       setCurrentSongIndex(previousIndex);
-      setBottomBarSong(musiclist[previousIndex]);
-     
     }
   };
 
   const playNext = () => {
     if (musiclist.length > 0) {
-      const nextIndex = (currentSongIndex + 1) % musiclist.length;
-      setCurrentSongIndex(nextIndex);
-      setBottomBarSong(musiclist[nextIndex]);
-      
+      if (isShuffle) {
+        const randomIndex = Math.floor(Math.random() * musiclist.length);
+        setCurrentSongIndex(randomIndex);
+      } else {
+        const nextIndex = (currentSongIndex + 1) % musiclist.length;
+        setCurrentSongIndex(nextIndex);
+      }
     }
   };
 
+
   const playSongFromList = (index) => {
     setCurrentSongIndex(index);
-    setBottomBarSong(musiclist[index]);
+    setShowBottomBar(true);
   };
 
+
+  
+  // Manage audio events for time update and duration
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    const updateTime = () => setCurrentTime(audio.currentTime);
+    const setAudioDuration = () => setDuration(audio.duration);
+
+    // Add event listeners to handle time updates and song end
+    const handleSongEnd = () => {
+      if (isRepeat) {
+        audio.currentTime = 0; // Reset to the beginning of the song
+        audio.play(); // Play again
+      } else {
+        playNext(); // Proceed to the next song if repeat is not enabled
+      }
+    };
+
+    if (audio) {
+      audio.addEventListener("timeupdate", updateTime);
+      audio.addEventListener("loadedmetadata", setAudioDuration);
+      audio.addEventListener("ended", handleSongEnd); // Handle song end here
+
+      return () => {
+        audio.removeEventListener("timeupdate", updateTime);
+        audio.removeEventListener("loadedmetadata", setAudioDuration);
+        audio.removeEventListener("ended", handleSongEnd); // Clean up listener
+      };
+    }
+  }, [currentSong, isRepeat]); // Dependencies to run when song or repeat changes
+  
+
+  
+  
+  
+  
   const closeBottomBar = () => {
     setShowBottomBar(false);
     setIsPlaying(false);
@@ -151,12 +216,29 @@ const MusicScreen = () => {
 
       console.log(response.data); // Display success or error message from the backend
       toast.success("Added");
+      fetchMusicList();
     } catch (error) {
       console.log('Error adding to favorites: ' + error.message); // Handle error
       toast.error("Already Added")
     } 
   };
 
+  const handleRemoveFromFavorites = async (audioId) =>{
+    try{
+      const response = await axios.delete(
+        `${API_URL}/api/v2/${userId}/removeFavoriteAudio`, // Adjust the endpoint if necessary
+        {
+          params: { audioId },
+        }
+      );
+      console.log(response.data); // Display success or error message from the backend
+      toast.success("Removed");
+      fetchMusicList();
+    } catch (error) {
+      console.log('Error adding to favorites: ' + error.message); // Handle error
+      
+    } 
+  };
   
   console.log("song",currentSong)
 
@@ -243,52 +325,109 @@ const MusicScreen = () => {
   }
 };
 
+console.log("issuffle",isShuffle)
+
+const handleVolumeChange = (e) => {
+  const newVolume = e.target.value;
+  setVolume(newVolume);
+  if (audioRef.current) {
+    audioRef.current.volume = newVolume;
+  }
+};
+
+const toggleSliderVisibility = () => {
+  setIsSliderVisible((prev) => !prev);
+};
+
+const getVolumeIcon = () => {
+  if (volume === 0) return '🔇';
+  if (volume <= 0.5) return '🔉';
+  return '🔊';
+};
+
+
 
   return (
     <Layout>
       <div className="music-player">
         {/* Left Side */}
         <div className="left-side">
-          <span style={{ marginBottom: '30px' }}>A R Rahman</span>
+          
           {currentSong ? (
             <>
+            <span style={{ marginBottom: '30px',fontSize: '20px' }}>{currentSong.moviename}</span>
               <img
                 src={`${API_URL}/api/v2/image/${currentSong.id}`}
                 alt="Album Art"
                 className="album-art"
               />
               <span style={{ fontSize: '20px' }}>{currentSong.audio_title}</span>
+              <span style={{ fontSize: '20px' }}>({currentSong.moviename})</span>
             </>
           ) : (
             <p>Loading...</p>
           )}
-          <span style={{ fontSize: '20px' }}>(Ok Kanmani)</span>
+          
+          
           <div className="controls">
+          <button
+          className="control-button"
+          onClick={toggleShuffle}
+          style={{ color: isShuffle ? "red" : "white" }}
+        >
+          <BsShuffle style={{ fontSize: "20px" }} />
+        </button>
             <button onClick={playPrevious} className="control-button"><FaBackward /></button>
-            <button onClick={playSong} className="control-button">
-              {isPlaying ? <FaPause /> : <FaPlay />}
-            </button>
+            <button
+  onClick={playSong}
+  className="control-button"
+  style={{ color: isPlaying ? "red" : "white" }}
+>
+  {isPlaying ? <FaPause /> : <FaPlay />}
+</button>
+
             <button onClick={playNext} className="control-button"><FaForward /></button>
+            <button 
+            className='control-button'
+            onClick={toggleRepeat}
+            style={{color:isRepeat?'red':'white'}}
+            >
+            {/* <img src={repeat} alt='' style={{width:'20px',height:'20px'}}/> */}
+            <i className="bi bi-arrow-repeat" style={{ fontSize: "20px" }}></i> {/* Repeat Icon */}
+            </button>
           </div>
 
           <div className="actions">
-            <button 
-             onClick={() => {
-              if (currentSong && currentSong.id) {
-                handleAddToFavorites(currentSong.id);
-              } else {
-                console.error('Current song or song ID is not available');
-              }
-            }}
-            className="action-button">
-              <i class="fas fa-thumbs-up fs-10"></i> Like
-              </button>
+          <button
+    onClick={() => {
+      if (currentSong && currentSong.id) {
+        if (currentSong.like == true) {
+          // If already liked, remove from favorites
+          handleRemoveFromFavorites(currentSong.id);
+        } else {
+          // If not liked, add to favorites
+          handleAddToFavorites(currentSong.id);
+        }
+      }
+      
+    }}
+    className="action-button"
+    style={{
+      color: currentSong && currentSong.like == true ? 'red' : 'white', // Set color conditionally
+    }}
+  >
+    <img
+      src={icon}
+      alt=""
+      style={{ width: '15px', height: '15px' }}
+    />
+    {currentSong && currentSong.like == true ? 'Liked' : 'Like'} {/* Conditional text */}
+  </button>
             {/* <button  className="action-button"><i class="fas fa-thumbs-up fs-10"></i> Like</button> */}
             <button  
             onClick={openCreatePlaylistPopup}
             className="action-button">
-            <i class="fas fa-plus"></i> Playlist
-            {/* <i><FaPlus /></i> Playlist */}
+            <img src={pluslist} alt='' style={{width:'15px',height:'15px'}}/>Playlist
             </button>
 
             {popup && (
@@ -336,7 +475,7 @@ const MusicScreen = () => {
       overflowY: 'auto',
       maxHeight: '90px',
       scrollbarWidth: 'thin', // For Firefox
-      scrollbarColor: 'black', // Track color (black) and thumb color (dark grey) for Firefox
+      scrollbarColor: 'black  transparent', // Track color (black) and thumb color (dark grey) for Firefox
     }}>
       <style>
         {`
@@ -499,7 +638,9 @@ const MusicScreen = () => {
 
         </div>
       )}
-            <button onClick={playNext} className="action-button"><i class="bi bi-share"></i> Share
+            <button  className="action-button">
+              <img src={share} alt='' style={{width:'15px', height:'15px'}}/>
+              Copy link
             </button>
           </div>
         </div>
@@ -517,7 +658,7 @@ const MusicScreen = () => {
                   <span>{index + 1}. {song.audio_title}</span>
                   <span className="song-duration">{song.audio_Duration}</span>
                 </div>
-                <div className="song-artist">A R Rahman - Ok Kanmani</div>
+                <div className="song-artist">{song.moviename}</div>
               </li>
             ))}
           </ul>
@@ -549,21 +690,56 @@ const MusicScreen = () => {
           />
           <div className="bottom-bar-info">
             <span className="bottom-bar-title">{bottomBarSong.audio_title}</span>&nbsp;&nbsp;&nbsp;
-            <span className="bottom-bar-artist">A R Rahman - Ok Kanmani</span>
+            <span className="bottom-bar-artist">{bottomBarSong.moviename}</span>
           </div>
+          <div className='bottom-bar-controls'>
+          <button
+          className="control-button"
+          onClick={toggleShuffle}
+          style={{ color: isShuffle ? "red" : "white" }}
+        >
+          <BsShuffle style={{ fontSize: "20px" }} />
+        </button>
           <button onClick={playPrevious} className="control-button"><FaBackward /></button>
-          <button onClick={playSong} className="control-button">
+          <button onClick={playSong} className="control-button"
+          style={{color:isPlaying?'red':'white'}}>
             {isPlaying ? <FaPause /> : <FaPlay />}
           </button>
           <button onClick={playNext} className="control-button"><FaForward /></button>
+          <button 
+            className='control-button'
+            onClick={toggleRepeat}
+            style={{color:isRepeat?'red':'white'}}
+            >
+            {/* <img src={repeat} alt='' style={{width:'20px',height:'20px'}}/> */}
+            <i className="bi bi-arrow-repeat" style={{ fontSize: "20px" }}></i> {/* Repeat Icon */}
+            </button>
+          </div>
           
           {/* Time Display */}
     <div className="bottom-bar-time">
       <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
+      
     </div>
+    <div className="volume-container">
+        <button onClick={toggleSliderVisibility}>{getVolumeIcon()}</button>
+        {isSliderVisible && (
+          <div className="volume-slider-container">
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={handleVolumeChange}
+            />
+          </div>
+        )}
+      </div>
 
+    <button onClick={closeBottomBar} className=""><FaTimes /></button>
 
-          <button onClick={closeBottomBar} className="control-button"><FaTimes /></button>
+          
         </div>
       )}
 

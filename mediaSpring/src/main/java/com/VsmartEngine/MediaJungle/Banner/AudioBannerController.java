@@ -1,8 +1,11 @@
 package com.VsmartEngine.MediaJungle.Banner;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.VsmartEngine.MediaJungle.model.AudioMovieNameBanner;
 import com.VsmartEngine.MediaJungle.model.Audiodescription;
+import com.VsmartEngine.MediaJungle.model.MovieName;
 import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
 import com.VsmartEngine.MediaJungle.repository.AudioMovieNameBannerRepository;
+import com.VsmartEngine.MediaJungle.repository.MovieNameRepository;
+import com.VsmartEngine.MediaJungle.userregister.UserRegister;
+import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 
 @CrossOrigin()
 @RestController
@@ -35,6 +42,12 @@ public class AudioBannerController {
 	
 	@Autowired
 	private AudioMovieNameBannerRepository audiomovienamebannerrepository;
+	
+	@Autowired
+	private MovieNameRepository MovieNameRepository;
+	
+	@Autowired
+    private UserRegisterRepository userregisterrepository;
 	
 	@PostMapping("/createaudiobanner")
 	public ResponseEntity<?> createAudioBanner(@RequestBody List<AudioBanner> audioBannerRequest) {
@@ -99,18 +112,61 @@ public class AudioBannerController {
 	   	}
        
         
-        @GetMapping("/getaudiodetails/{movie_name}")
-        public ResponseEntity<?> getaudiodetailsbyId(@PathVariable("movie_name") long movie_name){
-        	List<Audiodescription> optionaladddescription = audio.findMovie_nameById(movie_name); 
-        	
-        	 if (!optionaladddescription.isEmpty()) {
-        	        return ResponseEntity.ok(optionaladddescription); // Return the list if found
-        	    } else {
-        	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        	                             .body("No audio details found for movie name: " + movie_name);
-        	    }
-        	
-        }
+//        @GetMapping("/getaudiodetails/{movie_name}")
+//        public ResponseEntity<?> getaudiodetailsbyId(@PathVariable("movie_name") long movie_name){
+//        	List<Audiodescription> optionaladddescription = audio.findMovie_nameById(movie_name); 
+//        	
+//        	
+//        	 if (!optionaladddescription.isEmpty()) {
+//        	        return ResponseEntity.ok(optionaladddescription); // Return the list if found
+//        	    } else {
+//        	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//        	                             .body("No audio details found for movie name: " + movie_name);
+//        	    }
+//        	
+//        }
+        
+        
+        @GetMapping("/getaudiodetails/{movie_name}/{userid}")
+        public ResponseEntity<?> getAudioDetailsByMovieName(
+                @PathVariable("movie_name") long movie_name, 
+                @PathVariable("userid") long userid) {
+            // Fetch audio descriptions by movie name
+            List<Audiodescription> audioDescriptions = audio.findMovie_nameById(movie_name);
+            
+            // Check if the list is empty
+            if (audioDescriptions.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No audio details found for movie name: " + movie_name);
+            }
 
+            // Fetch the movie name using the movie ID
+            Optional<MovieName> optionalMovieName = MovieNameRepository.findById(movie_name);
+            if (optionalMovieName.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No movie details found for movie ID: " + movie_name);
+            }
+            String movieName = optionalMovieName.get().getMovie_name(); // Extract the movie name
+
+            // Fetch user details to get favorite audio IDs
+            Optional<UserRegister> optionalUser = userregisterrepository.findById(userid);
+            final Set<Long> favoriteAudioIdsSet = optionalUser.map(UserRegister::getFavoriteAudioIds)
+                                                              .orElse(Collections.emptySet()); // Default empty set if user not found
+
+            // Map Audiodescription to AudioBannerDTO and set the movie name
+            List<AudioBannerDTO> audioBannerDTOList = audioDescriptions.stream().map(desc -> {
+                AudioBannerDTO dto = new AudioBannerDTO();
+                dto.setMoviename(movieName); // Set the fetched movie name
+                dto.setId(desc.getId());
+                dto.setAudio_title(desc.getAudio_title());
+                dto.setLike(favoriteAudioIdsSet.contains(desc.getId())); // Check if the ID is in favorites
+                dto.setAudio_file_name(desc.getAudio_file_name());
+                dto.setAudio_Duration(desc.getAudio_Duration());
+                return dto;
+            }).toList();
+
+            // Return the DTO list as the response
+            return ResponseEntity.ok(audioBannerDTOList);
+        }
 
 }

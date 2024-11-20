@@ -3,7 +3,7 @@ import axios from 'axios';
 import API_URL from '../Config';
 import Layout from '../user/Layout/Layout';
 import Thumbs from '../user/UserIcon/Thumbs Up.png';
-import vector from '../user/UserIcon/Vector.png';
+import vector from '../user/UserIcon/list.png';
 import video from '../user/UserIcon/Video Playlist.png';
 import plus from '../user/UserIcon/plus button playlist.png';
 import { Toaster, toast } from 'react-hot-toast';
@@ -1326,13 +1326,14 @@ Cancel
   return (
     <Layout>
 
-    <div
+    {/* <div>
     className='sss'
       style={{
         marginTop: '50px',
         marginLeft: '410px',
       }}
-    >
+      </div> */}
+    
 
       <div style={{
         marginTop:'50px',
