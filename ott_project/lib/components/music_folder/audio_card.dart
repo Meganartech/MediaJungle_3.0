@@ -57,7 +57,7 @@ class AudioCard extends StatelessWidget {
                     }),
               ),
             ),
-            SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+           SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
        
             Text(
               audio.audioTitle,

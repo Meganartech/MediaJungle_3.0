@@ -57,7 +57,7 @@ class MovieCard extends StatelessWidget {
                       height: 115,
                     ),
             ),
-            SizedBox(height: 3),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
             Text(
               movie.moviename,
               style: TextStyle(

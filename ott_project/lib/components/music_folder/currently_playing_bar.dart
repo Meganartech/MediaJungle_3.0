@@ -122,7 +122,7 @@ class _CurrentlyPlayingBarState extends State<CurrentlyPlayingBar> {
                   //   },
                   // ),
                 ),
-                SizedBox(width: 12),
+                SizedBox(width: MediaQuery.sizeOf(context).width * 0.03),
                 Expanded(
                   child: GestureDetector(
                     onTap: widget.onTap,

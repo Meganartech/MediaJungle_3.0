@@ -248,7 +248,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
         return Stack(
           children: [
             BackgroundImage(),
-            SizedBox(height: 10),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
             Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
@@ -296,7 +296,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                         // ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
                     Text(
                       currentAudio!.audioTitle,
                       style: TextStyle(

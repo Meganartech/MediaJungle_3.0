@@ -29,10 +29,8 @@ class AudioPlaylist {
       List<AudioDescription> audioList =[];
       for(int audioId in audioIds){
         final audio = await AudioApiService().fetchAudioDetails(audioId);
-        if(audio != null){
-          audioList.add(audio);
-        }
-      }
+        audioList.add(audio);
+            }
       _cachedAudios = audioList;
       return audioList;
     }catch (e) {

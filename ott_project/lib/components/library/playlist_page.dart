@@ -10,7 +10,7 @@ import 'package:ott_project/components/library/playlist_detail.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/app_icon.dart';
-import 'package:ott_project/profile/profile_page.dart';
+
 
 import 'package:provider/provider.dart';
 
@@ -28,8 +28,9 @@ class _PlayListPageState extends State<PlayListPage> {
   void initState() {
     super.initState();
     _loadIcon();
-    _playList = Future.value([]);
     _fetchPlaylists();
+    _playList = Future.value([]);
+    
     CircularProgressIndicator();
   }
 
@@ -38,6 +39,7 @@ class _PlayListPageState extends State<PlayListPage> {
   AppIcon? iconData;
   late Future<List<AudioPlaylist>> _playList;
    final GlobalKey _menuKey = GlobalKey();
+   bool _isLoading = false;
  
 
   Future<void> _loadIcon() async {
@@ -53,14 +55,21 @@ class _PlayListPageState extends State<PlayListPage> {
   }
 
   Future<void> _fetchPlaylists() async{
+    if(_isLoading) return;
    try{
+     setState(() {
+       _isLoading = true;
+     });
       final userId =await Service().getLoggedInUserId();
       print('UserId: ${userId}');
       if(userId != null){
       final playlists = await PlaylistService().getPlaylistsByUserId(userId);
+      if(mounted){
       setState(() {
         _playList = Future.value(playlists);
+        _isLoading = false;
       });
+      }
       }
    }catch(e){
     print('Error fetching playlists: $e');
@@ -73,6 +82,7 @@ class _PlayListPageState extends State<PlayListPage> {
   void _showEditPlaylistDialog(BuildContext context,{required int playlistId,String? initialtitle, String? initialdescription}) {
     final TextEditingController titleController = TextEditingController(text: initialtitle);
     final TextEditingController descriptionController = TextEditingController(text: initialdescription);
+    
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -99,7 +109,7 @@ class _PlayListPageState extends State<PlayListPage> {
                     ),
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height:  MediaQuery.sizeOf(context).height * 0.02),
                   TextField(
                     controller: descriptionController,
                     decoration: InputDecoration(
@@ -177,7 +187,7 @@ class _PlayListPageState extends State<PlayListPage> {
                           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             SizedBox(
-                              height: 20,
+                              height:  MediaQuery.sizeOf(context).height * 0.02,
                             ),
                             if (iconData != null)
                               Image.memory(
@@ -186,7 +196,7 @@ class _PlayListPageState extends State<PlayListPage> {
                               )
                             else
                               Image.asset('assets/images/bgimg2.jpg',
-                                  height: 30),
+                                  height:  MediaQuery.sizeOf(context).height * 0.05),
                             Spacer(),
                             IconButton(
                                 onPressed: () {},
@@ -195,7 +205,7 @@ class _PlayListPageState extends State<PlayListPage> {
                                   color: kWhite,
                                 )),
                             SizedBox(
-                              width: 10,
+                              width: MediaQuery.sizeOf(context).width * 0.04,
                             ),
                             IconButton(
                                 onPressed: _showNotification,
@@ -220,17 +230,19 @@ class _PlayListPageState extends State<PlayListPage> {
                           color: kWhite,
                         )),
                     SizedBox(
-                      width: 15  ,
+                      width:  MediaQuery.sizeOf(context).width * 0.05,
                     ),
                    
                     
                   ],
                 ),
                 SizedBox(
-                  height: 20,
+                  height:  MediaQuery.sizeOf(context).height * 0.04,
                 ),
                 Container(
-                  margin: EdgeInsets.only(right: 25, top: 10, left: 10),
+                  margin: EdgeInsets.only(right:  MediaQuery.sizeOf(context).width * 0.05,
+                   top:  MediaQuery.sizeOf(context).height * 0.02, 
+                   left: MediaQuery.sizeOf(context).width * 0.05 ),
                   alignment: Alignment.topLeft,
                   // child: Padding(
                   //     padding: EdgeInsets.only(right: 50),
@@ -243,9 +255,7 @@ class _PlayListPageState extends State<PlayListPage> {
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.white,
-                            decorationStyle: TextDecorationStyle.solid),
+                            ),
                       ),
                       IconButton(
                           onPressed: () async{
@@ -475,10 +485,14 @@ class _PlayListPageState extends State<PlayListPage> {
   void _showCreatePlaylistDialog(BuildContext context,{int? audioId}) {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
+    bool isCreating= false;
+
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return BackdropFilter(
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(builder: (BuildContext context, StateSetter setDialogState){
+          return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
           child: AlertDialog(           
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -488,8 +502,11 @@ class _PlayListPageState extends State<PlayListPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  
+
                   TextField(
                     controller: titleController,
+                    enabled: !isCreating,
                     decoration: InputDecoration(
                       hintText: 'Title',
                       hintStyle: TextStyle(color: Colors.white60),
@@ -502,9 +519,10 @@ class _PlayListPageState extends State<PlayListPage> {
                     ),
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height:  MediaQuery.sizeOf(context).width * 0.02),
                   TextField(
                     controller: descriptionController,
+                    enabled: !isCreating,
                     decoration: InputDecoration(
                       hintText: 'Description',
                       hintStyle: TextStyle(color: Colors.white60),
@@ -522,31 +540,59 @@ class _PlayListPageState extends State<PlayListPage> {
             ),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                onPressed: isCreating ? null : () => Navigator.pop(dialogContext),
+                    child: Text('Cancel', style: TextStyle(color: Colors.white)),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: isCreating ? null : ()  async{
                   final title = titleController.text;
                   final description = descriptionController.text;
+                  
                   if (title.isNotEmpty) {
+                    try{
+                      setDialogState(){
+                        isCreating = true;
+                      }
+                    
                     final audioProvider =
                         Provider.of<AudioProvider>(context, listen: false);
                         if(audioId != null){
             audioProvider.createPlayListWithAudioId(title, description, audioId);
-             Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Playlist "$title" created')),
-                    );
+              Navigator.pop(dialogContext);            
+            //         ScaffoldMessenger.of(context).showSnackBar(
+            //           SnackBar(content: Text('Playlist "$title" created')),
+            //         );
                         }else{
                           audioProvider.createPlayList(title, description);
-                           Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
+                          
+                        }
+                        Navigator.pop(dialogContext);
+
+                         await Future.delayed(Duration(milliseconds: 500));
+                        
+                        if(mounted){
+                          await _fetchPlaylists();
+                           ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Playlist "$title" created')),
                     );
                         }
-                    _fetchPlaylists(); 
-                   
+                    }catch(e){
+                       print('Error creating playlist: $e');
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error creating playlist. Please try again.'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                    }finally{
+                      if (mounted) {
+                            setDialogState(() {
+                              isCreating = false;
+                            });
+                          }
+                    }
                   }
                 },
                 child: Text('Create', style: TextStyle(color: Colors.white)),
@@ -554,6 +600,8 @@ class _PlayListPageState extends State<PlayListPage> {
             ],
           ),
         );
+        });
+        
       },
     );
   }

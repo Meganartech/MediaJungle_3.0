@@ -47,8 +47,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-          'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
-         //'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+          'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+         // 'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
+         
         //   'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
@@ -86,8 +87,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     try {
       var url = Uri.parse(
           //'http://localhost:8080/api/v2/UpdateUser/mobile/$userId');
-          //'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
-          'http://192.168.156.243:8080/api/v2/UpdateUser/mobile/$userId');
+          'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
+         // 'http://192.168.156.243:8080/api/v2/UpdateUser/mobile/$userId');
       var request = http.MultipartRequest('PATCH', url);
       //..headers.addAll({'Content-Type': 'application/json'});
       request.fields['username'] = usernameController.text;
@@ -172,12 +173,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                               : null,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                   Text(
                     usernameController.text,
                     style: TextStyle(color: kWhite),
                   ),
-                  const SizedBox(height: 20),
+                   SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
                   MyTextField(
                     controller: usernameController,
                     icon: Icons.person,
@@ -186,7 +187,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     inputAction: TextInputAction.next,
                     obscureText: false,
                   ),
-                  const SizedBox(height: 5),
+                   SizedBox(height:MediaQuery.sizeOf(context).height * 0.01),
                   MyTextField(
                     controller: emailController,
                     icon: Icons.email,
@@ -195,7 +196,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     inputAction: TextInputAction.next,
                     obscureText: false,
                   ),
-                  const SizedBox(height: 5),
+                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                   MyTextField(
                     controller: mobilenumberController,
                     icon: Icons.phone,

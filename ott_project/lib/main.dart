@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OTT Play',
+      title: 'Media Sharing',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme:

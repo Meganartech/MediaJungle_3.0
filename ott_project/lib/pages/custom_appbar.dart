@@ -260,7 +260,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               : Row(
                   children: [
                     SizedBox(
-                      height: 20,
+                      height: MediaQuery.sizeOf(context).height * 0.04,
                     ),
                     if (iconData != null)
                       Image.memory(
@@ -278,7 +278,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           size: 25,
                         )),
                     SizedBox(
-                      width: 15,
+                      width: MediaQuery.sizeOf(context).width * 0.05,
                     ),
                     GestureDetector(
                       onTap: _showNotification,
@@ -317,11 +317,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
               ),
             ),
             SizedBox(
-              width: 6,
+              width: MediaQuery.sizeOf(context).width * 0.01,
             ),
          
             SizedBox(
-              width: 10,
+              width: MediaQuery.sizeOf(context).width * 0.02,
             ),
           ],
         ),
