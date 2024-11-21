@@ -1273,12 +1273,16 @@ td{
   color: white;
   font-size: 14px;
   cursor: pointer;
+  display: flex; /* Use flexbox to align items in a row */
+  align-items: center; /* Vertically align items */
+  gap: 5px; /* Add spacing between the icon and text */
   transition: color 0.3s ease;
 }
 
 .action-button:hover {
   color: #e50914;
 }
+
 
 
 
@@ -1409,10 +1413,44 @@ td{
   color: #d1d1e0;
 }
 
-.bottom-bar .control-button {
+.bottom-bar-controls{
+  flex:1.5;
+}
+
+.bottom-bar-controls .control-button {
   margin-left: 15px;
   padding: 10px;
   font-size: 18px;
 } 
+
+.bottom-bar-time span {
+   margin-right: 30px;
+}
+
+.volume-container {
+  position: relative;
+  display: inline-block;
+}
+
+.volume-slider-container {
+  position: absolute;
+  top: -20px; /* Adjust as needed to display above the button */
+  right: 0;
+  width: 100px; /* Adjust slider width */
+}
+
+input[type='range'] {
+  width: 100%;
+}
+
+.volume-container button {
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+
 
 
