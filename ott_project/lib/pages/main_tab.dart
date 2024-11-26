@@ -10,7 +10,8 @@ import 'package:ott_project/service/service.dart';
 
 
 class MainTab extends StatefulWidget {
-  const MainTab({super.key});
+  final int initialTab;
+  const MainTab({super.key,required this.initialTab});
 
   @override
   State<MainTab> createState() => _MainTabState();
@@ -25,20 +26,14 @@ class _MainTabState extends State<MainTab> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     userId = Service().getLoggedInUserId();
-    controller = TabController(length: 4, vsync: this);
+    controller = TabController(length: 4, vsync: this,initialIndex: widget.initialTab);
     controller?.addListener(() {
       setState(() {
-        selectTab = controller?.index ?? 0;
+        selectTab = controller!.index;
       });
     });
   }
 
-  // void _navigateToTab(int index) {
-  //   setState(() {
-  //     selectTab = index;
-  //     controller?.animateTo(index);
-  //   });
-  // }
 
   @override
 Widget build(BuildContext context) {

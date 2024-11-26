@@ -269,7 +269,7 @@ class _LoginPageState extends State<LoginPage> {
         emailController.clear();
         passwordController.clear();
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: ((context) => MainTab ())));
+            context, MaterialPageRoute(builder: ((context) => MainTab(initialTab: 0,))));
       }
     } else {
       showDialog(
