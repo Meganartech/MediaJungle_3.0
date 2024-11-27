@@ -33,14 +33,9 @@ class MusicPage extends StatefulWidget {
 }
 
 class _MusicPageState extends State<MusicPage> {
-  // late Future<List<Audio>> _audio;
-  // Map<String, List<Audio>> _categorizeAudios = {};
-  // final TextEditingController _searchController = TextEditingController();
-  // List<Audio> _filteredAudios = [];
-
   
   final TextEditingController _searchController = TextEditingController();
-  List<Music> _filteredAudios = [];
+  //List<Music> _filteredAudios = [];
   
   List<AudioDescription> allSongs =[];
   late List<VideoDescription> _allVideos =[];
@@ -198,8 +193,8 @@ class _MusicPageState extends State<MusicPage> {
                           Expanded(
                             child: ListView(                       
                               children: [
-                                if (_searchController.text.isNotEmpty &&
-                                    _filteredAudios.isEmpty)
+                                if (_searchController.text.isNotEmpty
+                                    )
                                   Center(
                                     child: Text(
                                       'No audios found',
