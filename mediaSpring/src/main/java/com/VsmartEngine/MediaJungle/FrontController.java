@@ -602,6 +602,11 @@ public class FrontController {
 
 		return EmployeeController.getsitesettings();
 	}
+	
+	@GetMapping("/logo/{Id}")
+	public ResponseEntity<byte[]> getlogoThumbnail(@PathVariable long Id) {
+		return EmployeeController.getlogoThumbnail(Id);
+	}
 
 	@PatchMapping("/editsettings/{id}")
     public ResponseEntity<String> editSetting(
@@ -994,6 +999,19 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 		return UserRegisterController.resetPassword(loginRequest);
 	}
 	
+	@PatchMapping("/Update/user/{userId}")
+    public ResponseEntity<String> updateUserr(
+            @PathVariable Long userId,
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "mobnum", required = false) String mobnum,
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
+            @RequestParam(value = "profile", required = false) MultipartFile profile) {
+
+    	return UserRegisterController.updateUserr(userId, username, email, mobnum, password, confirmPassword, profile);
+    }
+	
 	
 	
 	 @GetMapping("/notifications")
@@ -1338,6 +1356,8 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 		            @PathVariable Long movedPlaylistId) {
 		    	return playlistcontroller.moveAudioToAnotherPlaylist(playlistId, audioId, movedPlaylistId);
 		    }
+		    
+		    
 		    
 		    
 }

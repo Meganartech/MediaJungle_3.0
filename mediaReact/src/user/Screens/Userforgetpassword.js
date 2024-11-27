@@ -156,9 +156,9 @@ const Userforgetpassword = () => {
     const [conformPassword,setConfirmPassword] = useState('');
     const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
-    const [showCode,setShowCode] = useState(false); // State for toggling password visibility
-    const [showwPassword,setShowPassword] =useState(false);
-    const [showConfirmPassword,setShowConformPassword] = useState(false);
+    const [showCode,setShowCode] = useState(true); // State for toggling password visibility
+    const [showwPassword,setShowPassword] =useState(true);
+    const [showConfirmPassword,setShowConformPassword] = useState(true);
 
     const toggleCodeVisibility = () => {
         setShowCode((prevShowcode) => !prevShowcode);
@@ -208,7 +208,6 @@ const Userforgetpassword = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-    
             if (senddata.status === 200) {
                 // Set a timer to show the toast message after a short delay
                 console.log(senddata);
@@ -257,10 +256,6 @@ const Userforgetpassword = () => {
         }
     };
 
-    console.log("email",email);
-    console.log("code",code);
-    console.log("password",password);
-    console.log('con',conformPassword);
 
 
     const handleSubmit = async (e) => {
@@ -390,6 +385,7 @@ const Userforgetpassword = () => {
                     {getall.length > 0 && getall[0].logo ? (
                         <img
                             src={`data:image/png;base64,${getall[0].logo}`}
+                            // src={`${API_URL}/api/v2/logo/1`}
                             alt="logo"
                             className="logoimage"
                         />

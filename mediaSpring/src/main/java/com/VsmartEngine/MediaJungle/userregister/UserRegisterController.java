@@ -223,7 +223,7 @@ public class UserRegisterController {
     }
     
     
-    @PatchMapping("/Update/user/{userId}")
+
     public ResponseEntity<String> updateUserr(
             @PathVariable Long userId,
             @RequestParam(value = "username", required = false) String username,
@@ -252,15 +252,6 @@ public class UserRegisterController {
             if (mobnum != null) {
                 existingUser.setMobnum(mobnum);
             }
-//            if (password != null) {
-//                if (!password.equals(confirmPassword)) {
-//                    return new ResponseEntity<>("Passwords do not match", HttpStatus.BAD_REQUEST);
-//                }
-//                // Encrypt the password before saving
-//                String encryptedPassword = passwordEncoder.encode(password);
-//                existingUser.setPassword(encryptedPassword);
-//                existingUser.setConfirmPassword(encryptedPassword); // Assuming this is required
-//            }
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             if (password != null) {
             	String encodedPassword = passwordEncoder.encode(password);
