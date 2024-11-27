@@ -346,7 +346,7 @@ const getVolumeIcon = () => {
 };
 
 
-
+console.log("bottomBarSong",bottomBarSong);
   return (
     <Layout>
       <div className="music-player">
@@ -666,7 +666,7 @@ const getVolumeIcon = () => {
       </div>
 
       {/* Bottom Bar */}
-      {showBottomBar && bottomBarSong && (
+      {showBottomBar && currentSong && (
         <div className="bottom-bar">
           {/* Progress Bar */}
           <div
@@ -684,13 +684,13 @@ const getVolumeIcon = () => {
             ></div>
           </div>
           <img
-            src={`${API_URL}/api/v2/image/${bottomBarSong.id}`}
+            src={`${API_URL}/api/v2/image/${currentSong.id}`}
             alt="Bottom Bar Album Art"
             className="bottom-bar-art"
           />
           <div className="bottom-bar-info">
-            <span className="bottom-bar-title">{bottomBarSong.audio_title}</span>&nbsp;&nbsp;&nbsp;
-            <span className="bottom-bar-artist">{bottomBarSong.moviename}</span>
+            <span className="bottom-bar-title">{currentSong.audio_title}</span>&nbsp;&nbsp;&nbsp;
+            <span className="bottom-bar-artist">{currentSong.moviename}</span>
           </div>
           <div className='bottom-bar-controls'>
           <button

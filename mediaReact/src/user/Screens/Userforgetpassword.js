@@ -299,8 +299,7 @@ const Userforgetpassword = () => {
                     console.error("An error occurred", error);
                 }
             };
-        
-    
+            
 
     return (
         <Layout>
@@ -361,7 +360,7 @@ const Userforgetpassword = () => {
                     <form className="formfield" onSubmit={SendVerifyCode}>
                     <div className="input-container">
                 <input
-                    type={showCode ? "text" : "password"} // Toggle between text and password
+                    type={showCode ? "password" : "text"} // Toggle between text and password
                     name="code"
                     value={code}
                     placeholder="Enter the OTP"
@@ -403,7 +402,7 @@ const Userforgetpassword = () => {
                     <form className="formfield" onSubmit={handleSubmit}>
                     <div className="input-container">
                 <input
-                    type={showwPassword? "text" : "password"} // Toggle between text and password
+                    type={showwPassword? "password" : "text"} // Toggle between text and password
                     name="code"
                     value={password}
                     placeholder="Enter the New Password"
@@ -415,7 +414,7 @@ const Userforgetpassword = () => {
                     onClick={togglePasswordVisibility}
                 ></i>
                 <input
-                    type={showConfirmPassword ? "text" : "password"} // Toggle between text and password
+                    type={showConfirmPassword ? "password" : "text"} // Toggle between text and password
                     name="code"
                     value={conformPassword}
                     placeholder="Confirm Password"
