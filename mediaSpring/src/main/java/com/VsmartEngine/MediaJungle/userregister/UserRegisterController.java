@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -222,7 +223,71 @@ public class UserRegisterController {
     }
     
     
-    
+    @PatchMapping("/Update/user/{userId}")
+    public ResponseEntity<String> updateUserr(
+            @PathVariable Long userId,
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "mobnum", required = false) String mobnum,
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
+            @RequestParam(value = "profile", required = false) MultipartFile profile) {
+
+        try {
+            // Retrieve existing user data from the repository
+            Optional<UserRegister> optionalUserRegister = userregisterrepository.findById(userId);
+            if (!optionalUserRegister.isPresent()) {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+
+            UserRegister existingUser = optionalUserRegister.get();
+
+            // Apply partial updates to the existing user data if provided
+            if (username != null) {
+                existingUser.setUsername(username);
+            }
+            if (email != null) {
+                existingUser.setEmail(email);
+            }
+            if (mobnum != null) {
+                existingUser.setMobnum(mobnum);
+            }
+//            if (password != null) {
+//                if (!password.equals(confirmPassword)) {
+//                    return new ResponseEntity<>("Passwords do not match", HttpStatus.BAD_REQUEST);
+//                }
+//                // Encrypt the password before saving
+//                String encryptedPassword = passwordEncoder.encode(password);
+//                existingUser.setPassword(encryptedPassword);
+//                existingUser.setConfirmPassword(encryptedPassword); // Assuming this is required
+//            }
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            if (password != null) {
+            	String encodedPassword = passwordEncoder.encode(password);
+	            existingUser.setPassword(encodedPassword);
+	        }
+
+	        if (confirmPassword!= null) {
+	        	String confirmencodedPassword = passwordEncoder.encode(confirmPassword);
+	            existingUser.setConfirmPassword(confirmencodedPassword);
+	        }
+	        
+            if (profile != null && !profile.isEmpty()) {
+                byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
+                existingUser.setProfile(thumbnailBytes);
+            }
+
+            // Save the updated user data back to the repository
+            userregisterrepository.save(existingUser);
+
+            return new ResponseEntity<>("User details updated successfully", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Error processing profile image", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error updating user details", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
    
 
 }

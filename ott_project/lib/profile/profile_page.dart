@@ -54,13 +54,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (response.statusCode == 200) {
         print('profile:${response.body}');
-        Uint8List? profileImage =  await fetchProfileImage(userId!);
+       Uint8List? profileImage =  await fetchProfileImage(userId!);
        var userData = jsonDecode(response.body);
        
 
         setState(() {
+         //  fetchProfileImage(userId);
            profile = profileImage;
-         // base64Image = userData['profile'];
+          //base64Image = userData['profile'];
           usernameController.text = userData['username'] ?? '';
           // emailController.text = userData['email'] ?? '';
           // mobilenumberController.text = userData['mobnum'] ?? '';
@@ -96,6 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } catch (e) {
       print('Error fetching profile image: $e');
     }
+    return null;
   }
 
 
@@ -327,10 +329,11 @@ class _ProfilePageState extends State<ProfilePage> {
               bool success = await service.logoutUser(context);
     if (success) {
       // Navigate to the login screen upon successful logout
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+            Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+          (route) => false,
+        );
     } else {
       // Handle unsuccessful logout if necessary
       // For example, show an error message
