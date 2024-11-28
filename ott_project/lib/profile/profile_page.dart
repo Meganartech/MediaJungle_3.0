@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -24,6 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController mobilenumberController = TextEditingController();
   String base64Image = '';
+  Uint8List? profile;
   final Service service = Service();
   @override
   void initState() {
@@ -38,8 +40,8 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-            'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-         //   'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
+         //   'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+            'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         //),
         headers: {
@@ -51,20 +53,21 @@ class _ProfilePageState extends State<ProfilePage> {
       // print(response.statusCode);
 
       if (response.statusCode == 200) {
-        var userData = jsonDecode(response.body);
-        //final List<dynamic> responseBody = jsonDecode(response.body);
-
-        //final String base64Thumbnail = userData[0];
-        //_image = userData['profile'];
+        print('profile:${response.body}');
+       Uint8List? profileImage =  await fetchProfileImage(userId!);
+       var userData = jsonDecode(response.body);
+       
 
         setState(() {
-          base64Image = userData['profile'];
+         //  fetchProfileImage(userId);
+           profile = profileImage;
+          //base64Image = userData['profile'];
           usernameController.text = userData['username'] ?? '';
           // emailController.text = userData['email'] ?? '';
           // mobilenumberController.text = userData['mobnum'] ?? '';
         });
 
-        //await fetchProfileImage(userId);
+        
       } else {
         // Handle error
         print('Failed to fetch user profile');
@@ -75,32 +78,28 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Future<void> fetchProfileImage(String userId) async {
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(
-  //           // 'https://testtomcat.vsmartengine.com/media/api/v2/mobile/GetThumbnailsById/$userId'
-  //           'http://192.168.40.165:8080/api/v2/mobile/GetThumbnailsById/$userId'
-  //           //'http://localhost:8080/api/v2/GetUserById/$userId'
-  //           ),
-  //     );
+    Future<Uint8List?> fetchProfileImage(String userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            // 'https://testtomcat.vsmartengine.com/media/api/v2/mobile/GetThumbnailsById/$userId'
+            'http://192.168.156.243:8080/api/v2/GetProfileImage/$userId'
+            //'http://localhost:8080/api/v2/GetUserById/$userId'
+            ),
+      );
+      print('Profile image status:${response.statusCode}');
+      print('Profile image:${response.bodyBytes}');
+      if (response.statusCode == 200) {
+        return response.bodyBytes;
+      } else {
+        print('Failed to load profile image: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching profile image: $e');
+    }
+    return null;
+  }
 
-  //     if (response.statusCode == 200) {
-  //       final List<dynamic> responseBody = jsonDecode(response.body);
-  //       if (responseBody.isNotEmpty) {
-  //         final String base64Thumbnail = responseBody[0];
-  //         setState(() {
-  //           base64Image = base64Thumbnail;
-  //           //print('Image bytes set'); // Debugging print
-  //         });
-  //       }
-  //     } else {
-  //       print('Failed to load profile image: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching profile image: $e');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -135,9 +134,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: CircleAvatar(
                         backgroundColor: const Color.fromARGB(255, 51, 49, 49),
                         radius: 50,
-                        backgroundImage: base64Image.isNotEmpty
-                            ? Image.memory(base64Decode(base64Image)).image
-                            : null,
+                        backgroundImage: 
+                           profile != null ? MemoryImage(profile!) : null,
+                            // : null,
                         // child: base64Image.isEmpty
                         //     ? Icon(
                         //         Icons.person,
@@ -330,10 +329,11 @@ class _ProfilePageState extends State<ProfilePage> {
               bool success = await service.logoutUser(context);
     if (success) {
       // Navigate to the login screen upon successful logout
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+            Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+          (route) => false,
+        );
     } else {
       // Handle unsuccessful logout if necessary
       // For example, show an error message

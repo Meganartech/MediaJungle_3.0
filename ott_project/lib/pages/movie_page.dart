@@ -9,6 +9,7 @@ import 'package:ott_project/components/video_folder/movie_player_page.dart';
 import 'package:ott_project/components/video_folder/video_play.dart';
 import 'package:ott_project/pages/app_icon.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
+import 'package:ott_project/pages/main_tab.dart';
 import 'package:ott_project/pages/music_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/service/audio_service.dart';
@@ -126,27 +127,33 @@ class _MoviePageState extends State<MoviePage> {
     });
     switch (category) {
       case "All":
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => HomePage()),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 0,)),
+        );
         break;
       case "Movies":
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => VideoPage()),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 0)),
+        );
         break;
       case "Music":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MusicPage(userId: 24)),
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 1)),
+        );
+        break;
+      case "Library":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 2)),
         );
         break;
       case "Profile":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 3)),
         );
         break;
     }
@@ -172,6 +179,7 @@ class _MoviePageState extends State<MoviePage> {
             BackgroundImage(),
             CustomAppBar(
               onSearchChanged: handleSearchState,
+              
             ),
             _isSearching
                 ? _buildSearchResults()
