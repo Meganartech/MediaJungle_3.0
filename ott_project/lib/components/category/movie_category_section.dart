@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ott_project/components/category/category_service.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/components/video_folder/category_based_movie.dart';
-import 'package:ott_project/components/video_folder/movie.dart';
 import 'package:ott_project/components/video_folder/movie_player_page.dart';
 import 'package:ott_project/components/video_folder/movies_card.dart';
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
@@ -22,8 +23,9 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController mobilenumberController = TextEditingController();
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
-  String base64Image = '';
+  
   File? _profilePicture;
+  Uint8List? profile;
 
   @override
   void initState() {
@@ -46,9 +48,9 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-           'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-          //  'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
-        // 'http://localhost:8080/api/v2/GetUserById/$userId'),
+           //'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+           // 'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
+        'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -58,16 +60,16 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       // print(response.statusCode);
 
       if (response.statusCode == 200) {
+        Uint8List? profileImage =  await fetchProfileImage(userId!);
         var userData = jsonDecode(response.body);
         //print(userData);
         //_image = userData['profile'];
         setState(() {
+          profile = profileImage;
           usernameController.text = userData['username'] ?? '';
           emailController.text = userData['email'] ?? '';
           mobilenumberController.text = userData['mobnum'] ?? '';
-          if (userData['profile'] != null) {
-            base64Image = userData['profile'];
-          }
+          
         });
         setState(() {});
       } else {
@@ -78,6 +80,28 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
       // Handle error
       print('Error fetching user profile: $e');
     }
+  }
+
+  Future<Uint8List?> fetchProfileImage(String userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            // 'https://testtomcat.vsmartengine.com/media/api/v2/mobile/GetThumbnailsById/$userId'
+          //  'http://192.168.156.243:8080/api/v2/GetProfileImage/$userId'
+            'http://localhost:8080/api/v2/GetUserById/$userId'
+            ),
+      );
+      print('Profile image status:${response.statusCode}');
+      print('Profile image:${response.bodyBytes}');
+      if (response.statusCode == 200) {
+        return response.bodyBytes;
+      } else {
+        print('Failed to load profile image: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching profile image: $e');
+    }
+    return null;
   }
 
   @override
@@ -113,11 +137,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: const Color.fromARGB(255, 51, 49, 49),
-                    backgroundImage: _profilePicture != null
-                        ? FileImage(_profilePicture!)
-                        : base64Image.isNotEmpty
-                            ? Image.memory(base64Decode(base64Image)).image
-                            : null,
+                    backgroundImage:  profile != null ? MemoryImage(profile!) : null,
                   ),
                   //),
                   SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
