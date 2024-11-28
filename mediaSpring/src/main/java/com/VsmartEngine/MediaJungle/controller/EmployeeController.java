@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ import com.VsmartEngine.MediaJungle.repository.SocialSettingsRepository;
 import com.VsmartEngine.MediaJungle.repository.siteSettingRepository;
 import com.VsmartEngine.MediaJungle.repository.videoSettingRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
+import com.VsmartEngine.MediaJungle.video.VideoImage;
 
 
 @Controller
@@ -460,6 +462,31 @@ public ResponseEntity<String> editcontact(@PathVariable Long id,
 	            cast.setIcon(icon);
 	        }
 		return new ResponseEntity<>(sitesettingss, HttpStatus.OK);
+	}
+	
+	
+	public ResponseEntity<byte[]> getlogoThumbnail(@PathVariable long Id) {
+	    try {
+	        // Fetch the video image from the repository
+	        Optional<Sitesetting> logoImageOptional = siteSetting.findById(Id);
+
+	        if (logoImageOptional .isPresent()) {
+	        	Sitesetting Image = logoImageOptional.get();
+
+	            // Decompress the image bytes
+	            byte[] decompressedVideoThumbnail = ImageUtils.decompressImage(Image.getLogo());
+
+	            // Return the decompressed image data directly with the correct content type
+	            return ResponseEntity.ok()
+	                                 .contentType(MediaType.IMAGE_PNG) // Or use MediaType.IMAGE_PNG for PNG images
+	                                 .body(decompressedVideoThumbnail);
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();  // Replace with proper logging in production
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
 	}
 	
 

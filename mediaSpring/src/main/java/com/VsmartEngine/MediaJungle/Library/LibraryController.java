@@ -30,9 +30,9 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 import com.VsmartEngine.MediaJungle.video.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RestController
-@RequestMapping("/api/v2/")
+
 public class LibraryController {
 	
 //  ---------------------------------watchlater----------------------------------------------
