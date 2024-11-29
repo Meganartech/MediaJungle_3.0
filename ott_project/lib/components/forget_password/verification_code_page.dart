@@ -21,7 +21,10 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
   bool visibleOTP = false;
 
   Future<void> verifyCode(String email,String code) async{
-    const String baseUrl = 'http://192.168.156.243:8080/api/v2/verify-code';
+    const String baseUrl =
+     'http://localhost:8080/api/v2/send-code';
+    // 'http://192.168.156.243:8080/api/v2/verify-code';
+    //'https://testtomcat.vsmartengine.com/media/api/v2/verify-code';
      setState(() {
       isLoading = true;
     });

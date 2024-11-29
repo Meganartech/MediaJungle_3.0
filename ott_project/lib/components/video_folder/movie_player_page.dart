@@ -723,16 +723,21 @@ Widget build(BuildContext context) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
           Row(
             children: [
+             
               Container(
                 //width: 170,
                 child: Text(
                   _movieDetails.videoTitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+                    
                   ),
                 ),
               ),
@@ -758,7 +763,7 @@ Widget build(BuildContext context) {
               color: Colors.white,
             ),
           ),
-          SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
+          SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
           Container(
             height: MediaQuery.sizeOf(context).height * 0.12,
             child: ListView.builder(

@@ -49,10 +49,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-         // 'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+          'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
         //  'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
          
-           'http://localhost:8080/api/v2/GetUserById/$userId'),
+         //  'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -88,8 +88,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     String? userId = await secureStorage.read(key: 'userId');
     try {
       var url = Uri.parse(
-          'http://localhost:8080/api/v2/UpdateUser/mobile/$userId');
-          //'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
+        //  'http://localhost:8080/api/v2/UpdateUser/mobile/$userId');
+          'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
           //'http://192.168.156.243:8080/api/v2/updateUser/$userId');
       var request = http.MultipartRequest('PUT', url);
       //..headers.addAll({'Content-Type': 'application/json'});
@@ -148,9 +148,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     try {
       final response = await http.get(
         Uri.parse(
-            // 'https://testtomcat.vsmartengine.com/media/api/v2/mobile/GetThumbnailsById/$userId'
+             'https://testtomcat.vsmartengine.com/media/api/v2/mobile/GetThumbnailsById/$userId'
             //'http://192.168.156.243:8080/api/v2/GetProfileImage/$userId'
-            'http://localhost:8080/api/v2/GetUserById/$userId'
+            //'http://localhost:8080/api/v2/GetUserById/$userId'
             ),
       );
       print('Profile image status:${response.statusCode}');
