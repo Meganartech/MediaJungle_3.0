@@ -159,6 +159,8 @@ useEffect(() => {
   
     // Store the item object in local storage as a JSON string
     localStorage.setItem('items', JSON.stringify(item));
+    window.scrollTo(0, 0); // Scroll to the top
+    
   };
   const [message, setMessage] = useState(""); // State to store the response message
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import "../css/Sidebar.css";
+import API_URL from '../Config';
 
 const Footer_setting = () => {
   // State to manage all form data
@@ -32,7 +33,7 @@ const Footer_setting = () => {
   useEffect(() => {
     const fetchFooterSettings = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v2/footer-settings');
+        const response = await fetch(`${API_URL}/api/v2/footer-settings`);
         const data = await response.json();
         if (response.ok && data) {
           setFormData({
@@ -79,8 +80,8 @@ const Footer_setting = () => {
 
     try {
       const url = isUpdating
-        ? 'http://localhost:8080/api/v2/footer-settings/update' // Update URL
-        : 'http://localhost:8080/api/v2/footer-settings/submit'; // Submit URL
+        ? `${API_URL}/api/v2/footer-settings/update` // Update URL
+        : `${API_URL}/api/v2/footer-settings/submit`; // Submit URL
       const response = await fetch(url, {
         method: 'POST',
         body: formDataToSend,

@@ -11928,3 +11928,14 @@ margin-top: 5px;
 .adminprofile:hover {
   color: black; /* Ensures the icon color remains black on hover */
 }
+.custom-expand{
+  flex-flow: row nowrap;
+}
+.custom-navbar{
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: right;
+    padding: 0.5rem 1rem;
+}

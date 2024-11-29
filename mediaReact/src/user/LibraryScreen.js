@@ -1403,6 +1403,7 @@ Cancel
           style={{
             height: '110px',
             width: '75%',
+            
             backgroundColor:
               selectedCategory === 'playlist' ? '#2149B1' : 'rgba(50, 50, 50, 0.5)',
             color: 'white',

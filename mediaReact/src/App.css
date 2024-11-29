@@ -12295,3 +12295,7 @@ img {
     display: block !important;
   }
   }
+
+  .custom-expand{
+      flex-flow: row nowrap;
+  }

@@ -36,8 +36,16 @@ const MoviesPage = () => {
       console.error('Error fetching video container:', error);
     }
   };
-
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'; // Disable automatic scroll restoration
+    }
+    window.scrollTo(0, 0); // Ensure the page starts at the top
+  }, []);
+  
+  useEffect(() => {
+    
+    window.scrollTo(0, 0);
     fetchVideoBanners();
     fetchVideoContainer();
   }, []);
@@ -83,6 +91,7 @@ const MoviesPage = () => {
   
     // Store the item object in local storage as a JSON string
     localStorage.setItem('items', JSON.stringify(item));
+    window.scrollTo(0, 0); // Scroll to the top
   };
   
   const handleBanner = (id) =>{
