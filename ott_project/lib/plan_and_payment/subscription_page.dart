@@ -20,7 +20,7 @@ class SubscriptionPage extends StatefulWidget {
 class _SubscriptionPageState extends State<SubscriptionPage> {
   int? _userId;
   AppIcon? iconData;
-  bool _showSearch = false;
+  
   final TextEditingController nameController = TextEditingController();
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
   String subscriptionPlan = 'Free';
@@ -179,7 +179,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   onPressed: () => Navigator.pop(context),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.04,
+                  height: MediaQuery.sizeOf(context).height * 0.04,
                 ),
                 Padding(
                   padding:
@@ -193,19 +193,19 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   ),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.07,
+                  height: MediaQuery.sizeOf(context).height * 0.07,
                 ),
                 subscribeInfo('Subscription Plan', '$subscriptionPlan'),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.02,
+                  height: MediaQuery.sizeOf(context).height * 0.02,
                 ),
                 // Display Email row
                 subscribeInfo('Expiry', '$expiry'),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.04,
+                  height: MediaQuery.sizeOf(context).height * 0.04,
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.18,
+                  height: MediaQuery.sizeOf(context).height * 0.18,
                 ),
                 if (!isSubscribed || isSubscriptionExpired)
                   Align(
@@ -255,11 +255,11 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       color: kWhite,
                       fontWeight: FontWeight.normal,
                       fontSize: 16))),
-          const SizedBox(width: 10),
+             SizedBox(width:  MediaQuery.sizeOf(context).width * 0.02),
           Text(':',
               style: TextStyle(
                   color: kWhite, fontWeight: FontWeight.normal, fontSize: 16)),
-          const SizedBox(width: 10),
+             SizedBox(width:  MediaQuery.sizeOf(context).width * 0.04),
           Expanded(
             flex: 2,
             child: Text(

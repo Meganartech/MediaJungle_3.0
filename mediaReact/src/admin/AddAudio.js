@@ -140,7 +140,7 @@ const AddAudio = () => {
         .then(data => {
 
           const base64Thumbnail = data.thumbnail;
-          // console.log(base64Thumbnail)
+          console.log("base64Thumbnail",base64Thumbnail)
           
           setThumbnail(base64Thumbnail);
           if (base64Thumbnail) {
@@ -468,12 +468,14 @@ const handleDropdownToggle = () => {
   setDropdownOpen(!dropdownOpen);
   const MovieNames = options;
   
+  
   // Separate options that start with the value from those that contain it elsewhere
   if(Movie_name!=null){
   const startsWithValue = MovieNames.filter(optione =>
     optione.toLowerCase().startsWith(Movie_name.toLowerCase())  // Options that start with the input
   );
   setFilteredOptions(startsWithValue); 
+  
 }
   // console.log(Movie_name)
 };
@@ -501,6 +503,7 @@ const handleDropdownToggle = () => {
   setFilteredOptions(filtered); 
   setDropdownOpen(true);
   setMovie_name(value2);
+  
 };
 
 const handleOptionClick = (option) => {
@@ -513,6 +516,7 @@ const handleOptionClick = (option) => {
     optione.toLowerCase().startsWith(option.toLowerCase())  // Options that start with the input
   );
   setFilteredOptions(startsWithValue); 
+  
   
 };
 
@@ -775,8 +779,39 @@ const handleOptionClick = (option) => {
     });
 
   }
+  useEffect(() => {
+    // Define async function within useEffect to call async function `getbannermovie`
+    const fetchBanner = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/v2/moviename/getbanner/${Movie_name}`);
+        const data = await response.json();
+  
+        console.log("bannerdata", data);
+  
+        if (data) {
+          const imageResponse = await fetch(`${API_URL}/api/v2/getbannerimage/${data}/get`);
+          const imgdata = await imageResponse.json();
+          setBannerimageUrl(`data:image/png;base64,${imgdata.userbanneraudio}`);
+          console.log("Converted File:", imgdata);
+        } else {
+          console.error("Error: Movie ID not found");
+          setBannerimageUrl('');
+        }
+      } catch (error) {
+        console.error("Error fetching banner image:", error);
+        setBannerimageUrl('');
+      }
+    };
 
- 
+    if (Movie_name) {
+      fetchBanner();
+    }
+  }, [Movie_name]); // Re-run when `Movie_name` changes
+
+
+  
+  
+
 
 
   return (
@@ -865,7 +900,12 @@ const handleOptionClick = (option) => {
         type="text"
         value={Movie_name || ''}
         onClick={handleDropdownToggle} // Open the dropdown on input click
-        onChange={handleInputChange} // Update input value on change
+        onChange={(e) => handleInputChange(e)} // Update the state as the user types
+    // onBlur={() => {
+    //   if (Movie_name) {
+    //     getbannermovie(Movie_name); // Call the function if Movie_name is set
+    //   }
+    // }}
         className="form-control border border-dark border-2 input-width col-lg-12"
         style={{ padding: '10px', cursor: 'pointer' }}
         placeholder="Select an option"

@@ -9,17 +9,20 @@ import 'package:ott_project/components/music_folder/recently_played.dart';
 import 'package:ott_project/components/video_folder/category_bar.dart';
 import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
-import 'package:ott_project/pages/home_page.dart';
+import 'package:ott_project/pages/main_tab.dart';
+
 import 'package:ott_project/pages/movie_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
 import 'package:ott_project/service/audio_api_service.dart';
 import 'package:ott_project/service/audio_service.dart';
+import 'package:ott_project/service/movie_service_page.dart';
 import 'package:provider/provider.dart';
 import '../components/background_image.dart';
 import '../components/music_folder/audio_container.dart';
 import '../components/music_folder/song_player_page.dart';
-import '../components/video_folder/movie.dart';
-import '../components/video_folder/video_play.dart';
+
+import '../components/video_folder/movie_player_page.dart';
+
 
 class MusicPage extends StatefulWidget {
   final int userId;
@@ -30,36 +33,66 @@ class MusicPage extends StatefulWidget {
 }
 
 class _MusicPageState extends State<MusicPage> {
-  // late Future<List<Audio>> _audio;
-  // Map<String, List<Audio>> _categorizeAudios = {};
-  // final TextEditingController _searchController = TextEditingController();
-  // List<Audio> _filteredAudios = [];
-
-  late Future<List<Music>> _audio;
-  Map<String, List<Music>> _categorizeAudios = {};
+  
   final TextEditingController _searchController = TextEditingController();
-  List<Music> _filteredAudios = [];
-  late List<Movie> _allMovies = [];
+  //List<Music> _filteredAudios = [];
+  
+  List<AudioDescription> allSongs =[];
   late List<VideoDescription> _allVideos =[];
   bool _isSearching = false;
   List<dynamic> _searchResults = [];
-  late Future<Map<String, List<Music>>> _musicByCategory;
-  // Map<String, String> _categoryMap = {};
-
-  // bool _showSearch = false;
   final RecentlyPlayed _mrecentlyPlayed = RecentlyPlayed();
 
   @override
   void initState() {
     super.initState();
-    //_audio = _fetchAudios();
-   // _musicByCategory = _fetchAudios();
-
-    //_fetchMovies();
+     loadMovies();
+    loadSongs();
+   
     Provider.of<AudioProvider>(context, listen: false).loadCurrentlyPlaying();
 
     // _filterAudioList('');
   }
+
+  Future<void> loadMovies() async {
+  try {
+    // Fetch the video containers
+    List<VideoContainer> videoContainers = await MovieService.fetchVideoContainer();
+
+    // Extract VideoDescription objects from the containers and populate allMovies
+    _allVideos = videoContainers
+        .expand((container) => container.videoDescriptions)
+        .toList();
+  print('all movies:${_allVideos}');
+    // Ensure the UI updates after data is fetched
+    setState(() {});
+  } catch (e) {
+    print('Error fetching movies: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to load movies. Please try again.')),
+    );
+  }
+}
+ Future<void> loadSongs() async {
+  try {
+    // Fetch the video containers
+    List<AudioContainer> audioContainers = await AudioService.fetchAudioContainer();
+
+    // Extract VideoDescription objects from the containers and populate allMovies
+    allSongs = audioContainers
+        .expand((container) => container.audiolist)
+        .toList();
+  print('all movies:${allSongs}');
+    // Ensure the UI updates after data is fetched
+    setState(() {});
+  } catch (e) {
+    print('Error fetching songs: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to load songs. Please try again.')),
+    );
+  }
+}
+
 
    void _navigateToCategory(String category) {
     switch (category) {
@@ -72,27 +105,35 @@ class _MusicPageState extends State<MusicPage> {
       case "Movies":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MoviePage()),
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 0)),
         );
         break;
       case "Music":
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MusicPage(userId: widget.userId)),
+              builder: (context) => MainTab(initialTab: 1)),
         );
         break;
-      case "Profile":
+      case "Library":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 2)),
+        );
+        break;
+       case "Profile":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 3)),
         );
         break;
     }
   }
 
 
-
+  Future<void> _refreshSongs() async {
+     await loadSongs();
+  }
 
 
   void handleSearchState(bool isSearching, List<dynamic> results) {
@@ -121,92 +162,91 @@ class _MusicPageState extends State<MusicPage> {
                 : Container(
                     padding: const EdgeInsets.all(16.0),
                     margin: EdgeInsets.only(top: 90),
-                    child: Column(
-                      children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.all(16.0),
-                        //   child:
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Divider(
-                              color: Colors.white,
-                              height: 1,
+                    child: RefreshIndicator(
+                      onRefresh: _refreshSongs,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          
+                              const Divider(
+                                color: Colors.white54,
+                                height: 1,
+                              ),
+                              SizedBox(
+                              height: MediaQuery.sizeOf(context).height * 0.01,
                             ),
-                            SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.01,
-                          ),
-                            CategoryBar(
-                                selectedCategory: 'Music',
-                                onCategorySelected: _navigateToCategory),
-                            SizedBox(
-                              height: 7,
-                            ),
-                            const Divider(
-                              color: Colors.white,
-                              height: 1,
-                            ),
-                            
-                          ],
-                        ),
-                        //),
-                        //),
-                        Expanded(
-                          child: ListView(                       
-                            children: [
-                              if (_searchController.text.isNotEmpty &&
-                                  _filteredAudios.isEmpty)
-                                Center(
-                                  child: Text(
-                                    'No audios found',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                )
-                              else ...[
-                                SizedBox(
-                                  height: 500,
-                                  child: _buildMusicCategories(),
-                                ),
-                               
-                              ]
-                            ],
-                            //),
-                            // ),
-                          ),
-                        ),
-      
-                        Consumer<AudioProvider>(
-                          builder: (context, audioProvider, child) {
-                            return audioProvider.audioDescriptioncurrently != null
-                                ? CurrentlyPlayingBar(
-                                    audioCurrentlyPlaying:
-                                        audioProvider.audioDescriptioncurrently,
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => SongPlayerPage(
-                                              music: audioProvider.audioDescriptioncurrently!,                                              
-                                              onChange: (newAudio) {
-                                                audioProvider
-                                                    .setCurrentlyPlayingSong(
-                                                        newAudio,
-                                                        audioProvider
-                                                            .audio_playlist);
-                                              },
-                                              onDislike: ((audio) {
-                                                handleDislike(audio, context);
-                                              }),
-                                            ),
-                                          ));
-                                    },
+                              CategoryBar(
+                                  selectedCategory: 'Music',
+                                  onCategorySelected: _navigateToCategory),
+                              SizedBox(
+                                height: MediaQuery.sizeOf(context).height * 0.02,
+                              ),
+                              const Divider(
+                                color: Colors.white54,
+                                height: 1,
+                              ),
+                              
+                          //   ],
+                          // ),
+                          //),
+                          //),
+                          Expanded(
+                            child: ListView(                       
+                              children: [
+                                if (_searchController.text.isNotEmpty
+                                    )
+                                  Center(
+                                    child: Text(
+                                      'No audios found',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
-                                : Container();
-                          },
-                        ),
-                      ],
-      
-                      //),
+                                else ...[
+                                  SizedBox(
+                                    height: MediaQuery.sizeOf(context).height * 0.5,
+                                    child: _buildMusicCategories(),
+                                  ),
+                                 
+                                ]
+                              ],
+                              //),
+                              // ),
+                            ),
+                          ),
+                            
+                          Consumer<AudioProvider>(
+                            builder: (context, audioProvider, child) {
+                              return audioProvider.audioDescriptioncurrently != null
+                                  ? CurrentlyPlayingBar(
+                                      audioCurrentlyPlaying:
+                                          audioProvider.audioDescriptioncurrently,
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => SongPlayerPage(
+                                                music: audioProvider.audioDescriptioncurrently!,                                              
+                                                onChange: (newAudio) {
+                                                  audioProvider
+                                                      .setCurrentlyPlayingSong(
+                                                          newAudio,
+                                                          audioProvider
+                                                              .audio_playlist);
+                                                },
+                                                onDislike: ((audio) {
+                                                  handleDislike(audio, context);
+                                                }),
+                                              ),
+                                            ));
+                                      },
+                                    )
+                                  : Container();
+                            },
+                          ),
+                        ],
+                            
+                        //),
+                      ),
                     ),
                   ),
           ],
@@ -334,34 +374,40 @@ class _MusicPageState extends State<MusicPage> {
             subtitle: Text(item is VideoDescription ? 'Movie' : item is AudioDescription ? 'Song' : 'Unknown',
                 style: TextStyle(color: Colors.white70)),
             onTap: () {
-              // if (item is VideoDescription) {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => VideoPlayerPage(
-              //         movies: _allVideos,
-              //         initialIndex: _allVideos.indexOf(item),
-              //       ),
-              //     ),
-              //   );
-              //   } 
-                // else {
-                //   if (item is AudioDescription) {
-                //     Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (context) => SongPlayerPage(
-                //                   music: item,
-                //                   onChange: (newAudio) {
-                //                     //  Provider.of<AudioProvider>(context,listen: true)
-                //                     // .musicsetCurrentlyPlaying(
-                //                     //               newAudio,
-                //                     //               );
-                //                   },
-                //                   onDislike: (p0) {},
-                //                 )));
-                //   }
-              //}
+              if (item is VideoDescription) {
+                if(_allVideos.isNotEmpty){
+                final movieIndex = _allVideos.indexWhere((video)=> video.id == item.id);
+                print('Movie index:$movieIndex');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MoviesPlayerPage(
+                      videoDescriptions: _allVideos,
+                      categoryId: (item.categoryList.isNotEmpty && index < item.categoryList.length) ? item.categoryList[index] : 0,
+                      initialIndex: movieIndex)
+                  ),
+                );
+                }
+                }
+  
+                else {
+                  if (item is AudioDescription) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SongPlayerPage(
+                                music: item,
+                                  musicList: allSongs,
+                                  onChange: (newAudio) {
+                                     Provider.of<AudioProvider>(context,listen: true)
+                                    .setCurrentlyPlayingSong(
+                                                  newAudio,_searchResults.cast<AudioDescription>(),
+                                                  );
+                                  },
+                                  onDislike: (p0) {},
+                                )));
+                  }
+              }
             },
           );
         },

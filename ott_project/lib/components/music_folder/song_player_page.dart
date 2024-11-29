@@ -3,11 +3,14 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:ott_project/components/library/audio_playlist.dart';
+import 'package:ott_project/components/library/playlistDTO.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
 import 'package:ott_project/components/library/liked_songs_page.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/service/audio_api_service.dart';
+import 'package:ott_project/service/playlist_service.dart';
 import 'package:ott_project/service/service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +21,7 @@ import 'recently_played.dart';
 
 class SongPlayerPage extends StatefulWidget {
   final AudioDescription music;
+  // final PlaylistDTO playlist;
   // final bool isLiked;
   // final Function(Audio, bool) onLike;
   final Function(AudioDescription) onChange;
@@ -27,6 +31,7 @@ class SongPlayerPage extends StatefulWidget {
   SongPlayerPage({
     Key? key,
     required this.music,
+    //required this.playlist,
     // required this.onLike,
     // required this.isLiked,
     this.musicList = const [],
@@ -50,6 +55,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
   List<String> likedSongIds = [];
   Uint8List? banner;
 
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +65,10 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
     _loadBannerImage();
     audioApiService = AudioApiService();
     audioPlayer = AudioPlayer();
+   audioProvider = Provider.of<AudioProvider>(context,listen:false);
+   audioProvider.loadPlaylistsFromLocal();
+    audioProvider.fetchUserPlaylists();
+    
 
     currentSongIndex = widget.musicList.indexOf(widget.music);
     audioPlayer.onDurationChanged.listen((d) {
@@ -82,13 +92,8 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
     // decodeImage(widget.audio.thumbnail);
   }
 
-  // Future<void> _initializeUserAndLikedStatus() async {
-  //   await _getCurrentUserId();
-  //   if (currentUserId != null) {
-  //     await _fetchLikedAudios();
-  //     _checkIfLiked();
-  //   }
-  // }
+
+
 
   Future<void> _loadBannerImage() async {
     final image = await widget.music.thumbnail;
@@ -125,17 +130,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
     });
   }
 
-  // void _handleLike(Audio audio, bool isLiked) {
-  //   setState(() {
-  //     isLiked = isLiked;
-  //   });
-  //   if (isLiked) {
-  //     likedSongIds.add(audio.id.toString());
-  //   } else {
-  //     likedSongIds.remove(audio.id.toString());
-  //   }
-  //   _saveLikeStatus();
-  // }
+
 
   Future<void> _toggleLike() async {
     if (currentUserId == null) {
@@ -143,8 +138,9 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
       // Handle case where user is not logged in
       return;
     }
+
     bool success;
-    if (isLiked) {
+    if (isLiked) { 
       print('Unliking audio....');
       success =
           await audioApiService.unlikeAudio(widget.music.id, currentUserId!);
@@ -183,13 +179,6 @@ if (success) {
   }
   }
 
-  // Future<void> _saveLikeStatus(int audioId, bool isLiked) async {
-  //   if (isLiked)
-  //     likedSongIds.add(audioId.toString());
-  //   else {
-  //     likedSongIds.remove(audioId.toString());
-  //   }
-  // }
 
   void _updateListeningHistory(Music song) async {
     print("Updating listening history for song: ${song.songname}");
@@ -236,23 +225,25 @@ if (success) {
     ].join(":");
   }
 
+ 
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AudioProvider>(
       builder: (context, audioProvider, child) {
         final currentAudio = audioProvider.audioDescriptioncurrently;
         final isPlaying = audioProvider.isPlaying;
-        final duration = audioProvider.duration;
-        final position = audioProvider.position;
+        final duration = audioProvider.duration ;
+        final position = audioProvider.position ;
         // final decodedImage =
         //     audioProvider.getDecodedImage(currentAudio!.thumbnail);
         IconData repeatIcon;
         Color repeatColor;
-        switch (audioProvider.repeatMode) {
+        switch (audioProvider.repeatModeSong) {
           case RepeatMode.off:
             repeatIcon = Icons.repeat;
             repeatColor = Colors.white;
-            break;
+            break; 
           case RepeatMode.all:
             repeatIcon = Icons.repeat;
             repeatColor = Colors.green;
@@ -265,7 +256,6 @@ if (success) {
         return Stack(
           children: [
             BackgroundImage(),
-            SizedBox(height: 10),
             Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
@@ -314,8 +304,9 @@ if (success) {
                                   : 
                                   Image.asset('assets/icon/media_jungle.png')),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                     Text(
+                     // 'songname',
                       currentAudio!.audioTitle,
                       style: TextStyle(
                           color: kWhite,
@@ -326,7 +317,7 @@ if (success) {
                     //   currentAudio.movieName,
                     //   style: TextStyle(fontSize: 16, color: Colors.white70),
                     // ),
-                    SizedBox(height: 20),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -377,7 +368,7 @@ if (success) {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                     Slider(
                       min: 0,
                       max: duration.inSeconds.toDouble(),
@@ -403,7 +394,7 @@ if (success) {
                         ],
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -490,38 +481,39 @@ if (success) {
                 onTap: () {
                   Navigator.pop(context);
                   _showCreatePlaylistOption(context);
+                  audioProvider.fetchPlaylists();
                 },
               ),
-              ...audioProvider.mplaylists.map((likedsong) {
-                final isAudioInlikedsong =
-                    likedsong.music.any((audio) => audio.id == widget.music.id);
-                return ListTile(
-                  leading: Icon(
-                    Icons.favorite_outline_rounded,
-                    color: Colors.white,
-                  ),
-                  title: Text(
-                    'Add to Liked Songs',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onTap: isAudioInlikedsong
-                      ? null // Disable onTap if the song is already in the playlist
-                      : () {
-                          // audioProvider.addMusicToLikedsong(
-                          //     likedsong, widget.music);
-                          // Navigator.pop(context);
-                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          //   content: Text('Added to Liked Songs'),
-                          // ));
-                        },
-                  // Optionally, you can visually indicate if the song is already in the playlist
-                  trailing: isAudioInlikedsong
-                      ? Icon(Icons.check,
-                          color: Colors
-                              .green) // A checkmark to show the song is already added
-                      : null,
-                );
-              }).toList(),
+              // ...audioProvider.aplaylists.map((likedsong) {
+              //   // final isAudioInlikedsong =
+              //   //     likedsong.audios.any((audio) => audio.id == widget.music.id);
+              //   return ListTile(
+              //     leading: Icon(
+              //       Icons.favorite_outline_rounded,
+              //       color: Colors.white,
+              //     ),
+              //     title: Text(
+              //       'Add to Liked Songs',
+              //       style: TextStyle(color: Colors.white),
+              //     ),
+              //     // onTap: isAudioInlikedsong
+              //     //     ? null // Disable onTap if the song is already in the playlist
+              //     //     : () {
+              //     //         // audioProvider.addMusicToLikedsong(
+              //     //         //     likedsong, widget.music);
+              //     //         // Navigator.pop(context);
+              //     //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              //     //         //   content: Text('Added to Liked Songs'),
+              //     //         // ));
+              //     //       },
+              //     // Optionally, you can visually indicate if the song is already in the playlist
+              //     // trailing: isAudioInlikedsong
+              //     //     ? Icon(Icons.check,
+              //     //         color: Colors
+              //     //             .green) // A checkmark to show the song is already added
+              //     //     : null,
+              //   );
+              // }).toList(),
               ListTile(
                 leading: Icon(Icons.share_rounded,
                     color: const Color.fromARGB(255, 229, 191, 191)),
@@ -562,7 +554,10 @@ if (success) {
                       style: TextStyle(color: Colors.white)),
                   onTap: () {
                     Navigator.pop(context);
+                    
                     _showCreatePlaylistDialog(context);
+                    audioProvider.fetchPlaylists();
+                   
                   },
                 ),
                 ListTile(
@@ -582,10 +577,10 @@ if (success) {
                             builder: (context) => LikedSongsPage(userId:1 )));
                   },
                 ),
-                ...audioProvider.mplaylists.map((playlist) {
+                ...audioProvider.aplaylists.map((playlist) {
                   // Check if the current song is already in the playlist
-                  final isAudioInPlaylist = playlist.music
-                      .any((audio) => audio.id == widget.music.id);
+                  final isAudioInPlaylist = playlist.audioIds
+                      .any((audio) => audio == widget.music.id);
                   print(playlist.title);
                   return ListTile(
                     leading:
@@ -597,8 +592,8 @@ if (success) {
                     onTap: isAudioInPlaylist
                         ? null // Disable onTap if the song is already in the playlist
                         : () {
-                            // audioProvider.addMusicToPlaylist(
-                            //     playlist, widget.music);
+                          audioProvider.addAudiosToPlaylist(playlist, widget.music.id);
+                           
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text('Added to ${playlist.title}'),
@@ -620,56 +615,54 @@ if (success) {
     );
   }
 
-  void _showCreatePlaylistDialog(BuildContext context) {
+void _showCreatePlaylistDialog(BuildContext context,{int? audioId}) {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
     showDialog(
       context: context,
+
       builder: (BuildContext context) {
         return BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
           child: AlertDialog(
-            backgroundColor: Color.fromARGB(119, 68, 66, 66),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            backgroundColor: Color.fromARGB(69, 178, 174, 174),
             title: Text('New playlist', style: TextStyle(color: Colors.white)),
             content: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.7,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: titleController,
-                      decoration: InputDecoration(
-                        hintText: 'Title',
-                        hintStyle: TextStyle(color: Colors.white60),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white60),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+               
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      hintText: 'Title',
+                      hintStyle: TextStyle(color: Colors.white60),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white60),
                       ),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller: descriptionController,
-                      decoration: InputDecoration(
-                        hintText: 'Description',
-                        hintStyle: TextStyle(color: Colors.white60),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white60),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
                       ),
-                      style: TextStyle(color: Colors.white),
                     ),
-                  ],
-                ),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      hintText: 'Description',
+                      hintStyle: TextStyle(color: Colors.white60),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white60),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
               ),
             ),
             actions: [
@@ -682,13 +675,28 @@ if (success) {
                   final title = titleController.text;
                   final description = descriptionController.text;
                   if (title.isNotEmpty) {
+                    try{
                     final audioProvider =
                         Provider.of<AudioProvider>(context, listen: false);
-                    audioProvider.createmusicPlaylist(title, description);
-                    Navigator.pop(context);
+                        
+            audioProvider.createPlayListWithAudioId(title, description, widget.music.id);
+             Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Playlist "$title" created')),
                     );
+                   // audioProvider.fetchPlaylists();
+                    }catch(e) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Failed to create playlist: ${e.toString()}'),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    }
+                    
+                   
                   }
                 },
                 child: Text('Create', style: TextStyle(color: Colors.white)),

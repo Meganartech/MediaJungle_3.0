@@ -1,15 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
-import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/music_folder/audio.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
-import 'package:ott_project/components/music_folder/music_player_page.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/service/audio_api_service.dart';
-import '../../pages/app_icon.dart';
 import '../music_folder/song_player_page.dart';
 
 class LikedSongsPage extends StatefulWidget {
@@ -131,6 +127,10 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
             Column(
               children: [
                 //CustomAppBar(),
+                Padding(
+                  padding:  EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.10),
+                  child: Text('Liked Songs',style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16),),
+                ),
                 Expanded(
                   flex:8,
                   child: StreamBuilder<List<AudioDescription>>(
@@ -154,13 +154,13 @@ class _LikedSongsPageState extends State<LikedSongsPage> {
                               await Future.delayed(Duration(seconds: 2));
                             },
                             child: Padding(
-                              padding:  EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.10,
-                              left:  MediaQuery.sizeOf(context).width * 0.05,),
+                              padding:  EdgeInsets.only(top: MediaQuery.sizeOf(context).height * 0.04,
+                              left:  MediaQuery.sizeOf(context).width * 0.04,),
                               child: ListView.builder(
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     AudioDescription song = snapshot.data![index];
-                                  
+                                    print('Liked song audio name:${song}');
                                     return ListTile(
                                       leading:  ClipRRect(
                                             borderRadius: BorderRadius.circular(8),

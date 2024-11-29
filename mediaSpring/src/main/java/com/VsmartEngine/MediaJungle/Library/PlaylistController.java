@@ -29,9 +29,8 @@ import com.VsmartEngine.MediaJungle.repository.AddAudioRepository;
 import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RestController
-@RequestMapping("/api/v2/")
 public class PlaylistController {
 	
 	@Autowired
@@ -40,7 +39,6 @@ public class PlaylistController {
 	@Autowired
 	private AddAudiodescription audio ;
 	
-	@PostMapping("/createplaylist")
     public ResponseEntity<Playlist> createPlaylist(
         @RequestParam String title, @RequestParam String description,@RequestParam Long userId) {
 		Playlist playlist = new Playlist();
@@ -51,9 +49,8 @@ public class PlaylistController {
         return ResponseEntity.ok(playlists);
     }
 	
-	
 	// Add an audio ID to a playlist
-    @PostMapping("/{playlistId}/audio/{audioId}")
+    
     public ResponseEntity<Playlist> addAudioIdToPlaylist(
         @PathVariable Long playlistId, @PathVariable Long audioId) {
     	Playlist playlist = playlistrepository.findById(playlistId)
@@ -64,7 +61,8 @@ public class PlaylistController {
         return ResponseEntity.ok(playlists);
     }
     
-    @PostMapping("/createplaylistid")
+    
+    
     public ResponseEntity<Playlist> createPlaylistwithid(
         @RequestParam String title, 
         @RequestParam String description,
@@ -85,7 +83,7 @@ public class PlaylistController {
         return ResponseEntity.ok(updatedPlaylist);
     }
     
-    @GetMapping("/user/{userId}/playlists")
+ 
     public ResponseEntity<List<Playlist>> getPlaylistsByUserId(@PathVariable Long userId) {
         // Retrieve all playlists for the given userId
         List<Playlist> playlists = playlistrepository.findAllByUserId(userId);  
@@ -93,7 +91,7 @@ public class PlaylistController {
         return ResponseEntity.ok(playlists);
     }
     
-    @GetMapping("/{Id}/playlists")
+
     public ResponseEntity<Playlist> getPlaylists(@PathVariable Long Id) {
         // Retrieve all playlists for the given userId
         Optional<Playlist> playlists = playlistrepository.findById(Id);
@@ -106,7 +104,6 @@ public class PlaylistController {
         }
     }
     
-    @GetMapping("/{id}/getPlaylistWithAudioDetails")
     public ResponseEntity<List<playlistDTO>> getPlaylistWithAudioDetails(@PathVariable Long id) {
         List<Playlist> playlists = playlistrepository.findByPlaylist(id);
         // Map each Playlist to a PlaylistDTO with audio details
@@ -137,7 +134,7 @@ public class PlaylistController {
     }
 
 // New DELETE method for deleting a playlist by ID
-    @DeleteMapping("/{id}/delete/playlist")
+    
     public ResponseEntity<String> deletePlaylist(@PathVariable Long id) {
         // Check if the playlist exists
         if (!playlistrepository.existsById(id)) {
@@ -151,7 +148,7 @@ public class PlaylistController {
         return ResponseEntity.ok("Success: Playlist deleted");
     }
     
-    @DeleteMapping("/{playlistId}/audio/{audioId}/delete")
+    
     public ResponseEntity<Void> removeAudioFromPlaylist(@PathVariable Long playlistId, @PathVariable Long audioId) {
         // Check if the playlist exists
         Optional<Playlist> optionalPlaylist = playlistrepository.findById(playlistId);
@@ -174,7 +171,6 @@ public class PlaylistController {
         }
     }
     
-    @PatchMapping("/editplaylist/{Id}")
     public ResponseEntity<String> updatePlaylist(
             @PathVariable Long Id,
             @RequestParam(value = "title", required = false) String title,
@@ -202,7 +198,6 @@ public class PlaylistController {
         }
     }
 
-    @PatchMapping("/{playlistId}/moveAudioToPlaylist/{audioId}/{movedPlaylistId}")
     public ResponseEntity<String> moveAudioToAnotherPlaylist(
             @PathVariable Long playlistId, 
             @PathVariable Long audioId, 

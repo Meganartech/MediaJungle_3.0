@@ -1,12 +1,15 @@
 package com.VsmartEngine.MediaJungle.test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +26,7 @@ import com.VsmartEngine.MediaJungle.controller.VideoCastAndCrewController;
 import com.VsmartEngine.MediaJungle.fileservice.AudioFileService;
 import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AudioCastAndCrew;
+import com.VsmartEngine.MediaJungle.model.AudioMovieNameBanner;
 import com.VsmartEngine.MediaJungle.model.Audiodescription;
 import com.VsmartEngine.MediaJungle.model.AudiodetailsDTO;
 import com.VsmartEngine.MediaJungle.model.Audioimages;
@@ -34,10 +38,14 @@ import com.VsmartEngine.MediaJungle.model.Tag;
 import com.VsmartEngine.MediaJungle.repository.AddAudiodescription;
 import com.VsmartEngine.MediaJungle.repository.AudioCastandCrewRepository;
 import com.VsmartEngine.MediaJungle.repository.AudioCategoriesRepository;
+import com.VsmartEngine.MediaJungle.repository.AudioMovieNameBannerRepository;
 import com.VsmartEngine.MediaJungle.repository.AudioTagRepository;
 import com.VsmartEngine.MediaJungle.repository.Audioimage;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 import com.VsmartEngine.MediaJungle.repository.MovieNameRepository;
+import com.VsmartEngine.MediaJungle.video.VideoImage;
+
+import jakarta.transaction.Transactional;
 
 @CrossOrigin()
 @RestController
@@ -74,89 +82,295 @@ public class test {
 	@Autowired
 	private MovieNameRepository MovieNameRepository;
 	
-
-
-
+	@Autowired
+	private AudioMovieNameBannerRepository audiomovienamebannerrepository;
+	
+//	@PostMapping("/test")
+//	public ResponseEntity<?> testaudio( @RequestParam("audio_title") String audioTitle,
+//		    @RequestParam("Movie_name") String movieName,
+//		    @RequestParam("Audio_Duration") String audioDuration,
+//		    @RequestParam("Certificate_no") String certificateNo,
+//		    @RequestParam("Certificate_name") String certificateName,
+//		    @RequestParam("Rating") String rating,
+//		    @RequestParam("paid") boolean isPaid,
+//		    @RequestParam("production_company") String productionCompany,
+//		    @RequestParam("Description") String description,
+//			@RequestParam(value = "thumbnail", required = false) MultipartFile audio_thumbnail,
+//			@RequestParam(value = "Bannerthumbnail", required = false) MultipartFile banner_thumbnail,
+//			@RequestParam("castAndCrewIds") List<Long> castAndCrewIds, @RequestParam("category") List<Long> category,
+//			@RequestParam("tag") List<Long> tag, @RequestParam("audioFile") MultipartFile audioFile) {
+//		try {
+//			String audioFilePath = fileService.saveAudioFile(audioFile);
+//			long movieId=0L;
+//			String lowercasemoviename=movieName;
+//			lowercasemoviename.toLowerCase();
+//			Long data_id =MovieNameRepository.findIDBy_Moviename(movieName);
+//			Long lowercasemovienameId =this.GetMovenameId(lowercasemoviename);
+//			if((data_id != null) ? true : false) {
+//				movieId=data_id;
+////				System.out.println("***************************************************Exexting data");
+////				System.out.println("Exexting data"+movieId);
+//			}else
+//			{
+//				if((lowercasemovienameId != null) ? true : false) {
+////					System.out.println("***************************************************Exexting data");
+////					System.out.println("Exexting datachanged"+movieId);
+//					movieId=lowercasemovienameId;
+//					Optional<MovieName> movienames=MovieNameRepository.findById(lowercasemovienameId);
+//					MovieName savemoviename=movienames.get();
+//					savemoviename.setMovie_name(movieName);
+//					MovieNameRepository.save(savemoviename);		
+//				}else {
+////					System.out.println("***************************************************Exexting data");
+////					System.out.println("New data"+movieId);
+//					MovieName savemoviename= new MovieName();
+//					savemoviename.setMovie_name(movieName);
+//					MovieNameRepository.save(savemoviename);	
+//					movieId=savemoviename.getId();
+//				}
+//			}
+//	
+//	// Check if AudioMovieNameBanner entry already exists for this movieId
+//    if (audiomovienamebannerrepository.findByMovieId(movieId).isEmpty() && banner_thumbnail != null) {
+//        // Only add new entry if it does not already exist
+//        AudioMovieNameBanner newBanner = new AudioMovieNameBanner();
+//        byte[] bannerthumbnail = ImageUtils.compressImage(banner_thumbnail.getBytes());
+//        newBanner.setMovieId(movieId);
+//        newBanner.setBannerImage(bannerthumbnail);
+//        audiomovienamebannerrepository.save(newBanner);
+//    }
+//			Audiodescription audiodata = new Audiodescription();
+//			audiodata.setAudio_file_name(audioFilePath);
+//			audiodata.setAudio_Duration(audioDuration);
+//			audiodata.setAudio_title(audioTitle);
+//			audiodata.setCertificate_name(certificateName);
+//			audiodata.setCertificate_no(certificateNo);
+//			audiodata.setDescription(description);
+//			audiodata.setMovie_name(movieId);
+//			audiodata.setPaid(isPaid);
+//			audiodata.setProduction_company(productionCompany);
+//			audiodata.setRating(rating);
+//			audiodata = audio.save(audiodata);
+//			AudioCastAndCrew AudioCastAndCrew = new AudioCastAndCrew();
+//			;
+//			AudioCastAndCrew.setAudio_id(audiodata.getId());
+//			AudioCastAndCrew.setCastandcrewlist(castAndCrewIds);
+//			Audiocastandcrewrepository.save(AudioCastAndCrew);
+//			Category.saveCategories(audiodata.getId(), category);
+//			Category.savetags(audiodata.getId(), tag);
+//			byte[] audiothumbnailBytes = ImageUtils.compressImage(audio_thumbnail.getBytes());
+//			byte[] bannerthumbnailBytes = ImageUtils.compressImage(banner_thumbnail.getBytes());
+//
+//			Audioimages cast = new Audioimages();
+//			cast.setAudioId(audiodata.getId());
+//			cast.setAudio_thumbnail(audiothumbnailBytes);
+//			cast.setBannerthumbnail(bannerthumbnailBytes);
+//			audioI.save(cast);
+////			System.out.println("Audio Title: ");
+//
+//			return ResponseEntity.ok().build();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
+//		}
+//	}
+ 
+	@Transactional
 	@PostMapping("/test")
-	public ResponseEntity<?> testaudio( @RequestParam("audio_title") String audioTitle,
-		    @RequestParam("Movie_name") String movieName,
-		    @RequestParam("Audio_Duration") String audioDuration,
-		    @RequestParam("Certificate_no") String certificateNo,
-		    @RequestParam("Certificate_name") String certificateName,
-		    @RequestParam("Rating") String rating,
-		    @RequestParam("paid") boolean isPaid,
-		    @RequestParam("production_company") String productionCompany,
-		    @RequestParam("Description") String description,
-			@RequestParam(value = "thumbnail", required = false) MultipartFile audio_thumbnail,
-			@RequestParam(value = "Bannerthumbnail", required = false) MultipartFile banner_thumbnail,
-			@RequestParam("castAndCrewIds") List<Long> castAndCrewIds, @RequestParam("category") List<Long> category,
-			@RequestParam("tag") List<Long> tag, @RequestParam("audioFile") MultipartFile audioFile) {
-		try {
-			String audioFilePath = fileService.saveAudioFile(audioFile);
-			long movieId=0L;
-			String lowercasemoviename=movieName;
-			lowercasemoviename.toLowerCase();
-			Long data_id =MovieNameRepository.findIDBy_Moviename(movieName);
-			Long lowercasemovienameId =this.GetMovenameId(lowercasemoviename);
-			if((data_id != null) ? true : false) {
-				movieId=data_id;
-//				System.out.println("***************************************************Exexting data");
-//				System.out.println("Exexting data"+movieId);
-			}else
-			{
-				if((lowercasemovienameId != null) ? true : false) {
-//					System.out.println("***************************************************Exexting data");
-//					System.out.println("Exexting datachanged"+movieId);
-					movieId=lowercasemovienameId;
-					Optional<MovieName> movienames=MovieNameRepository.findById(lowercasemovienameId);
-					MovieName savemoviename=movienames.get();
-					savemoviename.setMovie_name(movieName);
-					MovieNameRepository.save(savemoviename);		
-				}else {
-//					System.out.println("***************************************************Exexting data");
-//					System.out.println("New data"+movieId);
-					MovieName savemoviename= new MovieName();
-					savemoviename.setMovie_name(movieName);
-					MovieNameRepository.save(savemoviename);	
-					movieId=savemoviename.getId();
-				}
-			}
-			Audiodescription audiodata = new Audiodescription();
-			audiodata.setAudio_file_name(audioFilePath);
-			audiodata.setAudio_Duration(audioDuration);
-			audiodata.setAudio_title(audioTitle);
-			audiodata.setCertificate_name(certificateName);
-			audiodata.setCertificate_no(certificateNo);
-			audiodata.setDescription(description);
-			audiodata.setMovie_name(movieId);
-			audiodata.setPaid(isPaid);
-			audiodata.setProduction_company(productionCompany);
-			audiodata.setRating(rating);
-			audiodata = audio.save(audiodata);
-			AudioCastAndCrew AudioCastAndCrew = new AudioCastAndCrew();
-			;
-			AudioCastAndCrew.setAudio_id(audiodata.getId());
-			AudioCastAndCrew.setCastandcrewlist(castAndCrewIds);
-			Audiocastandcrewrepository.save(AudioCastAndCrew);
-			Category.saveCategories(audiodata.getId(), category);
-			Category.savetags(audiodata.getId(), tag);
-			byte[] audiothumbnailBytes = ImageUtils.compressImage(audio_thumbnail.getBytes());
-			byte[] bannerthumbnailBytes = ImageUtils.compressImage(banner_thumbnail.getBytes());
+	public ResponseEntity<?> testaudio(
+	        @RequestParam("audio_title") String audioTitle,
+	        @RequestParam("Movie_name") String movieName,
+	        @RequestParam("Audio_Duration") String audioDuration,
+	        @RequestParam("Certificate_no") String certificateNo,
+	        @RequestParam("Certificate_name") String certificateName,
+	        @RequestParam("Rating") String rating,
+	        @RequestParam("paid") boolean isPaid,
+	        @RequestParam("production_company") String productionCompany,
+	        @RequestParam("Description") String description,
+	        @RequestParam(value = "thumbnail", required = false) MultipartFile audio_thumbnail,
+	        @RequestParam(value = "Bannerthumbnail", required = false) MultipartFile banner_thumbnail,
+	        @RequestParam("castAndCrewIds") List<Long> castAndCrewIds,
+	        @RequestParam("category") List<Long> category,
+	        @RequestParam("tag") List<Long> tag,
+	        @RequestParam("audioFile") MultipartFile audioFile) {
+	    try {
+	        String audioFilePath = fileService.saveAudioFile(audioFile);
+	        long movieId = 0L;
+	        String lowercasemoviename = movieName.toLowerCase();
+	        Long data_id = MovieNameRepository.findIDBy_Moviename(movieName);
+	        Long lowercasemovienameId = this.GetMovenameId(lowercasemoviename);
+
+	        if (data_id != null) {
+	            movieId = data_id;
+	        } else {
+	            if (lowercasemovienameId != null) {
+	                movieId = lowercasemovienameId;
+	                Optional<MovieName> movienames = MovieNameRepository.findById(lowercasemovienameId);
+	                MovieName savemoviename = movienames.get();
+	                savemoviename.setMovie_name(movieName);
+	                MovieNameRepository.save(savemoviename);
+	            } else {
+	                MovieName savemoviename = new MovieName();
+	                savemoviename.setMovie_name(movieName);
+	                MovieNameRepository.save(savemoviename);
+	                movieId = savemoviename.getId();
+	            }
+	        }
+
+//	        // Check if AudioMovieNameBanner entry already exists for this movieId
+//	        if (audiomovienamebannerrepository.findByMovieId(movieId).isEmpty() && banner_thumbnail != null) {
+//	            // Only add new entry if it does not already exist
+//	            AudioMovieNameBanner newBanner = new AudioMovieNameBanner();
+//	            byte[] bannerthumbnail = ImageUtils.compressImage(banner_thumbnail.getBytes());
+//	            newBanner.setMovieId(movieId);
+//	            newBanner.setBannerImage(bannerthumbnail);
+//	            audiomovienamebannerrepository.save(newBanner);
+//	        }
+	        
+	     // Check if movie ID already has a banner entry
+	     			Optional<AudioMovieNameBanner> existingBanner = audiomovienamebannerrepository.findByMovieId(movieId);
+
+	     			if (existingBanner.isPresent()) {
+	     			    // Update the existing banner if the movie ID already exists and a new banner image is provided
+	     			    if (banner_thumbnail != null) {
+	     			        AudioMovieNameBanner banner = existingBanner.get();
+	     			        byte[] bannerthumbnailBytes = ImageUtils.compressImage(banner_thumbnail.getBytes());
+	     			        banner.setBannerImage(bannerthumbnailBytes);
+	     			        audiomovienamebannerrepository.save(banner);
+	     			    }
+	     			} else if (banner_thumbnail != null) {
+	     			    // Add new banner entry only if it does not already exist and a new banner image is provided
+	     			    AudioMovieNameBanner newBanner = new AudioMovieNameBanner();
+	     			    byte[] bannerthumbnail = ImageUtils.compressImage(banner_thumbnail.getBytes());
+	     			    newBanner.setMovieId(movieId);
+	     			    newBanner.setBannerImage(bannerthumbnail);
+	     			    audiomovienamebannerrepository.save(newBanner);
+	     			}
+
+	        // Set audio description details
+	        Audiodescription audiodata = new Audiodescription();
+	        audiodata.setAudio_file_name(audioFilePath);
+	        audiodata.setAudio_Duration(audioDuration);
+	        audiodata.setAudio_title(audioTitle);
+	        audiodata.setCertificate_name(certificateName);
+	        audiodata.setCertificate_no(certificateNo);
+	        audiodata.setDescription(description);
+	        audiodata.setMovie_name(movieId);
+	        audiodata.setPaid(isPaid);
+	        audiodata.setProduction_company(productionCompany);
+	        audiodata.setRating(rating);
+	        audiodata = audio.save(audiodata);
+
+	        // Save cast and crew, categories, and tags
+	        AudioCastAndCrew audioCastAndCrew = new AudioCastAndCrew();
+	        audioCastAndCrew.setAudio_id(audiodata.getId());
+	        audioCastAndCrew.setCastandcrewlist(castAndCrewIds);
+	        Audiocastandcrewrepository.save(audioCastAndCrew);
+	        Category.saveCategories(audiodata.getId(), category);
+	        Category.savetags(audiodata.getId(), tag);
+
+	        byte[] audiothumbnailBytes = ImageUtils.compressImage(audio_thumbnail.getBytes());
+//			byte[] bannerthumbnailBytes = ImageUtils.compressImage(banner_thumbnail.getBytes());
 
 			Audioimages cast = new Audioimages();
 			cast.setAudioId(audiodata.getId());
 			cast.setAudio_thumbnail(audiothumbnailBytes);
-			cast.setBannerthumbnail(bannerthumbnailBytes);
+//			cast.setBannerthumbnail(bannerthumbnailBytes);
 			audioI.save(cast);
 //			System.out.println("Audio Title: ");
 
 			return ResponseEntity.ok().build();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
-		}
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
+	    }
 	}
+	
+	
+	
+	@GetMapping("/moviename/getbanner/{moviename}")
+    public ResponseEntity<?> getBannerMovieId(@PathVariable String moviename) {
+        try {
+            // Step 1: Get movieId by movie name
+            Long movieId = MovieNameRepository.findIDBy_Moviename(moviename);
 
+            if (movieId == null) {
+                return ResponseEntity.ok("null");
+            }
+
+            // Step 2: Check if movieId exists in AudioMovieNameBanner table
+            Long existingMovieId = audiomovienamebannerrepository.findMovieIdIfExists(movieId);
+
+            // Step 3: Return movieId if it exists, else return null
+            if (existingMovieId != null) {
+                return ResponseEntity.ok(existingMovieId);
+            } else {
+                return ResponseEntity.ok("null"); // Return null if no banner is associated
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+	
+	@GetMapping("/getbannerimage/{movieId}/get")
+	@Transactional
+	public ResponseEntity<Map<String, byte[]>> getAudioBannermoviename(@PathVariable long movieId) {
+	    try {
+	        // Fetch the video image from the repository
+	        Optional<AudioMovieNameBanner> audioImageOptional =audiomovienamebannerrepository.findMovieById(movieId);
+
+	        if (audioImageOptional.isPresent()) {
+	        	AudioMovieNameBanner bannerImage = audioImageOptional.get();
+
+	            // Decompress the image bytes
+	            byte[] decompressedVideoThumbnail = ImageUtils.decompressImage(bannerImage.getBannerImage());
+	            // Prepare a map to hold the decompressed image data
+	            Map<String, byte[]> imageMap = new HashMap<>();
+	            imageMap.put("userbanneraudio", decompressedVideoThumbnail);
+
+	         // Return the map as a response
+	            return ResponseEntity.ok()
+	                                 .contentType(MediaType.APPLICATION_JSON)
+	                                 .body(imageMap);
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();  // Replace with proper logging in production
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+	}
+	
+	@GetMapping("/getimage/banner/{Id}")
+	@Transactional
+	public ResponseEntity<byte[]> getbannerThumbnail(@PathVariable long Id) {
+		try {
+	        // Fetch the video image from the repository
+	        Optional<AudioMovieNameBanner> videoImageOptional = audiomovienamebannerrepository.findMovieById(Id);
+
+	        if (videoImageOptional.isPresent()) {
+	        	AudioMovieNameBanner videoImage = videoImageOptional.get();
+
+	            // Decompress the image bytes
+	            byte[] decompressedVideoThumbnail = ImageUtils.decompressImage(videoImage.getBannerImage());
+
+	            // Return the decompressed image data directly with the correct content type
+	            return ResponseEntity.ok()
+	                                 .contentType(MediaType.IMAGE_PNG) // Or use MediaType.IMAGE_PNG for PNG images
+	                                 .body(decompressedVideoThumbnail);
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();  // Replace with proper logging in production
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+	}
+	
+
+	@Transactional
 	@PostMapping("/update")
 	public ResponseEntity<?> audioupdate(    @RequestParam(value = "audio_id", required = false) Long audioId,
 		    @RequestParam("audio_title") String audioTitle,
@@ -278,24 +492,39 @@ public class test {
 			castandcrew.setCastandcrewlist(castAndCrewIds);
 			Audiocastandcrewrepository.save(castandcrew);
 
+			// Fetch the audioThumbnail and BannerThumbnail details as before
 			Optional<Audioimages> audioThumbnail = audioI.findById(id);
-
 			Audioimages audioImage = audioThumbnail.get();
-			System.out.println("audio_thumbnail != null :" + (audio_thumbnail != null));
 
+			// Update audio thumbnail if provided
 			if (audio_thumbnail != null) {
-				byte[] audiothumbnailBytes = ImageUtils.compressImage(audio_thumbnail.getBytes());
-				audioImage.setAudio_thumbnail(audiothumbnailBytes);
+			    byte[] audiothumbnailBytes = ImageUtils.compressImage(audio_thumbnail.getBytes());
+			    audioImage.setAudio_thumbnail(audiothumbnailBytes);
 			}
-			System.out.println("banner_thumbnail != null :" + (banner_thumbnail != null));
-			if (banner_thumbnail != null) {
-				byte[] bannerthumbnailBytes = ImageUtils.compressImage(banner_thumbnail.getBytes());
-				audioImage.setBannerthumbnail(bannerthumbnailBytes);
+
+			// Check if movie ID already has a banner entry
+			Optional<AudioMovieNameBanner> existingBanner = audiomovienamebannerrepository.findByMovieId(movieId);
+
+			if (existingBanner.isPresent()) {
+			    // Update the existing banner if the movie ID already exists and a new banner image is provided
+			    if (banner_thumbnail != null) {
+			        AudioMovieNameBanner banner = existingBanner.get();
+			        byte[] bannerthumbnailBytes = ImageUtils.compressImage(banner_thumbnail.getBytes());
+			        banner.setBannerImage(bannerthumbnailBytes);
+			        audiomovienamebannerrepository.save(banner);
+			    }
+			} else if (banner_thumbnail != null) {
+			    // Add new banner entry only if it does not already exist and a new banner image is provided
+			    AudioMovieNameBanner newBanner = new AudioMovieNameBanner();
+			    byte[] bannerthumbnail = ImageUtils.compressImage(banner_thumbnail.getBytes());
+			    newBanner.setMovieId(movieId);
+			    newBanner.setBannerImage(bannerthumbnail);
+			    audiomovienamebannerrepository.save(newBanner);
 			}
-			System.out.println("banner_thumbnail != null || audio_thumbnail != nul :"
-					+ (banner_thumbnail != null || audio_thumbnail != null));
+
+			// Save audio image if either banner or audio thumbnail is provided
 			if (banner_thumbnail != null || audio_thumbnail != null) {
-				audioI.save(audioImage);
+			    audioI.save(audioImage);
 			}
 			return ResponseEntity.ok().build();
 		} catch (Exception e) {
@@ -303,6 +532,157 @@ public class test {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
 		}
 	}
+	
+	
+
+		
+	
+//	@PostMapping("/update")
+//	public ResponseEntity<?> audioupdate(    @RequestParam(value = "audio_id", required = false) Long audioId,
+//		    @RequestParam("audio_title") String audioTitle,
+//		    @RequestParam("Movie_name") String movieName,
+//		    @RequestParam("Audio_Duration") String audioDuration,
+//		    @RequestParam("Certificate_no") String certificateNo,
+//		    @RequestParam("Certificate_name") String certificateName,
+//		    @RequestParam("Rating") String rating,
+//		    @RequestParam("paid") boolean isPaid,
+//		    @RequestParam("production_company") String productionCompany,
+//		    @RequestParam("Description") String description,
+//			@RequestParam(value = "thumbnail", required = false) MultipartFile audio_thumbnail,
+//			@RequestParam(value = "Bannerthumbnail", required = false) MultipartFile banner_thumbnail,
+//			@RequestParam("castAndCrewIds") List<Long> castAndCrewIds, @RequestParam("category") List<Long> category,
+//			@RequestParam("tag") List<Long> tag, @RequestParam("audio_id") Long id,
+//			@RequestParam(value = "audioFile", required = false) MultipartFile audioFile) {
+//		try {
+//
+//			Optional<Audiodescription> audioList = audio.findById(audioId);
+//			long movieId=0L;
+//			String lowercasemoviename=movieName;
+//			lowercasemoviename.toLowerCase();
+//			Long data_id =MovieNameRepository.findIDBy_Moviename(movieName);
+//			Long lowercasemovienameId =this.GetMovenameId(lowercasemoviename);
+//			if((data_id != null) ? true : false) {
+//				movieId=data_id;
+//				System.out.println("***************************************************Exexting data");
+//				System.out.println("Exexting data"+movieId);
+//			}else
+//			{
+//				if((lowercasemovienameId != null) ? true : false) {
+////					System.out.println("***************************************************Exexting data");
+////					System.out.println("Exexting datachanged"+movieId);
+//					movieId=lowercasemovienameId;
+//					Optional<MovieName> movienames=MovieNameRepository.findById(lowercasemovienameId);
+//					MovieName savemoviename=movienames.get();
+//					System.out.println(savemoviename);
+//					savemoviename.setMovie_name(movieName);
+//					List<MovieName> movien=MovieNameRepository.findAll();
+//					movien.forEach(movie -> System.out.println(movie));
+//
+//					MovieNameRepository.save(savemoviename);		
+//				}else {
+////					System.out.println("***************************************************Exexting data");
+////					System.out.println("New data"+movieId);
+//					MovieName savemoviename= new MovieName();
+//					savemoviename.setMovie_name(movieName);
+//					MovieNameRepository.save(savemoviename);	
+//					movieId=savemoviename.getId();
+//				}
+//			}
+//			Audiodescription audiodata = audioList.get();
+//			audiodata.setAudio_Duration(audioDuration);
+//			audiodata.setAudio_title(audioTitle);
+//			audiodata.setCertificate_name(certificateName);
+//			audiodata.setCertificate_no(certificateNo);
+//			audiodata.setDescription(description);
+//			audiodata.setMovie_name(movieId);
+//			audiodata.setPaid(isPaid);
+//			audiodata.setProduction_company(productionCompany);
+//			audiodata.setRating(rating);
+//			System.out.println("audioFile!=null :" + (audioFile != null));
+//			if (audioFile != null) {
+//				String audioFilePath = fileService.saveAudioFile(audioFile);
+//				System.out.println("audioFilePath :" + (audioFilePath));
+//				audiodata.setAudio_file_name(audioFilePath);
+//			} else if (audioFile == null) {
+//				audiodata.setAudio_file_name(audiodata.getAudio_file_name());
+//			}
+//
+//			audio.save(audiodata);
+//
+//			List<Tag> audioTag = AudioTagRepository.findByAudio_Id(id);
+//			List<Long> audioTagIds = audioTag.stream().map(Tag::getTag_id).collect(Collectors.toList());
+//
+//			List<Long> newTags = tag.stream().filter(tagId -> !audioTagIds.contains(tagId))
+//					.collect(Collectors.toList());
+////		    	 	       missingTags.forEach(System.out::println);
+//
+//			List<Long> removeTags = audioTagIds.stream().filter(tagId -> !tag.contains(tagId))
+//					.collect(Collectors.toList());
+//
+//			if (!removeTags.isEmpty()) {
+//				removeTags.forEach(tagId -> {
+//					AudioTagRepository.deletetagBytagId(tagId, id);
+//				});
+//			}
+//
+//			System.out.println("!missingTags.isEmpty() :" + !newTags.isEmpty());
+//			if (!newTags.isEmpty()) {
+//				Category.savetags(id, newTags);
+//			}
+//
+//			List<AddNewCategories> audioCategorie = AudioCategoriesRepository.findByCategorie_Id(id);
+//			List<Long> CategoryIds = audioCategorie.stream().map(AddNewCategories::getCategory_id) // Assuming Tag has a
+//																									// method getId()
+//																									// returning Long
+//					.collect(Collectors.toList());
+//			List<Long> missingCategory = category.stream().filter(categoryId -> !CategoryIds.contains(categoryId))
+//					.collect(Collectors.toList());
+//
+//			List<Long> removeCategory = CategoryIds.stream().filter(categoryId -> !category.contains(categoryId))
+//					.collect(Collectors.toList());
+//			removeTags.forEach(System.out::println);
+//
+//			if (!removeCategory.isEmpty()) {
+//				removeCategory.forEach(tagId -> {
+//					AudioCategoriesRepository.deletetagBycategotiesId(tagId, id);
+//				});
+//			}
+//
+//			System.out.println("!missingCategory.isEmpty() :" + !missingCategory.isEmpty());
+//			if (!missingCategory.isEmpty()) {
+//
+//				Category.saveCategories(id, missingCategory);
+//			}
+//			Optional<AudioCastAndCrew> audioCastandCrew = Audiocastandcrewrepository.findById(id);
+//			AudioCastAndCrew castandcrew = audioCastandCrew.get();
+//			castandcrew.setCastandcrewlist(castAndCrewIds);
+//			Audiocastandcrewrepository.save(castandcrew);
+//
+//			Optional<Audioimages> audioThumbnail = audioI.findById(id);
+//
+//			Audioimages audioImage = audioThumbnail.get();
+//			System.out.println("audio_thumbnail != null :" + (audio_thumbnail != null));
+//
+//			if (audio_thumbnail != null) {
+//				byte[] audiothumbnailBytes = ImageUtils.compressImage(audio_thumbnail.getBytes());
+//				audioImage.setAudio_thumbnail(audiothumbnailBytes);
+//			}
+//			System.out.println("banner_thumbnail != null :" + (banner_thumbnail != null));
+//			if (banner_thumbnail != null) {
+//				byte[] bannerthumbnailBytes = ImageUtils.compressImage(banner_thumbnail.getBytes());
+//				audioImage.setBannerthumbnail(bannerthumbnailBytes);
+//			}
+//			System.out.println("banner_thumbnail != null || audio_thumbnail != nul :"
+//					+ (banner_thumbnail != null || audio_thumbnail != null));
+//			if (banner_thumbnail != null || audio_thumbnail != null) {
+//				audioI.save(audioImage);
+//			}
+//			return ResponseEntity.ok().build();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
+//		}
+//	}
 	
 	
 	@GetMapping("/getaudio/{id}")
@@ -482,6 +862,7 @@ public class test {
 				
 		 return ResponseEntity.ok(audiocat);
 	}
+	
 	@GetMapping("/movename/{moviename}")
 	public ResponseEntity<?> testmovename(@PathVariable("moviename")String movie) {
 
@@ -502,6 +883,7 @@ public class test {
 		
 		 return ResponseEntity.ok(a);
 	}
+	
 	@GetMapping("/movename")
 	public ResponseEntity<?> GetMovename() {
 
@@ -512,6 +894,7 @@ public class test {
 		
 		 return ResponseEntity.ok(movienames);
 	}
+	
 	@GetMapping("/movenam")
 	public ResponseEntity<?> GetMovenamelist() {
 

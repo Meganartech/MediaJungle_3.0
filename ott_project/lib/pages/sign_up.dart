@@ -49,7 +49,6 @@ class _SignUpState extends State<SignUp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     visiblePassword = false;
     confirmVisiblePassword = false;
     super.initState();
@@ -58,222 +57,235 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Stack(
-      children: [
-        BackgroundImage(),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: size.width * 0.3,
-                  ),
-                  Stack(
-                    children: [
-                      Center(
-                        child: ClipOval(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                            child: CircleAvatar(
-                              radius: size.width * 0.14,
-                              backgroundColor:
-                                  Colors.grey.shade200.withOpacity(0.3),
-                              child: _imageFile == null
-                                  ? Icon(FontAwesomeIcons.user,
-                                      color: kWhite, size: size.width * 0.11)
-                                  : CircleAvatar(
-                                      radius: size.width * 0.13,
-                                      backgroundImage: FileImage(_imageFile!),
-                                    ),
+    return WillPopScope(
+      onWillPop: () async{
+        return false;
+      },
+      child: Stack(
+        children: [
+          BackgroundImage(),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            body: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.10,
+                    ),
+                    Stack(
+                      children: [
+                        Center(
+                          child: ClipOval(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                              child: CircleAvatar(
+                                radius: size.width * 0.14,
+                                backgroundColor:
+                                    Colors.grey.shade200.withOpacity(0.3),
+                                child: _imageFile == null
+                                    ? Icon(FontAwesomeIcons.user,
+                                        color: kWhite, size: size.width * 0.11)
+                                    : CircleAvatar(
+                                        radius: size.width * 0.13,
+                                        backgroundImage: FileImage(_imageFile!),
+                                      ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Positioned(
-                        bottom: size.height * 0.002,
-                        left: size.width * 0.53,
-                        child: IconButton(
-                          onPressed: _pickImage,
-                          icon: Icon(
-                            Icons.camera_alt,
-                            color: kWhite,
+                        Positioned(
+                          bottom: MediaQuery.sizeOf(context).height * 0.002,
+                          left: MediaQuery.sizeOf(context).width * 0.52,
+                          child: IconButton(
+                            onPressed: _pickImage,
+                            icon: Icon(
+                              Icons.camera_alt,
+                              color: kWhite,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: size.width * 0.1,
-                  ),
-                  Column(
-                    children: [
-                      MyTextField(
-                        controller: usernameController,
-                        icon: FontAwesomeIcons.user,
-                        hint: 'User Name',
-                        inputType: TextInputType.name,
-                        inputAction: TextInputAction.next,
-                        obscureText: false,
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return '  Please enter your name';
-                          }
-                          return null;
-                        },
-                      ),
-                      MyTextField(
-                        controller: emailController,
-                        icon: FontAwesomeIcons.envelope,
-                        hint: 'Email',
-                        inputType: TextInputType.emailAddress,
-                        inputAction: TextInputAction.next,
-                        obscureText: false,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return '  Please enter your email';
-                          }
-                          if (!isValidEmail(value)) {
-                            return '  Please enter a valid email';
-                          }
-                          return null;
-                        },
-                      ),
-                      MyTextField(
-                        controller: mobilenumberController,
-                        icon: FontAwesomeIcons.phone,
-                        hint: 'Mobile Number',
-                        inputType: TextInputType.number,
-                        inputAction: TextInputAction.next,
-                        obscureText: false,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return '  Please enter mobile number';
-                          }
-                          if (value.length < 10) {
-                            return ' Please enter 10 digits';
-                          }
-                          return null;
-                        },
-                      ),
-                      MyTextField(
-                        controller: passwordController,
-                        icon: FontAwesomeIcons.lock,
-                        
-                        hint: 'Password',
-                        inputType: TextInputType.visiblePassword,
-                       suffixIcon: IconButton(onPressed: (){
-                              setState(() {
-                                visiblePassword = !visiblePassword;
-                              });
-                            },
-                             icon: Icon(visiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
-                        inputAction: TextInputAction.next,
-                        obscureText: !visiblePassword,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return '  Please enter password';
-                          }
-                          return null;
-                        },
-                      ),
-                      MyTextField(
-                        controller: confirmpasswordController,
-                        icon: FontAwesomeIcons.lock,
-                        hint: 'Confirm Password',
-                        inputType: TextInputType.visiblePassword,
-                        suffixIcon: IconButton(onPressed: (){
-                              setState(() {
-                                confirmVisiblePassword = !confirmVisiblePassword;
-                              });
-                            },
-                             icon: Icon(confirmVisiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
-                        inputAction: TextInputAction.done,
-                        obscureText: !confirmVisiblePassword,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return '  Please enter confirm password';
-                          }
-                          return null;
-                        },
-                        confirmPasswordController: passwordController,
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        height: size.height * 0.07,
-                        width: size.width * 0.8,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: Colors.blueGrey.shade300),
-                        child: TextButton(
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                bool signupSuccess =
-                                    await registerUser(context);
-                                if (signupSuccess) {
-                                  // Sign-up successful, navigate to login or home screen
+                      ],
+                    ),
+                    SizedBox(
+                      height:  MediaQuery.sizeOf(context).height * 0.03,
+                    ),
+                    Column(
+                      children: [
+                        MyTextField(
+                          controller: usernameController,
+                          icon: FontAwesomeIcons.user,
+                          hint: 'User Name',
+                          inputType: TextInputType.name,
+                          inputAction: TextInputAction.next,
+                          obscureText: false,
+                          validator: (value) {
+                            if (value?.isEmpty ?? true) {
+                              return '  Please enter your name';
+                            }
+                            return null;
+                          },
+                        ),
+                        MyTextField(
+                          controller: emailController,
+                          icon: FontAwesomeIcons.envelope,
+                          hint: 'Email',
+                          inputType: TextInputType.emailAddress,
+                          inputAction: TextInputAction.next,
+                          obscureText: false,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return '  Please enter your email';
+                            }
+                            if (!isValidEmail(value)) {
+                              return '  Please enter a valid email';
+                            }
+                            return null;
+                          },
+                        ),
+                        MyTextField(
+                          controller: mobilenumberController,
+                          icon: FontAwesomeIcons.phone,
+                          hint: 'Mobile Number',
+                          inputType: TextInputType.number,
+                          inputAction: TextInputAction.next,
+                          obscureText: false,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return '  Please enter mobile number';
+                            }
+                            if (value.length < 10) {
+                              return ' Please enter 10 digits';
+                            }
+                            return null;
+                          },
+                        ),
+                        MyTextField(
+                          controller: passwordController,
+                          icon: FontAwesomeIcons.lock,
+                          
+                          hint: 'Password',
+                          inputType: TextInputType.visiblePassword,
+                         suffixIcon: IconButton(onPressed: (){
+                                setState(() {
+                                  visiblePassword = !visiblePassword;
+                                });
+                              },
+                               icon: Icon(visiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
+                          inputAction: TextInputAction.next,
+                          obscureText: !visiblePassword,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return '  Please enter password';
+                            }
+                            return null;
+                          },
+                        ),
+                        MyTextField(
+                          controller: confirmpasswordController,
+                          icon: FontAwesomeIcons.lock,
+                          hint: 'Confirm Password',
+                          inputType: TextInputType.visiblePassword,
+                          suffixIcon: IconButton(onPressed: (){
+                                setState(() {
+                                  confirmVisiblePassword = !confirmVisiblePassword;
+                                });
+                              },
+                               icon: Icon(confirmVisiblePassword ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,)),
+                          inputAction: TextInputAction.done,
+                          obscureText: !confirmVisiblePassword,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return '  Please enter confirm password';
+                            }
+                            return null;
+                          },
+                          confirmPasswordController: passwordController,
+                        ),
+                        SizedBox(height:  MediaQuery.sizeOf(context).height * 0.03),
+                        Container(
+                          height: MediaQuery.sizeOf(context).height * 0.07,
+                          width: MediaQuery.sizeOf(context).width * 0.6,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.blueGrey.shade300),
+                          child: TextButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  bool signupSuccess =
+                                      await registerUser(context);
+                                  if (signupSuccess) {
+                                    // Sign-up successful, navigate to login or home screen
+                                    showValidationDialog(
+                                        'User registered Successfully!!!');
+                                    usernameController.clear();
+                                    emailController.clear();
+                                    mobilenumberController.clear();
+                                    passwordController.clear();
+                                    confirmpasswordController.clear();
+                                    setState(() {
+                                      _imageFile = null;
+                                    });
+                                  } //else {
+                                  //   // Sign-up failed, show an error message
+                                  //   showValidationDialog(
+                                  //       'User with the given email already exists.');
+                                  // }
+                                } else {
                                   showValidationDialog(
-                                      'User registered Successfully!!!');
-                                } //else {
-                                //   // Sign-up failed, show an error message
-                                //   showValidationDialog(
-                                //       'User with the given email already exists.');
-                                // }
-                              } else {
-                                showValidationDialog(
-                                    ' Please enter required fields to register.');
-                              }
-                            },
-                            child: Text(
-                              'Register',
-                              style: kBodyText.copyWith(
-                                  fontWeight: FontWeight.bold),
-                            )),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              color: Colors.grey[400],
-                              thickness: 0.5,
+                                      ' Please enter required fields to register.');
+                                }
+                              },
+                              child: Text(
+                                'Register',
+                                style: kBodyText.copyWith(
+                                    fontWeight: FontWeight.bold),
+                              )),
+                        ),
+                        SizedBox(
+                          height:  MediaQuery.sizeOf(context).height * 0.02,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Divider(
+                                color: Colors.grey[400],
+                                thickness: 0.5,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Already Have an account?',
-                            style: kBodyText,
-                          ),
-                          GestureDetector(
-                            onTap: () => Navigator.pushNamed(context, '/'),
-                            child: Text(
-                              'Login Here!',
-                              style: kBodyText.copyWith(
-                                  color: kBlue, fontWeight: FontWeight.bold),
+                          ],
+                        ),
+                         SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.01,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Already Have an account?',
+                              style: kBodyText,
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                    ],
-                  ),
-                ],
+                            GestureDetector(
+                              onTap: () => Navigator.pushNamed(context, '/'),
+                              child: Text(
+                                'Login Here!',
+                                style: kBodyText.copyWith(
+                                    color: kBlue, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height:  MediaQuery.sizeOf(context).height * 0.01),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -305,6 +317,7 @@ class _SignUpState extends State<SignUp> {
     bool isRegistered = await registerUser(context);
 
     if (isRegistered) {
+      clearInputFields();
       // Registration success, navigate to login page
       Navigator.pushAndRemoveUntil(
               context, MaterialPageRoute(builder: (context) => const LoginPage()),(route)=> false);
@@ -354,5 +367,12 @@ class _SignUpState extends State<SignUp> {
         );
       },
     );
+  }
+  void clearInputFields(){
+    usernameController.clear();
+     emailController.clear();
+        mobilenumberController.clear();
+        passwordController.clear();
+        confirmpasswordController.clear();
   }
 }

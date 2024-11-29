@@ -8,6 +8,7 @@ import rightarrowIcon from '../UserIcon/right slide icon.png';
 import ManualSlider from './ManualSlider';
 import AutoSlider from './AutoSlider';
 import AudioPlayer from '../../admin/AudioPlayer';
+import { Link, useNavigate } from 'react-router-dom';
 
 const AudioHomescreen = () => {
     const [movies, setMovies] = useState([]);
@@ -19,17 +20,24 @@ const AudioHomescreen = () => {
     const [filename, setFilename] = useState(null);
     const [audiotitle, setAudiotitle] = useState(null);
     const [bannerIndex, setBannerIndex] = useState(0); // Track banner index for sliding
+    const userid = sessionStorage.getItem("userId");
+
+    const handleEdit = (id) =>{
+      localStorage.setItem('item', id);
+    }
 
       // Fetch video banners (if needed, but not used in your current code)
-  const fetchVideoBanners = async () => {
+  const fetchAudioBanners = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/v2/getallvideobanners`);
+      const response = await axios.get(`${API_URL}/api/v2/getallaudiobanner`);
       // Handle banner data here if necessary
       setVideoBanners(response.data)
     } catch (error) {
       console.error('Error fetching video banners:', error);
     }
   };
+
+  console.log("audiobanners",videoBanners)
   
     // Fetch data only once on mount
     useEffect(() => {
@@ -43,7 +51,7 @@ const AudioHomescreen = () => {
           const data = await response.json();
           setMovies(data);
           setCategories(data);
-          fetchVideoBanners();
+          fetchAudioBanners();
           // setVideoBanners(data[0]?.audiolist || []); // Safe access
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -117,8 +125,13 @@ const AudioHomescreen = () => {
           <div className="banner-container">
             <div className="banner-items" style={{ transform: `translateX(-${bannerIndex * 100}%)` }}>
               {videoBanners.map((banner, index) => (
-                <div key={index} className="banner-item"  style={{ cursor: 'pointer' }}>
-                  <img src={`${API_URL}/api/v2/${banner.videoId}/videothumbnail`} alt={`Banner ${index}`} />
+                <div key={index} className="banner-item"  style={{ cursor: 'pointer' }} >
+                  <Link
+                                to={userid ? `/MusicPage` : "/UserLogin"}
+                                onClick={() => handleEdit(banner.movienameID)}
+                              >
+                  <img src={`${API_URL}/api/v2/getimage/banner/${banner.movienameID}`} alt={`Banner ${index}`} />
+                  </Link>
                 </div>
               ))}
             </div>
