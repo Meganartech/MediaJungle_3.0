@@ -103,6 +103,9 @@ import LibraryScreen from './user/LibraryScreen';
 import AudioHomescreen from './user/Screens/AudioHomescreen';
 
 import MusicScreen from './user/Screens/MusicScreen';
+import Mailsetting from './admin/Mailsetting';
+import ForgetPasswordUser from './user/Screens/ForgetPasswordUser';
+
 
 
 
@@ -236,6 +239,7 @@ const App = () => {
           <Route path='watchpage/:id' element={<WatchPage />} />
           {/* <Route path='videoScreen/:id' element={<VideoScreen/>} />  */}
           <Route path='userforgetpassword' element={<Userforgetpassword />} />
+          <Route path='forgetPassword' element={<ForgetPasswordUser />} />
           <Route path='ViewProfile' element={<ViewProfile />} />
           <Route path='libraryScreen' element={<LibraryScreen />} />
           {/* <Route path='libraryScreen' element={<Library/>} /> */}
@@ -296,6 +300,7 @@ const App = () => {
             <Route path='setting' element= {<Setting/>} /> */}
             
             <Route path='SiteSetting' element= {<SiteSetting/>} />
+            <Route path='mailSetting' element={<Mailsetting />} />
             <Route path='Video_setting' element= {<Video_setting/>} />
             <Route path='Setting_sidebar' element= {<Setting_sidebar/>} />
             <Route path='Social_setting' element= {<Social_setting/>} />

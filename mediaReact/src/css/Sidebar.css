@@ -1487,7 +1487,7 @@ input[type='range'] {
   text-decoration: none;
   font-size: 16px;
   align-self: flex-start; 
-  margin-bottom: 20px;    
+  /* margin-bottom: 10px;     */
 }
 
 .back-to-login:hover {
@@ -1495,19 +1495,19 @@ input[type='range'] {
 }
 
 .logoimage {
-  width: 100px;  
-  margin-bottom: 25px;
+  width: 200px;
+ 
 }
 
 .form-box span {
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
   font-size: 30px;
   font-weight: bold;
   align-self: flex-start; 
 }
 
 .forgot {
-  margin-top: 20px;
+  margin-top: 10px;
   font-size: 20px !important;
 }
 
