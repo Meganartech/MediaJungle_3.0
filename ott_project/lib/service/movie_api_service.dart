@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
+import 'package:ott_project/components/banners/video_banner.dart';
 import 'package:ott_project/components/video_folder/cast_crew.dart';
 import 'package:ott_project/components/video_folder/category.dart';
 import 'dart:convert';
@@ -10,9 +11,9 @@ import 'package:ott_project/components/video_folder/video_container.dart';
 
 class MovieApiService {
   static const String baseUrl =
- 'https://testtomcat.vsmartengine.com/media/api/v2';
+    //'https://testtomcat.vsmartengine.com/media/api/v2';
  //   'http://localhost:8080/api/v2';  
-  // 'http://192.168.156.243:8080/api/v2';
+   'http://192.168.156.243:8080/api/v2';
   Future<Movie> fetchVideoDetail(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/GetvideoDetail/$id'));
 
@@ -84,6 +85,40 @@ class MovieApiService {
       throw Exception('Failed to load video screen details');
     }
   }
+
+  //get all video banner images
+  static Future<Uint8List?> fetchVideoBannerImage(int videoId) async{
+    try{
+      final response = await http.get(Uri.parse('$baseUrl/$videoId/videoBanner'));
+      print('Video banner:${response.statusCode}');
+      if(response.statusCode == 200){
+        return response.bodyBytes;
+      }
+    }catch (e) {
+      print("Error fetching banner for movie $videoId: $e");
+      return null;
+  }
+  return null;
+  }
+
+  
+   Future<List<VideoBanner>> fetchAllVideoBanner() async{
+    try{
+      final response = await http.get(Uri.parse('$baseUrl/getallvideobanners'));
+      print('Video all Banners:${response.statusCode}');
+      if(response.statusCode == 200){
+        final List<dynamic> videojson = jsonDecode(response.body);
+        return videojson.map((data)=> VideoBanner.fromJson(data)).toList();
+      }else{
+        throw Exception('Falied to load video banners:${response.statusCode}');
+      }
+    }catch (e) {
+    print('Error fetching video banners: $e');
+    throw Exception('Failed to fetch video banners');
+  }
+   }
+
+
 
   
   Future<List<CastCrew>> fetchCastAndCrew(List<int> castIds) async {

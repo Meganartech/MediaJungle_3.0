@@ -1,4 +1,9 @@
+import 'dart:typed_data';
+
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:ott_project/components/banners/video_banner.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
 import 'package:ott_project/components/music_folder/music.dart';
@@ -37,8 +42,13 @@ class _MoviePageState extends State<MoviePage> {
   List<AudioDescription> allSongs =[];
   final TextEditingController _searchController = TextEditingController();
   List<VideoDescription> _filteredMovies = [];
- 
-
+ int currentBannerIndex = 0;
+ List<VideoContainer> _videoContainers =[];
+  List<VideoBanner> videobanners =[];
+  Map<int,VideoDescription> _videoDetails = {};
+  Map<int,Uint8List?> bannerImages = {};
+  bool _isLoading = true;
+  bool _isBannerLoading = true;
   //int _selectedIndex = 1;
   String selectedCategory = "Movies";
   // bool _showSearch = false;
@@ -49,7 +59,7 @@ class _MoviePageState extends State<MoviePage> {
   @override
   void initState() {
     super.initState();
-    loadMovies();
+     _loadData();
     loadSongs();    
     _loadIcon();
   }
@@ -72,6 +82,11 @@ class _MoviePageState extends State<MoviePage> {
       print('Error loading icon: $e');
     }
   }
+  Future<void> _loadData() async {
+    setState(() => _isLoading = true);
+    
+   await Future.wait([loadMovies(), _loadBannerDetails()]);
+  }
 
   Future<void> loadMovies() async {
   try {
@@ -84,7 +99,10 @@ class _MoviePageState extends State<MoviePage> {
         .toList();
   print('all movies:${allMovies}');
     // Ensure the UI updates after data is fetched
-    setState(() {});
+     setState(() {
+      _videoContainers = videoContainers;
+     _isLoading = false;
+    });
   } catch (e) {
     print('Error fetching movies: $e');
     ScaffoldMessenger.of(context).showSnackBar(
@@ -111,7 +129,32 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 }
+Future<void> _loadBannerDetails() async {
+  try {
+    final banners = await MovieApiService().fetchAllVideoBanner();
+    final detailsMap = <int, VideoDescription>{};
+    final imageMap = <int,Uint8List?>{};
+    for (var banner in banners) {
+      try {
+        final details = await MovieApiService().fetchMovieDetail(banner.videoId);
+        detailsMap[banner.videoId] = details;
 
+        final image = await MovieApiService.fetchVideoBannerImage(banner.videoId);
+        imageMap[banner.videoId] = image;
+      } catch (e) {
+        print('Error fetching details for video ${banner.videoId}: $e');
+      }
+    }
+     setState(() {
+      videobanners = banners;
+      _videoDetails = detailsMap;
+      bannerImages = imageMap;
+      _isBannerLoading = false;
+    });
+  } catch (e) {
+    print('Error loading banner: $e');
+  }
+  }
 
 
   
@@ -165,121 +208,133 @@ class _MoviePageState extends State<MoviePage> {
       _searchResults = results;
     });
   }
-
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async{
-        return false;  
-      },
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            BackgroundImage(),
-            CustomAppBar(
-              onSearchChanged: handleSearchState,
-              
-            ),
-            _isSearching
-                ? _buildSearchResults()
-                : Container(
-                    padding: const EdgeInsets.all(16.0),
-                    margin: EdgeInsets.only(top: 90),
-                    child: RefreshIndicator(
-                      onRefresh: _refreshMovies,
-                      child:
-                          Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Divider(
-                            color: Colors.white54,
-                            height: 1,
-                          ),
-                          SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.01,
-                          ),
-                          CategoryBar(
-                              selectedCategory: selectedCategory,
-                              onCategorySelected: _navigateToCategory),
-                          SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.01,
-                          ),
-                          const Divider(
-                            color: Colors.white54,
-                            height: 1,
-                          ),
-                         
-                          Expanded(
-                            child: _searchController.text.isNotEmpty &&
-                                    _filteredMovies.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      'No movies found',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  )
-                                
-                                : FutureBuilder<List<VideoContainer>>(
-                                    future: MovieService.fetchVideoContainer(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      } else if (snapshot.hasError) {
-                                        return Center(
-                                            child: Text(
-                                          'Error: ${snapshot.error}',
-                                          style: TextStyle(color: Colors.white),
-                                        ));
-                                      } else if (!snapshot.hasData ||
-                                          snapshot.data!.isEmpty) {
-                                        return Center(
-                                          child: Text(
-                                            'No movies found',
-                                            style: TextStyle(color: Colors.white),
-                                          ),
-                                        );
-                                      } else {
-                                        // final movie = snapshot.data!;
-                                        // final categories = movie
-                                        //     .expand((movie) => movie.categories)
-                                        //     .toSet()
-                                        //     .toList();
-                                        final videoContainer = snapshot.data!;
-                                        print(
-                                            'Video container details:${videoContainer}');
-                                        return ListView.builder(
-                                            itemCount: videoContainer.length,
-                                            itemBuilder: (context, index) {
-                                              final container =
-                                                  videoContainer[index];
-                                              // final containerVideos =
-                                              //     container.video;
-                                              return Column(
-                                                children: [
-                                                  MoviesCategorySection(
-                                                    videoContainer: container,
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      }
+  Widget build(BuildContext context){
+    return WillPopScope(onWillPop: () async{
+      return false;
+    },
+    child: Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          BackgroundImage(),
+          CustomAppBar(onSearchChanged: handleSearchState),
+          _isSearching ?
+          _buildSearchResults()
+          : Container(
+            padding: EdgeInsets.all(16.0),
+            margin: EdgeInsets.only(top: 90),
+            child: Expanded(
+              child: RefreshIndicator(
+                onRefresh: _refreshMovies,
+                child: ListView(
+                  children: [
+                    if(_isBannerLoading)
+                       const Center(child: CircularProgressIndicator(),)
+                    else
+                     Stack(
+                      children: [
+                        Container(
+                          height: MediaQuery.sizeOf(context).height * 0.25,
+                         child:  CarouselSlider(
+                                  options: CarouselOptions(
+                                    height: double.infinity,
+                                    viewportFraction: 1.0,
+                                    autoPlay: true,
+                                    autoPlayInterval: const Duration(seconds: 5),
+                                    onPageChanged: (index, reason) {
+                                      setState(() {
+                                        currentBannerIndex = index;
+                                      });
                                     },
                                   ),
-                          ),
-                        ],
-                      ),
-                      //),
-                    ),
-                  ),
-          ],
-        ),
+                                  items: videobanners.map((banner) {
+                                    final details = _videoDetails[banner.videoId];
+                                    final image = bannerImages[banner.videoId];
+                                    return Builder(
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: MemoryImage(image!),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    begin: Alignment.topCenter,
+                                                    end: Alignment.bottomCenter,
+                                                    colors: [
+                                                      Colors.transparent,
+                                                      Colors.black.withOpacity(0.4),
+                                                      Colors.black.withOpacity(0.5), // Stronger blur at bottom
+                                                      Colors.black.withOpacity(0.6),
+                                                    ],
+                                                  ),
+                                                ),
+                                            
+                                              ),
+                                            );
+                                         
+                                      },
+                                    );
+                                  }).toList(),
+                                ),
+                        ),
+                        Positioned(
+                          top: 180,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                          child:videobanners.isNotEmpty ?
+                           DotsIndicator(
+                            dotsCount: videobanners.length,
+                            position: currentBannerIndex,
+                            decorator: const DotsDecorator( 
+                              color: Colors.grey,
+                              activeColor: Colors.white,
+                              size: Size(7, 7),
+                              activeSize: Size(8, 8),
+                              spacing: EdgeInsets.all(4),
+                            ),
+                          ) : SizedBox.shrink(),
+                        ),
+                        ),
+                      ],
+                     ),
+                      _searchController.text.isNotEmpty && _filteredMovies.isEmpty
+                                  ? Center(
+                                      child: Text(
+                                        'No movies found',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    )
+                                  : ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                            itemCount: _videoContainers.length,
+                                            itemBuilder: (context, index) {
+                                              final container = _videoContainers[index];
+                                              return MoviesCategorySection(
+                                                videoContainer: container,
+                                              );
+                                            },
+                                          ),
+
+                  ],
+                  
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
+    ),
     );
   }
-Widget _buildSearchResults() {
+
+  Widget _buildSearchResults() {
     return Container(
       margin: EdgeInsets.only(top: 90),
       child: ListView.builder(
