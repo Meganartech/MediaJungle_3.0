@@ -847,7 +847,7 @@ const handleAudioDelete = async (index) => {
     </Dropdown>
     </div>
     <br />
-    <div className='container2'>
+    <div className='container3'>
         <ol className="breadcrumb mb-4 d-flex my-0">
           <li className="breadcrumb-item">
             <Link to="/admin/SiteSetting">Settings</Link>
@@ -855,6 +855,7 @@ const handleAudioDelete = async (index) => {
           <li className="breadcrumb-item active  text-white">Banner Settings</li>
         </ol>
         <div className="outer-container">
+
       {activeView === 'movie' && (
         <>
           <div className="row py-3" style={{ paddingLeft: '50px', paddingRight: '70px', marginTop: '10px' }}>
@@ -1176,7 +1177,7 @@ const handleAudioDelete = async (index) => {
                            <div className='col-lg-2'> 
                              <div className='col-lg-8'>
                            <button
-                             className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginLeft: '65px' }}
+                             className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginTop:'-50px',marginLeft: '65px' }}
                              // onClick={'handleUpdatecontainervalue'}  // Using the function here
                            >
                              Cancel
@@ -1186,7 +1187,7 @@ const handleAudioDelete = async (index) => {
              
                            <div className='col-lg-1'><button
                              className="btn btn-primary"
-                             style={{ backgroundColor: 'blue' }} onClick={handleSubmit}  // Using the function here
+                             style={{ marginTop:'-50px',backgroundColor: 'blue' }} onClick={handleSubmit}  // Using the function here
                            >
                              Submit
                            </button>
@@ -1205,7 +1206,7 @@ const handleAudioDelete = async (index) => {
                            <div className='col-lg-2'> 
                              <div className='col-lg-8'>
                            <button
-                             className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginLeft: '65px' }}
+                             className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginTop:'-50px',marginLeft: '65px' }}
                              // onClick={'handleUpdatecontainervalue'}  // Using the function here
                            >
                              Cancel
@@ -1215,7 +1216,7 @@ const handleAudioDelete = async (index) => {
              
                            <div className='col-lg-1'><button
                              className="btn btn-primary"
-                             style={{ backgroundColor: 'blue' }} onClick={handleAudioSubmit}  // Using the function here
+                             style={{ marginTop:'-50px',backgroundColor: 'blue' }} onClick={handleAudioSubmit}  // Using the function here
                            >
                              Submit
                            </button>

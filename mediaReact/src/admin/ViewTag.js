@@ -112,9 +112,9 @@ const handleDeleteTag = (tagId) => {
               < th style={{border: 'none' }}>
                 <input type="checkbox" />
               </th>
-              <th style={{border: 'none' }}>S.NO</th>
-              <th style={{border: 'none' }}>NAME TAGS</th>
-              <th style={{border: 'none' }}>ACTION</th>
+              <th style={{border: 'none' }}>S.No</th>
+              <th style={{border: 'none' }}>Tags Name</th>
+              <th style={{border: 'none' }}>Action</th>
             </tr>
           </thead>
           <tbody>

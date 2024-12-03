@@ -218,12 +218,12 @@ const Video = () => {
             />
             </th>
             <th style={{border: 'none' }}>S.No</th>
-            <th style={{border: 'none' }}>VIDEO TITLE</th>
+            <th style={{border: 'none' }}>Video Title</th>
              {/* <th style={{border: 'none' }}>CATEGORY</th>  */}
-            <th style={{border: 'none' }}>PRODUCTION</th>
-            <th style={{border: 'none' }}>RATING</th>
-            <th style={{border: 'none' }}>VIDEO ACCESS TYPE</th>
-            <th style={{border: 'none' }}>ACTION</th>
+            <th style={{border: 'none' }}>Production</th>
+            <th style={{border: 'none' }}>Rating</th>
+            <th style={{border: 'none' }}>Video Access Type</th>
+            <th style={{border: 'none' }}>Action</th>
                     
           </tr>
         </thead>

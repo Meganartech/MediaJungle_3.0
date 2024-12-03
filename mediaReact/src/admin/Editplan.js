@@ -8,6 +8,8 @@ import "../css/Sidebar.css";
 const EditPlan = () => {
   const id = localStorage.getItem('items');
   const [validity, setvalidity] = useState('30');
+  const handleAddFeatures = () => navigate('/admin/PlanFeatures');
+
   const [plan, setPlan] = useState({
     planname: '',
     amount: '',
@@ -117,7 +119,11 @@ const EditPlan = () => {
   
 
   return (
-    <div className='container3 mt-20'>
+    <div className="marquee-container">
+    <div className='AddArea'>
+          {/* <button className='btn btn-custom' onClick={() => handleClick("/admin/AdminPlan")}>Add Plan</button> */}
+        </div>  <br/>
+    <div className='container3 mt-10'>
       <ol className="breadcrumb mb-4 d-flex my-0">
         <li className="breadcrumb-item"><Link to="/admin/PlanDetailsList">Plans</Link></li>
         <li className="breadcrumb-item active text-white">Edit Plan</li>
@@ -125,7 +131,7 @@ const EditPlan = () => {
       <div className='card-body'>
         <div className='modal-body'>
           <div className='temp'>
-            <div className='col-lg-5'>
+            <div className='col-lg-4'>
               <div className='col-lg-12'>
                 <label htmlFor="planname">Plan Name</label>
                 <input
@@ -157,45 +163,60 @@ const EditPlan = () => {
               <div style={{ height: "100%", width: "1px", backgroundColor: "skyblue" }}></div>
             </div>
 
-            <div className="col-lg-5 position-relative" style={{
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              backgroundColor: "#f9f9f9",
-              bottom: '-30px'
-            }}>
-              <div className="col-lg-6 w-100 d-flex flex-column align-items-center justify-content-center">
-                <div className="w-100 d-flex">
-                  <div className="w-100">
-                  {features.length > 0 ? (
-          features.map((feature, index) => (
-            <div key={index} className="mb-2 d-flex align-items-center">
-              <span style={{ width: '20px', textAlign: 'center' }}>
-                {feature.active === 'yes' ? <span>&#10003;</span> : <span>&#10007;</span>}
-              </span>
-              <button className="flex-grow-1" style={{ textAlign: "left" }}>
-                {feature.features}
-              </button>
-              <button
-                className={`btn ms-2 ${feature.active === 'yes' ? 'btn-success' : 'btn-info'}`}
-                onClick={() => handleSetActive(feature.id, 'yes')}
-              >
-                Active
-              </button>
-              <button
-                className={`btn ms-2 ${feature.active === 'no' ? 'btn-danger' : 'btn-info'}`}
-                onClick={() => handleSetActive(feature.id, 'no')}
-              >
-                Inactive
-              </button>
-            </div>
-          ))
-        ) : (
-          <div>No features available</div>
-        )}
-
+      
+            <div className="col-lg-6 w-100 d-flex flex-column align-items-center justify-content-center">
+  <div className="w-100 d-flex">
+    <div className="w-100" style={{ marginTop: "30px", maxHeight: '300px', overflowY: 'auto', width: '100%' }}>
+      {features.length > 0 ? (
+        <table className="table" style={{ tableLayout: 'auto', width: '100%' }}>
+          <thead>
+            <tr>
+              <th style={{ textAlign: 'center' }}>S.No</th>
+              <th style={{ textAlign: 'center' }}>Feature</th>
+              <th style={{ textAlign: 'center' }}>Status</th>
+              <th style={{ textAlign: 'center' }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {features.map((feature, index) => (
+              <tr key={index}>
+                <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                <td style={{ textAlign: 'left' }}>{feature.features}</td>
+                <td style={{ textAlign: 'center' }}>
+                  {feature.active === 'yes' ? <span>&#10003;</span> : <span>&#10007;</span>}
+                </td>
+                <td style={{ textAlign: 'center' }}>
+                  <div className="d-flex justify-content-center">
+                    <button
+                      className={`btn ${feature.active === 'yes' ? 'btn-success' : 'btn-info'}`}
+                      onClick={() => handleSetActive(feature.id, 'yes')}
+                      style={{ minWidth: '80px', padding: '5px 10px' }}
+                    >
+                      Active
+                    </button>
+                    <button
+                      className={`btn ms-2 ${feature.active === 'no' ? 'btn-danger' : 'btn-info'}`}
+                      onClick={() => handleSetActive(feature.id, 'no')}
+                      style={{ minWidth: '80px', padding: '5px 10px' }}
+                    >
+                      Inactive
+                    </button>
                   </div>
-                </div>
-              </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <div>No features available</div>
+      )}
+    </div>
+  </div>
+  <div className="position-absolute" style={{ top: '-40px', right: '-10px' }}>
+    <button className="btn btn-info" style={{ fontSize: '15px' }} onClick={handleAddFeatures}>Add Features</button>
+  </div>
+</div>
+
             </div>
           </div>
           <div className="d-flex justify-content-center" style={{ marginTop: "10px" }}>
@@ -204,6 +225,7 @@ const EditPlan = () => {
         </div>
       </div>
     </div>
+   
   );
 };
 

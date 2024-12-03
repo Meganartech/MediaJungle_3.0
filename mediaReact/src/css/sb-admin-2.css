@@ -141,6 +141,7 @@ address {
   animation: marquee 10s linear infinite;
   font-size: larger;
   font-weight: 700;
+  margin-top:30px;
 }
 
 .marquee-container:hover .marquee-content {
@@ -11429,10 +11430,13 @@ h1 {
   background-image: url('../img/Frame.png');
   background-repeat:no-repeat;
   background-size:cover;
-padding-top: 20px;
-/* overflow: auto; */
-height: 100vh;
 
+/* overflow: auto; */
+position:fixed;
+height: 100vh;
+/* padding-top: 20px; */
+transform: translateY(40px); 
+width: 87vw; /* Ensure full viewport width */
 
 }
 .con-flu{

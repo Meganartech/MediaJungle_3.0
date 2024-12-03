@@ -816,9 +816,12 @@ const handleOptionClick = (option) => {
 
   return (
 
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* <button className='btn btn-custom' onClick={() => handleClick("/admin/addAudio")}>Add Audio</button> */}
+    </div><br/>
 
-
-    <div className='container3 mt-20'>
+    <div className='container3 mt-10'>
       <ol className="breadcrumb mb-4 d-flex my-0">
         <li className="breadcrumb-item"><Link to="/admin/ListAudio">Audios</Link></li>
         <li className="breadcrumb-item active text-white">{mode ? "Add Audio" : "Edit Audio"}</li>
@@ -1733,7 +1736,7 @@ const handleOptionClick = (option) => {
         </div>
       </div>
     </div>
-
+</div>
 
   );
 };

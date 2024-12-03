@@ -95,36 +95,48 @@ const TenureList = () => {
             <br />
             
             <div className='container3'>
-                <ol className="breadcrumb mb-4">
+                <ol className="breadcrumb mb-4 d-flex  my-0">
                     <li className="breadcrumb-item text-white">
                         <Link to="/admin/TenureList">Tenures</Link>
                     </li>
+                    <li className="ms-auto text-end text-white">
+          Bulk Action
+          <button className="ms-2">
+            <i className="bi bi-chevron-down"></i>
+          </button>
+        </li>
                 </ol>
-                <div className="card-body profile-card-body">
-                    <table id="datatablesSimple">
+                <div className="table-container">
+                <table class="table table-striped">
                         <thead>
-                            <tr>
-                                <th>S.No</th>
-                                <th>Tenure Name</th>
-                                <th>No of Months</th>
-                                <th>Discount Months</th>
-                                <th>Action</th>
+                            <tr className='table-header'>
+                            < th style={{border: 'none' }}>
+                <input type="checkbox" />
+              </th>
+                                <th style={{border: 'none' }}>S.No</th>
+                                <th style={{border: 'none' }}>Tenure Name</th>
+                                <th style={{border: 'none' }}>No of Months</th>
+                                <th style={{border: 'none' }}>Discount Months</th>
+                                <th style={{border: 'none' }}>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {tenures.length > 0 ? (
                                 tenures.map((tenure, index) => (
                                     <tr key={tenure.id}>
+                                        <td>
+                  <input type="checkbox" />
+                </td>
                                         <td>{index + 1}</td> {/* Display serial number */}
                                         <td>{tenure.tenure_name}</td>
                                         <td>{tenure.months}</td>
                                         <td>{tenure.discount}</td>
                                         <td>
-                                            <button onClick={() => handleEdit(tenure.id)}>
-                                                <i className="fas fa-edit" aria-hidden="true"></i>
+                                            <button className="btn btn-primary me-2" onClick={() => handleEdit(tenure.id)}>
+                                              <i className="fas fa-edit" aria-hidden="true"></i>  Edit
                                             </button>
-                                            <button onClick={() => handleDelete(tenure.id)}>
-                                                <i className="fa fa-trash" aria-hidden="true"></i>
+                                            <button  className="btn btn-danger" onClick={() => handleDelete(tenure.id)}>
+                                                <i className="fa fa-trash" aria-hidden="true"></i> Delete
                                             </button>
                                         </td>
                                     </tr>

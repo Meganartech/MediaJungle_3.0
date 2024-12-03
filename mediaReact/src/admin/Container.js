@@ -1208,7 +1208,7 @@ return () => {
                            <div className='col-lg-2'> 
                              <div className='col-lg-8'>
                            <button
-                             className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginLeft: '65px' }}
+                             className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginTop:'-50px',marginLeft: '65px' }}
                              // onClick={'handleUpdatecontainervalue'}  // Using the function here
                            >
                              Cancel
@@ -1218,7 +1218,7 @@ return () => {
              
                            <div className='col-lg-1'><button
                              className="btn btn-primary"
-                             style={{ backgroundColor: 'blue' }} onClick={handleSubmit}  // Using the function here
+                             style={{ marginTop:'-50px',backgroundColor: 'blue' }} onClick={handleSubmit}  // Using the function here
                            >
                              Submit
                            </button>
@@ -1236,7 +1236,7 @@ return () => {
               <div className='col-lg-2'> 
                 <div className='col-lg-8'>
               <button
-                className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginLeft: '65px' }}
+                className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginTop:'-50px', marginLeft: '65px' }}
                 // onClick={'handleUpdatecontainervalue'}  // Using the function here
               >
                 Cancel
@@ -1246,7 +1246,7 @@ return () => {
 
               <div className='col-lg-1'><button
                 className="btn btn-primary"
-                style={{ backgroundColor: 'blue' }} onClick={handleSubmitAudio}  // Using the function here
+                style={{ marginTop:'-50px',backgroundColor: 'blue' }} onClick={handleSubmitAudio}  // Using the function here
               >
                 Submit
               </button>

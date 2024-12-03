@@ -103,8 +103,14 @@ const PaymentHistory = () => {
   
 
   return (
-
-      <div className='container3 mt-20'>
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* <Link to="/admin/AddUser">
+        <button className='btn btn-custom'>Add SubAdmin</button>
+      </Link> */}
+    </div>
+ 
+      <div className='container3 mt-16'>
         <ol className="breadcrumb mb-4 d-flex my-0">
 
        
@@ -158,7 +164,7 @@ const PaymentHistory = () => {
         </table>
         </div>
       </div>
-   
+   </div>
   );
 };
 

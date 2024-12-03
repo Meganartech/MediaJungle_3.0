@@ -133,12 +133,12 @@ const ListAudio = () => {
               <input type="checkbox" />
             </th>
             <th style={{border: 'none' }}>S.No</th>
-            <th style={{border: 'none' }}>Audio TITLE</th>
-            <th style={{border: 'none' }}>CATEGORY</th>
-            <th style={{border: 'none' }}>PRODUCTION</th>
-            <th style={{border: 'none' }}>RATING</th>
-            <th style={{border: 'none' }}>VIDEO ACCESS TYPE</th>
-            <th style={{border: 'none' }}>ACTION</th>
+            <th style={{border: 'none' }}>Audio Title</th>
+            <th style={{border: 'none' }}>Category</th>
+            <th style={{border: 'none' }}>Production</th>
+            <th style={{border: 'none' }}>Rating</th>
+            <th style={{border: 'none' }}>Video Access Type</th>
+            <th style={{border: 'none' }}>Action</th>
                     
           </tr>
         </thead>

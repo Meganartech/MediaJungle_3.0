@@ -125,9 +125,9 @@ const handlEdit = async (categoryId) => {
               < th style={{border: 'none' }}>
                 <input type="checkbox" />
               </th>
-              <th style={{border: 'none' }}>S.NO</th>
-              <th style={{border: 'none' }}>CATEGORY NAME</th>
-              <th style={{border: 'none' }}>ACTION</th>
+              <th style={{border: 'none' }}>S.No</th>
+              <th style={{border: 'none' }}>Category Name</th>
+              <th style={{border: 'none' }}>Action</th>
             </tr>
           </thead>
           {categories && categories.length > 0 ? (

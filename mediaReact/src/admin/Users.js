@@ -47,7 +47,14 @@ const Users = () => {
 
   return (
 
-    <div className='container3 mt-20'>
+    <div className="marquee-container">
+  <div className='AddArea'>
+    {/* <Link to="/admin/AddUser">
+      <button className='btn btn-custom'>Add SubAdmin</button>
+    </Link> */}
+  </div>
+  <br/>
+    <div className='container3 mt-10'>
           <ol className="breadcrumb mb-4 d-flex my-0">
              <li className="breadcrumb-item text-white">
             <Link to="/admin/Users">Manage Users</Link>
@@ -103,7 +110,7 @@ const Users = () => {
           </div>
         </div>
       </div>
-  
+  </div>
   );
 };
 

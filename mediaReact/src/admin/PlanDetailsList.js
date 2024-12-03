@@ -114,8 +114,14 @@ const PlanDetailsList = () => {
           <button className='btn btn-custom' onClick={() => handleClick("/admin/AdminPlan")}>Add Plan</button>
         </div>  <br/>
      <div className='container3'>
-        <ol className="breadcrumb mb-4">
+        <ol className="breadcrumb mb-4 d-flex  my-0">
         <li className="breadcrumb-item text-white"><Link to="/admin/PlanDetailsList">Plans</Link>
+        </li>
+        <li className="ms-auto text-end text-white">
+          Bulk Action
+          <button className="ms-2">
+            <i className="bi bi-chevron-down"></i>
+          </button>
         </li>
           {/* <li className="breadcrumb-item active">List Plans</li> */}
         </ol>
@@ -126,15 +132,18 @@ const PlanDetailsList = () => {
                   <i className="fas fa-table me-1"></i>
                   Plan List
                 </div> */}
-                <div className="card-body profile-card-body">
-                  <table id="datatablesSimple">
+                <div className="table-container">
+                <table class="table table-striped">
                     <thead>
-                      <tr>
-                        <th>S.No</th>
-                        <th>Plan name</th>
-                        <th>Amount</th>
+                      <tr className='table-header'>
+                      < th style={{border: 'none' }}>
+                <input type="checkbox" />
+              </th>
+                        <th style={{border: 'none' }}>S.No</th>
+                        <th style={{border: 'none' }}>Plan name</th>
+                        <th style={{border: 'none' }}>Amount</th>
                         {/* <th>Validity</th> */}
-                        <th>Action</th>
+                        <th style={{border: 'none' }}>Action</th>
                         {/* <th>Features</th> */}
                       </tr>
                     </thead>
@@ -142,16 +151,19 @@ const PlanDetailsList = () => {
                     {getall && getall.length > 0 && (
                       getall.map((plan, index) => (
                         <tr key={plan.id}>
+                               <td>
+                  <input type="checkbox" />
+                </td>
                           <td>{index + 1}</td>
                           <td>{plan.planname}</td>
                           <td>{plan.amount}</td>
                           {/* <td>{plan.validity}</td> */}
-                          <td> <button onClick={() => handlEdit(plan.id)}>
-                              <i className="fas fa-edit" aria-hidden="true"></i>
+                          <td> <button  className="btn btn-primary me-2" onClick={() => handlEdit(plan.id)}>
+                              <i className="fas fa-edit" aria-hidden="true"></i>Edit
                             </button>
               
-                            <button onClick={() => handleDelete(plan.id)}>
-                              <i className="fa fa-trash" aria-hidden="true"></i>
+                            <button   className="btn btn-danger" onClick={() => handleDelete(plan.id)}>
+                              <i className="fa fa-trash" aria-hidden="true"></i>Delete
                             </button></td>
                           {/* <td>
                             <button  onClick={() => handleClick("/admin/PlanFeatures")} className="btn btn-secondary ml-2" >

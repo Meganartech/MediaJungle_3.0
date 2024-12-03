@@ -126,8 +126,12 @@ const handleUpdate = (e) => {
 };
 
   return (
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* <button className='btn btn-custom' onClick={() => handleClick("/admin/addAudio")}>Add Audio</button> */}
+    </div><br/>
     
-    <div className='container3 mt-20'>
+    <div className='container3 mt-10'>
    <ol className="breadcrumb mb-4 d-flex my-0">
     <li className="breadcrumb-item"><Link to="/admin/ViewCategory">Categories</Link></li>
     <li className="breadcrumb-item active text-white">{isEditMode ? 'Edit Category' : 'Add Category'}</li>
@@ -167,7 +171,7 @@ const handleUpdate = (e) => {
   </div>
 </div>
 </div>
-
+</div>
   );
 };
 

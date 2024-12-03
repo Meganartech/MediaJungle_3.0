@@ -11,7 +11,12 @@ function EditComponent() {
   const [updatedUser, setUpdatedUser] = useState('');
   const [errors, setErrors] = useState({});
   const token = sessionStorage.getItem('tokenn')
-
+  const [showBulkOptions, setShowBulkOptions] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const toggleBulkOptions = () => {
+    setShowBulkOptions(prevState => !prevState);
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUpdatedUser((prevUser) => ({
@@ -23,7 +28,48 @@ function EditComponent() {
       [name]: undefined,
     }));
   };
+  const deleteMultipleUsers = (userIds) => {
+    fetch(`${API_URL}/api/v2/DeletemultipleAdmins`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token, // Ensure the token is formatted correctly
+      },
+      body: JSON.stringify(userIds), // Pass the array directly
+    })
+      .then((response) => {
+        if (response.ok) {
+          // If there's no content, return a default message
+          if (response.status <= 205) {
+            return { message: 'Admins deleted successfully' }; // No content response
+          }
+        } else {
+          throw new Error('Network response was not ok.');
+        }
 
+      })
+      .then((data) => {
+        Swal.fire({
+          title: 'Deleted!',
+          text: data.message || 'Admins deleted successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          
+        });
+        // Optionally, refresh the user list or update the state here
+         // Update local state to remove the deleted users
+    setUsers((prevUsers) => prevUsers.filter((user) => !userIds.includes(user.id)));
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'An error occurred while deleting the users. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      });
+  };
   const validateForm = () => {
     let isValid = true;
     const newErrors = {};
@@ -164,16 +210,34 @@ const handleSubmit = (e) => {
   
 
   return (
-  
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* <Link to="/admin/AddUser">
+        <button className='btn btn-custom'>Add SubAdmin</button>
+      </Link> */}
+    </div>
  
-    <div className='container2 mt-20'>
-      <ol className="breadcrumb mb-4">
-        <li className="breadcrumb-item">
-          <Link to="/admin/Profile">Manage SubAdmin</Link>
-        </li>
-        <li className="breadcrumb-item active text-white">Edit Sub Admin</li>
-      </ol>
-            <div className="card-body">
+    <div className='container3 mt-16'>
+    <ol className="breadcrumb mb-4 d-flex my-0">
+          <li className="breadcrumb-item"><Link to="/admin/Profile">Sub Admin</Link>
+          </li>
+            <li className="breadcrumb-item active  text-white">Edit Sub Admin</li>
+          </ol>
+   
+      {/* <li className="ms-auto text-end text-white position-relative">
+        Bulk Action
+        <button className="ms-2" onClick={toggleBulkOptions}>
+          <i className="bi bi-chevron-down"></i>
+        </button>
+        {showBulkOptions && (
+          <div className="bulk-options">
+            <button className="btn btn-danger" style={{color:'black'}} onClick={() => deleteMultipleUsers(selectedIds)}>Delete</button>
+          </div>
+        )}
+      </li> */}
+
+    <div class="outer-container">
+    <div className="table-container">
               <form onSubmit={handleSubmit}>
                 <table className="table">
                   <tbody>
@@ -282,13 +346,14 @@ const handleSubmit = (e) => {
 </tr>
                   </tbody>
                 </table>
-                <div className='buttoncontainer'>
+                <div className='button-container'>
                 <button type="submit" className="btn btn-info">
                   Update
                 </button>
                 </div>
               </form>
             </div>
+          </div>
           </div>
         
         /*<div className="col-lg-4">
@@ -334,7 +399,7 @@ const handleSubmit = (e) => {
             </div>
           </div>
         </div>*/
- 
+ </div>
   );
 }
 

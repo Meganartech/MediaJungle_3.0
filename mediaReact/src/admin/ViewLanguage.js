@@ -122,9 +122,9 @@ const handleDeleteLanguage = (languageId) => {
               < th style={{border: 'none' }}>
                 <input type="checkbox" />
               </th>
-              <th style={{border: 'none' }}>S.NO</th>
-              <th style={{border: 'none' }}>LANGUAGE</th>
-              <th style={{border: 'none' }}>ACTION</th>
+              <th style={{border: 'none' }}>S.No</th>
+              <th style={{border: 'none' }}>Language</th>
+              <th style={{border: 'none' }}>Action</th>
             </tr>
           </thead>
             <tbody>
