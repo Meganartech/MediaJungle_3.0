@@ -274,7 +274,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
   }
 
   void _enterFullScreen() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   }
@@ -282,8 +282,44 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
   void _exitFullScreen() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown
+        
+        ]);
   }
+
+  Widget _buildFullScreenPlayer() {
+ return GestureDetector(
+  onTap: _toggleControlsVisibility,
+  child: Stack(
+    fit: StackFit.expand,
+    children: [
+      Center(
+        child: AspectRatio(aspectRatio: _controller.value.aspectRatio,
+        child: VideoPlayer(_controller),),
+      ),
+      if(_showControls)
+        _buildVideoPlayer(),
+    ],
+  ),
+ );
+}
+
+void _toggleControlsVisibility() {
+  setState(() {
+    _showControls = !_showControls;
+    
+    // Optional: Auto-hide controls after 3 seconds
+    if (_showControls) {
+      Future.delayed(Duration(seconds: 5), () {
+        if (mounted) {
+          setState(() {
+            _showControls = false;
+          });
+        }
+      });
+    }
+  });
+}
 
   String _formatDuration(Duration duration) {
     final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
@@ -412,51 +448,92 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
     }
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return FutureBuilder(
+  //     future: _initializeVideoPlayerFuture,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Center(child: CircularProgressIndicator());
+  //       } else if (snapshot.hasError) {
+  //         // Handle error
+  //         return Center(child: Text('Error: ${snapshot.error}'));
+  //       } else {
+  //         return Scaffold(
+  //           backgroundColor: Colors.transparent,
+  //           body: SafeArea(
+  //             child: Stack(
+  //               children: [
+  //                 BackgroundImage(),
+  //                 Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.stretch,
+  //                   children: [
+  //                     if (!isFullScreen)
+  //                        AppBar(
+  //                         automaticallyImplyLeading: false,
+  //                          backgroundColor: Colors.transparent,
+  //                          elevation: 0,
+  //                     //     leading: IconButton(
+  //                     //       icon: Icon(Icons.arrow_back, color: Colors.white),
+  //                     //       onPressed: () => Navigator.pop(context),
+  //                     //     ),
+  //                       ),
+  //                     if (!isFullScreen) _buildVideoPlayer(),
+  //                     if (!isFullScreen) _buildMovieDetails(),
+  //                     if (isFullScreen) Expanded(child: _buildVideoPlayer()),
+  //                   ],
+  //                 ),
+  //                 if (!isFullScreen) 
+  //                 _buildSuggestedMoviesDrawer(),
+  //                 //SuggestedMoviesDrawer(currentCategory: widget.categoryId),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
+
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initializeVideoPlayerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          // Handle error
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          return Scaffold(
-            backgroundColor: Colors.transparent,
-            body: SafeArea(
-              child: Stack(
-                children: [
-                  BackgroundImage(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (!isFullScreen)
+Widget build(BuildContext context) {
+  return FutureBuilder(
+    future: _initializeVideoPlayerFuture,
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      } else {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: isFullScreen 
+            ? _buildFullScreenPlayer() 
+            : SafeArea(
+                child: Stack(
+                  children: [
+                    BackgroundImage(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
                         AppBar(
+                          automaticallyImplyLeading: false,
                           backgroundColor: Colors.transparent,
                           elevation: 0,
-                          leading: IconButton(
-                            icon: Icon(Icons.arrow_back, color: Colors.white),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                       ),
-                      if (!isFullScreen) _buildVideoPlayer(),
-                      if (!isFullScreen) _buildMovieDetails(),
-                      if (isFullScreen) Expanded(child: _buildVideoPlayer()),
-                    ],
-                  ),
-                  if (!isFullScreen) 
-                  _buildSuggestedMoviesDrawer(),
-                  //SuggestedMoviesDrawer(currentCategory: widget.categoryId),
-                ],
+                        ),
+                        _buildVideoPlayer(),
+                        _buildMovieDetails(),
+                      ],
+                    ),
+                    _buildSuggestedMoviesDrawer(),
+                  ],
+                ),
               ),
-            ),
-          );
-        }
-      },
-    );
-  }
+        );
+      }
+    },
+  );
+}
 
   Widget _buildLeftControls() {
     return Row(
@@ -530,11 +607,29 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
     );
   }
 
+   Widget _buildBackControls() {
+    return Row(
+      children: [
+        IconButton(
+            onPressed: (){
+              if(Navigator.canPop(context)){
+                Navigator.pop(context);
+              }
+            },
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              size: 25,
+              color: kWhite,
+            )),
+      ],
+    );
+  }
+
   Widget _buildVideoPlayer() {
     return SafeArea(
       child: Center(
         child: AspectRatio(
-          aspectRatio: 16/9,
+          aspectRatio: _controller.value.aspectRatio,
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -547,19 +642,8 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                   child: CircularProgressIndicator(),
                 ),
               if(_showControls) ...[
-  //             Positioned(
-  //               top:16,
-  //               left:0,
-  //               child:IconButton(icon: Icon(Icons.arrow_back_rounded,color: Colors.white,),
-  //               onPressed:(){
-  //                 if(Navigator.canPop(context)){
-  //                 Navigator.pop(context);
-  //                 }else{
-  //                   print('No page');
-  //                 }
-                  
-  // }),
-  //             ),
+              
+
              buildControls(),
               ],
               // if (isDrawerOpen)
@@ -582,11 +666,22 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+         Padding(padding: EdgeInsets.symmetric(horizontal: 8.0),
+         child: Row(
+              children: [
+                 _buildBackControls(),
+                
+              ],
+         ),
+         ),
+          Spacer(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                
+               
                 Text(
                   _formatDuration(_controller.value.position),
                   style: TextStyle(color: Colors.white),

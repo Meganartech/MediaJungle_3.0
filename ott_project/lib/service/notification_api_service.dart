@@ -11,9 +11,13 @@ class NotificationApiService {
   Future<List<Notifications>> fetchNotification(String token) async {
     final response = await http.get(
       Uri.parse('$baseUrl/usernotifications'),
+      headers: {'Authorization': 'Bearer $token'},
     );
-
+    print('Notification Request Token: Bearer $token');
+  print('Notification status:${response.statusCode}');
+  print('Notification:${response.body}');
     if (response.statusCode == 200) {
+      print('Notification:${response.body}');
       List<dynamic> notificationJson = jsonDecode(response.body);
       return notificationJson
           .map((json) => Notifications.fromJson(json))
@@ -29,8 +33,10 @@ class NotificationApiService {
   Future<void> markAllasRead(String token) async {
     final response = await http.post(
       Uri.parse('$baseUrl/markAllAsReaduser'),
-      headers: {'Authorization': token},
+      headers: {'Authorization': 'Bearer $token'},
     );
+    print('Notification status:${response.statusCode}');
+  print('Notification:${response.body}');
 
     if (response.statusCode == 200) {
       print('All notifications are read');
@@ -42,9 +48,10 @@ class NotificationApiService {
   Future<int> fetchUnreadCount(String token) async {
     final response = await http.get(
       Uri.parse('$baseUrl/unreadCountuser'),
-      headers: {'Authorization': token},
+      headers: {'Authorization': 'Bearer $token'},
     );
-
+    print('Notification status:${response.statusCode}');
+  print('Notification:${response.body}');
     if (response.statusCode == 200) {
       return int.parse(response.body);
     } else {
@@ -56,9 +63,10 @@ class NotificationApiService {
   Future<void> clearAllNotifications(String token) async {
     final response = await http.get(
       Uri.parse('$baseUrl/clearAlluser'),
-      headers: {'Authorization': token},
+      headers: {'Authorization': 'Bearer $token'},
     );
-
+print('Notification status:${response.statusCode}');
+  print('Notification:${response.body}');
     if (response.statusCode == 200) {
       print('All notifications are cleared');
     } else {

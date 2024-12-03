@@ -8,7 +8,7 @@ class CategoryBar extends StatelessWidget {
       {super.key,
       required this.selectedCategory,
       required this.onCategorySelected,
-      this.categories = const ["All", "Movies", "Music", "Profile"]});
+      this.categories = const ["All", "Movies", "Music","Library", "Profile"]});
 
   @override
   Widget build(BuildContext context) {
