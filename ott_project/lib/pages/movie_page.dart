@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:ott_project/components/banners/video_banner.dart';
+import 'package:ott_project/components/category/category_service.dart';
 import 'package:ott_project/components/music_folder/audio_container.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
 import 'package:ott_project/components/music_folder/music.dart';
@@ -223,7 +224,7 @@ Future<void> _loadBannerDetails() async {
           _buildSearchResults()
           : Container(
             padding: EdgeInsets.all(16.0),
-            margin: EdgeInsets.only(top: 90),
+            margin: EdgeInsets.only(top: 50),
             child: Expanded(
               child: RefreshIndicator(
                 onRefresh: _refreshMovies,
@@ -253,29 +254,44 @@ Future<void> _loadBannerDetails() async {
                                     final image = bannerImages[banner.videoId];
                                     return Builder(
                                       builder: (BuildContext context) {
-                                        return Container(
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: MemoryImage(image!),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                              child: Container(
+                                         print('VideoContainers length: ${_videoContainers.length}');
+                                         print('Banner videoId: ${banner.videoId}');
+                                         print('Details: $details');
+                                        final matchingMovie = allMovies.firstWhere((movie)=> movie.id == banner.videoId);
+                                        final matchingValue = _videoContainers.firstWhere((container)=>container.videoDescriptions.any((desc)=> desc.id == banner.videoId));
+                                        final index = matchingMovie != null ? allMovies.indexOf(matchingMovie) : 0;
+                                        print('Matching container value:${matchingValue}');
+                                        return GestureDetector(
+                                          onTap: (){
+                                            final categoryId = CategoryService().getCategoryId(details!.categoryList,matchingValue.value);
+                                            Navigator.push(context,
+                                             // ignore: unnecessary_null_comparison
+                                             MaterialPageRoute(builder: (context)=>MoviesPlayerPage(videoDescriptions: allMovies, categoryId:categoryId ,initialIndex:index ,)));
+                                          },
+                                          child: Container(
                                                 decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter,
-                                                    colors: [
-                                                      Colors.transparent,
-                                                      Colors.black.withOpacity(0.4),
-                                                      Colors.black.withOpacity(0.5), // Stronger blur at bottom
-                                                      Colors.black.withOpacity(0.6),
-                                                    ],
+                                                  image: DecorationImage(
+                                                    image: MemoryImage(image!),
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
-                                            
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment.topCenter,
+                                                      end: Alignment.bottomCenter,
+                                                      colors: [
+                                                        Colors.transparent,
+                                                        Colors.black.withOpacity(0.4),
+                                                        Colors.black.withOpacity(0.5), // Stronger blur at bottom
+                                                        Colors.black.withOpacity(0.6),
+                                                      ],
+                                                    ),
+                                                  ),
+                                              
+                                                ),
                                               ),
-                                            );
+                                        );
                                          
                                       },
                                     );
@@ -303,6 +319,7 @@ Future<void> _loadBannerDetails() async {
                         ),
                       ],
                      ),
+                     SizedBox(height: MediaQuery.sizeOf(context).height * 0.03,),
                       _searchController.text.isNotEmpty && _filteredMovies.isEmpty
                                   ? Center(
                                       child: Text(

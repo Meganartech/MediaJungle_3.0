@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:ott_project/components/banners/audio_banner.dart';
 import 'package:ott_project/components/music_folder/audio.dart';
 import 'dart:convert';
 
@@ -13,28 +14,28 @@ class AudioApiService with ChangeNotifier {
   //  'http://localhost:8080/api/v2';
       'http://192.168.156.243:8080/api/v2';
 
-  Future<Audio> fetchAudioDetail(int id) async {
-    final response = await http.get(Uri.parse('$baseUrl/audio/$id'));
+  // Future<Audio> fetchAudioDetail(int id) async {
+  //   final response = await http.get(Uri.parse('$baseUrl/audio/$id'));
 
-    //print(response.statusCode);
-    if (response.statusCode == 200) {
-      return Audio.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load audio details');
-    }
-  }
+  //   //print(response.statusCode);
+  //   if (response.statusCode == 200) {
+  //     return Audio.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     throw Exception('Failed to load audio details');
+  //   }
+  // }
 
-  Future<Music> fetchMusicDetail(int id) async {
-    final response = await http.get(Uri.parse('$baseUrl/getaudio/$id'));
+  // Future<Music> fetchMusicDetail(int id) async {
+  //   final response = await http.get(Uri.parse('$baseUrl/getaudio/$id'));
 
-    //print(response.statusCode);
-    if (response.statusCode == 200) {
-      //   print('Response Audio:${response.body}');
-      return Music.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load audio details');
-    }
-  }
+  //   //print(response.statusCode);
+  //   if (response.statusCode == 200) {
+  //     //   print('Response Audio:${response.body}');
+  //     return Music.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     throw Exception('Failed to load audio details');
+  //   }
+  // }
 
   Future<AudioDescription> fetchAudioDetails(int id) async{
     final response = await http.get(Uri.parse('$baseUrl/getaudio/$id'));
@@ -105,37 +106,24 @@ class AudioApiService with ChangeNotifier {
     }
   }
 
-  // Future<AudioDescription> getSongDetail(int audioId) async{
-  //   try{
-  //   final url = Uri.parse('$baseUrl/audio/$audioId');
-  //   final response= await http.get(url);
 
-  //    print('response:${response.statusCode}');
-  //   print('Audio:${response.body}');
-  //   if(response.statusCode== 200){
-  //     Map<String,dynamic> songJson = jsonDecode(response.body);
 
-  //     return AudioDescription.fromJson(songJson);
-  //   }else{
-  //     throw Exception('Failed to load song details');
-  //   }
-  //   }catch(e){
-  //     throw Exception('Error in song details : $e');
-  //   }
-  // }
-
-  Future<Audio> getAudioDetails(int audioId) async {
-    final url = Uri.parse('$baseUrl/audio/$audioId');
-    final response = await http.get(url);
-   
-    if (response.statusCode == 200) {
-      Map<String, dynamic> audioJson = jsonDecode(response.body);
-
-      return Audio.fromJson(audioJson);
-    } else {
-      throw Exception('Failed to load audio details');
-    }
+ 
+ // get all banner
+   Future<List<AudioBanner>> fetchAllAudioBanner() async{
+    try{
+      final response = await http.get(Uri.parse('$baseUrl/getallaudiobanner'));
+      print('audio all Banners:${response.statusCode}');
+      if(response.statusCode == 200){
+        final List<dynamic> audiojson = jsonDecode(response.body);
+        return audiojson.map((data)=> AudioBanner.fromJson(data)).toList();
+      }else{
+        throw Exception('Falied to load audio banners:${response.statusCode}');
+      }
+    }catch (e) {
+    print('Error fetching audio banners: $e');
+    throw Exception('Failed to fetch audio banners');
   }
-
+   }
  
 }

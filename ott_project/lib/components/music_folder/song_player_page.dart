@@ -302,6 +302,13 @@ if (success) {
                                       fit: BoxFit.fill,
                                     )
                                   : 
+                                   currentAudio?.bannerthumbnail != null
+                                  ? Image.memory(
+                                      currentAudio!
+                                          .bannerthumbnail!, // safely unwrapping banner since it's non-null here
+                                      fit: BoxFit.fill,
+                                    )
+                                  : 
                                   Image.asset('assets/icon/media_jungle.png')),
                     ),
                     SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
