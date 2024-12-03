@@ -780,7 +780,7 @@ const handleUpdate = async (e) => {
                 type='text'
                 name='videoTitle'
                 required
-                className="form-control border border-dark border-2 input-width" 
+                className="form-control border border-dark input-width" 
                 placeholder="Video Title"
                 value={videoTitle}
                 onChange ={(e) => setVideoTitle(e.target.value) }
@@ -801,7 +801,7 @@ const handleUpdate = async (e) => {
                 type='text'
                 name='mainVideoDuration'
                 required
-                className="form-control border border-dark border-2 input-width" 
+                className="form-control border border-dark input-width" 
                 placeholder="Main Video Duration" 
                 value={mainVideoDuration}
                 onChange ={(e) => setMainVideoDuration(e.target.value) }
@@ -827,7 +827,7 @@ const handleUpdate = async (e) => {
                 type='text'
                 name='trailerDuration'
                 required
-                className="form-control border border-dark border-2 input-width" 
+                className="form-control border border-dark input-width" 
                 placeholder="Trailer Duration" 
                 value={trailerDuration}
                 onChange ={(e) => setTrailerDuration(e.target.value) }
@@ -847,7 +847,7 @@ const handleUpdate = async (e) => {
               <select 
                 name='certificateName'
                 required
-                className="form-control border border-dark border-2 input-width"
+                className="form-control border border-dark input-width"
                 value={certificateName}
                 onChange ={(e) => setCertificateName(e.target.value) }
               >
@@ -878,7 +878,7 @@ const handleUpdate = async (e) => {
                 type='text'
                 name='rating'
                 required
-                className="form-control border border-dark border-2 input-width" 
+                className="form-control border border-dark input-width" 
                 placeholder="/10" 
                 value={rating}
                 onChange ={(e) => setRating(e.target.value) }
@@ -898,7 +898,7 @@ const handleUpdate = async (e) => {
                 type='text'
                 name='certificateNumber'
                 required
-                className="form-control border border-dark border-2 input-width" 
+                className="form-control border border-dark input-width" 
                 placeholder="Certificate No" 
                 value={certificateNumber}
                 onChange ={(e) => setCertificateNumber(e.target.value) }
@@ -983,7 +983,7 @@ const handleUpdate = async (e) => {
               type="button"
               name='castandcrewlist'
                 required
-              className="form-control border border-dark border-2 input-width" 
+              className="form-control border border-dark input-width" 
               onClick={toggleDropdowncast}
             >
               {castandcrewlist.length > 0 ? 'Selected' : 'Select Cast & Crew'}
@@ -1027,7 +1027,7 @@ const handleUpdate = async (e) => {
   {/* Empty Div with Border, Border Radius, and Increased Height */}
   <div className="col-md-6">
     <div className="d-flex align-items-center">
-      <div className="flex-grow-1 border border-dark border-2 p-3" 
+      <div className="flex-grow-1 border border-dark p-3" 
            style={{ borderRadius: '13px', height: '130px', overflowY: 'auto' }}>
         {castandcrewlist.map(id => (
           <div key={id}>
@@ -1044,14 +1044,14 @@ const handleUpdate = async (e) => {
       <div className="row py-1 my-1 w-100">
               <div className="col-md-8 ms-auto text-end">
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                   type="button"
                 >
                   Cancel
                 </button>
                 {/* <Link to="/admin/AddVideo1"> */}
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  className="border border-dark p-1.5 w-20 text-white rounded-lg"
                   type="submit"
                   style={{ backgroundColor: 'blue' }}
                   onClick={nextStep}
@@ -1079,7 +1079,7 @@ const handleUpdate = async (e) => {
         <textarea 
           name='description'
           required
-          className="form-control border border-dark border-2 input-width" 
+          className="form-control border border-dark input-width" 
           placeholder="description"
           rows="2"
           value={description}
@@ -1100,7 +1100,7 @@ const handleUpdate = async (e) => {
                 type='text'
                 name='productionCompany'
                 required
-                className="form-control border border-dark border-2 input-width" 
+                className="form-control border border-dark input-width" 
                 placeholder="Production Company"
                 value={productionCompany}
                 onChange ={(e) => setProductionCompany(e.target.value) } 
@@ -1128,7 +1128,7 @@ const handleUpdate = async (e) => {
               type="button"
               name='taglist'
         required
-              className="form-control border border-dark border-2 input-width"
+              className="form-control border border-dark input-width"
               onClick={toggleDropdowntag}
             >
               {taglist.length > 0 ? 'Selected' : 'Select Tag'}
@@ -1165,7 +1165,7 @@ const handleUpdate = async (e) => {
               type="button"
               name='categorylist'
         required
-              className="form-control border border-dark border-2 input-width"
+              className="form-control border border-dark input-width"
               onClick={toggleDropdowncategory}
             >
               {category.length > 0 ? 'Selected' : 'Select categories'}
@@ -1198,7 +1198,7 @@ const handleUpdate = async (e) => {
   {/* Empty Div with Border, Border Radius, and Increased Height */}
   <div className="col-md-6">
     <div className="d-flex align-items-center">
-      <div className="flex-grow-1 border border-dark border-2 p-3" 
+      <div className="flex-grow-1 border border-dark p-3" 
            style={{ borderRadius: '13px', height: '130px', overflowY: 'auto' }}>
         {taglist.map(id => (
           <div key={id}>
@@ -1212,7 +1212,7 @@ const handleUpdate = async (e) => {
   {/* Another Empty Div with Border, Border Radius, and Increased Height */}
   <div className="col-md-6">
     <div className="d-flex align-items-center">
-      <div className="flex-grow-1 border border-dark border-2 p-3" 
+      <div className="flex-grow-1 border border-dark p-3" 
            style={{ borderRadius: '13px', height: '130px', overflowY: 'auto' }}>
            {category.map(id => (
              <div key={id}>
@@ -1234,7 +1234,7 @@ const handleUpdate = async (e) => {
               <div className="col-md-8 ms-auto text-end">
                 {/* <Link to="/admin/AddVideo"> */}
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                   type="button"
                   onClick={prevStep}
                 >
@@ -1243,7 +1243,7 @@ const handleUpdate = async (e) => {
                 {/* </Link> */}
                 {/* <Link to="/admin/AddVideo2"> */}
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  className="border border-dark p-1.5 w-20 text-white rounded-lg"
                   type="submit"
                   style={{ backgroundColor: 'blue' }}
                   onClick={nextStep}
@@ -1269,7 +1269,7 @@ const handleUpdate = async (e) => {
           <div className="flex-grow-1">
             <div className="d-flex align-items-center">
               <div
-                className="drag-drop-area border border-dark border-2 text-center"
+                className="drag-drop-area border border-dark text-center"
                 onDrop={handleVideoDrop}
                 onDragOver={handleDragOver}
                 style={{
@@ -1300,7 +1300,7 @@ const handleUpdate = async (e) => {
               </div>
               <button
                 type="button"
-                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                className="border border-dark p-1 bg-silver ml-2 choosefile"
                 onClick={() => document.getElementById('fileInputvideofile').click()}
               >
                 Choose File
@@ -1328,7 +1328,7 @@ const handleUpdate = async (e) => {
           <div className="flex-grow-1">
             <div className="d-flex align-items-center">
               <div
-                className="drag-drop-area border border-dark border-2 text-center"
+                className="drag-drop-area border border-dark text-center"
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 style={{
@@ -1341,7 +1341,7 @@ const handleUpdate = async (e) => {
               </div>
               <button
                 type="button"
-                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                className="border border-dark p-1 bg-silver ml-2 choosefile"
                 onClick={() => document.getElementById('fileInputthumbnailvideo').click()}
               >
                 Choose File
@@ -1372,7 +1372,7 @@ const handleUpdate = async (e) => {
           <div className="flex-grow-1">
             <div className="d-flex align-items-center">
               <div
-                className="drag-drop-area border border-dark border-2 text-center"
+                className="drag-drop-area border border-dark text-center"
                 onDrop={handletrailerDrop}
                 onDragOver={handleDragOver}
                 
@@ -1403,7 +1403,7 @@ const handleUpdate = async (e) => {
               </div>
               <button
                 type="button"
-                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                className="border border-dark p-1 bg-silver ml-2 choosefile"
                 onClick={() => document.getElementById('fileInputtrailerfile').click()}
               >
                 Choose File
@@ -1431,7 +1431,7 @@ const handleUpdate = async (e) => {
           <div className="flex-grow-1">
             <div className="d-flex align-items-center">
               <div
-                className="drag-drop-area border border-dark border-2 text-center"
+                className="drag-drop-area border border-dark text-center"
                 onDrop={handleDroptrailerthumbnail}
                 onDragOver={handleDragOver}
                 style={{
@@ -1444,7 +1444,7 @@ const handleUpdate = async (e) => {
               </div>
               <button
                 type="button"
-                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                className="border border-dark p-1 bg-silver ml-2 choosefile"
                 onClick={() => document.getElementById('fileInputtrailerthumbnail').click()}
               >
                 Choose File
@@ -1476,7 +1476,7 @@ const handleUpdate = async (e) => {
           <div className="flex-grow-1">
             <div className="d-flex align-items-center">
               <div
-                className="drag-drop-area border border-dark border-2 text-center"
+                className="drag-drop-area border border-dark text-center"
                 onDrop={handleDropuserbanner}
                 onDragOver={handleDragOver}
                 style={{
@@ -1489,7 +1489,7 @@ const handleUpdate = async (e) => {
               </div>
               <button
                 type="button"
-                className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                className="border border-dark p-1 bg-silver ml-2 choosefile"
                 onClick={() => document.getElementById('fileInputuserbanner').click()}
               >
                 Choose File
@@ -1513,7 +1513,7 @@ const handleUpdate = async (e) => {
               <div className="col-md-8 ms-auto text-end">
                 {/* <Link to="/admin/AddVideo"> */}
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                   type="button"
                   onClick={prevStep}
                 >
@@ -1522,7 +1522,7 @@ const handleUpdate = async (e) => {
                 {/* </Link> */}
                 {/* <Link to="/admin/AddVideo2"> */}
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  className="border border-dark p-1.5 w-20 text-white rounded-lg"
                   type="submit"
                   style={{ backgroundColor: 'blue' }}
                   onClick={nextStep}
@@ -1576,7 +1576,7 @@ const handleUpdate = async (e) => {
 
 
           </div>          
-          <div className="details-box ml-4 p-3 border border-dark border-2">
+          <div className="details-box ml-4 p-3 border border-dark ">
     <div className="col-6">
       <table >
         <tbody>
@@ -1633,14 +1633,14 @@ const handleUpdate = async (e) => {
         <div className="row py-1 my-1 w-100">
               <div className="col-md-8 ms-auto text-end">               
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                   type="button"
                   onClick={prevStep}
                 >
                   Back
                 </button>               
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  className="border border-dark p-1.5 w-20 text-white rounded-lg"
                   type="submit"
                   style={{ backgroundColor: 'blue' }}
                   onClick={isEditMode ? handleUpdate : save}

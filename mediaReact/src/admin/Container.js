@@ -953,7 +953,7 @@ return () => {
                   name="Video Title Count"
                   id="videoContainer"
                   required
-                  className="form-control border border-dark border-2 input-width"
+                  className="form-control border border-dark input-width"
                   placeholder="Enter Number of Containers"
                   value={videoinputValue === 0 ? '' : videoinputValue}  // Show empty field when value is 0
                   min="0"  // Prevent negative numbers
@@ -1019,7 +1019,7 @@ return () => {
                   name="Audio Title Count"
                   id="audioContainer"
                   required
-                  className="form-control border border-dark border-2 input-width"
+                  className="form-control border-dark border-2 input-width"
                   placeholder="Enter Number of Containers"
                   value={inputValue === 0 ? '' : inputValue}  // Show empty field when value is 0
                   min="0"  // Prevent negative numbers
@@ -1077,7 +1077,7 @@ return () => {
                <input
                  type="text"
                  name="container"
-                 className="form-control border border-dark border-2 input-width col-lg-12"
+                 className="form-control border border-dark input-width col-lg-12"
                  placeholder="Enter Container"
                  value={row.value}
                  onClick={() => handlevideoDropdownToggleselect()}
@@ -1093,7 +1093,7 @@ return () => {
                    value={videoinputValues[index] || ""}
                    onClick={() => handlevideoDropdownToggle(index)}
                    onChange={(e) => handlevideoInputChanget(e, index)}
-                   className="form-control border border-dark border-2 input-width col-lg-12"
+                   className="form-control border border-dark input-width col-lg-12"
                    style={style.videodropdownInput}
                    placeholder="Select an option"
                   
@@ -1149,7 +1149,7 @@ return () => {
                <input
                  type="text"
                  name="Container"
-                 className="form-control border border-dark border-2 input-width col-lg-12"
+                 className="form-control border border-dark input-width col-lg-12"
                  placeholder="Enter Container"
                  value={row.container_name}
                  onClick={() => handleDropdownToggleselect()}
@@ -1163,7 +1163,7 @@ return () => {
                    value={inputValues[index] || ""}
                    onClick={() => handleDropdownToggle(index)}
                    onChange={(e) => handleInputChanget(e, index)}
-                   className="form-control border border-dark border-2 input-width col-lg-12"
+                   className="form-control border border-dark input-width col-lg-12"
                    style={styles.audiodropdownInput}
                    placeholder="Select an option"
                   
@@ -1208,7 +1208,7 @@ return () => {
                            <div className='col-lg-2'> 
                              <div className='col-lg-8'>
                            <button
-                             className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginTop:'-50px',marginLeft: '65px' }}
+                             className="btn border border-dark w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginTop:'-50px',marginLeft: '65px' }}
                              // onClick={'handleUpdatecontainervalue'}  // Using the function here
                            >
                              Cancel
@@ -1236,7 +1236,7 @@ return () => {
               <div className='col-lg-2'> 
                 <div className='col-lg-8'>
               <button
-                className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginTop:'-50px', marginLeft: '65px' }}
+                className="btn border border-dark w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginTop:'-50px', marginLeft: '65px' }}
                 // onClick={'handleUpdatecontainervalue'}  // Using the function here
               >
                 Cancel
