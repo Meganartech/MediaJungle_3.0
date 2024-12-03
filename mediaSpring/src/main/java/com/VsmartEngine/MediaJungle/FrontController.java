@@ -45,6 +45,7 @@ import com.VsmartEngine.MediaJungle.controller.FeatureController;
 import com.VsmartEngine.MediaJungle.controller.FooterSettingsController;
 import com.VsmartEngine.MediaJungle.controller.LanguageController;
 import com.VsmartEngine.MediaJungle.controller.LicenseController;
+import com.VsmartEngine.MediaJungle.controller.MailSettingController;
 import com.VsmartEngine.MediaJungle.controller.PaymentController;
 import com.VsmartEngine.MediaJungle.controller.PaymentSettingController;
 import com.VsmartEngine.MediaJungle.controller.PlanDescriptionController;
@@ -177,6 +178,8 @@ public class FrontController {
 	
 	@Autowired
 	private VerificationController verificationcontroller;
+	
+	@Autowired MailSettingController mailsettingcontroller;
 
 	
 	@PostMapping("/AdminRegister")
@@ -1356,6 +1359,24 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 		            @PathVariable Long movedPlaylistId) {
 		    	return playlistcontroller.moveAudioToAnotherPlaylist(playlistId, audioId, movedPlaylistId);
 		    }
+		    
+		    
+		    //---------------------mailconfiguration------------------------------------
+		    @PostMapping("/configuremail")
+			public ResponseEntity<String> addOrUpdateMail(
+			        @RequestParam(value = "mailhostname", required = false) String mailhostname,
+			        @RequestParam(value = "mailportname", required = false) Integer mailportname,
+			        @RequestParam(value = "emailid", required = false) String emailid,
+			        @RequestParam(value = "password", required = false) String password) {
+		    	return mailsettingcontroller.addOrUpdateMail(mailhostname, mailportname, emailid, password);
+		    }
+		    
+		    
+		    @GetMapping("/getmailconfig")
+		    public ResponseEntity<?> getMailConfiguration() {
+		    	return mailsettingcontroller.getMailConfiguration();
+		    }
+		    
 		    
 		    
 		    

@@ -142,7 +142,8 @@ const SiteSetting = () => {
     { name: "Banner Settings", path: "/admin/Banner_setting" },
     { name: "Footer Settings", path: "/admin/Footer_setting" },
     { name: "Contact Settings", path: "/admin/Contact_setting" },
-    { name : "Container Settings", path: "/admin/container" }
+    { name : "Container Settings", path: "/admin/container" },
+    { name:"Mail Settings",path:'/admin/mailSetting'}
   ];
 
   const handleSettingChange = (setting) => {

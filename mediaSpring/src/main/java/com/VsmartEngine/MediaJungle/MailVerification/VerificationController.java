@@ -31,39 +31,6 @@ public class VerificationController {
     @Autowired
     private UserRegisterRepository userregisterrepository;
         
-//    public ResponseEntity<String> sendCode(@RequestParam String email) {
-//        try {
-//            // Check if the user exists by email
-//            Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
-//
-//            // If the user doesn't exist, return "Invalid email"
-//            if (!userOptional.isPresent()) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email");
-//            }
-//
-//            // Generate a random 6-digit code
-//            String code = UUID.randomUUID().toString().substring(0, 6);
-//
-//            // Save the code with expiry time
-//            VerificationCode verificationCode = new VerificationCode();
-//            verificationCode.setEmail(email);
-//            verificationCode.setCode(code);
-//            verificationCode.setExpiryTime(LocalDateTime.now().plusMinutes(10)); // Expires in 10 minutes
-//            verificationCodeRepository.save(verificationCode);
-//
-//            // Send the email
-//            emailService.sendEmail(email, "Your Verification Code", "Verification Code: " + code);
-//
-//            return ResponseEntity.ok("Verification code sent to your email.");
-//        } catch (Exception e) {
-//            // Log the exception (optional)
-//            System.err.println("Error occurred while sending verification code: " + e.getMessage());
-//            
-//            // Return a generic error response
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body("An error occurred while sending the verification code. Please try again later.");
-//        }
-//    }
     
     public ResponseEntity<String> sendCode(@RequestParam String email) {
         try {

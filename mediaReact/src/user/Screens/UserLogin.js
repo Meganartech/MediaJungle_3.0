@@ -4,11 +4,34 @@ import { Input } from '../Components/UsedInputs';
 import { Link } from 'react-router-dom';
 import { FiLogIn } from 'react-icons/fi';
 import API_URL from '../../Config';
+import axios from 'axios';
 
 const UserLogin = () => {
   const [user, setUser] = useState({ email: '', password: '' });
   const [errorMessage, setErrorMessage] = useState('');
   const [getall,setGetAll] = useState('');
+  const [mailConfig, setMailConfig] = useState(null);
+
+
+  // Function to fetch mail configuration
+  const fetchMailConfig = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v2/getmailconfig`);
+      if (response.status === 200) {
+        setMailConfig(response.data); // Store the configuration data in state
+      } else {
+        console.error('Failed to fetch mail configuration.');
+      }
+    } catch (err) {
+      console.error('Error fetching mail configuration:', err);
+    }
+  };
+
+
+  // Fetch the configuration on component mount
+  useEffect(() => {
+    fetchMailConfig();
+  }, []);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetsiteSettings`)
@@ -108,11 +131,14 @@ const UserLogin = () => {
           onChange={handleChange}
           required
         />
-        <p className='w-full flex flex-end justify-between' style={{marginTop:'-18px'}}>
-          <Link to='/userforgetpassword' className='text-dryGray font-semibold'>
-            Forget Password?
-          </Link>
-        </p>
+        {mailConfig ? (
+  <p className="w-full flex flex-end justify-between" style={{ marginTop: '-18px' }}>
+    <Link to="/forgetPassword" className="text-dryGray font-semibold">
+      Forget Password?
+    </Link>
+  </p>
+) : null}
+
         <button
           type='submit'
           className='bg-dry transitions hover:bg-main flex-rows gap-4 text-white p-4 rounded-lg'
