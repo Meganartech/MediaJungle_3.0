@@ -567,23 +567,23 @@ if (success) {
                    
                   },
                 ),
-                ListTile(
-                  leading: Icon(
-                    Icons.favorite_outline_rounded,
-                    color: Colors.white,
-                  ),
-                  title: Text(
-                    'Liked Songs',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LikedSongsPage(userId:1 )));
-                  },
-                ),
+                // ListTile(
+                //   leading: Icon(
+                //     Icons.favorite_outline_rounded,
+                //     color: Colors.white,
+                //   ),
+                //   title: Text(
+                //     'Liked Songs',
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //     Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => LikedSongsPage(userId:1 )));
+                //   },
+                // ),
                 ...audioProvider.aplaylists.map((playlist) {
                   // Check if the current song is already in the playlist
                   final isAudioInPlaylist = playlist.audioIds

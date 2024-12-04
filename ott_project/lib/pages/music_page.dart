@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:ott_project/components/banners/audio_banner.dart';
 import 'package:ott_project/components/category/music_category_section.dart';
 import 'package:ott_project/components/music_folder/audio_provider.dart';
+import 'package:ott_project/components/music_folder/currently_playing_bar.dart';
 import 'package:ott_project/components/music_folder/recently_played.dart';
 import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
@@ -244,7 +245,7 @@ class _MusicPageState extends State<MusicPage> {
                                             }
 
                                              Provider.of<AudioProvider>(context, listen: false)
-                                              .setCurrentlyPlayingSong(
+                                              .setCurrentlyPlayingSong( 
                                                   details!, 
                                                   _searchResults.cast<AudioDescription>()
                                               );
@@ -345,44 +346,48 @@ class _MusicPageState extends State<MusicPage> {
                                            },
                                            ),
                               SizedBox(height: MediaQuery.sizeOf(context).height * 0.03,),
-                          //     Consumer<AudioProvider>(
-                          //   builder: (context, audioProvider, child) {
-                          //     return audioProvider.audioDescriptioncurrently != null
-                          //         ? CurrentlyPlayingBar(
-                          //             audioCurrentlyPlaying:
-                          //                 audioProvider.audioDescriptioncurrently,
-                          //             onTap: () {
-                          //               Navigator.push(
-                          //                   context,
-                          //                   MaterialPageRoute(
-                          //                     builder: (context) => SongPlayerPage(
-                          //                       musicList: allSongs,
-                          //                       music: audioProvider.audioDescriptioncurrently!,                                              
-                          //                       onChange: (newAudio) {
-                          //                         audioProvider
-                          //                             .setCurrentlyPlayingSong(
-                          //                                 newAudio,
-                          //                                 audioProvider
-                          //                                     .audio_playlist);
-                          //                       },
-                          //                       onDislike: ((audio) {
-                          //                         handleDislike(audio, context);
-                          //                       }),
-                          //                     ),
-                          //                   ));
-                          //             },
-                          //           )
-                          //         : Container();
-                          //   },
-                          // ),
+                             
 
 
                   ],
-                  
                 ),
               ),
             ),
+            
           ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Consumer<AudioProvider>(
+                              builder: (context, audioProvider, child) {
+                                return audioProvider.audioDescriptioncurrently != null
+                                    ? CurrentlyPlayingBar(
+                                        audioCurrentlyPlaying:
+                                            audioProvider.audioDescriptioncurrently,
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => SongPlayerPage(
+                                                  musicList: allSongs,
+                                                  music: audioProvider.audioDescriptioncurrently!,                                              
+                                                  onChange: (newAudio) {
+                                                    audioProvider
+                                                        .setCurrentlyPlayingSong(
+                                                            newAudio,
+                                                            audioProvider
+                                                                .audio_playlist);
+                                                  },
+                                                  onDislike: ((audio) {
+                                                    handleDislike(audio, context);
+                                                  }),
+                                                ),
+                                              ));
+                                        },
+                                      )
+                                    : Container();
+                              },
+                            ),
+            ),
         ],
       ),
     ),

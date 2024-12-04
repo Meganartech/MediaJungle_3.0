@@ -48,8 +48,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-           'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-           // 'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
+         //  'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+            'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
            // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
@@ -86,8 +86,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     try {
       final response = await http.get(
         Uri.parse(
-             'https://testtomcat.vsmartengine.com/media/api/v2/mobile/GetThumbnailsById/$userId'
-          //  'http://192.168.156.243:8080/api/v2/GetProfileImage/$userId'
+           //  'https://testtomcat.vsmartengine.com/media/api/v2/mobile/GetThumbnailsById/$userId'
+           'http://192.168.156.243:8080/api/v2/GetProfileImage/$userId'
            // 'http://localhost:8080/api/v2/GetUserById/$userId'
             ),
       );

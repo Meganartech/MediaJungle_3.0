@@ -84,8 +84,8 @@ class Service {
   ) async {
     var uri = Uri.parse(
      // "https://testtomcat.vsmartengine.com/media/api/v2/login");
-       'http://192.168.156.243:8080/api/v2/login');
-     //   'http://localhost:8080/api/v2/login');
+      // 'http://192.168.156.243:8080/api/v2/login');
+       'http://localhost:8080/api/v2/login');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map data = {
       'email': email,
