@@ -331,8 +331,8 @@ const AddUser = () => {
           </div>
         </div>
         <div className="temp">
-          <div className="col-md-12 text-center">
-            <input type="submit" className="btn btn-info" name="submit" value="Register" />     <br/>
+          <div className="col-md-12 text-right">
+            <input type="submit" className="btn btn-custom" name="submit" value="Register" />     <br/>
           </div>
      
         </div>

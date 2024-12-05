@@ -247,9 +247,9 @@ const handleUpdate = async (e) => {
                   Cancel
                 </button>
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  className="mt-20 border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
                   type="submit"
-                  style={{ backgroundColor: 'blue' }}
+                  style={{ backgroundColor: '#2b2a52' }}
                 >
                   {isEditMode?'Edit':'Submit'}
                 </button>

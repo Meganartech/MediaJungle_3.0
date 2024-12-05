@@ -1406,7 +1406,7 @@ margin-top: 12rem;
  margin-bottom:0px;
 }
 .btn-custom{
-  background-color: #2b2a52;
+  background-color: #2B2A52 !important;
   color: white;
 }
 .logo__carousel.owl-carousel_user .owl-item img {

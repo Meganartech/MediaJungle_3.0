@@ -7,6 +7,8 @@ import API_URL from '../../../Config';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import UserNotification from '../../Screens/UserNotification';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const NavBar = () => {
     const hover = 'hover:text-subMain transitions text-white';
@@ -172,6 +174,7 @@ const NavBar = () => {
                           <img
                               src={`data:image/png;base64,${getall[0].logo}`}
                               alt="logo"
+                              loading="lazy"
                               className="h-20 lg:h-20 w-auto object-contain "
                           />
                       </Link>

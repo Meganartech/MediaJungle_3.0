@@ -266,7 +266,7 @@ td{
  }
 
 .table-container {
-  overflow-x: hidden; /* Horizontal scrolling only */
+  overflow-x: auto; /* Horizontal scrolling only */
   overflow-y: auto; /* Disable vertical scrolling */
  white-space: nowrap;
  height: 68.70vh;
@@ -1045,7 +1045,7 @@ td{
 
 .items {
  display: flex; /* Use flexbox for easier alignment */
- overflow-x: auto; /* Enable horizontal scrolling if needed */
+ overflow-x: hidden; /* Enable horizontal scrolling if needed */
  gap: 15px; /* Adjust this value to control the gap between items */
  flex-grow: 1; /* Allow items div to take up remaining space */
 }
@@ -1061,6 +1061,7 @@ td{
  flex-direction: column; /* Align image and title vertically */
  align-items: center; /* Center content horizontally */
  margin: 10px 5px; 
+
 }
 
 .item img {

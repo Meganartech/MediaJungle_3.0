@@ -1053,7 +1053,7 @@ const handleUpdate = async (e) => {
                 <button
                   className="border border-dark p-1.5 w-20 text-white rounded-lg"
                   type="submit"
-                  style={{ backgroundColor: 'blue' }}
+                  style={{ backgroundColor: '#2b2a52' }}
                   onClick={nextStep}
                 >
                   Next
@@ -1243,9 +1243,9 @@ const handleUpdate = async (e) => {
                 {/* </Link> */}
                 {/* <Link to="/admin/AddVideo2"> */}
                 <button
-                  className="border border-dark p-1.5 w-20 text-white rounded-lg"
+                  className="mt-16 border border-dark p-1.5 w-20 text-white rounded-lg"
                   type="submit"
-                  style={{ backgroundColor: 'blue' }}
+                  style={{ backgroundColor: '#2b2a52' }}
                   onClick={nextStep}
                 >
                   Next
@@ -1524,12 +1524,13 @@ const handleUpdate = async (e) => {
                 <button
                   className="border border-dark p-1.5 w-20 text-white rounded-lg"
                   type="submit"
-                  style={{ backgroundColor: 'blue' }}
+                  style={{ backgroundColor: '#2b2a52' }}
                   onClick={nextStep}
                 >
                   Next
                 </button>
                 {/* </Link> */}
+
               </div>
             </div>
 
@@ -1642,7 +1643,7 @@ const handleUpdate = async (e) => {
                 <button
                   className="border border-dark p-1.5 w-20 text-white rounded-lg"
                   type="submit"
-                  style={{ backgroundColor: 'blue' }}
+                  style={{ backgroundColor: '#2b2a52' }}
                   onClick={isEditMode ? handleUpdate : save}
                   
                 >

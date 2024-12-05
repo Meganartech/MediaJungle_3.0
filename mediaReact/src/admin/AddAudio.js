@@ -828,7 +828,7 @@ const handleOptionClick = (option) => {
       </ol>
 
       <div className="outer-container">
-        <div className="table-container" style={{ height: '63vh' }} >
+        <div className="table-container" style={{ height: '61vh' }} >
           {currentStep === 1 && (
             <>
               <div className="row py-3 my-3 align-items-center w-100">
@@ -1709,7 +1709,7 @@ const handleOptionClick = (option) => {
               <button
                 className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
                 type="submit"
-                style={{ backgroundColor: 'blue' }}
+                style={{ backgroundColor: '#2b2a52' }}
                 onClick={nextStep}
               >
                 Next
@@ -1724,7 +1724,7 @@ const handleOptionClick = (option) => {
               <button
                 className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
                 type="submit"
-                style={{ backgroundColor: 'blue' }}
+                style={{ backgroundColor: '#2b2a52' }}
                 onClick={save}
 
               >

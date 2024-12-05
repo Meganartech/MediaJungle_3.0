@@ -155,9 +155,9 @@ const handleSubmit = (e) => {
       <div className="col-md-12" style={{ height: '200px' }}></div> {/* Placeholder div for spacing */}
     </div>
     <div className="row py-3 my-5">
-      <div className="col-md-8 ms-auto text-end">
+      <div className=" mt-2 col-md-8 ms-auto text-end">
       <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
-        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode ? handleUpdate : handleSubmit} style={{backgroundColor:'blue'}}
+        <button className="border border-dark border-2 p-1.5 /w-20 mr-10 text-white rounded-lg " onClick={isEditMode ? handleUpdate : handleSubmit} style={{backgroundColor:'#2b2a52'}}
         >Submit</button>
       </div>
     </div>

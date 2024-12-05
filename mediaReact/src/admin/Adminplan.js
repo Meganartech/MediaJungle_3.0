@@ -229,13 +229,13 @@
 
                   </div>
                 </div>
-                <div className="position-absolute" style={{ top: '-40px', right: '-10px' }}>
-                  <button className="btn btn-info" style={{ fontSize: '15px' }} onClick={handleAddFeatures}>Add Features</button>
+                <div className="position-absolute" style={{ top: '-20px', right: '-10px' }}>
+                  <button className="btn btn-custom" style={{ fontSize: '15px' }} onClick={handleAddFeatures}>Add Features</button>
                 </div>
               </div>
             </div >
             <div className="d-flex justify-content-center" style={{ marginTop: "10px" }}>
-              <button className='text-center btn btn-info' onClick={handleSubmit}>SAVE</button>
+              <button className='ml-auto mr-10 mt-16 text-center btn btn-custom' onClick={handleSubmit}>SAVE</button>
             </div>
           </div>
         </div>
