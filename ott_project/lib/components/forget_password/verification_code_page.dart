@@ -22,9 +22,9 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
 
   Future<void> verifyCode(String email,String code) async{
     const String baseUrl =
-     'http://localhost:8080/api/v2/send-code';
+     //'http://localhost:8080/api/v2/verify-code';
     // 'http://192.168.156.243:8080/api/v2/verify-code';
-    //'https://testtomcat.vsmartengine.com/media/api/v2/verify-code';
+    'https://testtomcat.vsmartengine.com/media/api/v2/verify-code';
      setState(() {
       isLoading = true;
     });
@@ -92,7 +92,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                       //SizedBox(height: 15),
                       MyTextField( 
                           controller: codeController,
-                          icon: FontAwesomeIcons.envelope,
+                          icon: FontAwesomeIcons.lock,
                           hint: 'Enter OTP',
                           inputType: TextInputType.visiblePassword,
                           inputAction: TextInputAction.done,
@@ -128,10 +128,9 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                                       codeController.clear();
                                     });
                                   });
-                                  
                                 }
-                            }
-                           ,
+                            },
+                           
                             child: isLoading ? CircularProgressIndicator(color: Colors.white,)
                             :
                             Text(

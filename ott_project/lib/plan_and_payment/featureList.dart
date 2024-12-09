@@ -63,7 +63,7 @@ class FeatureList extends StatelessWidget {
                     child: Opacity(
                       opacity: opacity,
                       child: Container(
-                        height: 45,
+                        height: 59,
                         width: 30,
                         child: Text(formatFeatureName(feature.featureName),
                             style: TextStyle(

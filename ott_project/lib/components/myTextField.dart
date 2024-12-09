@@ -12,6 +12,7 @@ class MyTextField extends StatefulWidget {
   final TextInputAction inputAction;
   final bool obscureText;
   final TextEditingController? confirmPasswordController;
+  final Widget? suffix;
    MyTextField(
       {super.key,
       required this.icon,
@@ -22,6 +23,7 @@ class MyTextField extends StatefulWidget {
       required this.inputAction,
       required this.obscureText,
       this.validator,
+      this.suffix,
       this.confirmPasswordController});
 
   
@@ -63,15 +65,16 @@ class _MyTextFieldState extends State<MyTextField> {
                         child: Icon(
                           widget.icon,
                           size: 20,
-                          color: kWhite,
+                          color: Colors.white.withOpacity(0.9),
                         ),
                       ),
                       suffixIcon: widget.suffixIcon,
+                      suffix: widget.suffix,
                       hintText: widget.hint,
                       hintStyle: Theme.of(context)
                           .textTheme
                           .bodyLarge!
-                          .copyWith(color: Colors.white60),
+                          .copyWith(color: Colors.white54),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                       isDense: true,
@@ -79,6 +82,7 @@ class _MyTextFieldState extends State<MyTextField> {
                     obscureText: widget.obscureText,
                     style: TextStyle(fontSize: 18, color: Colors.white),
                     keyboardType: widget.inputType,
+                  
                     textInputAction: widget.inputAction,
                     validator: (value) {
                       setState(() {

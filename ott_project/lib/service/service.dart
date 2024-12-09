@@ -18,9 +18,9 @@ class Service {
     // File profilePicture,
   ) async {
     var uri = Uri.parse(
-       //"https://testtomcat.vsmartengine.com/media/api/v2/userregister");
-        // 'http://192.168.156.243:8080/api/v2/userregister');
-        'http://localhost:8080/api/v2/userregister');
+       "https://testtomcat.vsmartengine.com/media/api/v2/userregister");
+       //  'http://192.168.156.243:8080/api/v2/userregister');
+        //'http://localhost:8080/api/v2/userregister');
     //Map<String, String> headers = {"Content-Type": "multipart/form-data"};
     var request = http.MultipartRequest('POST', uri);
     request.fields['username'] = username;
@@ -83,9 +83,9 @@ class Service {
     TextEditingController passwordController,
   ) async {
     var uri = Uri.parse(
-     // "https://testtomcat.vsmartengine.com/media/api/v2/login");
-      // 'http://192.168.156.243:8080/api/v2/login');
-       'http://localhost:8080/api/v2/login');
+      "https://testtomcat.vsmartengine.com/media/api/v2/login");
+     //  'http://192.168.156.243:8080/api/v2/login');
+      // 'http://localhost:8080/api/v2/login');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map data = {
       'email': email,
@@ -160,10 +160,15 @@ class Service {
 
   Future<bool> logoutUser(BuildContext context) async {
     String? token = await secureStorage.read(key: 'token');
+
+     if (token == null) {
+    _showAlertDialog(context, 'Error', 'No active session found');
+    return false;
+  }
     var uri = Uri.parse(
-      'http://192.168.156.243:8080/api/v2/logout');
-      //"https://testtomcat.vsmartengine.com/media/api/v2/logout");
-    if(token == null) return false;
+     // 'http://192.168.156.243:8080/api/v2/logout');
+      "https://testtomcat.vsmartengine.com/media/api/v2/logout");
+   
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": token,
