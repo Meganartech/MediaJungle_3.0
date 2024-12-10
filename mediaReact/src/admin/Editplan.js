@@ -133,7 +133,7 @@ const EditPlan = () => {
           <div className='temp'>
             <div className='col-lg-4'>
               <div className='col-lg-12'>
-                <label htmlFor="planname">Plan Name</label>
+                <label className='custom-label' htmlFor="planname">Plan Name</label>
                 <input
                   type="text"
                   name="planname"
@@ -145,7 +145,7 @@ const EditPlan = () => {
                 />
               </div>
               <div className="col-lg-12">
-                <label htmlFor="amount">Amount (per Month)</label>
+                <label className='custom-label' htmlFor="amount">Amount (per Month)</label>
                 <input
                   type="number"
                   name="amount"
@@ -212,15 +212,15 @@ const EditPlan = () => {
       )}
     </div>
   </div>
-  <div className="position-absolute" style={{ top: '-40px', right: '-10px' }}>
-    <button className="btn btn-info" style={{ fontSize: '15px' }} onClick={handleAddFeatures}>Add Features</button>
+  <div className="position-absolute" style={{ top: '-20px', right: '-10px' }}>
+    <button className="btn btn-custom" style={{ fontSize: '15px' }} onClick={handleAddFeatures}>Add Features</button>
   </div>
 </div>
 
             </div>
           </div>
-          <div className="d-flex justify-content-center" style={{ marginTop: "10px" }}>
-            <button className='text-center btn btn-info' onClick={handleSubmit}>UPDATE</button>
+          <div className="d-flex justify-end" style={{ marginTop: "60px", marginRight:"40px" }}>
+            <button className='text-center btn btn-custom' onClick={handleSubmit}>UPDATE</button>
           </div>
         </div>
       </div>

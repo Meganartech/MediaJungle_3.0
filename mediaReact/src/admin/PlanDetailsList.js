@@ -154,9 +154,9 @@ const PlanDetailsList = () => {
                                <td>
                   <input type="checkbox" />
                 </td>
-                          <td>{index + 1}</td>
-                          <td>{plan.planname}</td>
-                          <td>{plan.amount}</td>
+                          <td className='truncate' title={index}>{index + 1}</td>
+                          <td className='truncate' title={plan.planname}>{plan.planname.length> 15 ? `${plan.planname.substring(0, 10)}...` : plan.planname}</td>
+                          <td className='truncate' title={plan.amount}>{plan.amount.length> 15 ? `${plan.amount.substring(0, 10)}...` : plan.amount}</td>
                           {/* <td>{plan.validity}</td> */}
                           <td> <button  className="btn btn-primary me-2" onClick={() => handlEdit(plan.id)}>
                               <i className="fas fa-edit" aria-hidden="true"></i>Edit

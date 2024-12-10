@@ -127,10 +127,10 @@ const TenureList = () => {
                                         <td>
                   <input type="checkbox" />
                 </td>
-                                        <td>{index + 1}</td> {/* Display serial number */}
-                                        <td>{tenure.tenure_name}</td>
-                                        <td>{tenure.months}</td>
-                                        <td>{tenure.discount}</td>
+                                        <td className='truncate' title={index}>{index + 1}</td> {/* Display serial number */}
+                                        <td className='truncate' title={tenure.tenure_name}>{tenure.tenure_name.length> 15 ? `${tenure.tenure_name.substring(0, 10)}...` : tenure.tenure_name}</td>
+                                        <td className='truncate' title={tenure.months}>{tenure.months.length> 15 ? `${tenure.months.substring(0, 10)}...` : tenure.months}</td>
+                                        <td className='truncate' title={tenure.discount}>{tenure.discount.length> 15 ? `${tenure.discount.substring(0, 10)}...` : tenure.discount}</td>
                                         <td>
                                             <button className="btn btn-primary me-2" onClick={() => handleEdit(tenure.id)}>
                                               <i className="fas fa-edit" aria-hidden="true"></i>  Edit

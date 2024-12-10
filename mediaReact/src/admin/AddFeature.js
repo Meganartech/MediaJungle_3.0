@@ -85,7 +85,7 @@ const AddFeature = () => {
           required
           value={featureName}
           onChange={(e) => setFeatureName(e.target.value)}
-          className="form-control border border-dark border-2" 
+          className="form-control border border-dark " 
           placeholder="Enter Feature" 
         />
       </div>
@@ -95,8 +95,8 @@ const AddFeature = () => {
     </div>
     <div className="row py-3 my-5">
       <div className="col-md-8 ms-auto text-end">
-      <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
-        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={handleSubmit} style={{backgroundColor:'blue'}}
+      <button className="border border-dark  p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
+        <button className="border border-dark  p-1.5 w-20 mr-10 text-white rounded-lg " onClick={handleSubmit} style={{backgroundColor:'#2b2a52'}}
         >Submit</button>
       </div>
     </div>

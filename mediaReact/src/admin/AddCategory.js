@@ -152,7 +152,7 @@ const handleUpdate = (e) => {
           required
           value={categoryName}
           onChange={(e) => setCategoryName(e.target.value)}
-          className="form-control border border-dark border-2" 
+          className="form-control border border-dark" 
           placeholder="Enter Category" 
         />
       </div>
@@ -162,9 +162,9 @@ const handleUpdate = (e) => {
       <div className="space" ></div> 
     </div>
       <div className="mt-40 col-md-8 ms-auto text-end">
-      <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg ">Cancel</button>
-        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode? handleUpdate : handleSubmit} style={{backgroundColor:'#2b2a52'}}
-        >{isEditMode ? 'Edit' : 'Submit'}</button>
+      <button className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg ">Cancel</button>
+        <button className="border border-dark p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode? handleUpdate : handleSubmit} style={{backgroundColor:'#2b2a52'}}
+        >{isEditMode ? 'Update' : 'Submit'}</button>
      
     </div>
   </div>

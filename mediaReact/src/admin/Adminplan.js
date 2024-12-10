@@ -135,7 +135,7 @@
             <div className='temp'>
               <div className='col-lg-4'>
                 <div className='col-lg-12'>
-                  <label htmlFor="planname">Plan Name</label>
+                  <label className='custom-label' htmlFor="planname">Plan Name</label>
                   <input
                     type="text"
                     name="planname"
@@ -147,7 +147,7 @@
                   />
                 </div>
                 <div className="col-lg-12">
-                  <label htmlFor="amount">Amount (per Month)</label>
+                  <label className='custom-label' htmlFor="amount">Amount (per Month)</label>
                   <input
                     type="number"
                     name="amount"
@@ -235,7 +235,7 @@
               </div>
             </div >
             <div className="d-flex justify-content-center" style={{ marginTop: "10px" }}>
-              <button className='ml-auto mr-10 mt-16 text-center btn btn-custom' onClick={handleSubmit}>SAVE</button>
+              <button className='ml-auto mr-10 mt-16 text-center btn btn-custom' onClick={handleSubmit}>Submit</button>
             </div>
           </div>
         </div>

@@ -146,7 +146,7 @@ const handleSubmit = (e) => {
           required
           value={tagName}
           onChange={(e) =>  setTagName(e.target.value)}
-          className="form-control border border-dark border-2" 
+          className="form-control border border-dark" 
           placeholder="Tags" 
         />
       </div>
@@ -156,8 +156,8 @@ const handleSubmit = (e) => {
     </div>
     <div className="row py-3 my-5">
       <div className=" mt-2 col-md-8 ms-auto text-end">
-      <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
-        <button className="border border-dark border-2 p-1.5 /w-20 mr-10 text-white rounded-lg " onClick={isEditMode ? handleUpdate : handleSubmit} style={{backgroundColor:'#2b2a52'}}
+      <button className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
+        <button className="border border-dark p-1.5 /w-20 mr-10 text-white rounded-lg " onClick={isEditMode ? handleUpdate : handleSubmit} style={{backgroundColor:'#2b2a52'}}
         >Submit</button>
       </div>
     </div>

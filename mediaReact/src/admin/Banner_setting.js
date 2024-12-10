@@ -872,6 +872,7 @@ const handleAudioDelete = async (index) => {
               <button
                 className={`col-lg-6 custom-btn ${activeView === 'music' ? 'active-btn' : 'inactive-btn'}`}
                 onClick={() => handleViewChange('music')}
+                style={{ height: '35px' }}
               >
                 Music
               </button> 
@@ -947,6 +948,7 @@ const handleAudioDelete = async (index) => {
               <button
                 className={`col-lg-6 custom-btn ${activeView === 'music' ? 'active-btn' : 'inactive-btn'}`}
                 onClick={() => handleViewChange('music')}
+                style={{ height: '35px' }}
               >
                 Music
               </button> 

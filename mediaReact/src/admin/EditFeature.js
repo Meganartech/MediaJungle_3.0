@@ -91,14 +91,12 @@ const handleSubmit = (e) => {
           </li>
           <li className="breadcrumb-item active text-white">Edit Feature</li>
         </ol>
-        <div className="row">
      
-         
                 <form onSubmit={handleSubmit}>
-                  <table className="table">
+                  <table>
                     <tbody>
                       <tr>
-                        <th>Feature</th>
+                        <th>Feature Name</th>
                         <td>
                           <input
                             type="text"
@@ -111,13 +109,17 @@ const handleSubmit = (e) => {
                       </tr>
                     </tbody>
                   </table>
-                  <button type="submit" className="btn btn-info">
+                  <div className="row py-3 my-5">
+                  <div className="col-md-8 ms-auto text-end">
+                  <button type="submit" className="btn btn-custom">
                     Update
                   </button>
+                  </div>
+                  </div>
                 </form>
               </div>
             </div>
-          </div>
+      
       //   </div>
       // </div>
   );

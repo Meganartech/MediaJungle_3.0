@@ -347,7 +347,7 @@ const handleSubmit = (e) => {
                   </tbody>
                 </table>
                 <div className='button-container'>
-                <button type="submit" className="btn btn-info">
+                <button type="submit" className="btn btn-custom" style={{margin:"20px"}}>
                   Update
                 </button>
                 </div>

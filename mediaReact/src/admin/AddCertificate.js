@@ -152,7 +152,7 @@ const handleUpdate = async (e) => {
           required
           value={certificateName}
           onChange={(e) => setCertificateName(e.target.value)}
-          className="form-control border border-dark border-2" 
+          className="form-control border border-dark" 
           placeholder="Name" 
         />
       </div>
@@ -170,7 +170,7 @@ const handleUpdate = async (e) => {
           required
           value={description}
           onChange={(e) => setdescription(e.target.value)}
-          className="form-control border border-dark border-2" 
+          className="form-control border border-dark" 
           placeholder="Description" 
         />
       </div>
@@ -188,7 +188,7 @@ const handleUpdate = async (e) => {
           required
           value={issuedby}
           onChange={(e) => setissuedby(e.target.value)}
-          className="form-control border border-dark border-2" 
+          className="form-control border border-dark" 
           placeholder="Issued by" 
         />
       </div>
@@ -199,9 +199,9 @@ const handleUpdate = async (e) => {
     </div>
     
       <div className="mt-20 col-md-8 ms-auto text-end">
-      <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
-        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode ? handleUpdate :handleSubmit} style={{backgroundColor:'#2b2a52'}}
-        >{isEditMode ? 'Edit' : 'Submit'}</button>
+      <button className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
+        <button className="border border-dark p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode ? handleUpdate :handleSubmit} style={{backgroundColor:'#2b2a52'}}
+        >{isEditMode ? 'Update' : 'Submit'}</button>
       </div>
     </div>
   </div>

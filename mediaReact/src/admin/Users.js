@@ -88,10 +88,10 @@ const Users = () => {
                       <td>
                 <input type="checkbox" />
               </td>
-                      <td>{index + 1}</td>
-                      <td>{user.username}</td>
-                      <td>{user.mobnum}</td>
-                      <td>{user.email}</td>
+                      <td className='truncate' title={index}>{index + 1}</td>
+                      <td className='truncate' title={user.username}>{user.username.length> 20 ? `${user.username.substring(0, 10)}...` : user.username}</td>
+                      <td className='truncate' title={user.mobnum}>{user.mobnum.length> 20 ? `${user.mobnum.substring(0, 10)}...` : user.mobnum}</td>
+                      <td className='truncate' title={user.email}>{user.email.length > 20 ? user.email.substring(0, 10) + "..." : user.email}</td>
  <td>       
                       <button onClick={() => handleNavigate(user.id, user.username)}>
                         View Payment History

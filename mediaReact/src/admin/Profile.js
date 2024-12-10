@@ -238,13 +238,13 @@ const Profile = () => {
               />
               </td>
               <td className="truncate">{index + 1}</td>
-              <td className="truncate">{user.username}</td>
-              <td className="truncate">{user.mobnum}</td>
-              <td className="truncate" title={user.address}>  {user.address.length > 20 ? `${user.address.substring(0, 10)}...` : user.address}</td>
-              <td className="truncate">{user.pincode}</td>
+              <td className="truncate"  title={user.username}>{user.username.length> 20 ? `${user.username.substring(0, 10)}...` : user.username}</td>
+              <td className="truncate" title={user.mobnum}>{user.mobnum.length> 20 ? `${user.mobnum.substring(0, 10)}...` : user.mobnum}</td>
+              <td className="truncate" title={user.address}>  {user.address.length > 15 ? `${user.address.substring(0, 10)}...` : user.address}</td>
+              <td className="truncate" title={user.pincode}> {user.pincode.length > 10 ? `${user.pincode.substring(0, 10)}...` : user.pincode}</td>
               <td className="truncate" title={user.email}>{user.email.length > 15 ? user.email.substring(0, 10) + "..." : user.email}</td>
-              <td className="truncate">{user.compname}</td>
-              <td className="truncate">{user.country}</td>
+              <td className="truncate" title={user.compname}>{user.compname.length > 15 ? user.compname.substring(0, 10) + "..." : user.compname}</td>
+              <td className="truncate" title={user.country}>{user.country.length > 15 ? user.country.substring(0, 10) + "..." : user.country}</td>
               <td>
                 <button 
                   onClick={() => handlEdit(user.id)} 

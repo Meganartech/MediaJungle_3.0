@@ -149,14 +149,16 @@ const ListAudio = () => {
               <td>
                 <input type="checkbox" />
               </td>
-              <td>{index + 1}</td>
-              <td>{Audiodata.audioTitle}</td>
-               <td>{Audiodata.categories} ...</td>
-              <td>{Audiodata.production_company}</td>
-              <td>{Audiodata.rating}/10</td>
-              <td>{Audiodata.paid===true ? "Paid" : "Free"}</td>
+              <td className='truncate' title={index}>{index + 1}</td>
+              <td className='truncate' title={Audiodata.audioTitle}>{Audiodata.audioTitle.length> 15 ? `${Audiodata.audioTitle.substring(0, 10)}...` : Audiodata.audioTitle}</td>
+               <td className='truncate' title={Audiodata.categories}>{Audiodata.categories.length> 15 ? `${Audiodata.categories.substring(0, 10)}...` : Audiodata.categories} ...</td>
+               <td className='truncate' title={Audiodata.production_company}>{Audiodata.production_company.length> 10 ? `${Audiodata.production_company.substring(0, 10)}...` : Audiodata.production_company}</td>
+              <td className='truncate' title={Audiodata.rating}>{Audiodata.rating.length> 10 ? `${Audiodata.rating.substring(0, 10)}...` : Audiodata.rating}/10</td>
+            
+              <td className='truncate'>{Audiodata.paid===true ? "Paid" : "Free"}</td>
 
              
+
 
 
 
