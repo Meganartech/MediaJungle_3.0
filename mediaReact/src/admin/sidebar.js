@@ -689,7 +689,12 @@ const handlePlanClick = () => {
         </ul>
     )}
 </li>
-
+<li className={`nav-item  ${activeLink === "/admin/Ads" ? 'active' : ''}`} onClick={() => handleClick("/admin/Ads")}>
+          <Link className="nav-link" >
+          <i class="bi bi-gear-fill"></i>
+            <span> Ads</span>
+          </Link>
+      </li>
 
       {/* <div className="sb-sidenav-menu-heading bg-primary text-white text-center">
         <div className="sidebar-brand-text mx-3">Settings</div>
