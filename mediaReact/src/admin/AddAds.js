@@ -8,6 +8,7 @@ import ReactPlayer from 'react-player';
 const AddAds = () => {
   const [adName, setAdName] = useState('');
   const token = sessionStorage.getItem("tokenn");
+
   const [Certificate, setCertificate] = useState([]);
   const [Certificateid, setCertificateid] = useState('');
   const [Certificatename, setCertificatename] = useState('');
@@ -46,6 +47,7 @@ const AddAds = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
     const formData = new FormData();
     formData.append("adName", adName);
     formData.append("certificateNumber", Certificate_no);
@@ -53,56 +55,58 @@ const AddAds = () => {
     formData.append("numberOfViews", Views);
     formData.append("rollType", rollad);
     formData.append("videoFile", videofile);
-  
+
     fetch(`${API_URL}/api/v2/AddAds`, {
-      method: 'POST',
-      headers: {
-        Authorization: token,
-      },
-      body: formData,
+        method: 'POST',
+        headers: {
+            Authorization: token,
+        },
+        body: formData,
     })
-      .then(response => response.text())
-      .then(data => {
-        if (data === 'success') {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Ad inserted successfully!',
-            showCancelButton: true,
-            confirmButtonText: 'Preview Ad',
-            cancelButtonText: 'Close',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // Show the preview when "Preview Ad" is clicked
-              showAdPreview();
-            }
-          });
-          
-          // Reset form fields
-          setAdName('');
-          setCertificateid('');
-          setCertificatename('');
-          setViews('');
-          setRollAd('');
-          setVideofile(null);
-          setVideoUrl(null);
+    .then(response => {
+        if (response.ok) {
+            return response.json(); // Convert the response to JSON
         } else {
-          Swal.fire({
+            throw new Error('Failed to insert ad');
+        }
+    })
+    .then(data => {
+        console.log("Response Data:", data); // Log the response data
+
+        // Check if the response contains ad details and an ID (indicating success)
+        if (data && data.id) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Ad inserted successfully!',
+            });
+
+            // Reset form fields
+            setAdName('');
+            setCertificateid('');
+            setCertificatename('');
+            setViews('');
+            setRollAd('');
+            setVideofile(null);
+            setVideoUrl(null);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error occurred while inserting Ad.',
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error); // Log any error during the fetch
+        Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Error occurred while inserting Ad.',
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'An error occurred while inserting the ad.',
+            text: 'An error occurred while inserting the ad.',
         });
-      });
-  };
+    });
+};
+
   
   const showAdPreview = () => {
     Swal.fire({
@@ -147,36 +151,43 @@ const AddAds = () => {
   useEffect(() => {
     if (adId) {
       setIsEditMode(true);
-      fetch(`${API_URL}/api/v2/GetadById/${adId}`)
+      fetch(`${API_URL}/api/v2/GetAdById/${adId}`)
         .then(response => response.json())
         .then(data => {
-          setAdName(data.ad);
-          setCertificateid(data.certificate_id);
-          setCertificatename(data.certificate_name);
-          setViews(data.views);
-          setRollAd(data.rollad);
+          console.log(data); // Log the full data response
+          setAdName(data.adName || '');
+          setCertificate_no(data.certificateNumber || '');
+          setCertificatename(data.certificateName || '');
+          setViews(data.views || '');
+          setRollAd(data.rollType || ''); // Ensure default value for rollad
+          setVideoUrl(`${API_URL}/${data.videoFilePath.replace(/\\/g, '/')}`); // For preview
+          setVideofile(null); // Reset file input
         })
         .catch(error => console.error('Error fetching ad details:', error));
     }
   }, [adId]);
-
+  
   const handleUpdate = (e) => {
     e.preventDefault();
-    const data = {
-      ad: adName,
-      certificate_id: Certificateid,
-      certificate_name: Certificatename,
-      views: Views,
-      rollad,
-    };
-
-    fetch(`${API_URL}/api/v2/editad/${adId}`, {
+  
+    const formData = new FormData();
+    formData.append("adName", adName);
+    formData.append("certificateNumber", Certificate_no);
+    formData.append("certificateName", Certificatename);
+    formData.append("numberOfViews", Views);
+    formData.append("rollType", rollad);
+  
+    // If a new video file is selected, append it
+    if (videofile) {
+      formData.append("videoFile", videofile);
+    }
+  
+    fetch(`${API_URL}/api/v2/editAd/${adId}`, {
       method: 'PATCH',
       headers: {
         Authorization: token,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: formData, // Send FormData with video file if available
     })
       .then(response => {
         if (response.ok) {
@@ -201,6 +212,7 @@ const AddAds = () => {
         });
       });
   };
+  
 
   return (
     <div className="marquee-container">
@@ -364,6 +376,7 @@ const AddAds = () => {
             >
               {isEditMode ? "Update" : "Submit"}
             </button>
+            
             
           </div>
         </div>

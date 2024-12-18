@@ -1,30 +1,29 @@
 package com.VsmartEngine.MediaJungle.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-
+import jakarta.validation.constraints.NotBlank;
 @Entity
 public class AddAd {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String adName;
+
     private String certificateNumber;
     private String certificateName;
     private Integer views;
     private String rollType;
-    
-    @Lob
-    private byte[] videoFile;
-
+    private String videoFilePath;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt = new Date();
 
@@ -77,19 +76,21 @@ public class AddAd {
         this.rollType = rollType;
     }
 
-    public byte[] getVideoFile() {
-        return videoFile;
-    }
-
-    public void setVideoFile(byte[] videoFile) {
-        this.videoFile = videoFile;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
     }
 
+ 
     public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+		this.createdAt = createdAt;
+	}
+
+	// Getter and setter for videoFilePath
+    public String getVideoFilePath() {
+        return videoFilePath;
+    }
+
+    public void setVideoFilePath(String videoFilePath) {
+        this.videoFilePath = videoFilePath;
     }
 }

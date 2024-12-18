@@ -1,9 +1,5 @@
 package com.VsmartEngine.MediaJungle.controller;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -83,28 +79,28 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
         
         @PostMapping("/update")
         public ResponseEntity<?> updateFooterSettings(
-                @RequestParam("id") Long id,  // FooterSettings ID to be updated
+                @RequestParam("id") Long id, // FooterSettings ID to be updated
                 @RequestParam("aboutUsHeaderScript") String aboutUsHeaderScript,
                 @RequestParam("aboutUsBodyScript") String aboutUsBodyScript,
                 @RequestParam("featureBox1HeaderScript") String featureBox1HeaderScript,
                 @RequestParam("featureBox1BodyScript") String featureBox1BodyScript,
                 @RequestParam("featureBox2HeaderScript") String featureBox2HeaderScript,
                 @RequestParam("featureBox2BodyScript") String featureBox2BodyScript,
-                @RequestParam("aboutUsImage") MultipartFile aboutUsImage,
+                @RequestParam(value = "aboutUsImage", required = false) MultipartFile aboutUsImage,
                 @RequestParam("contactUsEmail") String contactUsEmail,
                 @RequestParam("contactUsBodyScript") String contactUsBodyScript,
                 @RequestParam("callUsPhoneNumber") String callUsPhoneNumber,
                 @RequestParam("callUsBodyScript") String callUsBodyScript,
                 @RequestParam("locationMapUrl") String locationMapUrl,
                 @RequestParam("locationAddress") String locationAddress,
-                @RequestParam("contactUsImage") MultipartFile contactUsImage,
+                @RequestParam(value = "contactUsImage", required = false) MultipartFile contactUsImage,
                 @RequestParam("appUrlPlaystore") String appUrlPlaystore,
                 @RequestParam("appUrlAppStore") String appUrlAppStore,
                 @RequestParam("copyrightInfo") String copyrightInfo) {
             try {
                 // Find the existing FooterSettings record by id
                 FooterSettings footerSettings = repository.findById(id).orElse(null);
-                
+
                 if (footerSettings == null) {
                     return ResponseEntity.status(404).body("FooterSettings not found with id: " + id);
                 }
@@ -116,14 +112,24 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
                 footerSettings.setFeatureBox1BodyScript(featureBox1BodyScript);
                 footerSettings.setFeatureBox2HeaderScript(featureBox2HeaderScript);
                 footerSettings.setFeatureBox2BodyScript(featureBox2BodyScript);
-                footerSettings.setAboutUsImage(extractImageBytes(aboutUsImage)); // Update aboutUs image
+
+                // Update the About Us image only if a new file is uploaded
+                if (aboutUsImage != null && !aboutUsImage.isEmpty()) {
+                    footerSettings.setAboutUsImage(extractImageBytes(aboutUsImage));
+                }
+
                 footerSettings.setContactUsEmail(contactUsEmail);
                 footerSettings.setContactUsBodyScript(contactUsBodyScript);
                 footerSettings.setCallUsPhoneNumber(callUsPhoneNumber);
                 footerSettings.setCallUsBodyScript(callUsBodyScript);
                 footerSettings.setLocationMapUrl(locationMapUrl);
                 footerSettings.setLocationAddress(locationAddress);
-                footerSettings.setContactUsImage(extractImageBytes(contactUsImage)); // Update contactUs image
+
+                // Update the Contact Us image only if a new file is uploaded
+                if (contactUsImage != null && !contactUsImage.isEmpty()) {
+                    footerSettings.setContactUsImage(extractImageBytes(contactUsImage));
+                }
+
                 footerSettings.setAppUrlPlaystore(appUrlPlaystore);
                 footerSettings.setAppUrlAppStore(appUrlAppStore);
                 footerSettings.setCopyrightInfo(copyrightInfo);
@@ -136,6 +142,7 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
                 return ResponseEntity.status(500).body("Error updating the FooterSettings: " + e.getMessage());
             }
         }
+
         @GetMapping
         public ResponseEntity<?> getFooterSettings() {
             try {

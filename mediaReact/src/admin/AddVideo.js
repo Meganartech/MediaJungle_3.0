@@ -572,7 +572,7 @@ useEffect(() => {
 
         const videoFile = data.vidofilename;
         const trailerFile = data.videotrailerfilename;
-
+console.log("lolololol" +videoFile);
         if (videoFile) {
           // setVideoUrl(`${API_URL}/api/v2/${videoFile}/videofile`);
           setVideoUrl(`${API_URL}/api/v2/${videoId}/videofile`);

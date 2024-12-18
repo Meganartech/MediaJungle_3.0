@@ -10,6 +10,7 @@ const Ads = () => {
     const token = sessionStorage.getItem('tokenn')
     const [ad, setAd] = useState([]);
   
+    
     const handleClick = (link) => {
       localStorage.removeItem('items'); // Clear the stored videoId
       navigate(link);
@@ -17,81 +18,85 @@ const Ads = () => {
   
   
     useEffect(() => {
-      // fetch category data from the backend
-      fetch(`${API_URL}/api/v2/GetAllAds`)
-        .then(response => {
+      // Fetch ads data from the backend
+      fetch(`${API_URL}/api/v2/GetAllAds`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token, // Include token if required for authentication
+        },
+      })
+        .then((response) => {
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Failed to fetch ads');
           }
           return response.json();
         })
-        .then(data => {
-          setAd(data);
+        .then((data) => {
+          setAd(data); // Update the state with the fetched ads
         })
-        .catch(error => {
-          console.error('Error fetching data:', error);
+        .catch((error) => {
+          console.error('Error fetching ads:', error);
         });
     }, []);
+    
   
   
   
-  
-  
-  const handleDeleteAd = (adId) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You are about to delete this ad. This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(`${API_URL}/api/v2/DeleteAd/${adId}`, {
-          method: 'DELETE',
-          headers:{
-            Authorization:token
-          }
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          // If the response status is OK, don't attempt to parse JSON from an empty response
-          return response.status === 204 ? null : response.json();
-        })
-        .then(data => {
-          if (!data) {
-            console.log('Ad deleted successfully');
-            // Remove the deleted ad from the local state
-            setAd(prevad => prevad.filter(ad => ad.id !== adId));
-            Swal.fire(
-              'Deleted!',
-              'Your ad has been deleted.',
-              'success'
-            );
-          } else {
-            console.error('Error deleting ad:', data.error); // Log error message from server
-            Swal.fire(
-              'Error!',
-              `Failed to delete ad: ${data.error}`,
-              'error'
-            );
-          }
-        })
-        .catch(error => {
-          console.error('Error deleting ad:', error);
-          Swal.fire(
-            'Error!',
-            'There was a problem deleting your ad. Please try again later.',
-            'error'
-          );
-        });
-      }
-    });
-  };
+    const handleDeleteAd = (adId) => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to delete this ad. This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`${API_URL}/api/v2/deleteAd/${adId}`, {
+            method: 'DELETE',
+            headers: {
+              Authorization: token,
+            },
+          })
+          
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              // Return null if the status is 204 (No Content)
+              return response.status === 200 ? null : response.json();
+            })
+            .then((data) => {
+
+              if (data === null) {
+                // Successfully deleted
+                setAd((prevAd) => prevAd.filter((ad) => ad.id !== adId));
+                Swal.fire('Deleted!', 'Your ad has been deleted.', 'success');
+              } else {
+                // Handle unexpected cases
+                console.error('Error deleting ad:', data.error);
+                Swal.fire(
+                  'Error!',
+                  `Failed to delete ad: ${data.error}`,
+                  'error'
+                );
+              }
+            })
+            .catch((error) => {
+              console.error('Error deleting ad:', error);
+              Swal.fire(
+                'Error!',
+                'There was a problem deleting your ad. Please try again later.',
+                'error'
+              );
+            });
+        }
+      });
+    };
+    
   
   
     const handleEdit = async (adId) => {
@@ -133,32 +138,33 @@ const Ads = () => {
             </tr>
           </thead>
           <tbody>
-                {ad.length > 0 ? (
-                  ad.map((adv, index) => (
-                    <tr key={adv.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                      <td><input type="checkbox" /></td>
-                      <td>{index + 1}</td>
-                      <td className='truncate' title={adv.ad}>{adv.ad.length > 15 ? `${adv.ad.substring(0, 10)}...` : adv.ad}</td>
-                      <td>{adv.views}</td>
-                      <td>{adv.adsRoll}</td>
-                      <td>{adv.certificate}</td>
-                      <td>{adv.year}</td>
-                      <td>
-                        <button onClick={() => handleEdit(adv.id)} className="btn btn-primary me-2">
-                          <i className="fas fa-edit" aria-hidden="true"></i> Edit
-                        </button>
-                        <button onClick={() => handleDeleteAd(adv.id)} className="btn btn-danger">
-                          <i className="fa fa-trash" aria-hidden="true"></i> Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="8" className="text-center">No ads available</td>
-                  </tr>
-                )}
-              </tbody>
+  {Array.isArray(ad) && ad.length > 0 ? (
+    ad.map((adv, index) => (
+      <tr key={adv.id}>
+        <td><input type="checkbox" /></td>
+        <td className='truncate' title={index}>{index + 1}</td>
+        <td className='truncate' title={adv.adName}>{adv.adName.length> 10 ? `${adv.adName.substring(0, 10)}...` : adv.adName}</td>
+        <td className='truncate' title={adv.views}>{adv.views.length> 10 ? `${adv.views.substring(0, 10)}...` : adv.views}</td>
+        <td className='truncate' title={adv.rollType}>{adv.rollType.length> 10 ? `${adv.rollType.substring(0, 10)}...` : adv.rollType}</td>
+        <td className='truncate' title={adv.certificateName}>{adv.certificateName.length> 10 ? `${adv.certificateName.substring(0, 10)}...` : adv.certificateName}</td>
+        <td className='truncate' title={adv.createdAt}>{new Date(adv.createdAt).getFullYear()}</td>
+        <td className='truncate'>
+          <button onClick={() => handleEdit(adv.id)} className="btn btn-primary me-2">
+            <i className="fas fa-edit"></i> Edit
+          </button>
+          <button onClick={() => handleDeleteAd(adv.id)} className="btn btn-danger">
+            <i className="fa fa-trash"></i> Delete
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="8" className="text-center">No ads available</td>
+    </tr>
+  )}
+</tbody>
+
           </table>
           
     
