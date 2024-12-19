@@ -125,9 +125,9 @@ const handlEdit = async (categoryId) => {
               < th style={{border: 'none' }}>
                 <input type="checkbox" />
               </th>
-              <th style={{border: 'none' }}>S.NO</th>
-              <th style={{border: 'none' }}>CATEGORY NAME</th>
-              <th style={{border: 'none' }}>ACTION</th>
+              <th style={{border: 'none' }}>S.No</th>
+              <th style={{border: 'none' }}>Category Name</th>
+              <th style={{border: 'none' }}>Action</th>
             </tr>
           </thead>
           {categories && categories.length > 0 ? (
@@ -138,7 +138,7 @@ const handlEdit = async (categoryId) => {
               <input type="checkbox" />
             </td>
             <td>{index + 1}</td>
-            <td>{category.categories ? category.categories : 'No category available'}</td>
+            <td className='truncate' title={category.categories}>{category.categories.length> 15 ? `${category.categories.substring(0, 10)}...` : category.categories}</td>
             <td>
               <button onClick={() => handlEdit(category.category_id)} className="btn btn-primary me-2">
                 <i className="fas fa-edit" aria-hidden="true"></i> Edit

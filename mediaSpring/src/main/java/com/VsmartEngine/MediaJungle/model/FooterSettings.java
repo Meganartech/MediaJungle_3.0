@@ -43,9 +43,8 @@ public class FooterSettings {
 
     @Column(columnDefinition = "TEXT")
     private String featureBox2BodyScript;
-   
-    @Column(length = 255)
-    private String aboutUsImage; // Image file path
+
+    private byte[] aboutUsImage; // Image file path
 
 
 	@Column(length = 255)
@@ -66,8 +65,7 @@ public class FooterSettings {
     @Column(columnDefinition = "TEXT")
     private String locationAddress;
 
-    @Column(length = 255)
-    private String contactUsImage; // Image file path
+    private byte[] contactUsImage; // Image file path
 
     @Column(length = 255)
     private String appUrlPlaystore;
@@ -139,11 +137,11 @@ public class FooterSettings {
 		this.featureBox2BodyScript = featureBox2BodyScript;
 	}
 	
-	public String getAboutUsImage() {
+	public byte[] getAboutUsImage() {
 		return aboutUsImage;
 	}
 
-	public void setAboutUsImage(String aboutUsImage) {
+	public void setAboutUsImage(byte[] aboutUsImage) {
 		this.aboutUsImage = aboutUsImage;
 	}
 	
@@ -195,11 +193,11 @@ public class FooterSettings {
 		this.locationAddress = locationAddress;
 	}
 
-	public String getContactUsImage() {
+	public byte[] getContactUsImage() {
 		return contactUsImage;
 	}
 
-	public void setContactUsImage(String contactUsImage) {
+	public void setContactUsImage(byte[] contactUsImage) {
 		this.contactUsImage = contactUsImage;
 	}
 

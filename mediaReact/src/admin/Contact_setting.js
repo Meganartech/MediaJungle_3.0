@@ -35,7 +35,8 @@ const ContactSetting = () => {
     { name: "Payment Settings", path: "/admin/Payment_setting" },
     { name: "Banner Settings", path: "/admin/Banner_setting" },
     { name: "Footer Settings", path: "/admin/Footer_setting" },
-    { name: "Contact Settings", path: "/admin/Contact_setting" }
+    { name: "Contact Settings", path: "/admin/Contact_setting" },
+    { name: "Container Settings", path: "/admin/container" }
   ];
 
   const handleSettingChange = (setting) => {
@@ -231,23 +232,22 @@ const ContactSetting = () => {
     </Dropdown>
     </div>
     <br />
-    <div className='container2'>
+    <div className='container3'>
         <ol className="breadcrumb mb-4 d-flex my-0">
           <li className="breadcrumb-item">
             <Link to="/admin/SiteSetting">Settings</Link>
           </li>
           <li className="breadcrumb-item active  text-white">Contact Settings</li>
         </ol>
+        <div className='outer-container mt-10'>
         <div className="table-container">
-          <div className="card-body">
-            <div className="temp">
+       
               {/* <div className="col col-lg-2">
                 <Setting_sidebar />
               </div> */}
 
-              <div className="col col-lg-9">
                 <ul className='breadcrumb-item' style={{ paddingLeft: '0px' }}>
-                  <form onSubmit={buttonText === 'ADD' ? handleSubmit : handleSub} method="post" className="registration-form">
+                  <form onSubmit={buttonText === 'ADD' ? handleSubmit : handleSub} method="post" className="registration-form1">
                     <div className="temp">
                       <div className="col-md-6">
                         <div className="form-group">
@@ -335,7 +335,7 @@ const ContactSetting = () => {
 
 
                       <div className='col-lg-12'>
-                        <div className="d-flex justify-content-center" style={{ marginTop: "10px" }}>
+                        <div className="d-flex justify-content-end" style={{ marginTop: "160px" }}>
                           <button className='text-center btn btn-info'>
                             {buttonText}
                           </button>
@@ -347,10 +347,8 @@ const ContactSetting = () => {
               </div>
             </div>
           </div>
-        </div>
+          </div>
         
-      </div>
-   </div>
   );
 };
 

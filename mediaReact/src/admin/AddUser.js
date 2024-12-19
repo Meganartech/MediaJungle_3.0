@@ -177,7 +177,10 @@ const AddUser = () => {
   
   
   return (
-   
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* <button className='btn btn-custom' onClick={() => handleClick("/admin/addAudio")}>Add Audio</button> */}
+    </div><br/>
     
 <div className='container3 mt-10'>
       
@@ -328,8 +331,8 @@ const AddUser = () => {
           </div>
         </div>
         <div className="temp">
-          <div className="col-md-12 text-center">
-            <input type="submit" className="btn btn-info" name="submit" value="Register" />     <br/>
+          <div className="col-md-12 text-right">
+            <input type="submit" className="btn btn-custom" name="submit" value="Register" />     <br/>
           </div>
      
         </div>
@@ -339,7 +342,7 @@ const AddUser = () => {
       </div>
       </div>
       
-    
+    </div>
   );
 };
 

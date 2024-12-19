@@ -218,12 +218,12 @@ const Video = () => {
             />
             </th>
             <th style={{border: 'none' }}>S.No</th>
-            <th style={{border: 'none' }}>VIDEO TITLE</th>
+            <th style={{border: 'none' }}>Video Title</th>
              {/* <th style={{border: 'none' }}>CATEGORY</th>  */}
-            <th style={{border: 'none' }}>PRODUCTION</th>
-            <th style={{border: 'none' }}>RATING</th>
-            <th style={{border: 'none' }}>VIDEO ACCESS TYPE</th>
-            <th style={{border: 'none' }}>ACTION</th>
+            <th style={{border: 'none' }}>Production</th>
+            <th style={{border: 'none' }}>Rating</th>
+            <th style={{border: 'none' }}>Video Access Type</th>
+            <th style={{border: 'none' }}>Action</th>
                     
           </tr>
         </thead>
@@ -237,12 +237,12 @@ const Video = () => {
                 onChange={() => handleCheckboxChange(user.id)}
               />
               </td>
-              <td>{index + 1}</td>
-              <td>{user.videoTitle}</td>
+              <td className='truncate' title={index}>{index + 1}</td>
+              <td className='truncate' title={user.videoTitle}>{user.videoTitle.length> 20 ? `${user.videoTitle.substring(0, 10)}...` : user.videoTitle}</td>
               {/* <td>{user.categorylist}</td> */}
-              <td>{user.productionCompany}</td>
-              <td>{user.rating}/10</td>
-              <td>{user.videoAccessType===true ? 'paid' : 'free'}</td>
+              <td className='truncate' title={user.productionCompany}>{user.productionCompany.length> 20 ? `${user.productionCompany.substring(0, 10)}...` : user.productionCompany}</td>
+              <td className='truncate' title={user.rating}>{user.rating.length> 10 ? `${user.rating.substring(0, 10)}...` : user.rating}/10</td>
+              <td className='truncate' title={user.videoAccessType}>{user.videoAccessType===true ? 'paid' : 'free'}</td>
               <td>
                 
                 <button onClick={() => handlEdit(user.id)} className="btn btn-primary me-2">

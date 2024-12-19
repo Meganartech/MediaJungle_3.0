@@ -1,23 +1,20 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, Route  } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Usersidebar from './usersidebar'
 import { useNavigate } from 'react-router-dom';
-import Video from './video';
 import Footer from './Footer'
 import API_URL from '../Config';
 // import '../css/style.css';
 
 function VideoHomescreen() {
-    const [image, setImage] = useState([]);
+
     const [vimage, setvImage] = useState([]);
     // const [audios, setAudios] = useState([]);
     const navigate = useNavigate();
-    const [deleteStatus, setDeleteStatus] = useState(null);
-    const [filename, setFilename] = useState(null);
-    const [getall, setGetall] = useState(null);
+    const [deleteStatus] = useState(null);
     const [all, setall] = useState(null);
-    const [items, setItems] = useState([]);
+
 
     useEffect(() => {
       fetchData();

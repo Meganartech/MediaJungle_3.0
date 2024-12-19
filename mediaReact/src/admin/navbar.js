@@ -137,7 +137,7 @@ const [userImage, setUserImage] = useState(null);
 
 
   return (
-       <nav className="sb-topnav navbar navbar-expand navbar-dark logo" style={{ backgroundColor: '#d2d0d0'}} >
+       <nav className="sb-topnav custom-navbar custom-expand navbar-dark logo" style={{ backgroundColor: '#d2d0d0'}} >
     <a className="navbar-brand ps-3" href="./Dashboard.js" style={{ margin: '0px', padding: '0px'   }}></a>
     <button className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!" onClick={toggleSidebar}>
       <i className="fas fa-bars"></i>
@@ -145,7 +145,7 @@ const [userImage, setUserImage] = useState(null);
 
    
 
-<div class="row height d-flex justify-content-center align-items-center">
+{/* <div class="row height d-flex justify-content-center align-items-center">
 
   <div class="col-md-6">
 
@@ -156,7 +156,7 @@ const [userImage, setUserImage] = useState(null);
     
   </div>
   
-</div>
+</div> */}
 
 
 <div className="notification-icon ">

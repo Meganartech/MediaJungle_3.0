@@ -20,7 +20,7 @@ const UserProfileScreen = () => {
     // Load profile image function
     const loadProfileImage = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/v2/GetProfileImage/${userId}?t=${new Date().getTime()}`);
+            const response = await fetch(`${API_URL}/api/v2/GetProfileImage/${userId}?t=${new Date().getTime()}`);
             if (!response.ok) {
                 setImageSrc(null); // Set imageSrc to null if image is not found
                 return;
@@ -101,7 +101,7 @@ const UserProfileScreen = () => {
             formData.append('image', file);
 
             try {
-                const response = await fetch(`http://localhost:8080/api/v2/UploadProfileImage/${userId}`, {
+                const response = await fetch(`${API_URL}/api/v2/UploadProfileImage/${userId}`, {
                     method: 'POST',
                     body: formData,
                 });

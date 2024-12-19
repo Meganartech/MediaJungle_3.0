@@ -126,8 +126,12 @@ const handleUpdate = (e) => {
 };
 
   return (
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* <button className='btn btn-custom' onClick={() => handleClick("/admin/addAudio")}>Add Audio</button> */}
+    </div><br/>
     
-    <div className='container3 mt-20'>
+    <div className='container3 mt-10'>
    <ol className="breadcrumb mb-4 d-flex my-0">
     <li className="breadcrumb-item"><Link to="/admin/ViewCategory">Categories</Link></li>
     <li className="breadcrumb-item active text-white">{isEditMode ? 'Edit Category' : 'Add Category'}</li>
@@ -148,26 +152,25 @@ const handleUpdate = (e) => {
           required
           value={categoryName}
           onChange={(e) => setCategoryName(e.target.value)}
-          className="form-control border border-dark border-2" 
+          className="form-control border border-dark" 
           placeholder="Enter Category" 
         />
       </div>
     </div>
 
-    <div className="row py-3 my-5 w-100">
+    <div className="row my-4 w-100">
       <div className="space" ></div> 
     </div>
-    <div className="row py-3 my-5 w-100">
-      <div className="col-md-8 ms-auto text-end">
-      <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg ">Cancel</button>
-        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode? handleUpdate : handleSubmit} style={{backgroundColor:'blue'}}
-        >{isEditMode ? 'Edit' : 'Submit'}</button>
-      </div>
+      <div className="mt-40 col-md-8 ms-auto text-end">
+      <button className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg ">Cancel</button>
+        <button className="border border-dark p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode? handleUpdate : handleSubmit} style={{backgroundColor:'#2b2a52'}}
+        >{isEditMode ? 'Update' : 'Submit'}</button>
+     
     </div>
   </div>
 </div>
 </div>
-
+</div>
   );
 };
 

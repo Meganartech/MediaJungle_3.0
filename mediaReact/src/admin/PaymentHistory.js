@@ -103,8 +103,14 @@ const PaymentHistory = () => {
   
 
   return (
-
-      <div className='container3 mt-20'>
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* <Link to="/admin/AddUser">
+        <button className='btn btn-custom'>Add SubAdmin</button>
+      </Link> */}
+    </div>
+ 
+      <div className='container3 mt-16'>
         <ol className="breadcrumb mb-4 d-flex my-0">
 
        
@@ -140,13 +146,13 @@ const PaymentHistory = () => {
                   <td>
                 <input type="checkbox" />
               </td>
-                  <td>{index + 1}</td>
-                  <td>{userName}</td>
-                  <td>{payment.subscriptionTitle}</td>
-                  <td>{payment.paymentId}</td>
-                  <td>{payment.amount}</td>
-                  <td>{payment.orderId}</td>
-                  <td>{payment.expiryDate}</td>
+                  <td className='truncate' title={index}>{index + 1}</td>
+                  <td className='truncate' title={userName}>{userName}</td>
+                  <td className='truncate' title={payment.subscriptionTitle}>{payment.subscriptionTitle.length> 15 ? `${payment.subscriptionTitle.substring(0, 10)}...` : payment.subscriptionTitle}</td>
+                  <td className='truncate' title={payment.paymentId}>{payment.paymentId.length> 20 ? `${payment.paymentId.substring(0, 10)}...` : payment.paymentId}</td>
+                  <td className='truncate' title={payment.amount}>{payment.amount.length> 15 ? `${payment.amount.substring(0, 10)}...` : payment.amount}</td>
+                  <td className='truncate' title={payment.orderId}>{payment.orderId.length> 20 ? `${payment.orderId.substring(0, 10)}...` : payment.orderId}</td>
+                  <td className='truncate' title={payment.expiryDate}>{payment.expiryDate.length> 15 ? `${payment.expiryDate.substring(0, 10)}...` : payment.expiryDate}</td>
                 </tr>
               ))
             ) : (
@@ -158,7 +164,7 @@ const PaymentHistory = () => {
         </table>
         </div>
       </div>
-   
+   </div>
   );
 };
 

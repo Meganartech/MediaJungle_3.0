@@ -97,7 +97,7 @@ const ContactUs = () => {
                                     <div style={{ color: '#FFAA1D' }} ><FaMapMarker /></div>
                                 </span>
                                 <h4 className='text-xl font-semibold mb-2'>Location</h4>
-                                <h6 className='text-xl font-semibold mb-2'>{contactUsData.locationMapUrl}</h6>
+                                <h6 className='text-xl font-semibold mb-2'>{contactUsData.locationAddress}</h6>
                                 <p className='mb-0 text-sm text-text leading-7'>
                                     
                                     {contactUsData.locationAddress}

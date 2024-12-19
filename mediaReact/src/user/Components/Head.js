@@ -25,7 +25,7 @@ const Head = ({title}) => {
   useEffect(() => {
     const fetchContactUsData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v2/footer-settings');
+        const response = await fetch(`${API_URL}/api/v2/footer-settings`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -61,7 +61,7 @@ const Head = ({title}) => {
   return (
     <div className='w-full bg-deepGray lg:h-64 h-40 relative overflow-hidden rounded-md'>
         <img 
-         src={`${API_URL}/${contactUsData.contactUsImage}`} 
+         src={`data:image/png;base64,${contactUsData.contactUsImage}`} 
         className='w-full h-full object-cover' 
         alt='aboutus' 
         />

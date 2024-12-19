@@ -132,18 +132,18 @@ const Viewcastandcrew = () => {
                   {getall && getall.length > 0 && (
                     getall.map((cast, index) => (
                       <tr key={cast.id} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                        <td>
+                        <td className='truncate'>
                 <input type="checkbox" />
               </td>
-                        <td>{index + 1}</td>
-                        <td>{cast.name}</td>
-                        <td>
+                        <td className='truncate' title={index}>{index + 1}</td>
+                        <td className='truncate' title={cast.name}>{cast.name.length> 15 ? `${cast.name.substring(0, 10)}...` : cast.name}  </td>
+                        <td className='truncate'>
                           {cast.image && (
                             
                             <img src={`data:image/jpeg;base64,${cast.image}`} alt={cast.name} style={{ width: '55px', height: 'auto' }} />
                           )}
                         </td>
-                        <td>{cast.description}</td>
+                        <td className='truncate' title={cast.description}>{cast.description.length> 15 ? `${cast.description.substring(0, 10)}...` : cast.description}</td>
                         <td>
                           <button onClick={() => handlEdit(cast.id)}className="btn btn-primary me-2">
                   <i className="fas fa-edit" aria-hidden="true"></i> Edit

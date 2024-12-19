@@ -1,10 +1,10 @@
 import React from 'react'
-import { Link, Route } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
 function usersidebar() {
   return (
     <div class="header__logo_user">
-        <a href="#"><img src="img/logo.png" alt="" /></a>
+      <img src="img/logo.png" alt="" />
         <div className='side_value_user'>
         <h5 className="text-center text-white font-weight-light my-4 Wording_user">
         <Link className="Link" to="/login1">
