@@ -1405,12 +1405,634 @@ td{
 }
 
 .bottom-bar-artist {
- font-size: 14px;
- color: #d1d1e0;
+
+  font-size: 14px;
+  color: #d1d1e0;
 }
 
-.bottom-bar .control-button {
- margin-left: 15px;
- padding: 10px;
- font-size: 18px;
+.bottom-bar-controls{
+  flex:1.5;
+}
+
+.bottom-bar-controls .control-button {
+  margin-left: 15px;
+  padding: 10px;
+  font-size: 18px;
 } 
+
+.bottom-bar-time span {
+   margin-right: 30px;
+}
+
+.volume-container {
+  position: relative;
+  display: inline-block;
+}
+
+.volume-slider-container {
+  position: absolute;
+  top: -20px; /* Adjust as needed to display above the button */
+  right: 0;
+  width: 100px; /* Adjust slider width */
+}
+
+input[type='range'] {
+  width: 100%;
+}
+
+.volume-container button {
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+/* forgetpassword screen style */
+
+
+ /* .forgot-password-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 120vh;
+  margin-top: 100px;
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+} */
+
+.forgot-password-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 80vh; /* Minimum height to cover the viewport */
+  margin-top: 100px;
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  padding-bottom: 50px; /* Adds space for extra content */
+}
+
+
+
+
+
+.form-box {
+  background: linear-gradient(to top, #141335, #0c0d1a); 
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  text-align: left;
+  width: 100%;
+  height: 60%;
+  max-width: 600px;
+  display: flex;              
+  flex-direction: column;     
+  align-items: center;        
+  justify-content: center;    
+  font-family: 'Open Sans', sans-serif;
+}
+
+.back-to-login {
+  text-decoration: none;
+  font-size: 16px;
+  align-self: flex-start; 
+  /* margin-bottom: 10px;     */
+}
+
+.back-to-login:hover {
+  color: red;
+}
+
+.logoimage {
+  width: 200px;
+ 
+}
+
+.form-box span {
+  /* margin-bottom: 10px; */
+  font-size: 30px;
+  font-weight: bold;
+  align-self: flex-start; 
+}
+
+.forgot {
+  margin-top: 10px;
+  font-size: 20px !important;
+}
+
+.forgot1 {
+  font-size: 14px !important;
+  color:#a09f9f !important;
+}
+
+.resend{
+  font-size: 10px !important;
+  margin-top: 3px;
+  color:#a09f9f !important;
+}
+
+.resend1{
+  font-size:10px !important;
+  margin-top: 3px;
+  cursor: pointer;
+  text-decoration: underline;
+} 
+
+
+
+.formfield {
+  width:60%;
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-start; 
+}
+
+
+
+.input-container {
+  position: relative; /* To position the icon inside the container */
+  width: 100%; /* Adjust as needed */
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 15px;
+  border: 1px solid white;
+  border-radius: 10px;
+  background-color:  rgb(43 42 82);
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 10px; /* Adjust for spacing */
+  top: 65%;
+  transform: translateY(-50%); 
+  cursor: pointer;
+  color:white; /* Neutral color */
+  
+}
+
+
+
+.eye-icon:hover {
+  color: red; 
+  
+}
+
+.password-eye-icon{
+  position: absolute;
+  right: 10px; /* Adjust for spacing */
+  top: 30%;
+  transform: translateY(-50%); 
+  cursor: pointer;
+  color:white; /* Neutral color */
+}
+
+.password-eye-icon:hover{
+  color:red;
+}
+
+.confirm-eye-icon{
+  position: absolute;
+  right: 10px; /* Adjust for spacing */
+  top: 80%;
+  transform: translateY(-50%); 
+  cursor: pointer;
+  color:white; /* Neutral color */
+}
+
+.confirm-eye-icon:hover{
+  color:red;
+}
+
+
+
+.submit-verifybutton {
+  width: auto;
+  padding: 5px 15px;
+  color: white;
+  font-weight: bold;
+  border:1px solid white;
+  background-color: rgb(43 42 82) !important;  
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+ margin-top: 15px;
+  align-self: flex-end; 
+} 
+
+
+/*register */
+
+.register-box {
+  background: linear-gradient(to top, #141335, #0c0d1a); 
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  width: 100%;
+  height: 60%;
+  max-width: 600px;
+  display: flex;              
+  flex-direction: column;     
+  align-items: center;        
+  justify-content: center;    
+  font-family: 'Open Sans', sans-serif;
+}
+
+
+.register-box span {
+  font-size: 25px;
+  font-weight: bold;
+  align-self: flex-start; 
+}
+
+.registerfield {
+  width:80%;
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-start; 
+}
+
+.registerfield label{
+  margin-top: 20px;
+}
+
+.registerfield span {
+  font-size: 20px;
+  text-align: center; /* Centers text horizontally inside the parent */
+  display: block; /* Ensures the span takes up the full width of the parent */
+  margin: 10px auto; /* Aligns the span within the parent container */
+}
+
+
+.register-container {
+  position: relative; /* To position the icon inside the container */
+  width: 100%; /* Adjust as needed */
+}
+
+.otp-container {
+  position: relative;
+  width: 100%; /* Adjust as needed */
+}
+
+.verify-container {
+  position: relative;
+  width: 40%; /* Adjust as needed */
+  margin-top: 10px;
+}
+
+.register-field {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid white;
+  border-radius: 10px;
+  background-color:  #141335;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  padding-right: 90px; /* Space for the button */
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+.get-otp-button {
+  position: absolute;
+  right: 10px; 
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 5px 10px; /* Adjust button size */
+  background-color: rgb(43 42 82);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.get-verify-button {
+  position: absolute;
+  width:50%;
+  left: 335px; 
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 5px 10px; /* Adjust button size */
+  background-color: rgb(170, 154, 11);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.get-tick-button{
+  position: absolute;
+  width:50%;
+  left: 335px; 
+  top: 20%;
+  transform: translateY(-50%);
+  padding: 5px 10px; /* Adjust button size */
+  background-color: rgb(170, 154, 11);
+  color: green !important;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
+/* .registerfield-forget{
+  align-items: flex-start; 
+} */
+
+ .submit-registerbutton {
+  display: block; /* Ensure the button is treated as a block-level element */
+  width: auto;
+  padding: 5px 15px;
+  color: white;
+  font-weight: bold;
+  background-color: rgb(43 42 82) !important;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 30px auto 0; /* Center the button with auto margins */
+  text-align: center;
+}
+
+.disabled-button {
+  background-color: #ccc; /* Gray background for disabled button */
+  cursor: not-allowed; /* Show not-allowed cursor */
+  opacity: 0.7; /* Make it appear slightly faded */
+}
+
+
+/* user login */
+
+.or-container {
+  display: flex; /* Use flexbox for layout */
+  align-items: center; /* Vertically align elements */
+  justify-content: center; /* Center the content horizontally */
+  width: 100%; /* Full-width container */
+  margin-top: 10px;
+}
+
+.line {
+  width: 20%; /* Set a specific width for the lines */
+  height: 1px; /* Line thickness */
+  background-color: #ccc; /* Line color */
+  margin: 8px 10px; /* Space between the line and the "OR" */
+}
+
+.or-text {
+  font-size: 15px !important; /* Size of "OR" text */
+  color: #555; /* Text color */
+  text-align: center; /* Center the text */
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+.signin-container {
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Center items vertically */
+  text-align: center;
+  padding: 20px; /* Add spacing around the content */
+}
+
+.signin-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px; /* Space between title and icons */
+}
+
+.icons-container {
+  display: flex; /* Arrange icons horizontally */
+  justify-content: center; /* Center icons */
+  gap: 15px; /* Space between icons */
+}
+
+.signin-icon {
+  font-size: 40px; /* Set icon size */
+  cursor: pointer; /* Change cursor on hover */
+  transition: transform 0.2s, color 0.2s; /* Add hover effects */
+}
+
+.signin-icon:hover {
+  transform: scale(1.1); /* Slightly enlarge the icon on hover */
+  color: #007bff; /* Change color on hover */
+}
+
+.remember-me-container {
+  display: flex; /* Arrange checkbox and label in a row */
+  align-items: center; /* Ensure vertical alignment */
+  margin: 10px 0; /* Add some margin */
+  text-align: left; /* Align content to the left */
+  align-self: flex-start; 
+}
+
+.remember-checkbox {
+  margin-right: 8px; 
+  margin-bottom: 6px;
+  width: 18px; /* Set checkbox size */
+  height: 18px; /* Set checkbox size */
+  
+}
+
+.remember-label {
+  font-size: 16px; /* Set text size */
+  cursor: pointer; /* Change cursor to pointer for better UX */
+  
+}
+
+
+
+/* .ext-container{
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  width: 100%; 
+  margin-top: 10px;
+} */
+
+
+
+
+/* .eye-icon {
+  position: absolute;
+  right: 10px; 
+  top: 65%;
+  transform: translateY(-50%); 
+  cursor: pointer;
+  color:white; 
+  
+}
+
+
+
+.eye-icon:hover {
+  color: red; 
+  
+} */
+
+
+
+/* admin signin */
+
+.admin-screen{
+  margin: 0;
+  font-family: 'Open Sans', sans-serif ;
+  background: linear-gradient(to top, #141335, #0c0d1a); 
+  color:white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.admin-container {
+  flex-direction: column;
+  text-align: center;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  background: linear-gradient(to top, #141335, #0c0d1a);
+  color: white;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.welcome-section {
+  margin-bottom: 20px;
+}
+
+.welcome-section h1 {
+  font-size: 5rem;
+  margin: 0;
+  color: white;
+}
+
+.welcome-section p {
+  font-size: 1.5rem;
+  margin: 5px 0;
+}
+
+.admin-highlight {
+  font-weight: bold;
+  color: white;
+}
+
+/* Main Content Section */
+.admin-main-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 50px;
+}
+
+/* Left Section: Form */
+.admin-form-container {
+  flex: 2;
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.admin-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center; /* Ensures vertical alignment */
+}
+
+.admin-row input {
+  flex: 1;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  color: black;
+  width: 100%;
+  height: 50px;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+/* Styling for Input with Button */
+.input-with-button {
+  position: relative;
+  width: 50%;
+}
+
+.input-with-button input {
+  flex: 1;
+  padding: 0.8rem;
+  padding-right: 6rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  color: black;
+}
+
+.input-with-button input::placeholder {
+  color: #aaa;
+}
+
+.input-with-button .otp-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  background: skyblue;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* OTP and Verify Button Styles */
+.otp-button {
+  flex: 1;
+  max-width: 50%; /* Adjust the width of the OTP input as needed */
+  padding: 0.8rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  color: black;
+}
+
+.verify-btn {
+  flex-shrink: 0;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  background: #28a745;
+  color: #fff;
+  cursor: pointer;
+  height: 50px;
+  white-space: nowrap;
+}
+
+.signup-btn {
+  background: #ff0000;
+  color: #fff;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.admin-image-section {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+}
+
+.admin-image-section img {
+  max-width: 100%;
+  height: auto;
+}

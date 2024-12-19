@@ -10,7 +10,6 @@ import API_URL from './Config';
 import { Toaster } from 'react-hot-toast'; // Import Toaster
 
 
-
 import AddUser from "./admin/AddUser";
 import Video_setting from "./admin/Video_setting";
 import Email_setting from "./admin/Email_setting";
@@ -103,6 +102,10 @@ import LibraryScreen from './user/LibraryScreen';
 import AudioHomescreen from './user/Screens/AudioHomescreen';
 
 import MusicScreen from './user/Screens/MusicScreen';
+import Mailsetting from './admin/Mailsetting';
+import ForgetPasswordUser from './user/Screens/ForgetPasswordUser';
+import AdminRouteGuard from './admin/AdminRouteGuard';
+
 
 
 
@@ -124,19 +127,28 @@ const App = () => {
     const checkAdminRole = async () => {
       try {
         const response = await fetch(`${API_URL}/api/v2/checkAdminRole`);
+  
+        if (!response.ok) {
+          // If backend responds with a status other than 200
+          throw new Error(`Error: ${response.status}`);
+        }
+  
         const data = await response.json();
         console.log("data", data.adminExists);
-        sessionStorage.setItem('initialsignup', data.adminExists);
+        // Set session storage based on admin existence
+        sessionStorage.setItem('initialsignup', data.adminExists.toString());
       } catch (error) {
         console.error('Failed to check admin role:', error);
-        sessionStorage.setItem('initialsignup', 'false');
+        // Mark as error in session storage
+        sessionStorage.setItem('initialsignup', 'error');
       } finally {
         setLoading(false);
       }
     };
-
+  
     checkAdminRole();
   }, []);
+  
 
 
 
@@ -202,31 +214,33 @@ const App = () => {
       marginTop: '100px', // Adjust the margin-top as needed
     },
   }}
-/>  {/* Place Toaster for notifications */}
+/>
+
+  {/* Place Toaster for notifications */}
         <Routes>
 
-{/*         
-            <Route path='/' element={{hasSignedUp ?{navigate("/Home")} : {navigate("/admin/addUser")}} />} /> */}
 <Route path='AudioHomescreen' element= {<AudioHomescreen/>} />
-            <Route path='/' element={<UserPrivateRouter isAuthenticated={true} element={<MoviesPage/>} />} />
-          {/* <Route path='/' element={<Home  />} /> */}
-
-          {/* <Route path='/' element={<UserPrivateRouter hasSignedUp={hasSignedUp}  element={<Home />} />} /> */}
-          {/* <Route path='/AdminSignin' element={<AdminSignin />} /> */}
-
+            
+            <Route
+        path="/"
+        element={<UserPrivateRouter isAuthenticated={true} element={<MoviesPage />} />}
+      />
+      <Route
+        path="/AdminSignin"
+        element={<AdminRouteGuard element={<AdminSignin />} />}
+      />
           <Route path='Home' element={<Home />} />
           
           
           <Route path='MusicPage' element={<MusicScreen />} />
          
           <Route path='VideoHomescreen' element={<VideoHomescreen />} />
-          {/* <Route path='Homescreen' element={<Videosam />} /> */}
           <Route path='test' element={<Test/>} />
           <Route path='UserLogin' element={<UserLogin />} />
           <Route path='Register' element={<Register />} />
           <Route path='AboutUs' element={<AboutUs />} />
           <Route path='PrivacyPolicy' element={<PrivacyPolicy />} />
-          {/* <Route path='play' element={<Userplayer/>} /> */}
+         
           <Route path='play' element={<UserPrivateRouter isAuthenticated={log} element={<Userplayer />} />} />
           <Route path='PlanDetails' element={<PlanDetails />} />
           <Route path="Subscriptiondetails" element={<Subscription_details />} />
@@ -234,11 +248,12 @@ const App = () => {
           <Route path='AdminSignin' element ={<AdminSignin />} />
           <Route path='Contactus' element={<ContactUs />}/>
           <Route path='watchpage/:id' element={<WatchPage />} />
-          {/* <Route path='videoScreen/:id' element={<VideoScreen/>} />  */}
+         
           <Route path='userforgetpassword' element={<Userforgetpassword />} />
+          <Route path='forgetPassword' element={<ForgetPasswordUser />} />
           <Route path='ViewProfile' element={<ViewProfile />} />
           <Route path='libraryScreen' element={<LibraryScreen />} />
-          {/* <Route path='libraryScreen' element={<Library/>} /> */}
+         
 
          
 
@@ -296,6 +311,7 @@ const App = () => {
             <Route path='setting' element= {<Setting/>} /> */}
             
             <Route path='SiteSetting' element= {<SiteSetting/>} />
+            <Route path='mailSetting' element={<Mailsetting />} />
             <Route path='Video_setting' element= {<Video_setting/>} />
             <Route path='Setting_sidebar' element= {<Setting_sidebar/>} />
             <Route path='Social_setting' element= {<Social_setting/>} />

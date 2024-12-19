@@ -2,6 +2,7 @@ package com.VsmartEngine.MediaJungle.userregister;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.MailVerification.EmailService;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
 
@@ -41,42 +44,48 @@ public class UserRegisterController {
     private TokenBlacklist tokenBlacklist;
     
 	@Autowired
-    private NotificationService notificationservice;
-        
+    private NotificationService notificationservice;  
 
-	public ResponseEntity<UserRegister> register(@RequestParam("username") String username,
-			            @RequestParam("email") String email,
-			            @RequestParam("password") String password,
-			            @RequestParam("mobnum") String mobnum,
-			            @RequestParam("confirmPassword") String confirmPassword,
-			            @RequestParam(value = "profile", required = false) MultipartFile profile) throws IOException {
-			if (!password.equals(confirmPassword)) {
-			return ResponseEntity.badRequest().body(null);
-			}
-			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		    String encodedPassword = passwordEncoder.encode(password);
-		    String encodedconfirmPassword = passwordEncoder.encode(confirmPassword);
-		    LocalDate parsedDate = LocalDate.now();
-			
-			UserRegister newRegister = new UserRegister();
-			newRegister.setUsername(username);
-			newRegister.setEmail(email);
-			newRegister.setPassword(encodedPassword);
-			newRegister.setConfirmPassword(encodedconfirmPassword);
-			newRegister.setMobnum(mobnum);
-			newRegister.setRole("USER");
-			newRegister.setDate(parsedDate);
-			
-			if (profile != null && !profile.isEmpty()) {
-			byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
-			newRegister.setProfile(thumbnailBytes);
-			}
-			
-			UserRegister savedUser = userregisterrepository.save(newRegister);
-			return ResponseEntity.ok(savedUser);
-			}
+	   public ResponseEntity<?> register(
+		        @RequestParam("username") String username,
+		        @RequestParam("email") String email,
+		        @RequestParam("password") String password,
+		        @RequestParam("mobnum") String mobnum,
+		        @RequestParam(value = "profile", required = false) MultipartFile profile) {
+		    try {
+		        // Encrypt the password and confirmPassword
+		        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		        String encodedPassword = passwordEncoder.encode(password);
+		        // Set current date
+		        LocalDate parsedDate = LocalDate.now();
 
+		        // Create a new UserRegister object
+		        UserRegister newRegister = new UserRegister();
+		        newRegister.setUsername(username);
+		        newRegister.setEmail(email);
+		        newRegister.setPassword(encodedPassword);
+		        newRegister.setMobnum(mobnum);
+		        newRegister.setDate(parsedDate);
 
+		        // Handle profile image
+		        if (profile != null && !profile.isEmpty()) {
+		            byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
+		            newRegister.setProfile(thumbnailBytes);
+		        }
+
+		        // Save the user to the repository
+		        UserRegister savedUser = userregisterrepository.save(newRegister);
+
+		        return ResponseEntity.ok(savedUser);
+
+		    } catch (Exception e) {
+		        // Handle exceptions
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		                .body("{\"message\": \"An error occurred while registering the user: \"}" + e.getMessage());
+		    }
+		}
+	
+	
     public ResponseEntity<List<UserRegisterDTO>> getUsersRegisteredWithinLast15Days() {
         LocalDate startDate = LocalDate.now().minusDays(15);
         List<UserRegisterDTO> users  = userregisterrepository.findUsersRegisteredWithinLast15Days(startDate);
@@ -86,14 +95,26 @@ public class UserRegisterController {
             return ResponseEntity.noContent().build();
         }
     }
+
     
-    
-	
     public ResponseEntity<List<UserRegister>> getAllUser() {
-        List<UserRegister> getUser = userregisterrepository.findAll();
-        return new ResponseEntity<>(getUser, HttpStatus.OK);
+        try {
+            // Fetch all users from the repository
+            List<UserRegister> getUser = userregisterrepository.findAll();
+            
+            // Check if the list is empty
+            if (getUser.isEmpty()) {
+                return new ResponseEntity(HttpStatus.NO_CONTENT); // Return 204 No Content
+            }
+            
+            // Return the list of users with 200 OK
+            return new ResponseEntity<>(getUser, HttpStatus.OK);
+        } catch (Exception e) {
+            // Handle exceptions and return 500 Internal Server Error
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-     
+
 
     public ResponseEntity<UserRegister> getUserById(@PathVariable Long id) {
         Optional<UserRegister> userOptional = userregisterrepository.findById(id);
@@ -125,7 +146,8 @@ public class UserRegisterController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Incorrect password\"}");
         }
         // Generate JWT token
-        String role = user.getRole(); // Get user role
+//        String role = user.getRole(); // Get user role
+        String role = "USER"; // Get user role
         String jwtToken = jwtUtil.generateToken(email,role);
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("token", jwtToken);
@@ -178,7 +200,6 @@ public class UserRegisterController {
             // Finding the user by email
             String email = loginRequest.get("email");
             String password = loginRequest.get("password");
-            String confirmPassword = loginRequest.get("confirmPassword");
             Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
 
             // If the user doesn't exist, return 404 Not Found
@@ -189,17 +210,11 @@ public class UserRegisterController {
 
             UserRegister user = userOptional.get();
 
-            // If passwords do not match, return 400 Bad Request
-            if (!password.equals(confirmPassword)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
-            }
-
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(password);
 
             // Update the user password
             user.setPassword(encodedPassword);
-            user.setConfirmPassword(encodedPassword); // You don't need a separate field for confirmPassword in the database
 
             // Save the updated user
             UserRegister savedUser = userregisterrepository.save(user);
@@ -230,7 +245,6 @@ public class UserRegisterController {
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "mobnum", required = false) String mobnum,
             @RequestParam(value = "password", required = false) String password,
-            @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
             @RequestParam(value = "profile", required = false) MultipartFile profile) {
 
         try {
@@ -256,11 +270,6 @@ public class UserRegisterController {
             if (password != null) {
             	String encodedPassword = passwordEncoder.encode(password);
 	            existingUser.setPassword(encodedPassword);
-	        }
-
-	        if (confirmPassword!= null) {
-	        	String confirmencodedPassword = passwordEncoder.encode(confirmPassword);
-	            existingUser.setConfirmPassword(confirmencodedPassword);
 	        }
 	        
             if (profile != null && !profile.isEmpty()) {

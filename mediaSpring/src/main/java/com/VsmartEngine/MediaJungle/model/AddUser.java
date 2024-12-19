@@ -42,6 +42,7 @@ public class AddUser {
 	@Column(name="confirm_Password")
 	private String confirmPassword;
 	
+	
 	@Column(name="address")
 	private String address;
 
