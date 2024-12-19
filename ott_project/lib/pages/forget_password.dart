@@ -55,7 +55,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       return;
     }
     final response = await http.post(
-      Uri.parse("http://192.168.40.165:8080/api/v2/forgetPassword"),
+      Uri.parse(
+        // "https://testtomcat.vsmartengine.com/media/api/v2/forgetPassword"),
+           'http://192.168.156.243:8080/api/v2/forgetPassword'),
+        //"http://192.168.40.165:8080/api/v2/forgetPassword"),
       headers: <String, String>{'Content-Type': 'application/json'},
       body: jsonEncode(<String, String>{
         'email': email,
@@ -166,6 +169,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         child: TextButton(
                             onPressed: () {
                               resetPassword(context);
+                             setState(() {
+                               emailController.clear();
+                               passwordController.clear();
+                               confirmPasswordController.clear();
+                             });
                             },
                             child: Text(
                               'Submit',

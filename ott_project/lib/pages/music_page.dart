@@ -9,6 +9,7 @@ import 'package:ott_project/components/music_folder/recently_played.dart';
 import 'package:ott_project/components/video_folder/category_bar.dart';
 import 'package:ott_project/components/video_folder/video_container.dart';
 import 'package:ott_project/pages/custom_appbar.dart';
+import 'package:ott_project/pages/main_tab.dart';
 
 import 'package:ott_project/pages/movie_page.dart';
 import 'package:ott_project/profile/profile_page.dart';
@@ -32,14 +33,9 @@ class MusicPage extends StatefulWidget {
 }
 
 class _MusicPageState extends State<MusicPage> {
-  // late Future<List<Audio>> _audio;
-  // Map<String, List<Audio>> _categorizeAudios = {};
-  // final TextEditingController _searchController = TextEditingController();
-  // List<Audio> _filteredAudios = [];
-
   
   final TextEditingController _searchController = TextEditingController();
-  List<Music> _filteredAudios = [];
+  //List<Music> _filteredAudios = [];
   
   List<AudioDescription> allSongs =[];
   late List<VideoDescription> _allVideos =[];
@@ -109,20 +105,26 @@ class _MusicPageState extends State<MusicPage> {
       case "Movies":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MoviePage()),
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 0)),
         );
         break;
       case "Music":
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MusicPage(userId: widget.userId)),
+              builder: (context) => MainTab(initialTab: 1)),
         );
         break;
-      case "Profile":
+      case "Library":
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 2)),
+        );
+        break;
+       case "Profile":
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainTab(initialTab: 3)),
         );
         break;
     }
@@ -191,8 +193,8 @@ class _MusicPageState extends State<MusicPage> {
                           Expanded(
                             child: ListView(                       
                               children: [
-                                if (_searchController.text.isNotEmpty &&
-                                    _filteredAudios.isEmpty)
+                                if (_searchController.text.isNotEmpty
+                                    )
                                   Center(
                                     child: Text(
                                       'No audios found',

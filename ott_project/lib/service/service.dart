@@ -18,8 +18,8 @@ class Service {
     // File profilePicture,
   ) async {
     var uri = Uri.parse(
-       "https://testtomcat.vsmartengine.com/media/api/v2/userregister");
-       //  'http://192.168.183.42:8080/api/v2/userregister');
+       //"https://testtomcat.vsmartengine.com/media/api/v2/userregister");
+         'http://192.168.156.243:8080/api/v2/userregister');
        //  'http://localhost:8080/api/v2/userregister');
     //Map<String, String> headers = {"Content-Type": "multipart/form-data"};
     var request = http.MultipartRequest('POST', uri);
@@ -79,10 +79,12 @@ class Service {
     BuildContext context,
     String email,
     String password,
+    TextEditingController emailController,
+    TextEditingController passwordController,
   ) async {
     var uri = Uri.parse(
      // "https://testtomcat.vsmartengine.com/media/api/v2/login");
-        'http://192.168.156.243:8080/api/v2/login');
+       'http://192.168.156.243:8080/api/v2/login');
      //   'http://localhost:8080/api/v2/login');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map data = {
@@ -97,6 +99,7 @@ class Service {
 
       var responseData = jsonDecode(response.body);
       String token = responseData['token'];
+      print('User token:$token');
       String userId = responseData['userId'].toString();
       await secureStorage.write(key: 'token', value: token);
       await secureStorage.write(key: 'userId', value: userId);
@@ -123,6 +126,7 @@ class Service {
         ),
       );
     } else if (response.statusCode == 404) {
+      
       String errorMessage = 'User not found ';
       showDialog(
         context: context,
@@ -135,6 +139,8 @@ class Service {
           actions: [
             TextButton(
               onPressed: () {
+                emailController.clear();
+                passwordController.clear();
                 Navigator.pop(context);
               },
               child: Text('OK'),
