@@ -136,11 +136,4 @@ public class VerificationController {
                     .body("{\"message\": \"An error occurred during verification. Please try again later.\"}"+ e.getMessage());
         }
     }
-
-<<<<<<< HEAD
 }
-=======
-
-
-}
->>>>>>> 624de14b5d26f58a3f3816a321f4456b266b98aa

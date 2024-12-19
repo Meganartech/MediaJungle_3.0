@@ -169,11 +169,11 @@ public class MobileAppController {
 	            existingUser.setPassword(encodedPassword);
 	        }
 
-	        if (confirmPassword!= null) {
-	        	String confirmencodedPassword = passwordEncoder.encode(confirmPassword);
-	            existingUser.setConfirmPassword(confirmencodedPassword);
-	        }
-	        
+//	        if (confirmPassword!= null) {
+//	        	String confirmencodedPassword = passwordEncoder.encode(confirmPassword);
+//	            existingUser.setConfirmPassword(confirmencodedPassword);
+//	        }
+//	        
             if (profile != null && !profile.isEmpty()) {
                 byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
                 existingUser.setProfile(thumbnailBytes);
