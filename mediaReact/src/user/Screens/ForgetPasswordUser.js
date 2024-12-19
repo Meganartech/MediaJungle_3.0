@@ -16,6 +16,35 @@ const ForgetPasswordUser = () => {
     const [showCode,setShowCode] = useState(true); // State for toggling password visibility
     const [showwPassword,setShowPassword] =useState(true);
     const [showConfirmPassword,setShowConformPassword] = useState(true);
+    const [errors, setErrors] = useState({});
+
+    const validateForm = () => {
+        let isValid = true;
+        const newErrors = {};
+    
+        if (!password.trim()) {
+            newErrors.password = 'Password is required';
+            isValid = false;
+        } else if (password.length < 6 || password.length > 15) {
+            newErrors.password = 'Password must be between 6 and 15 characters';
+            isValid = false;
+        } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            newErrors.password = 'Password must contain at least one special character';
+            isValid = false;
+        }
+        
+        if (!conformPassword.trim()) {
+            newErrors.conformPassword = 'Confirm Password is required';
+            isValid = false;
+        } else if (password !== conformPassword) {
+            newErrors.conformPassword = 'Passwords do not match';
+            isValid = false;
+        }
+    
+        setErrors(newErrors); // Update the state with new errors
+        return isValid;
+    };
+
 
     const toggleCodeVisibility = () => {
         setShowCode((prevShowcode) => !prevShowcode);
@@ -72,7 +101,7 @@ const ForgetPasswordUser = () => {
         const toastId = toast.success('Verification code is being sent to your email...');
     
         try {
-            const senddata = await axios.post(`${API_URL}/api/v2/send-code`, data, {
+            const senddata = await axios.post(`${API_URL}/api/v2/send-code/forgetpassword`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -81,7 +110,7 @@ const ForgetPasswordUser = () => {
             // Dismiss the initial toast after 5 seconds (5000ms)
             setTimeout(() => {
                 toast.dismiss(toastId);
-                if (senddata.status === 200) {
+                if (senddata.status === 201) {
                     console.log(senddata);
                     // Show success toast after the initial one is dismissed
                     toast.success('Email sent successfully!');
@@ -111,12 +140,6 @@ const ForgetPasswordUser = () => {
             }, 3000);  // Delay of 5 seconds before removing the toast
         }
     };
-    
-    
-    
-    
-    
-    
 
     const SendVerifyCode  = async (e) => {
         e.preventDefault();
@@ -137,7 +160,7 @@ const ForgetPasswordUser = () => {
                 // Set a timer to show the toast message after a short delay
                 console.log(senddata);
                 setTimeout(() => {
-                    toast.success(senddata.data);
+                    toast.success(senddata.data.message);
                 }, 1000); // Adjust time (1000ms = 1 second)
                 
                 // Move to the next step
@@ -146,21 +169,39 @@ const ForgetPasswordUser = () => {
             nextStep();
         }
         catch (error) {
-            console.error('Error:', error);
-            toast.error('An error occurred while sending the verification code.');
-        }
-    };
+                    // Extract status and message from the error response
+                    const status = error.response?.status;
+                    const message = error.response?.data?.message || 'An unexpected error occurred.';
+            
+                    // Handle specific statuses
+                    if (status === 400) {
+                        setTimeout(() => {
+                            toast.warning(message);
+                        }, 1000); // Adjust time (1000ms = 1 second)
+                    } else if (status === 500) {
+                        setTimeout(() => {
+                            toast.error(message);
+                        }, 1000); // Adjust time (1000ms = 1 second)
+                    } else {
+                        setTimeout(() => {
+                            toast.error(message);
+                        }, 1000); // Adjust time (1000ms = 1 second)
+                    }
+                    return false; // Indicate verification failure
+                }
+            };
 
 
 
     const handleSubmit = async (e) => {
                 e.preventDefault();
+
+                if (!validateForm()) return; // Ensure form validation before proceeding
         
                 try {
                     const sendData = {
                         email: email,
                         password: password,
-                        confirmPassword: conformPassword,
                     };
         
                     const response = await fetch(`${API_URL}/api/v2/forgetPassword`, {
@@ -303,6 +344,9 @@ const ForgetPasswordUser = () => {
                     className={`bi ${showwPassword ? 'bi-eye-slash' : 'bi-eye'} password-eye-icon`} // Bootstrap icons
                     onClick={togglePasswordVisibility}
                 ></i>
+                {errors.password && (
+                            <p style={{color:'red'}}>{errors.password}</p>
+                        )}
                 <input
                     type={showConfirmPassword ? "password" : "text"} // Toggle between text and password
                     name="code"
@@ -311,6 +355,9 @@ const ForgetPasswordUser = () => {
                     className="input-field"
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />
+                {errors.conformPassword && (
+                            <p style={{color:'red'}}>{errors.conformPassword}</p>
+                        )}
                 <i
                     className={`bi ${showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'} confirm-eye-icon`} // Bootstrap icons
                     onClick={toggleConfirmPasswordVisibility}

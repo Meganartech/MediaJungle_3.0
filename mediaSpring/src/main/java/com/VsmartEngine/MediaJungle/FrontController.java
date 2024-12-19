@@ -486,8 +486,7 @@ public class FrontController {
 	@DeleteMapping("/DeleteCertificate/{certificateId}")
 	   public ResponseEntity<?> deletecertificate(@PathVariable Long certificateId,@RequestHeader("Authorization") String token) {
 
-		return CertificateController.deleteCategory(certificateId, token)
-				;
+		return CertificateController.deleteCategory(certificateId, token);
 	}
 
 	@PatchMapping("/editCertificate/{certificateId}")
@@ -671,10 +670,10 @@ public class FrontController {
 		return LanguageController.editLanguage(languageId, editlanguage, token);
 	}
 
-	@GetMapping("/GetAllUser")
-	public ResponseEntity<UserWithStatus> getAllUser() {
-		return LicenseController.getAllUser();
-	}
+//	@GetMapping("/GetAllUser")
+//	public ResponseEntity<UserWithStatus> getAllUser() {
+//		return LicenseController.getAllUser();
+//	}
 
 	@GetMapping("/count")
 	public ResponseEntity<Integer> count() {
@@ -944,27 +943,45 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 
 		return VideoCastAndCrewController.getCastVideo(videoId);
 	}
-
+	
 	@PostMapping("/userregister")
-	public ResponseEntity<UserRegister> register(@RequestParam("username") String username,
-			@RequestParam("email") String email, @RequestParam("password") String password,
-			@RequestParam("mobnum") String mobnum, @RequestParam("confirmPassword") String confirmPassword,
-			@RequestParam(value = "profile", required = false) MultipartFile profile) throws IOException {
-
-		return UserRegisterController.register(username, email, password, mobnum, confirmPassword, profile);
+	public ResponseEntity<?> register(
+	        @RequestParam("username") String username,
+	        @RequestParam("email") String email,
+	        @RequestParam("password") String password,
+	        @RequestParam("mobnum") String mobnum,
+	        @RequestParam(value = "profile", required = false) MultipartFile profile) {
+		return UserRegisterController.register(username, email, password, mobnum, profile);
 	}
 
+//	@GetMapping("/GetAllUsers")
+//	public ResponseEntity<List<UserRegister>> getAllUserRegester() {
+//
+//		return UserRegisterController.getAllUser();
+//	}
+	
 	@GetMapping("/GetAllUsers")
-	public ResponseEntity<List<UserRegister>> getAllUserRegester() {
-
-		return UserRegisterController.getAllUser();
-	}
+	 public ResponseEntity<List<UserRegister>> getAllUser() {
+		 return UserRegisterController.getAllUser();
+	 }
+	
+//	@PostMapping("/send-code")
+//	@Transactional
+//    public ResponseEntity<String> sendCode(@RequestParam String email) {
+//		return verificationcontroller.sendCode(email);
+//	}
 	
 	@PostMapping("/send-code")
 	@Transactional
-    public ResponseEntity<String> sendCode(@RequestParam String email) {
-		return verificationcontroller.sendCode(email);
+	public ResponseEntity<String> sendCodewhileRegister(@RequestParam String email) {
+		return verificationcontroller.sendCodewhileRegister(email);
 	}
+	
+	@PostMapping("/send-code/forgetpassword")
+	@Transactional
+	 public ResponseEntity<String> sendCode(@RequestParam String email) {
+		 return verificationcontroller.sendCode(email);
+	 }
 	
 	@PostMapping("/verify-code")
     public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code) {
@@ -1009,10 +1026,9 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "mobnum", required = false) String mobnum,
             @RequestParam(value = "password", required = false) String password,
-            @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
             @RequestParam(value = "profile", required = false) MultipartFile profile) {
 
-    	return UserRegisterController.updateUserr(userId, username, email, mobnum, password, confirmPassword, profile);
+    	return UserRegisterController.updateUserr(userId, username, email, mobnum, password, profile);
     }
 	
 	

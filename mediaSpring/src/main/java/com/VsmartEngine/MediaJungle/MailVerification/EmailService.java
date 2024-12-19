@@ -21,58 +21,59 @@ public class EmailService {
 	 @Autowired
 	 private MailsettingRepository mailsettingrepository;
 	 	 
-	 // Send email with dynamic configuration
-	    public void sendEmail(String to, String subject, String body) {
-	        try {
-	            // Retrieve mail configuration from the database
-	            Optional<MailSetting> mailConfigOpt = mailsettingrepository.findFirstByOrderByIdAsc();
+	// Send email with dynamic configuration and return success status
+	 public boolean sendEmail(String to, String subject, String body) {
+	     try {
+	         // Retrieve mail configuration from the database
+	         Optional<MailSetting> mailConfigOpt = mailsettingrepository.findFirstByOrderByIdAsc();
 
-	            if (mailConfigOpt.isEmpty()) {
-	                throw new IllegalStateException("Mail configuration not found in the database");
-	            }
+	         if (mailConfigOpt.isEmpty()) {
+	             throw new IllegalStateException("Mail configuration not found in the database");
+	         }
 
-	            MailSetting mailConfig = mailConfigOpt.get();
+	         MailSetting mailConfig = mailConfigOpt.get();
 
-	            // Configure mail sender dynamically
-	            JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
-	            mailSenderImpl.setHost(mailConfig.getMailhostname());
-	            mailSenderImpl.setPort(mailConfig.getMailportname());
-	            mailSenderImpl.setUsername(mailConfig.getEmailid());
-	            mailSenderImpl.setPassword(mailConfig.getPassword());
+	         // Configure mail sender dynamically
+	         JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
+	         mailSenderImpl.setHost(mailConfig.getMailhostname());
+	         mailSenderImpl.setPort(mailConfig.getMailportname());
+	         mailSenderImpl.setUsername(mailConfig.getEmailid());
+	         mailSenderImpl.setPassword(mailConfig.getPassword());
 
-	            // Set additional mail properties
-	            Properties  props = mailSenderImpl.getJavaMailProperties();
-	            props.put("mail.transport.protocol", "smtp");
-	            props.put("mail.smtp.auth", "true");
-	            props.put("mail.smtp.starttls.enable", "true");
-	            props.put("mail.debug", "true"); // Enable debug logs for development purposes
-	            
-	            if (mailConfig.getMailportname() == 465) {
-	                props.put("mail.smtp.ssl.enable", "true"); // Use SSL for port 465
-	            }
+	         // Set additional mail properties
+	         Properties props = mailSenderImpl.getJavaMailProperties();
+	         props.put("mail.transport.protocol", "smtp");
+	         props.put("mail.smtp.auth", "true");
+	         props.put("mail.smtp.starttls.enable", "true");
+//	         props.put("mail.debug", "true"); // Enable debug logs for development purposes
 
-	            // Assign configured mail sender
-	            this.mailSender = mailSenderImpl;
+	         if (mailConfig.getMailportname() == 465) {
+	             props.put("mail.smtp.ssl.enable", "true"); // Use SSL for port 465
+	         }
 
-	            // Prepare and send the email
-	            long startTime = System.currentTimeMillis(); // Log start time
+	         // Assign configured mail sender
+	         this.mailSender = mailSenderImpl;
 
-	            SimpleMailMessage message = new SimpleMailMessage();
-	            message.setTo(to);
-	            message.setSubject(subject);
-	            message.setText(body);
-	            message.setFrom(mailConfig.getEmailid()); // Sender email address
-	            mailSender.send(message);
+	         // Prepare and send the email
+	         long startTime = System.currentTimeMillis(); // Log start time
 
-	            long endTime = System.currentTimeMillis(); // Log end time
-	            System.out.println("Email sent in " + (endTime - startTime) + " ms");
+	         SimpleMailMessage message = new SimpleMailMessage();
+	         message.setTo(to);
+	         message.setSubject(subject);
+	         message.setText(body);
+	         message.setFrom(mailConfig.getEmailid()); // Sender email address
+	         mailSender.send(message);
 
-	        } catch (Exception e) {
-	            // Log the error (use proper logging in production)
-	            e.printStackTrace();
-	            throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
-	        }
-	    }
+//	         long endTime = System.currentTimeMillis(); // Log end time
+//	         System.out.println("Email sent in " + (endTime - startTime) + " ms");
+
+	         return true; // Email sent successfully
+	     } catch (Exception e) {
+	         // Log the error (use proper logging in production)
+	         e.printStackTrace();
+	         return false; // Email sending failed
+	     }
+	 }
 
 
 
