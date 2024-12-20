@@ -74,7 +74,7 @@ function Subscription_details() {
   return (
     <Layout className='container mx-auto min-h-screen overflow-y-auto'>
         <div> {jwtToken && user ? <h1  className='ml-4 text-xl font-medium text-white' >Welcome    {user.username}      !!</h1> : "Welcome User"}</div>
-    <div className='banner-container px-10 my-24 flex flex-col items-left' style={{paddingLeft:'500px'}}>
+    <div className='banner-container px-10 my-24 flex flex-col items-left' >
       
  
         {/* Separate div for User Information */}

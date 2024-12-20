@@ -1,2 +1,1 @@
-sql.server.port=5001
-
+sql.server.port=5432

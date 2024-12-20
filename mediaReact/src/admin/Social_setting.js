@@ -23,7 +23,8 @@ const Social_setting = () => {
     { name: "Payment Settings", path: "/admin/Payment_setting" },
     { name: "Banner Settings", path: "/admin/Banner_setting" },
     { name: "Footer Settings", path: "/admin/Footer_setting" },
-    { name: "Contact Settings", path: "/admin/Contact_setting" }
+    { name: "Contact Settings", path: "/admin/Contact_setting" },
+    { name: "Container Settings", path: "/admin/container" }
   ];
 
   // Fetch the first social settings when the component loads
@@ -116,20 +117,17 @@ const Social_setting = () => {
       </div>
 
       <br />
-      <div className="container2">
+      <div className="container3">
   <ol className="breadcrumb mb-4 d-flex my-0">
     <li className="breadcrumb-item">
       <Link to="/admin/SiteSetting">Settings</Link>
     </li>
     <li className="breadcrumb-item active text-white">Social Settings</li>
   </ol>
+<div className='outer-container ml-2 mt-3'>
 
-  <div className="table-container">
-    <div className="card-body">
-    
-        {/* Form container */}
-        <div className="col-md-10">
-          <form onSubmit={save} method="post" className="registration-form">
+
+          <form onSubmit={save} method="post" className="registration-form1">
         
               {/* FB URL */}
               <div className="form-group">
@@ -184,7 +182,7 @@ const Social_setting = () => {
               </div>
 
               {/* Form Footer */}
-              <div className='button-container'>
+              <div className='button-container1'>
                 <input 
                   type="submit" 
                   className="btn btn-info" 
@@ -196,11 +194,11 @@ const Social_setting = () => {
           </form>
      
         </div>
-      </div>
+   
   
     </div>
   </div>
-</div>
+
 
   );
 };  

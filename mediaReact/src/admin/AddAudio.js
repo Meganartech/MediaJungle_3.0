@@ -140,7 +140,7 @@ const AddAudio = () => {
         .then(data => {
 
           const base64Thumbnail = data.thumbnail;
-          // console.log(base64Thumbnail)
+          console.log("base64Thumbnail",base64Thumbnail)
           
           setThumbnail(base64Thumbnail);
           if (base64Thumbnail) {
@@ -468,12 +468,14 @@ const handleDropdownToggle = () => {
   setDropdownOpen(!dropdownOpen);
   const MovieNames = options;
   
+  
   // Separate options that start with the value from those that contain it elsewhere
   if(Movie_name!=null){
   const startsWithValue = MovieNames.filter(optione =>
     optione.toLowerCase().startsWith(Movie_name.toLowerCase())  // Options that start with the input
   );
   setFilteredOptions(startsWithValue); 
+  
 }
   // console.log(Movie_name)
 };
@@ -501,6 +503,7 @@ const handleDropdownToggle = () => {
   setFilteredOptions(filtered); 
   setDropdownOpen(true);
   setMovie_name(value2);
+  
 };
 
 const handleOptionClick = (option) => {
@@ -513,6 +516,7 @@ const handleOptionClick = (option) => {
     optione.toLowerCase().startsWith(option.toLowerCase())  // Options that start with the input
   );
   setFilteredOptions(startsWithValue); 
+  
   
 };
 
@@ -775,22 +779,56 @@ const handleOptionClick = (option) => {
     });
 
   }
+  useEffect(() => {
+    // Define async function within useEffect to call async function `getbannermovie`
+    const fetchBanner = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/v2/moviename/getbanner/${Movie_name}`);
+        const data = await response.json();
+  
+        console.log("bannerdata", data);
+  
+        if (data) {
+          const imageResponse = await fetch(`${API_URL}/api/v2/getbannerimage/${data}/get`);
+          const imgdata = await imageResponse.json();
+          setBannerimageUrl(`data:image/png;base64,${imgdata.userbanneraudio}`);
+          console.log("Converted File:", imgdata);
+        } else {
+          console.error("Error: Movie ID not found");
+          setBannerimageUrl('');
+        }
+      } catch (error) {
+        console.error("Error fetching banner image:", error);
+        setBannerimageUrl('');
+      }
+    };
 
- 
+    if (Movie_name) {
+      fetchBanner();
+    }
+  }, [Movie_name]); // Re-run when `Movie_name` changes
+
+
+  
+  
+
 
 
   return (
 
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* <button className='btn btn-custom' onClick={() => handleClick("/admin/addAudio")}>Add Audio</button> */}
+    </div><br/>
 
-
-    <div className='container3 mt-20'>
+    <div className='container3 mt-10'>
       <ol className="breadcrumb mb-4 d-flex my-0">
         <li className="breadcrumb-item"><Link to="/admin/ListAudio">Audios</Link></li>
         <li className="breadcrumb-item active text-white">{mode ? "Add Audio" : "Edit Audio"}</li>
       </ol>
 
       <div className="outer-container">
-        <div className="table-container" style={{ height: '63vh' }} >
+        <div className="table-container" style={{ height: '61vh' }} >
           {currentStep === 1 && (
             <>
               <div className="row py-3 my-3 align-items-center w-100">
@@ -808,7 +846,7 @@ const handleOptionClick = (option) => {
                         name='Audio Title'
                         id='name'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         placeholder="Audio Title"
                         onChange={changeaudio_title}
                         value={audio_title}
@@ -830,7 +868,7 @@ const handleOptionClick = (option) => {
                         name='Audio Duration'
                         id='name'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         placeholder="Main Audio Duration"
                         onChange={changeaudio_Duration}
                         value={Audio_Duration}
@@ -855,7 +893,7 @@ const handleOptionClick = (option) => {
                         name='Movie Name'
                         id='Movie Name'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         placeholder="Movie Name"
                         onChange={changeMovie_name}
                         value={Movie_name}
@@ -865,8 +903,13 @@ const handleOptionClick = (option) => {
         type="text"
         value={Movie_name || ''}
         onClick={handleDropdownToggle} // Open the dropdown on input click
-        onChange={handleInputChange} // Update input value on change
-        className="form-control border border-dark border-2 input-width col-lg-12"
+        onChange={(e) => handleInputChange(e)} // Update the state as the user types
+    // onBlur={() => {
+    //   if (Movie_name) {
+    //     getbannermovie(Movie_name); // Call the function if Movie_name is set
+    //   }
+    // }}
+        className="form-control border border-dark input-width col-lg-12"
         style={{ padding: '10px', cursor: 'pointer' }}
         placeholder="Select an option"
       />
@@ -911,7 +954,7 @@ const handleOptionClick = (option) => {
                 name='certificate_name'
                 id='certificate_name'
                 required
-                className="form-control border border-dark border-2 input-width" 
+                className="form-control border border-dark input-width" 
                 placeholder="Certificate Name" 
                 onChange={changeCertificate_name}
                 value={Certificate_name}
@@ -923,7 +966,7 @@ const handleOptionClick = (option) => {
                         name='certificate_name'
                         id='certificate_name'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         placeholder="Certificate Name"
                         value={Certificateid}
                         value1={Certificatename}
@@ -965,7 +1008,7 @@ const handleOptionClick = (option) => {
                         name='rating'
                         id='rating'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         placeholder="/10"
                         onChange={changeRating}
                         value={Rating}
@@ -987,7 +1030,7 @@ const handleOptionClick = (option) => {
                         name='certificate_no'
                         id='certificate_no'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         placeholder="Certificate No"
                         onChange={changeCertificate_no}
                         value={Certificate_no}
@@ -1092,7 +1135,7 @@ const handleOptionClick = (option) => {
                         name='Cast_and_Crew'
                         id='Cast_and_Crew'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         onClick={toggleDropdown}
                       >
                         {castandcrewlist.length > 0 ? 'Selected' : 'Select Cast & Crew'}
@@ -1146,14 +1189,14 @@ const handleOptionClick = (option) => {
               {/* <div className="row py-1 my-1 w-100">
               <div className="col-md-8 ms-auto text-end">
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                   type="button"
                 >
                   Cancel
                 </button>
          
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  className="border border-dark p-1.5 w-20 text-white rounded-lg"
                   type="submit"
                   style={{ backgroundColor: 'blue' }}
                   onClick={nextStep}
@@ -1180,7 +1223,7 @@ const handleOptionClick = (option) => {
                         name='Description'
                         id='Description'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         placeholder="Description"
                         onChange={changeDescription}
                         value={Description}
@@ -1199,7 +1242,7 @@ const handleOptionClick = (option) => {
                         name='Production Company'
                         id='Production Company'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         placeholder="Production Company"
                         onChange={changeProduction_Company}
                         value={Production_Company}
@@ -1224,7 +1267,7 @@ const handleOptionClick = (option) => {
                         name='Tag'
                         id='Tag'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         onClick={toggleDropdowntag}
                       >
                         {taglist.length > 0 ? 'Selected' : 'Select Tag'}
@@ -1259,7 +1302,7 @@ const handleOptionClick = (option) => {
                         name='Category'
                         id='Category'
                         required
-                        className="form-control border border-dark border-2 input-width"
+                        className="form-control border border-dark input-width"
                         onClick={toggleDropdowncat}
                       >
                         {categorylist.length > 0 ? 'Selected' : 'Select Category'}
@@ -1345,7 +1388,7 @@ const handleOptionClick = (option) => {
                     <div className="flex-grow-1 col-md-7">
                       <div className="d-flex align-items-center">
                         <div
-                          className="drag-drop-area border border-dark border-2 text-center"
+                          className="drag-drop-area border border-dark text-center"
                           // onDrop={handleDrop}
                           // onDragOver={handleDragOver}
                           style={{
@@ -1376,7 +1419,7 @@ const handleOptionClick = (option) => {
                             marginLeft: '0px !Important',
                           }}
                           type="button"
-                          className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                          className="border border-dark p-1 bg-silver ml-2 choosefile"
                           onClick={() => document.getElementById('Thumbnail').click()}
                         >
                           Choose File
@@ -1415,7 +1458,7 @@ const handleOptionClick = (option) => {
                     <div className="flex-grow-1 col-md-7">
                       <div className="d-flex align-items-center">
                         <div
-                          className="drag-drop-area border border-dark border-2 text-center"
+                          className="drag-drop-area border border-dark text-center"
                           // onDrop={handleDrop}
                           // onDragOver={handleDragOver}
                           style={{
@@ -1445,7 +1488,7 @@ const handleOptionClick = (option) => {
                             marginLeft: '0px !Important',
                           }}
                           type="button"
-                          className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                          className="border border-dark p-1 bg-silver ml-2 choosefile"
                           onClick={() => document.getElementById('Banner').click()}
                         >
                           Choose File
@@ -1507,7 +1550,7 @@ const handleOptionClick = (option) => {
                             marginLeft: '0px !Important',
                           }}
                           type="button"
-                          className="border border-dark border-2 p-1 bg-silver ml-2 choosefile"
+                          className="border border-dark p-1 bg-silver ml-2 choosefile"
                           onClick={() => document.getElementById('fileInput1').click()}
                         >
                           Choose File
@@ -1583,7 +1626,7 @@ const handleOptionClick = (option) => {
                 </div>
                 <div className="col-md-6" style={{ height: '390px' }}>
 
-                  <div className="details-box ml-4 p-3 border border-dark border-2">
+                  <div className="details-box ml-4 p-3 border border-dark">
 
                     {/* <div class="row"> */}
                     <div class="col-md-12">
@@ -1657,35 +1700,35 @@ const handleOptionClick = (option) => {
           <div className="col-md-8 ms-auto text-end">
             {currentStep <= 3 ? <>
               <button
-                className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                 type="button"
                 onClick={prevStep}
               >
                 Back
               </button>
               <button
-                className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                className="border border-dark p-1.5 w-20 text-white rounded-lg"
                 type="submit"
-                style={{ backgroundColor: 'blue' }}
+                style={{ backgroundColor: '#2b2a52' }}
                 onClick={nextStep}
               >
                 Next
               </button></> : <>
               <button
-                className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                 type="button"
                 onClick={prevStep}
               >
                 Back
               </button>
               <button
-                className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                className="border border-dark p-1.5 w-20 text-white rounded-lg"
                 type="submit"
-                style={{ backgroundColor: 'blue' }}
+                style={{ backgroundColor: '#2b2a52' }}
                 onClick={save}
 
               >
-                Submit
+              {mode ? "Submit" : "Update"}
               </button>
             </>}
 
@@ -1693,7 +1736,7 @@ const handleOptionClick = (option) => {
         </div>
       </div>
     </div>
-
+</div>
 
   );
 };

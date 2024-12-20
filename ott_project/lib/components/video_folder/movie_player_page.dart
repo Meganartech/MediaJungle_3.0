@@ -1,20 +1,15 @@
 import 'dart:async';
-
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/components/video_folder/cast_crew.dart';
-import 'package:ott_project/components/video_folder/suggest_movie.dart';
-
 import 'package:ott_project/components/video_folder/video_container.dart';
-
 import 'package:ott_project/service/movie_api_service.dart';
 import 'package:ott_project/service/movie_service_page.dart';
+import 'package:ott_project/service/service.dart';
+import 'package:ott_project/service/watch_later_service.dart';
 
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -42,20 +37,26 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
   List<CastCrew> castCrew = [];
   List<VideoDescription> suggestedMovies =[];
   late MovieApiService _apiService;
+  late WatchLaterService _watchLater;
   late VideoDescription _movieDetails;
   bool isFullScreen = false;
   bool _showControls = true;
   final String currentCategory = '';
   Timer? _hideControlsTimer;
-  String baseUrl = 'http';
+  bool isInWatchList = false;
+  bool isAddingtoWatchList= false;
+  late int userId;
+  
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
     _apiService = MovieApiService();
+    _watchLater = WatchLaterService();
     _initializeVideoPlayerFuture = _fetchVideoScreenDetails(widget.videoDescriptions[_currentIndex].id, widget.categoryId);
     fetchSuggestedMovies();
+    _initializeUserWatchList();
   }
 
   Future<void> _fetchVideoScreenDetails(int videoId,int categoryId) async{
@@ -130,6 +131,86 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
       }
   }
 
+  Future<void>  _initializeUserWatchList() async{
+    try{
+      final currentUser = await Service().getLoggedInUserId();
+      if(currentUser!= null){
+        userId = currentUser;
+        await _checkWatchLaterStatus();
+      }else{
+        print('User not logged in');
+      }
+    }catch (e) {
+      print('Error initializing user watchlist: $e');
+    }
+  }
+
+  Future<void> _checkWatchLaterStatus() async{
+  try{
+    final watchList = await _watchLater.getWatchLaterVideos(userId);
+    setState(() {
+      isInWatchList = watchList.any((item)=> item.videoId == _movieDetails.id);
+    });
+    
+  }catch (e) {
+    print('Error checking watchlist status: $e');
+  }
+    }
+
+  Future<void> _toggleWatchLater() async{
+    if(isAddingtoWatchList) return;
+    if(userId == null){
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please log in to use watchlist feature'),
+          action: SnackBarAction(
+            label: 'Login',
+            onPressed: () {
+              // Navigate to login screen
+              Navigator.pushNamed(context, '/login');
+            },
+          ),
+        ),
+      );
+      return;
+    }
+    setState(() {
+      isAddingtoWatchList = true;
+    });
+    try{
+      if(isInWatchList){
+        await _watchLater.removeWatchLater(_movieDetails.id, userId);
+      }else{
+        await _watchLater.addToWatchLater(_movieDetails.id, userId);
+      }
+      setState(() {
+        isInWatchList = !isInWatchList;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(isInWatchList 
+            ? 'Added to your watchlist' 
+            : 'Removed from your watchlist'
+          ),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      print('Error toggling watchlist: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update your watchlist'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }finally{
+      setState(() {
+        isAddingtoWatchList = false;
+      });
+    }
+    }
+  
+
   @override
   void dispose() {
     _controller.dispose();
@@ -193,7 +274,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
   }
 
   void _enterFullScreen() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   }
@@ -201,8 +282,44 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
   void _exitFullScreen() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown
+        
+        ]);
   }
+
+  Widget _buildFullScreenPlayer() {
+ return GestureDetector(
+  onTap: _toggleControlsVisibility,
+  child: Stack(
+    fit: StackFit.expand,
+    children: [
+      Center(
+        child: AspectRatio(aspectRatio: _controller.value.aspectRatio,
+        child: VideoPlayer(_controller),),
+      ),
+      if(_showControls)
+        _buildVideoPlayer(),
+    ],
+  ),
+ );
+}
+
+void _toggleControlsVisibility() {
+  setState(() {
+    _showControls = !_showControls;
+    
+    // Optional: Auto-hide controls after 3 seconds
+    if (_showControls) {
+      Future.delayed(Duration(seconds: 5), () {
+        if (mounted) {
+          setState(() {
+            _showControls = false;
+          });
+        }
+      });
+    }
+  });
+}
 
   String _formatDuration(Duration duration) {
     final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
@@ -331,51 +448,92 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
     }
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return FutureBuilder(
+  //     future: _initializeVideoPlayerFuture,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Center(child: CircularProgressIndicator());
+  //       } else if (snapshot.hasError) {
+  //         // Handle error
+  //         return Center(child: Text('Error: ${snapshot.error}'));
+  //       } else {
+  //         return Scaffold(
+  //           backgroundColor: Colors.transparent,
+  //           body: SafeArea(
+  //             child: Stack(
+  //               children: [
+  //                 BackgroundImage(),
+  //                 Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.stretch,
+  //                   children: [
+  //                     if (!isFullScreen)
+  //                        AppBar(
+  //                         automaticallyImplyLeading: false,
+  //                          backgroundColor: Colors.transparent,
+  //                          elevation: 0,
+  //                     //     leading: IconButton(
+  //                     //       icon: Icon(Icons.arrow_back, color: Colors.white),
+  //                     //       onPressed: () => Navigator.pop(context),
+  //                     //     ),
+  //                       ),
+  //                     if (!isFullScreen) _buildVideoPlayer(),
+  //                     if (!isFullScreen) _buildMovieDetails(),
+  //                     if (isFullScreen) Expanded(child: _buildVideoPlayer()),
+  //                   ],
+  //                 ),
+  //                 if (!isFullScreen) 
+  //                 _buildSuggestedMoviesDrawer(),
+  //                 //SuggestedMoviesDrawer(currentCategory: widget.categoryId),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
+
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initializeVideoPlayerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          // Handle error
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          return Scaffold(
-            backgroundColor: Colors.transparent,
-            body: SafeArea(
-              child: Stack(
-                children: [
-                  BackgroundImage(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (!isFullScreen)
-                      //   AppBar(
-                      //     backgroundColor: Colors.transparent,
-                      //     elevation: 0,
-                      //     leading: IconButton(
-                      //       icon: Icon(Icons.arrow_back, color: Colors.white),
-                      //       onPressed: () => Navigator.pop(context),
-                      //     ),
-                      //  ),
-                      if (!isFullScreen) _buildVideoPlayer(),
-                      if (!isFullScreen) _buildMovieDetails(),
-                      if (isFullScreen) Expanded(child: _buildVideoPlayer()),
-                    ],
-                  ),
-                  if (!isFullScreen) 
-                  _buildSuggestedMoviesDrawer(),
-                  //SuggestedMoviesDrawer(currentCategory: widget.categoryId),
-                ],
+Widget build(BuildContext context) {
+  return FutureBuilder(
+    future: _initializeVideoPlayerFuture,
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      } else {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: isFullScreen 
+            ? _buildFullScreenPlayer() 
+            : SafeArea(
+                child: Stack(
+                  children: [
+                    BackgroundImage(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        AppBar(
+                          automaticallyImplyLeading: false,
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                        ),
+                        _buildVideoPlayer(),
+                        _buildMovieDetails(),
+                      ],
+                    ),
+                    _buildSuggestedMoviesDrawer(),
+                  ],
+                ),
               ),
-            ),
-          );
-        }
-      },
-    );
-  }
+        );
+      }
+    },
+  );
+}
 
   Widget _buildLeftControls() {
     return Row(
@@ -449,11 +607,29 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
     );
   }
 
+   Widget _buildBackControls() {
+    return Row(
+      children: [
+        IconButton(
+            onPressed: (){
+              if(Navigator.canPop(context)){
+                Navigator.pop(context);
+              }
+            },
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              size: 25,
+              color: kWhite,
+            )),
+      ],
+    );
+  }
+
   Widget _buildVideoPlayer() {
     return SafeArea(
       child: Center(
         child: AspectRatio(
-          aspectRatio: 16/9,
+          aspectRatio: _controller.value.aspectRatio,
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -466,19 +642,8 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                   child: CircularProgressIndicator(),
                 ),
               if(_showControls) ...[
-  //             Positioned(
-  //               top:16,
-  //               left:0,
-  //               child:IconButton(icon: Icon(Icons.arrow_back_rounded,color: Colors.white,),
-  //               onPressed:(){
-  //                 if(Navigator.canPop(context)){
-  //                 Navigator.pop(context);
-  //                 }else{
-  //                   print('No page');
-  //                 }
-                  
-  // }),
-  //             ),
+              
+
              buildControls(),
               ],
               // if (isDrawerOpen)
@@ -501,11 +666,22 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+         Padding(padding: EdgeInsets.symmetric(horizontal: 8.0),
+         child: Row(
+              children: [
+                 _buildBackControls(),
+                
+              ],
+         ),
+         ),
+          Spacer(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                
+               
                 Text(
                   _formatDuration(_controller.value.position),
                   style: TextStyle(color: Colors.white),
@@ -550,7 +726,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
           Row(
             children: [
               Container(
-                width: 170,
+                //width: 170,
                 child: Text(
                   _movieDetails.videoTitle,
                   style: TextStyle(
@@ -568,12 +744,12 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
             ],
           ),
          
-             SizedBox(height: 8),
+             SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
               Text(
                 '${_movieDetails.mainVideoDuration}',
                 style: TextStyle(color: Colors.grey),
               ),
-          SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
+          SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
           Text(
             'Cast And Crew',
             style: TextStyle(
@@ -582,7 +758,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
               color: Colors.white,
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
           Container(
             height: MediaQuery.sizeOf(context).height * 0.12,
             child: ListView.builder(
@@ -601,7 +777,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                           backgroundImage: cast.image != null ? MemoryImage(cast.image!) :   AssetImage('assets/icon/thupaki.png') as ImageProvider
                                                 ),
                         SizedBox(
-                          height: 6,
+                          height: MediaQuery.sizeOf(context).height * 0.01,
                         ),
                         Container(
                           // padding: EdgeInsets.symmetric(horizontal: 8),
@@ -611,7 +787,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                             style: TextStyle(color: Colors.white, fontSize: 12),
                             textAlign: TextAlign.center,
                             softWrap: true,
-                            maxLines: 2,
+                            //maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -633,6 +809,42 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
         ],
       ),
     );
+  }
+
+  Widget _buildWatchLaterButton(){
+    if(userId == null){
+      return ElevatedButton.icon(
+        onPressed: () {
+          Navigator.pushNamed(context, '/login');
+        },
+        icon: Icon(
+          Icons.login,
+          color: Colors.white,
+        ),
+        label: Text(
+          'Login to Add',
+          style: TextStyle(color: Colors.white),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color.fromARGB(255, 65, 65, 100),
+        ),
+      );
+    }
+    return ElevatedButton.icon(
+                          onPressed: isAddingtoWatchList ? null : _toggleWatchLater,
+                          icon: Icon(
+                            isInWatchList ? Icons.check :
+                            Icons.add_box_outlined,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            isInWatchList ? 'Added To Watchlater' : 'Add To Watchlater',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isInWatchList ?  Color.fromARGB(255, 65, 65, 100 ) : Color.fromARGB(255, 65, 65, 100),
+                          ),
+                        );
   }
 
   bool isDrawerOpen = false;
@@ -675,6 +887,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+
                         ElevatedButton.icon(
                           onPressed: () {
                             _showShareOptions(context);
@@ -691,20 +904,7 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                             backgroundColor: Color.fromARGB(255, 65, 65, 100),
                           ),
                         ),
-                        ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.add_box_outlined,
-                            color: Colors.white,
-                          ),
-                          label: Text(
-                            'Add To Watchlist',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 65, 65, 100),
-                          ),
-                        ),
+                        _buildWatchLaterButton(),
                       ],
                     ),
                   ),
@@ -732,7 +932,12 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              //onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>MoviesPlayerPage(videoDescriptions: widget.videoDescriptions, categoryId: widget.categoryId))),
+              onTap: () async{
+                  print('Category Id:${widget.categoryId},Index:$index');
+               Navigator.push(context,MaterialPageRoute(
+                builder: (context)=>
+                MoviesPlayerPage(videoDescriptions: widget.videoDescriptions, categoryId: widget.categoryId,initialIndex: index,)));
+                },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: FutureBuilder<Uint8List?>(
@@ -758,13 +963,17 @@ class _MoviesPlayerPageState extends State<MoviesPlayerPage> {
                 ),
               ),
             ),
-            SizedBox(height: 8),
-            Text(
-              suggestedMovies[index].videoTitle,
-              style: TextStyle(color: Colors.white),
-             // maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
+            Padding(
+                 padding:  EdgeInsets.only(left: MediaQuery.sizeOf(context).width * 0.02),
+                 child: Text(
+                  suggestedMovies[index].videoTitle,
+                  style: TextStyle(color: Colors.white),
+                 // maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                               ),
+               ),
+            
           ],
         ),
       ),

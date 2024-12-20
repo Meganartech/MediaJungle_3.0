@@ -67,7 +67,7 @@ public class AudioContainerController {
 	private CategoryController Category;
 
 	@Autowired
-	private AudioFileService fileService;
+	private AudioFileService fileService; 
 
 	@Autowired
 	private AudioTagRepository AudioTagRepository;
@@ -155,7 +155,7 @@ public class AudioContainerController {
              	Audioimages audioImage = audioTumbnail.get();  
 
                  // Assuming decompressImage returns the raw thumbnail data
-                 thumbnailData = ImageUtils.decompressImage(audioImage.getBannerthumbnail());
+                 thumbnailData = ImageUtils.decompressImage(audioImage.getAudio_thumbnail());
 
                  // Convert the byte array to Base64
                  String base64Thumbnail = Base64.getEncoder().encodeToString(thumbnailData);

@@ -30,9 +30,9 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
 import com.VsmartEngine.MediaJungle.video.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RestController
-@RequestMapping("/api/v2/")
+
 public class LibraryController {
 	
 //  ---------------------------------watchlater----------------------------------------------
@@ -43,7 +43,7 @@ public class LibraryController {
     @Autowired
    	private AddVideoDescriptionRepository videodescriptionRepository;
  
-    @PostMapping("/watchlater/video")
+   
     public ResponseEntity<String> watchlaterVideo(@RequestBody Map<String, Long> requestData) {
         try {
             Long videoId = requestData.get("videoId");
@@ -87,7 +87,7 @@ public class LibraryController {
         }
     }
 
-    @GetMapping("/getwatchlater/video")
+   
     public ResponseEntity<String> getwatchlaterVideo(@RequestParam Long videoId, @RequestParam Long userId) {
         try {
             // Check if videoId or userId is null
@@ -126,7 +126,7 @@ public class LibraryController {
         }
     }
     
-    @GetMapping("/{userId}/Watchlater")
+   
     public ResponseEntity<List<WatchLaterDTO>> getVideosForWatchlater(@PathVariable Long userId) {
         Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
         if (optionalUser.isPresent()) {
@@ -165,7 +165,7 @@ public class LibraryController {
         }
     }
     
-    @DeleteMapping("/{userId}/removewatchlater")
+    
     public ResponseEntity<String> removeWatchlater(@PathVariable Long userId, @RequestBody Map<String, Long> payload) {
         Long videoId = payload.get("videoId");
 
@@ -215,7 +215,7 @@ public class LibraryController {
     @Autowired
 	private AddAudiodescription audio ;
     
-    @PostMapping("/favourite/audio")
+
     public ResponseEntity<String> createOrder(@RequestBody Map<String, Long> requestData) {
         try {
             Long audioId = requestData.get("audioId");
@@ -261,7 +261,6 @@ public class LibraryController {
     
     
         
-    @GetMapping("/{userId}/UserAudios")
     public ResponseEntity<List<LikedsongsDTO>> getAudioForUsermobile(@PathVariable Long userId) {
     	Optional<UserRegister> optionalUser = userregisterrepository.findById(userId);
         if (optionalUser.isPresent()) {
@@ -299,7 +298,6 @@ public class LibraryController {
     }
     
     
-    @DeleteMapping("/{userId}/removeFavoriteAudio")
     public ResponseEntity<String> removeFavoriteAudio(@PathVariable Long userId, @RequestParam Long audioId) {
         try {
             if (audioId == null) {

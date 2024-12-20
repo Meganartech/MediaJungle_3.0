@@ -8,9 +8,9 @@ import 'package:ott_project/components/video_folder/video_container.dart';
 
 class MovieService {
   static const String baseUrl =
-   'https://testtomcat.vsmartengine.com/media/api/v2';
-    // 'http://localhost:8080/api/v2';
-   //    'http://192.168.183.42:8080/api/v2';
+    // 'https://testtomcat.vsmartengine.com/media/api/v2';
+     //'http://localhost:8080/api/v2';
+      'http://192.168.156.243:8080/api/v2';
  
   static Future<List<Movie>> fetchMovies() async {
     final response = await http.get(Uri.parse('$baseUrl/video/getall'));

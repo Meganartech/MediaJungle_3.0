@@ -86,9 +86,12 @@ const About_us = () => {
   };
   return (
     <div className="marquee-container">
-    <div className='AddArea' style={{paddingBottom:"50px"}}>
+    <div className='AddArea'>
+         {/* <Link to="/admin/AddUser">
+      <button className='btn btn-custom'>Add SubAdmin</button>
+    </Link> */}
       </div>
-       <div className="container2">
+       <div className="container3 mt-14">
        <ol className="breadcrumb mb-4 d-flex my-0">
          <li className="breadcrumb-item text-white "><Link to="/admin/About_us">About Us</Link>
          </li>

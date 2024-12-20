@@ -5,6 +5,7 @@ import { FiLogIn, FiUpload } from 'react-icons/fi';
 import API_URL from '../../Config';
 import { useNavigate } from 'react-router-dom';
 
+
 const Userforgetpassword = () => {
     const [getall, setGetAll] = useState('');
     const [user, setUser] = useState({ email: '', password: '', confirmPassword: '' });
@@ -135,3 +136,7 @@ const Userforgetpassword = () => {
 }
 
 export default Userforgetpassword;
+
+
+
+

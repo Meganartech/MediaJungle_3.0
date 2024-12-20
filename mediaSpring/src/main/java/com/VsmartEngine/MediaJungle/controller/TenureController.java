@@ -21,31 +21,27 @@ import com.VsmartEngine.MediaJungle.repository.TenureRepository;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/v2")
 public class TenureController {
 	
 	@Autowired
 	private TenureRepository tenureRepository;
 	
-	@GetMapping("/tenures")
 public List<Tenure> getAllTenures()
 	{
 		return tenureRepository.findAll();
 
 	}
-	 @PostMapping("/addtenure")
+
 public Tenure createTenure( @RequestBody Tenure tenure) {
 		   System.out.println("Received Tenure: " + tenure);
 	return tenureRepository.save(tenure);
 }
 	 
-@GetMapping("/tenures/{id}")
 public ResponseEntity<Tenure> getTenureById(@PathVariable long id){
 	Tenure tenure = tenureRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Tenure not exist with id:" +id));
 	return ResponseEntity.ok(tenure);
 }
 
-@PutMapping("/edittenure/{id}")
 public ResponseEntity<Tenure> updateTenure(@PathVariable long id,@RequestBody Tenure tenureDetails){
 	Tenure updateTenure = tenureRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Tenure not exist with id:" +id));
 	updateTenure.setTenure_name(tenureDetails.getTenure_name());
@@ -55,7 +51,6 @@ public ResponseEntity<Tenure> updateTenure(@PathVariable long id,@RequestBody Te
 	return ResponseEntity.ok(updateTenure);
 }
 
-@DeleteMapping("/deletetenure/{id}")
 public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 	Tenure tenure = tenureRepository.findById(id)
 			.orElseThrow(() -> new ResourceNotFoundException("Tenure not exist with id" + id));

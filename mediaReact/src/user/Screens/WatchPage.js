@@ -5,7 +5,8 @@ import API_URL from '../../Config';
 import axios from 'axios';
 import leftarrowIcon from '../UserIcon/left slide icon.png';
 import rightarrowIcon from '../UserIcon/right slide icon.png';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const WatchPage = () => {
   // const id = localStorage.getItem('items');
@@ -159,6 +160,8 @@ useEffect(() => {
   
     // Store the item object in local storage as a JSON string
     localStorage.setItem('items', JSON.stringify(item));
+    window.scrollTo(0, 0); // Scroll to the top
+    
   };
   const [message, setMessage] = useState(""); // State to store the response message
 
@@ -173,11 +176,29 @@ useEffect(() => {
       // Make the POST request
       const response = await axios.post(`${API_URL}/api/v2/watchlater/video`, data);
       console.log(response.data); // Display success message
-      
+        // Trigger a success toast
+    toast.success('Added to Watchlist!', {
+      position: "top-center",
+      autoClose: 3000, // Closes after 3 seconds
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     } catch (error) {
       // Handle error and display message
       if (error.response) {
         console.error(error.response.data); // Log the error message
+        toast.error('Already added to watchlist', {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
         console.error("Error adding to watch later");
       }
@@ -218,6 +239,7 @@ useEffect(() => {
 
   return (
   <Layout>
+     <ToastContainer />
      <div className="videothumbnail position-relative">
     <>
       <img src={`${API_URL}/api/v2/${id}/videothumbnail`} alt="image" className="img-fluid" />
@@ -234,7 +256,7 @@ useEffect(() => {
     )
 }
 
-        <button id="button2" className=" me-4" onClick={() => handleAddToWatchLater(id, userid)}>Add to Watch list</button>
+        <button id="button2" className={" me-4"} onClick={() => handleAddToWatchLater(id, userid)}>Add to Watch list</button>
         <i className="bi bi-share-fill share-icon"></i>
       </div>
       <span className="overlay-span">Duration:&nbsp;{getall.duration}</span>

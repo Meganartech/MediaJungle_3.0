@@ -25,7 +25,8 @@ const Payment_setting = () => {
     { name: "Payment Settings", path: "/admin/Payment_setting" },
     { name: "Banner Settings", path: "/admin/Banner_setting" },
     { name: "Footer Settings", path: "/admin/Footer_setting" },
-    { name: "Contact Settings", path: "/admin/Contact_setting" }
+    { name: "Contact Settings", path: "/admin/Contact_setting" },
+    { name: "Container Settings", path: "/admin/container" }
   ];
   useEffect(() => {
     fetch(`${API_URL}/api/v2/getrazorpay`)
@@ -39,7 +40,7 @@ const Payment_setting = () => {
         setGetAll(data);
         console.log(data);
         if (data.length > 0) {
-          setButtonText('EDIT');
+          setButtonText('UPDATE');
           setKeyPlaceholder(data[0].razorpay_key);
           setSecretKeyPlaceholder(data[0].razorpay_secret_key);
           setId(data[0].id);
@@ -96,7 +97,7 @@ const Payment_setting = () => {
   
       console.log(response.data);
       setId(response.data.id);
-      setButtonText('EDIT');
+      setButtonText('UPDATE');
       setKeyPlaceholder(response.data.razorpay_key);
       setSecretKeyPlaceholder(response.data.razorpay_secret_key);
   
@@ -180,7 +181,7 @@ const Payment_setting = () => {
   const handleFormSubmit = (e) => {
     if (buttonText === 'ADD') {
       handleSubmit(e);
-    } else if (buttonText === 'EDIT') {
+    } else if (buttonText === 'UPDATE') {
       handleSub(e);
     }
   };
@@ -217,22 +218,20 @@ const Payment_setting = () => {
     </Dropdown>
     </div>
     <br />
-    <div className='container2'>
+    <div className='container3'>
           <ol className="breadcrumb mb-4 d-flex my-0">
             <li className="breadcrumb-item">
               <Link to="/admin/SiteSetting">Settings</Link>
             </li>
             <li className="breadcrumb-item active  text-white">Payment Settings</li>
           </ol>
-          <div className="table-container">
-            <div className="card-body">
-              <div className="temp">
+          <div className='outer-container mt-10 ml-80'>
+
                 {/* <div className="col col-lg-2">
                   <Setting_sidebar />
                 </div> */}
-                <div className="col col-lg-9" style={{alignItems:'center'}}>
                   <ul className=' breadcrumb-item' style={{ paddingLeft: '0px' }}>
-                    <form onSubmit={handleFormSubmit} method="post" className="registration-form" style={{ height: '44rem' }}>
+                    <form onSubmit={handleFormSubmit} method="post" className="registration-form1" style={{ height: '44rem' }}>
              
                         <div className="col-md-12">
                           <div className="form-group">
@@ -272,7 +271,7 @@ const Payment_setting = () => {
                           </div>
                         </div>
                         <div className='col-lg-12'>
-                          <div className="d-flex justify-content-center" style={{ marginTop: "10px" }}>
+                          <div className="d-flex justify-content-end" style={{ marginTop: "120px", marginRight:"30px" }}>
                             <button className='text-center btn btn-info'>
                               {buttonText}
                             </button>
@@ -284,10 +283,9 @@ const Payment_setting = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-     
-    </div>
+        
+  
+
   );
 };
 

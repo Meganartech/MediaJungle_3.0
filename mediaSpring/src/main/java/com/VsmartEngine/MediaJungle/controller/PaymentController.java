@@ -34,7 +34,7 @@ import com.razorpay.RazorpayException;
 
 @RestController
 @RequestMapping("/api/v2/")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class PaymentController {
 
     @Value("${rzp_currency}")
@@ -65,7 +65,7 @@ public class PaymentController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/confirmPayment")
+ 
     public ResponseEntity<Map<String, String>> confirmPayment(@RequestBody Map<String, String> requestData) {
         Map<String, String> response = new HashMap<>(); // Create a response map
         try {
@@ -248,7 +248,6 @@ public class PaymentController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("GetPlanDetailsByUserId/{userId}")
     public ResponseEntity<Map<String, String>> getPlanDetailsByUserId(@PathVariable Long userId) {
         String plan = userService.getPlanDetailsByUserId(userId); // Get the plan details as a string
 

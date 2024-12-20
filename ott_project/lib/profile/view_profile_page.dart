@@ -46,8 +46,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-             'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-            //'http://192.168.183.42:8080/api/v2/GetUserById/$userId'),
+           'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+          //  'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
         // 'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
@@ -120,17 +120,17 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                             : null,
                   ),
                   //),
-                  const SizedBox(height: 10),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                   Text(
                     usernameController.text,
                     style: TextStyle(color: kWhite),
                   ),
-                  const SizedBox(height: 40),
+                   SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
                   profileInfo('Name', usernameController.text),
-                  const SizedBox(height: 15),
+                   SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                   // Display Email row
                   profileInfo('Email', emailController.text),
-                  const SizedBox(height: 15),
+                   SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
                   // Display Phone Number row
                   profileInfo('Phone Number', mobilenumberController.text),
                   //const SizedBox(height: 30),
@@ -167,7 +167,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16.0),
+                 // const SizedBox(height: 16.0),
                 ],
               ),
             ),
@@ -192,11 +192,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                       color: kWhite,
                       fontWeight: FontWeight.normal,
                       fontSize: 16))),
-          const SizedBox(width: 10),
+          SizedBox(width: MediaQuery.sizeOf(context).width * 0.05),
           Text(':',
               style: TextStyle(
                   color: kWhite, fontWeight: FontWeight.normal, fontSize: 16)),
-          const SizedBox(width: 10),
+           SizedBox(width: MediaQuery.sizeOf(context).width * 0.06),
           Expanded(
             flex: 2,
             child: Text(value,

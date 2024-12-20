@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,19 +14,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.Banner.VideoBanner;
-import com.VsmartEngine.MediaJungle.Banner.VideoBannerRequest;
 import com.VsmartEngine.MediaJungle.Banner.videoBannerController;
 import com.VsmartEngine.MediaJungle.Container.VideoContainer;
 import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.Container.VideoContainerDTO;
+import com.VsmartEngine.MediaJungle.Library.LibraryController;
+import com.VsmartEngine.MediaJungle.Library.LikedsongsDTO;
+import com.VsmartEngine.MediaJungle.Library.Playlist;
+import com.VsmartEngine.MediaJungle.Library.PlaylistController;
+import com.VsmartEngine.MediaJungle.Library.WatchLaterDTO;
+import com.VsmartEngine.MediaJungle.Library.playlistDTO;
+import com.VsmartEngine.MediaJungle.MailVerification.VerificationController;
 import com.VsmartEngine.MediaJungle.controller.AddUserController;
 import com.VsmartEngine.MediaJungle.controller.AudioController1;
 import com.VsmartEngine.MediaJungle.controller.CastandcrewController;
@@ -33,13 +42,18 @@ import com.VsmartEngine.MediaJungle.controller.CategoryController;
 import com.VsmartEngine.MediaJungle.controller.CertificateController;
 import com.VsmartEngine.MediaJungle.controller.EmployeeController;
 import com.VsmartEngine.MediaJungle.controller.FeatureController;
+import com.VsmartEngine.MediaJungle.controller.FooterSettingsController;
 import com.VsmartEngine.MediaJungle.controller.LanguageController;
 import com.VsmartEngine.MediaJungle.controller.LicenseController;
+import com.VsmartEngine.MediaJungle.controller.MailSettingController;
 import com.VsmartEngine.MediaJungle.controller.PaymentController;
 import com.VsmartEngine.MediaJungle.controller.PaymentSettingController;
 import com.VsmartEngine.MediaJungle.controller.PlanDescriptionController;
 import com.VsmartEngine.MediaJungle.controller.PlanDetailsController;
+import com.VsmartEngine.MediaJungle.controller.PlanFeatureMergeController;
+import com.VsmartEngine.MediaJungle.controller.ProfileImageController;
 import com.VsmartEngine.MediaJungle.controller.TagController;
+import com.VsmartEngine.MediaJungle.controller.TenureController;
 import com.VsmartEngine.MediaJungle.controller.UserWithStatus;
 import com.VsmartEngine.MediaJungle.controller.VideoCastAndCrewController;
 import com.VsmartEngine.MediaJungle.model.AddCertificate;
@@ -58,11 +72,12 @@ import com.VsmartEngine.MediaJungle.model.Othersettings;
 import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
 import com.VsmartEngine.MediaJungle.model.PlanDetails;
+import com.VsmartEngine.MediaJungle.model.PlanFeatureMerge;
 import com.VsmartEngine.MediaJungle.model.PlanFeatures;
 import com.VsmartEngine.MediaJungle.model.Seosettings;
 import com.VsmartEngine.MediaJungle.model.Sitesetting;
-import com.VsmartEngine.MediaJungle.model.SocialSettings;
 import com.VsmartEngine.MediaJungle.model.Tag;
+import com.VsmartEngine.MediaJungle.model.Tenure;
 import com.VsmartEngine.MediaJungle.model.UserListWithStatus;
 import com.VsmartEngine.MediaJungle.model.VideoCastAndCrew;
 // import com.VsmartEngine.MediaJungle.model.VideoDescription;
@@ -73,7 +88,6 @@ import com.VsmartEngine.MediaJungle.userregister.UserRegisterController;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterDTO;
 import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
-import com.VsmartEngine.MediaJungle.video.VideoDescriptionDTO;
 import com.VsmartEngine.MediaJungle.video.VideoImageController;
 import com.VsmartEngine.MediaJungle.video.VideoScreenDTO;
 
@@ -97,7 +111,12 @@ public class FrontController {
 	@Autowired
 	private FeatureController FeatureController;
 
-
+	@Autowired
+	private TenureController TenureController;
+	@Autowired
+	private ProfileImageController ProfileImageController;
+	@Autowired
+	private FooterSettingsController FooterSettingsController;
 	@Autowired
 	private CategoryController CategoryController;
 
@@ -149,6 +168,19 @@ public class FrontController {
 	@Autowired
 	private videoBannerController videobannercontroller;
 	
+	@Autowired
+	private PlanFeatureMergeController PlanFeatureMergeController;
+  @Autowired
+	private PlaylistController playlistcontroller;
+	
+	@Autowired
+	private LibraryController librarycontroller;
+	
+	@Autowired
+	private VerificationController verificationcontroller;
+	
+	@Autowired MailSettingController mailsettingcontroller;
+
 	
 	@PostMapping("/AdminRegister")
 	public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
@@ -454,8 +486,7 @@ public class FrontController {
 	@DeleteMapping("/DeleteCertificate/{certificateId}")
 	   public ResponseEntity<?> deletecertificate(@PathVariable Long certificateId,@RequestHeader("Authorization") String token) {
 
-		return CertificateController.deleteCategory(certificateId, token)
-				;
+		return CertificateController.deleteCategory(certificateId, token);
 	}
 
 	@PatchMapping("/editCertificate/{certificateId}")
@@ -573,6 +604,11 @@ public class FrontController {
 
 		return EmployeeController.getsitesettings();
 	}
+	
+	@GetMapping("/logo/{Id}")
+	public ResponseEntity<byte[]> getlogoThumbnail(@PathVariable long Id) {
+		return EmployeeController.getlogoThumbnail(Id);
+	}
 
 	@PatchMapping("/editsettings/{id}")
     public ResponseEntity<String> editSetting(
@@ -634,10 +670,10 @@ public class FrontController {
 		return LanguageController.editLanguage(languageId, editlanguage, token);
 	}
 
-	@GetMapping("/GetAllUser")
-	public ResponseEntity<UserWithStatus> getAllUser() {
-		return LicenseController.getAllUser();
-	}
+//	@GetMapping("/GetAllUser")
+//	public ResponseEntity<UserWithStatus> getAllUser() {
+//		return LicenseController.getAllUser();
+//	}
 
 	@GetMapping("/count")
 	public ResponseEntity<Integer> count() {
@@ -668,11 +704,91 @@ public class FrontController {
 	  
 	}
 	
+	   @PostMapping("/confirmPayment")
+	   public ResponseEntity<Map<String, String>> confirmPayment(@RequestBody Map<String, String> requestData) {
+	   return PaymentController.confirmPayment(requestData);
+	   }
+	
+	   @GetMapping("GetPlanDetailsByUserId/{userId}")
+	    public ResponseEntity<Map<String, String>> getPlanDetailsByUserId(@PathVariable Long userId) {
+		   return PaymentController.getPlanDetailsByUserId(userId);
+	   }
+       @PostMapping("/submit")
+       public ResponseEntity<?> submitFooterSettings(
+           @RequestParam("aboutUsHeaderScript") String aboutUsHeaderScript,
+           @RequestParam("aboutUsBodyScript") String aboutUsBodyScript,
+           @RequestParam("featureBox1HeaderScript") String featureBox1HeaderScript,
+           @RequestParam("featureBox1BodyScript") String featureBox1BodyScript,
+           @RequestParam("featureBox2HeaderScript") String featureBox2HeaderScript,
+           @RequestParam("featureBox2BodyScript") String featureBox2BodyScript,
+           @RequestParam("aboutUsImage") MultipartFile aboutUsImage,  // Updated to handle aboutUsImage
+           @RequestParam("contactUsEmail") String contactUsEmail,
+           @RequestParam("contactUsBodyScript") String contactUsBodyScript,
+           @RequestParam("callUsPhoneNumber") String callUsPhoneNumber,
+           @RequestParam("callUsBodyScript") String callUsBodyScript,
+           @RequestParam("locationMapUrl") String locationMapUrl,
+           @RequestParam("locationAddress") String locationAddress,
+           @RequestParam("contactUsImage") MultipartFile contactUsImage,
+           @RequestParam("appUrlPlaystore") String appUrlPlaystore,
+           @RequestParam("appUrlAppStore") String appUrlAppStore,
+           @RequestParam("copyrightInfo") String copyrightInfo
+       ) {
+    	   return FooterSettingsController.submitFooterSettings(aboutUsHeaderScript,aboutUsBodyScript,featureBox1HeaderScript,featureBox1BodyScript,featureBox2HeaderScript,featureBox2BodyScript,
+    			   aboutUsImage,contactUsEmail,contactUsBodyScript,callUsPhoneNumber,callUsBodyScript,locationMapUrl,locationAddress,contactUsImage,appUrlPlaystore,appUrlAppStore,copyrightInfo);
+       }   
+	
+       
+//       @PostMapping("/plans")
+//       public ResponseEntity<PlanDetails> getPlanById(@PathVariable Long id) {
+//       return PlanDetailsController.getPlanById(id);
+//       }
+       @PutMapping("/planfeaturemerge")
+       public ResponseEntity<List<PlanFeatureMerge>> updatePlanFeatureMerge( @RequestBody List<PlanFeatureMerge> planFeatureMerges){
+    		   	return PlanFeatureMergeController.updatePlanFeatureMerge(planFeatureMerges);
+}
+       
+       @PatchMapping("/planfeaturemerge")
+       public ResponseEntity<List<PlanFeatureMerge>> patchPlanFeatureMerge(
+               @RequestBody List<PlanFeatureMerge> planFeatureMerges) {
+       return PlanFeatureMergeController.patchPlanFeatureMerge(planFeatureMerges);
+       }
+       @DeleteMapping("/planfeaturemerge")
+       public ResponseEntity<HttpStatus> deleteFeaturesByPlanId(
+               @RequestParam Long planId) {
+       return PlanFeatureMergeController.deleteFeaturesByPlanId(planId);
+       }
+       
+
+       @GetMapping("/GetFeaturesByPlanId")
+       public ResponseEntity<List<PlanFeatureMerge>> getFeaturesByPlanId(@RequestParam Long planId) {
+    	   return PlanFeatureMergeController.getFeaturesByPlanId(planId);
+       }
+       
+       @PutMapping("/updateUser/{userId}")
+       public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("username") String username,
+                                            @RequestParam("email") String email, @RequestParam("mobnum") String mobnum,
+                                            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+    	   return ProfileImageController.updateUser(userId, username,email, mobnum,profileImage);
+       }
+
+       @PostMapping("/UploadProfileImage/{userId}")
+       public ResponseEntity<?> uploadProfileImage(@PathVariable Long userId, @RequestParam("image") MultipartFile image) {
+    	   return ProfileImageController.uploadProfileImage(userId,image);
+       }
+       @GetMapping("/GetProfileImage/{userId}")
+       @ResponseBody
+       public ResponseEntity<byte[]> getProfileImage(@PathVariable Long userId) {
+    	   return ProfileImageController.getProfileImage(userId);
+       }
 	@PostMapping("/AddrazorpayId")
 	public ResponseEntity<?>  Addpaymentsetting (@RequestParam("razorpay_key") String razorpay_key,
 			@RequestParam("razorpay_secret_key")String razorpay_secret_key,
 			@RequestHeader("Authorization") String token){
 		return PaymentSettingController.Addpaymentsetting(razorpay_key, razorpay_secret_key, token);
+	}
+	@GetMapping("/GetPlanById/{id}")
+	public ResponseEntity<PlanDetails> getPlanById(@PathVariable Long id) {
+		return PlanDetailsController.getPlanById(id);
 	}
 
 	@GetMapping("/getrazorpay")
@@ -681,12 +797,42 @@ public class FrontController {
 		return PaymentSettingController.getAllrazorpay();
 	}
 
+    @DeleteMapping("/plans/{planId}")
+    public ResponseEntity<?> deletePlan(@PathVariable Long planId, @RequestHeader("Authorization") String token) {
+    	
+    	return PlanDetailsController.deletePlan(planId, token);
+    }
 	@PatchMapping("/Editrazorpay/{id}")
 	public ResponseEntity<String> editrazorpay(@PathVariable Long id , @RequestBody Paymentsettings updatedrazorpay,
 			@RequestHeader("Authorization") String token){
 		return PaymentSettingController.editrazorpay(id, updatedrazorpay, token);
 	}
 
+	
+	@GetMapping("/tenures")
+public List<Tenure> getAllTenures()
+	{
+		return TenureController.getAllTenures();
+	}
+
+	 @PostMapping("/addtenure")
+public Tenure createTenure( @RequestBody Tenure tenure) {
+		 return TenureController.createTenure(tenure);
+	 }
+	 @GetMapping("/tenures/{id}")
+	 public ResponseEntity<Tenure> getTenureById(@PathVariable long id){
+		 return TenureController.getTenureById(id);
+	 }
+	 
+	 @PutMapping("/edittenure/{id}")
+	 public ResponseEntity<Tenure> updateTenure(@PathVariable long id,@RequestBody Tenure tenureDetails){
+		 return TenureController.updateTenure(id,tenureDetails);
+	 }
+
+@DeleteMapping("/deletetenure/{id}")
+public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
+	return TenureController.deleteTenure(id);
+}
 	@PostMapping("/AddPlanDescription")
 	public ResponseEntity<?> addPlanDescription(@RequestParam("description") String description,
 	        @RequestHeader("Authorization") String token) {
@@ -731,16 +877,12 @@ public class FrontController {
 		return PlanDetailsController.getAllPlanDetails();
 	}
 
-	@GetMapping("/GetPlanById/{id}")
-	public ResponseEntity<PlanDetails> getPlanById(@PathVariable Long id) {
-		return PlanDetailsController.getPlanById(id);
-	}
-
-	@DeleteMapping("/DeletePlan/{planId}")
-	public ResponseEntity<?> deletePlan(@PathVariable Long planId, @RequestHeader("Authorization") String token) {
-
-		return PlanDetailsController.deletePlan(planId, token);
-	}
+//
+//	@DeleteMapping("/DeletePlan/{planId}")
+//	public ResponseEntity<?> deletePlan(@PathVariable Long planId, @RequestHeader("Authorization") String token) {
+//
+//		return PlanDetailsController.deletePlan(planId, token);
+//	}
 
 	@PatchMapping("/editPlans/{planId}")
     public ResponseEntity<String> editplans(@PathVariable Long planId, @RequestBody PlanDetails updatedPlanDetails,@RequestHeader("Authorization") String token) {
@@ -801,20 +943,49 @@ public class FrontController {
 
 		return VideoCastAndCrewController.getCastVideo(videoId);
 	}
-
+	
 	@PostMapping("/userregister")
-	public ResponseEntity<UserRegister> register(@RequestParam("username") String username,
-			@RequestParam("email") String email, @RequestParam("password") String password,
-			@RequestParam("mobnum") String mobnum, @RequestParam("confirmPassword") String confirmPassword,
-			@RequestParam(value = "profile", required = false) MultipartFile profile) throws IOException {
-
-		return UserRegisterController.register(username, email, password, mobnum, confirmPassword, profile);
+	public ResponseEntity<?> register(
+	        @RequestParam("username") String username,
+	        @RequestParam("email") String email,
+	        @RequestParam("password") String password,
+	        @RequestParam("mobnum") String mobnum,
+	        @RequestParam(value = "profile", required = false) MultipartFile profile) {
+		return UserRegisterController.register(username, email, password, mobnum, profile);
 	}
 
+//	@GetMapping("/GetAllUsers")
+//	public ResponseEntity<List<UserRegister>> getAllUserRegester() {
+//
+//		return UserRegisterController.getAllUser();
+//	}
+	
 	@GetMapping("/GetAllUsers")
-	public ResponseEntity<List<UserRegister>> getAllUserRegester() {
-
-		return UserRegisterController.getAllUser();
+	 public ResponseEntity<List<UserRegister>> getAllUser() {
+		 return UserRegisterController.getAllUser();
+	 }
+	
+//	@PostMapping("/send-code")
+//	@Transactional
+//    public ResponseEntity<String> sendCode(@RequestParam String email) {
+//		return verificationcontroller.sendCode(email);
+//	}
+	
+	@PostMapping("/send-code")
+	@Transactional
+	public ResponseEntity<String> sendCodewhileRegister(@RequestParam String email) {
+		return verificationcontroller.sendCodewhileRegister(email);
+	}
+	
+	@PostMapping("/send-code/forgetpassword")
+	@Transactional
+	 public ResponseEntity<String> sendCode(@RequestParam String email) {
+		 return verificationcontroller.sendCode(email);
+	 }
+	
+	@PostMapping("/verify-code")
+    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code) {
+		return verificationcontroller.verifyCode(email, code);
 	}
 	
 	@GetMapping("/registereduserget")
@@ -847,6 +1018,18 @@ public class FrontController {
 
 		return UserRegisterController.resetPassword(loginRequest);
 	}
+	
+	@PatchMapping("/Update/user/{userId}")
+    public ResponseEntity<String> updateUserr(
+            @PathVariable Long userId,
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "mobnum", required = false) String mobnum,
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "profile", required = false) MultipartFile profile) {
+
+    	return UserRegisterController.updateUserr(userId, username, email, mobnum, password, profile);
+    }
 	
 	
 	
@@ -1087,81 +1270,133 @@ public class FrontController {
 		   	public ResponseEntity<?> Deletevideobanner(@PathVariable("id") long id) {
 		    	return videobannercontroller.Deletevideobanner(id);
 		    }
-//		 @GetMapping("/{filename}/file")
-//			public ResponseEntity<Resource> getAudioFi(@PathVariable String filename, HttpServletRequest request) {
-//
-//				return AudioController.getAudioFi(filename, request);
-//			}
-		
-//		
+		    
+		    //-----------------libary controller--------------------------------------
+		    
+		    @PostMapping("/favourite/audio")
+		    public ResponseEntity<String> createOrder(@RequestBody Map<String, Long> requestData) {
+		    	return librarycontroller.createOrder(requestData);
+		    }
+		    
+		    @GetMapping("/{userId}/UserAudios")
+		    public ResponseEntity<List<LikedsongsDTO>> getAudioForUsermobile(@PathVariable Long userId) {
+		    	return librarycontroller.getAudioForUsermobile(userId);
+		    }
+		    
+		    @DeleteMapping("/{userId}/removeFavoriteAudio")
+		    public ResponseEntity<String> removeFavoriteAudio(@PathVariable Long userId, @RequestParam Long audioId) {
+		    	return librarycontroller.removeFavoriteAudio(userId, audioId);
+		    }
+		    
+		//  ---------------------------------watchlater----------------------------------------------
+		    
+		    @PostMapping("/watchlater/video")
+		    public ResponseEntity<String> watchlaterVideo(@RequestBody Map<String, Long> requestData) {
+		    	return librarycontroller.watchlaterVideo(requestData);
+		    }
+		    
+		    @GetMapping("/getwatchlater/video")
+		    public ResponseEntity<String> getwatchlaterVideo(@RequestParam Long videoId, @RequestParam Long userId) {
+		    	return librarycontroller.getwatchlaterVideo(videoId, userId);
+		    }
+		    
+		    @GetMapping("/{userId}/Watchlater")
+		    public ResponseEntity<List<WatchLaterDTO>> getVideosForWatchlater(@PathVariable Long userId) {
+		    	return librarycontroller.getVideosForWatchlater(userId);
+		    }
+		    
+		    @DeleteMapping("/{userId}/removewatchlater")
+		    public ResponseEntity<String> removeWatchlater(@PathVariable Long userId, @RequestBody Map<String, Long> payload) {
+		    	return librarycontroller.removeWatchlater(userId, payload);
+		    }
+		    
+		    //---------- playlist--------------------------------------------------------------------------
+		    
+		    @PostMapping("/createplaylist")
+		    public ResponseEntity<Playlist> createPlaylist(
+		        @RequestParam String title, @RequestParam String description,@RequestParam Long userId) {
+		    	return playlistcontroller.createPlaylist(title, description, userId);
+		    }
 
-//		@PostMapping("/updatedescriprion")
-//		public ResponseEntity<VideoDescription> updatedescription(
-//		        @RequestParam("Movie_name") String moviename,
-//		        @RequestParam("description") String description,
-//		        @RequestParam("tags") String tags,
-//		        @RequestParam("category") String category,
-//		        @RequestParam("certificate") String certificate,
-//		        @RequestParam("Language") String language,
-//		        @RequestParam("Duration") String duration,
-//		        @RequestParam("Year") String year,
-//		        @RequestParam(value = "paid", required = false) boolean paid,
-//		        @RequestParam("id") long id,
-//		        @RequestHeader("Authorization") String token) {
-//			
-//			return VideoController.updatedescription(moviename, description, tags, category, certificate, language, duration, year, paid, id, token);
-//		}
-//		
-//		@PostMapping("/postit")
-//		public Videos uploadingVideo(@RequestParam("video") MultipartFile video) throws IOException
-//		{
-//			
-//			return VideoController.uploadingVideo(video);
-//		}
-//		
-//		@GetMapping(value = "/play/{id}")
-//		 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
-//			
-//			return VideoController.getVideo(id, request);
-//
-//		}
-//		
-//		@GetMapping(value = "/updatevideo")
-//		public ResponseEntity<String> updateById() throws IOException {
-//			
-//			return VideoController.updateById();
-//		}		
-//		 @GetMapping(value = "/videogetall")
-//		    public ResponseEntity<List<VideoDescription>> videogetall() {
-//			 
-//			 return VideoController.videogetall();
-//		 }
-//		 
-//		 @GetMapping("/GetvideoThumbnail")
-//		    public ResponseEntity<List<byte[]>> getAllThumbnails() {
-//			 
-//			 return VideoController.getAllThumbnail();
-//			 
-//		 }
 		 
-//		 @DeleteMapping("/video/{id}")
-//		 public ResponseEntity<?> deleteVideoById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
-//			 
-//			 return VideoController.deleteVideoById(id, token);
-//		 }
-//		 
-//		
-//		 
-//		 @GetMapping("/GetThumbnailsByid/{id}")
-//		    public ResponseEntity<List<String>> getThumbnailsById(@PathVariable Long id) {
-//			 
-//			 return VideoController.getThumbnailsById(id);
-//		 }
-//		 
-//		 @GetMapping("/GetAllThumbnaill")
-//		    public ResponseEntity<List<byte[]>> getAllThumbnaill() {
-//			 
-//			 return VideoController.getAllThumbnaill();
-//		 }
-
+		    @PostMapping("/{playlistId}/audio/{audioId}")
+		    public ResponseEntity<Playlist> addAudioIdToPlaylist(
+		        @PathVariable Long playlistId, @PathVariable Long audioId) {
+		    	return playlistcontroller.addAudioIdToPlaylist(playlistId, audioId);
+		    }
+		    
+		    @PostMapping("/createplaylistid")
+		    public ResponseEntity<Playlist> createPlaylistwithid(
+		        @RequestParam String title, 
+		        @RequestParam String description,
+		        @RequestParam Long audioId,
+		        @RequestParam Long userId) {
+		    	return playlistcontroller.createPlaylistwithid(title, description, audioId, userId);
+		    }
+		    
+		    @GetMapping("/user/{userId}/playlists")
+		    public ResponseEntity<List<Playlist>> getPlaylistsByUserId(@PathVariable Long userId) {
+		    	return playlistcontroller.getPlaylistsByUserId(userId);
+		    }
+		    
+		    
+		    @GetMapping("/{Id}/playlists")
+		    public ResponseEntity<Playlist> getPlaylists(@PathVariable Long Id) {
+		    	return playlistcontroller.getPlaylists(Id);
+		    }
+		    
+		    @GetMapping("/{id}/getPlaylistWithAudioDetails")
+		    public ResponseEntity<List<playlistDTO>> getPlaylistWithAudioDetails(@PathVariable Long id) {
+		    	return playlistcontroller.getPlaylistWithAudioDetails(id);
+		    }
+		    
+		    @DeleteMapping("/{id}/delete/playlist")
+		    public ResponseEntity<String> deletePlaylist(@PathVariable Long id) {
+		    	return playlistcontroller.deletePlaylist(id);
+		    }
+		    
+		    @DeleteMapping("/{playlistId}/audio/{audioId}/delete")
+		    public ResponseEntity<Void> removeAudioFromPlaylist(@PathVariable Long playlistId, @PathVariable Long audioId) {
+		    	return playlistcontroller.removeAudioFromPlaylist(playlistId, audioId);
+		    }
+		    
+		    @PatchMapping("/editplaylist/{Id}")
+		    public ResponseEntity<String> updatePlaylist(
+		            @PathVariable Long Id,
+		            @RequestParam(value = "title", required = false) String title,
+		            @RequestParam(value = "description", required = false) String description){
+		    	return playlistcontroller.updatePlaylist(Id, title, description);
+		    }
+		    
+		    @PatchMapping("/{playlistId}/moveAudioToPlaylist/{audioId}/{movedPlaylistId}")
+		    public ResponseEntity<String> moveAudioToAnotherPlaylist(
+		            @PathVariable Long playlistId, 
+		            @PathVariable Long audioId, 
+		            @PathVariable Long movedPlaylistId) {
+		    	return playlistcontroller.moveAudioToAnotherPlaylist(playlistId, audioId, movedPlaylistId);
+		    }
+		    
+		    
+		    //---------------------mailconfiguration------------------------------------
+		    @PostMapping("/configuremail")
+			public ResponseEntity<String> addOrUpdateMail(
+			        @RequestParam(value = "mailhostname", required = false) String mailhostname,
+			        @RequestParam(value = "mailportname", required = false) Integer mailportname,
+			        @RequestParam(value = "emailid", required = false) String emailid,
+			        @RequestParam(value = "password", required = false) String password) {
+		    	return mailsettingcontroller.addOrUpdateMail(mailhostname, mailportname, emailid, password);
+		    }
+		    
+		    
+		    @GetMapping("/getmailconfig")
+		    public ResponseEntity<?> getMailConfiguration() {
+		    	return mailsettingcontroller.getMailConfiguration();
+		    }
+		    
+		    
+		    
+		    
+		    
 }
+
+

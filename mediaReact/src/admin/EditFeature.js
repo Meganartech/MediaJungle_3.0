@@ -80,22 +80,23 @@ const handleSubmit = (e) => {
   }
 
   return (
-   
-    <div className='container2 mt-20'>
+    <div className="marquee-container">
+    <div className='AddArea'>
+          {/* <button className='btn btn-custom' onClick={() => handleClick("/admin/AdminPlan")}>Add Plan</button> */}
+        </div>  <br/>
+    <div className='container3 mt-10'>
         <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item">
             <Link to="/admin/PlanFeatures">Features</Link>
           </li>
-          <li className="breadcrumb-item active text-white">Edit</li>
+          <li className="breadcrumb-item active text-white">Edit Feature</li>
         </ol>
-        <div className="row">
      
-         
                 <form onSubmit={handleSubmit}>
-                  <table className="table">
+                  <table>
                     <tbody>
                       <tr>
-                        <th>Feature</th>
+                        <th>Feature Name</th>
                         <td>
                           <input
                             type="text"
@@ -108,13 +109,17 @@ const handleSubmit = (e) => {
                       </tr>
                     </tbody>
                   </table>
-                  <button type="submit" className="btn btn-info">
+                  <div className="row py-3 my-5">
+                  <div className="col-md-8 ms-auto text-end">
+                  <button type="submit" className="btn btn-custom">
                     Update
                   </button>
+                  </div>
+                  </div>
                 </form>
               </div>
             </div>
-          // </div>
+      
       //   </div>
       // </div>
   );
