@@ -32,14 +32,9 @@ public class UserRegister {
 	@Column(unique = true)
 	private String email;
 	
-	@Column(name="role")
-	private String role;
 	
 	@Column(name="password")
 	private String password;
-	
-	@Column(name="confirmPassword")
-	private String confirmPassword;
 	
 	@Column(name="mobnum")
 	private  String mobnum;
@@ -76,18 +71,14 @@ public class UserRegister {
 		// TODO Auto-generated constructor stub
 	}
 
-	
-
-	public UserRegister(long id, String username, String email, String role, String password, String confirmPassword,
-			String mobnum, LocalDate date, byte[] profile, Set<Long> favoriteAudioIds, Set<Long> favoriteVideosIds,
-			Set<Long> watchlaterIds, PaymentUser paymentId) {
+	public UserRegister(long id, String username, String email, String password,
+			String mobnum, LocalDate date, byte[] profile, Set<Long> favoriteAudioIds,
+			Set<Long> favoriteVideosIds, Set<Long> watchlaterIds, PaymentUser paymentId) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.email = email;
-		this.role = role;
 		this.password = password;
-		this.confirmPassword = confirmPassword;
 		this.mobnum = mobnum;
 		this.date = date;
 		this.profile = profile;
@@ -96,8 +87,6 @@ public class UserRegister {
 		this.watchlaterIds = watchlaterIds;
 		this.paymentId = paymentId;
 	}
-
-
 
 	public long getId() {
 		return id;
@@ -123,28 +112,12 @@ public class UserRegister {
 		this.email = email;
 	}
 
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
 	}
 
 	public String getMobnum() {
@@ -202,7 +175,4 @@ public class UserRegister {
 	public void setWatchlaterIds(Set<Long> watchlaterIds) {
 		this.watchlaterIds = watchlaterIds;
 	}
-	
-	
-
 }

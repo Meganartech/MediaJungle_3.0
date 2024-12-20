@@ -51,32 +51,32 @@ public class MobileAppController {
     @Autowired
     private TokenBlacklist tokenBlacklist;
     
-	@PostMapping("/register/mobile")
-    public ResponseEntity<UserRegister> registerMobile(@RequestParam("username") String username,
-                                                       @RequestParam("email") String email,
-                                                       @RequestParam("password") String password,
-                                                       @RequestParam("mobnum") String mobnum,
-                                                       @RequestParam("confirmPassword") String confirmPassword,
-                                                       @RequestParam(value = "profile", required = false) MultipartFile profile) throws IOException {
-        if (!password.equals(confirmPassword)) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        UserRegister newRegister = new UserRegister();
-        newRegister.setUsername(username);
-        newRegister.setEmail(email);
-        newRegister.setPassword(password);
-        newRegister.setConfirmPassword(confirmPassword);
-        newRegister.setMobnum(mobnum);
-
-        if (profile != null && !profile.isEmpty()) {
-            byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
-            newRegister.setProfile(thumbnailBytes);
-        }
-
-        UserRegister savedUser = userregisterrepository.save(newRegister);
-        return ResponseEntity.ok(savedUser);
-    }
+//	@PostMapping("/register/mobile")
+//    public ResponseEntity<UserRegister> registerMobile(@RequestParam("username") String username,
+//                                                       @RequestParam("email") String email,
+//                                                       @RequestParam("password") String password,
+//                                                       @RequestParam("mobnum") String mobnum,
+//                                                       @RequestParam("confirmPassword") String confirmPassword,
+//                                                       @RequestParam(value = "profile", required = false) MultipartFile profile) throws IOException {
+//        if (!password.equals(confirmPassword)) {
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//
+//        UserRegister newRegister = new UserRegister();
+//        newRegister.setUsername(username);
+//        newRegister.setEmail(email);
+//        newRegister.setPassword(password);
+//        newRegister.setConfirmPassword(confirmPassword);
+//        newRegister.setMobnum(mobnum);
+//
+//        if (profile != null && !profile.isEmpty()) {
+//            byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
+//            newRegister.setProfile(thumbnailBytes);
+//        }
+//
+//        UserRegister savedUser = userregisterrepository.save(newRegister);
+//        return ResponseEntity.ok(savedUser);
+//    }
 	
 	@GetMapping("/GetUserById/mobile/{id}")
     public ResponseEntity<UserRegister> getUserByIdmobile(@PathVariable Long id) {
@@ -169,11 +169,11 @@ public class MobileAppController {
 	            existingUser.setPassword(encodedPassword);
 	        }
 
-	        if (confirmPassword!= null) {
-	        	String confirmencodedPassword = passwordEncoder.encode(confirmPassword);
-	            existingUser.setConfirmPassword(confirmencodedPassword);
-	        }
-	        
+//	        if (confirmPassword!= null) {
+//	        	String confirmencodedPassword = passwordEncoder.encode(confirmPassword);
+//	            existingUser.setConfirmPassword(confirmencodedPassword);
+//	        }
+//	        
             if (profile != null && !profile.isEmpty()) {
                 byte[] thumbnailBytes = ImageUtils.compressImage(profile.getBytes());
                 existingUser.setProfile(thumbnailBytes);
@@ -191,37 +191,37 @@ public class MobileAppController {
     }
     
         
-    @PostMapping("/mobile/forgetPassword")
-    public ResponseEntity<?> resetPasswordmobile(@RequestBody Map<String, String> loginRequest) {
-        // Finding the user by email
-    	
-    	String email = loginRequest.get("email");
-        String password = loginRequest.get("password");
-        String confirmpassword = loginRequest.get("confirmPassword");
-        Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
-
-        // If the user doesn't exist, return 404 Not Found
-        if (!userOptional.isPresent()) {
-            System.out.println("User not found: " + email);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-
-        UserRegister user = userOptional.get();
-
-        // If passwords do not match, return 400 Bad Request
-        if (!password.equals(confirmpassword)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
-        }
-
-        // Assuming you have a method to hash the password
-        user.setPassword(password);
-        user.setConfirmPassword(confirmpassword);
-        // Do not set confirmPassword in the entity, it's used only for validation
-
-        userregisterrepository.save(user);
-
-        return ResponseEntity.ok("Password reset successfully");
-    }
+//    @PostMapping("/mobile/forgetPassword")
+//    public ResponseEntity<?> resetPasswordmobile(@RequestBody Map<String, String> loginRequest) {
+//        // Finding the user by email
+//    	
+//    	String email = loginRequest.get("email");
+//        String password = loginRequest.get("password");
+//        String confirmpassword = loginRequest.get("confirmPassword");
+//        Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
+//
+//        // If the user doesn't exist, return 404 Not Found
+//        if (!userOptional.isPresent()) {
+//            System.out.println("User not found: " + email);
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+//        }
+//
+//        UserRegister user = userOptional.get();
+//
+//        // If passwords do not match, return 400 Bad Request
+//        if (!password.equals(confirmpassword)) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
+//        }
+//
+//        // Assuming you have a method to hash the password
+//        user.setPassword(password);
+//        
+//        // Do not set confirmPassword in the entity, it's used only for validation
+//
+//        userregisterrepository.save(user);
+//
+//        return ResponseEntity.ok("Password reset successfully");
+//    }
 
         
     //-------------------------favorite audio---------------------------
