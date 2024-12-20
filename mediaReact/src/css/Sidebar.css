@@ -266,7 +266,8 @@ td{
  }
 
 .table-container {
- overflow-x: auto;
+  overflow-x: auto; /* Horizontal scrolling only */
+  overflow-y: auto; /* Disable vertical scrolling */
  white-space: nowrap;
  height: 68.70vh;
 }
@@ -274,7 +275,6 @@ td{
 .table-container2 {
  overflow-x: auto;
  white-space: nowrap;
- height: 72vh;
 }
 
 .table-container3 {
@@ -285,7 +285,11 @@ td{
 .table {
  margin: 0;
 }
-
+.outer-container1{
+  overflow: auto;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
 /* end table view */
 
 /* notification-style */
@@ -487,8 +491,33 @@ td{
  hyphens: auto; /* Optional: Add hyphens when breaking words */
 }
 
+.buttoncontainer{
+  display:flex;
+  align-items:center !important;
+}
 
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px; /* Adjust as needed */
+  position: relative;
+  cursor: pointer;
+}
 
+.truncate:hover::after {
+  content: attr(title); /* Use the title attribute as the tooltip content */
+  position: absolute;
+  background: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  white-space: nowrap;
+  top: 100%; /* Below the text */
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
 
 
 .button-group .btn {
@@ -1016,7 +1045,7 @@ td{
 
 .items {
  display: flex; /* Use flexbox for easier alignment */
- overflow-x: auto; /* Enable horizontal scrolling if needed */
+ overflow-x: hidden; /* Enable horizontal scrolling if needed */
  gap: 15px; /* Adjust this value to control the gap between items */
  flex-grow: 1; /* Allow items div to take up remaining space */
 }
@@ -1032,6 +1061,7 @@ td{
  flex-direction: column; /* Align image and title vertically */
  align-items: center; /* Center content horizontally */
  margin: 10px 5px; 
+
 }
 
 .item img {
@@ -1419,6 +1449,43 @@ td{
   padding: 10px;
   font-size: 18px;
 } 
+
+/* Modal Style */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Background */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+}
+
+/* Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 
 .bottom-bar-time span {
    margin-right: 30px;

@@ -13,7 +13,6 @@ const MoviesPage = () => {
   const [bannerIndex, setBannerIndex] = useState(0); // Track banner index for sliding
   const userid = sessionStorage.getItem("userId");
 
-
   // Fetch video banners (if needed, but not used in your current code)
   const fetchVideoBanners = async () => {
     try {
@@ -36,8 +35,16 @@ const MoviesPage = () => {
       console.error('Error fetching video container:', error);
     }
   };
-
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'; // Disable automatic scroll restoration
+    }
+    window.scrollTo(0, 0); // Ensure the page starts at the top
+  }, []);
+  
+  useEffect(() => {
+    
+    window.scrollTo(0, 0);
     fetchVideoBanners();
     fetchVideoContainer();
   }, []);
@@ -50,20 +57,17 @@ const MoviesPage = () => {
 
     return () => clearInterval(interval); // Clear interval on component unmount
   }, [videoBanners.length]);
-  const handleNext = (category) => {
-    setCurrentIndex((prevIndex) => {
-      const newIndex = (prevIndex[category] || 0) + 1;  // Increment the index
-      console.log(`Next: Category: ${category}, New Index: ${newIndex}`); // Log new index
-      return { ...prevIndex, [category]: newIndex };
-    });
+
+  const handleNext = () => {
+    const container = document.querySelector('.items');
+    const containerWidth = container.offsetWidth; // Get the width of the container
+    container.scrollLeft += containerWidth; // Scroll to the right by one container width
   };
   
-  const handlePrevious = (category) => {
-    setCurrentIndex((prevIndex) => {
-      const newIndex = Math.max(0, (prevIndex[category] || 0) - 1);  // Decrement the index
-      console.log(`Previous: Category: ${category}, New Index: ${newIndex}`); // Log new index
-      return { ...prevIndex, [category]: newIndex };
-    });
+  const handlePrevious = () => {
+    const container = document.querySelector('.items');
+    const containerWidth = container.offsetWidth; // Get the width of the container
+    container.scrollLeft -= containerWidth; // Scroll to the left by one container width
   };
   
 
@@ -83,6 +87,7 @@ const MoviesPage = () => {
   
     // Store the item object in local storage as a JSON string
     localStorage.setItem('items', JSON.stringify(item));
+    window.scrollTo(0, 0); // Scroll to the top
   };
   
   const handleBanner = (id) =>{
@@ -131,18 +136,14 @@ const MoviesPage = () => {
                 <div className="customcontainer">
                   <span>{state.value}</span>
                   <div className="navigation">
-                    {/* Left Button */}
-                    <button
-                      onClick={() => handlePrevious(state.value)}
-                      disabled={start === 0} // Disable if at the start
-                    >
-                      <img
-                        src={leftarrowIcon}
-                        alt="left arrow icon"
-                        style={{ width: "30px", height: "30px",cursor:"pointer" }}
-                      />
-                    </button>
-
+                   {/* Left Button */}
+<button onClick={handlePrevious}>
+  <img
+    src={leftarrowIcon}
+    alt="left arrow icon"
+    style={{ width: "30px", height: "30px", cursor: "pointer" }}
+  />
+</button>
                     <div className="items">
                       {displayedVideos.length === 0 ? (
                         <div>No videos available</div>
@@ -181,18 +182,14 @@ const MoviesPage = () => {
                       )}
                     </div>
 
-                    {/* Right Button */}
-                    <button
-                      onClick={() => handleNext(state.value)}
-                      disabled={start + 6 >= videoDescriptions.length} // Disable if no more videos to display
-                    >
-                      <img
-                        src={rightarrowIcon}
-                        alt="right arrow icon"
-                        style={{ width: "30px", height: "30px", cursor:"pointer"
-                         }}
-                      />
-                    </button>
+                  {/* Right Button */}
+<button onClick={handleNext}>
+  <img
+    src={rightarrowIcon}
+    alt="right arrow icon"
+    style={{ width: "30px", height: "30px", cursor: "pointer" }}
+  />
+</button>
                   </div>
                 </div>
               </div>

@@ -184,16 +184,15 @@ const SiteSetting = () => {
     </Dropdown>
     </div>
     <br />
-    <div className='container2'>
+    <div className='container3'>
     <ol className="breadcrumb mb-4 d-flex my-0">
       <li className="breadcrumb-item">
         <Link to="/admin/SiteSetting">Settings</Link>
       </li>
       <li className="breadcrumb-item active  text-white">SiteSettings</li>
     </ol>
+    <div className='outer-container mt-10 ml-5'>
     <div className='table-container'>
-        <div className="card-body">
-          {/* <h5 className="card-title text-center">Site Settings</h5> */}
           <form onSubmit={handleSubmit} method="post">
             <div className="flex-container">
               <div className="input-group">

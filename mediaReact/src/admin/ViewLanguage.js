@@ -122,9 +122,9 @@ const handleDeleteLanguage = (languageId) => {
               < th style={{border: 'none' }}>
                 <input type="checkbox" />
               </th>
-              <th style={{border: 'none' }}>S.NO</th>
-              <th style={{border: 'none' }}>LANGUAGE</th>
-              <th style={{border: 'none' }}>ACTION</th>
+              <th style={{border: 'none' }}>S.No</th>
+              <th style={{border: 'none' }}>Language</th>
+              <th style={{border: 'none' }}>Action</th>
             </tr>
           </thead>
             <tbody>
@@ -134,7 +134,7 @@ const handleDeleteLanguage = (languageId) => {
                   <input type="checkbox" />
                 </td>
                   <td>{index + 1}</td>
-                  <td>{lang.language ? lang.language : 'No language available'}</td>
+                  <td className='truncate' title={lang.language}>{lang.language.length> 15 ? `${lang.language.substring(0, 10)}...` : lang.language}  </td>
                   <td>
                     <button onClick={() => handlEdit(lang.id)} className="btn btn-primary me-2">
                       <i className="fas fa-edit" aria-hidden="true"></i> Edit

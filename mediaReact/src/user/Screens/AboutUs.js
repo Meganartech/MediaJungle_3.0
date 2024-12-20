@@ -71,28 +71,40 @@ const AboutUs = () => {
     featureBox1BodyScript: '',
     featureBox2HeaderScript: '',
     featureBox2BodyScript: '',
-    aboutUsImage:'null',
+    aboutUsImage: '', // Will store Base64 string
     contactUsEmail: '',
     contactUsBodyScript: '',
     callUsPhoneNumber: '',
     callUsBodyScript: '',
     locationMapUrl: '',
     locationAddress: '',
-    contactUsImage: null, // Handle file upload
+    contactUsImage: '', // Will store Base64 string
     appUrlPlaystore: '',
     appUrlAppStore: '',
-    copyrightInfo: '',// default image URL
+    copyrightInfo: '',
   });
   console.log(aboutUsData);
   useEffect(() => {
     const fetchAboutUsData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v2/footer-settings');
+        const response = await fetch(`${API_URL}/api/v2/footer-settings`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
         console.log(data); // Log the data to check its structure
+
+        // // Convert image byte arrays to Base64 (if they exist)
+        // const convertToBase64 = (bytes) => {
+        //   if (bytes) {
+        //     const binary = new Uint8Array(bytes);
+        //     const base64 = btoa(String.fromCharCode(...binary)); // Convert binary data to Base64
+        //     console.log("Converted Base64 Image: ", base64);
+        //     return `data:image/png;base64,${base64}`; // Use appropriate image type (png, jpg, etc.)
+        //   }
+        //   return 'default_image_url'; // Return default image if no data
+        // };
+
         setAboutUsData({
           aboutUsHeaderScript: data.aboutUsHeaderScript || '',
           aboutUsBodyScript: data.aboutUsBodyScript || '',
@@ -100,14 +112,14 @@ const AboutUs = () => {
           featureBox1BodyScript: data.featureBox1BodyScript || '',
           featureBox2HeaderScript: data.featureBox2HeaderScript || '',
           featureBox2BodyScript: data.featureBox2BodyScript || '',
-          aboutUsImage: data.aboutUsImage || 'default_image_url', // Provide a default
+          aboutUsImage: data.aboutUsImage|| 'default_image_url', // Convert or fallback
           contactUsEmail: data.contactUsEmail || '',
           contactUsBodyScript: data.contactUsBodyScript || '',
           callUsPhoneNumber: data.callUsPhoneNumber || '',
           callUsBodyScript: data.callUsBodyScript || '',
           locationMapUrl: data.locationMapUrl || '',
           locationAddress: data.locationAddress || '',
-          contactUsImage: data.contactUsImage || null, 
+          contactUsImage: data.contactUsImage || null, // Convert or fallback
           appUrlPlaystore: data.appUrlPlaystore || '',
           appUrlAppStore: data.appUrlAppStore || '',
           copyrightInfo: data.copyrightInfo || '',
@@ -116,7 +128,7 @@ const AboutUs = () => {
         console.error('Error fetching About Us data:', error);
       }
     };
-  
+
     fetchAboutUsData();
   }, []);
   
@@ -158,8 +170,7 @@ const AboutUs = () => {
             </div>
             <div className='mt-10 lg:mt-0'>
             <img
-
-                  src={`${API_URL}/${aboutUsData.aboutUsImage}`} // prepend the base URL
+src={`data:image/png;base64,${aboutUsData.aboutUsImage}`}
                   alt="About Us"
                   className='w-full xl:block hidden h-header rounded-lg object-cover'
                 />

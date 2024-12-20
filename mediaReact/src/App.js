@@ -102,6 +102,10 @@ import LibraryScreen from './user/LibraryScreen';
 import AudioHomescreen from './user/Screens/AudioHomescreen';
 
 import MusicScreen from './user/Screens/MusicScreen';
+
+import Ads from './admin/Ads';
+import AddAds from './admin/AddAds';
+
 import Mailsetting from './admin/Mailsetting';
 import ForgetPasswordUser from './user/Screens/ForgetPasswordUser';
 import AdminRouteGuard from './admin/AdminRouteGuard';
@@ -309,7 +313,8 @@ const App = () => {
             <Route path='PlanDescription' element={<PlanDescription />} />
 {/*             
             <Route path='setting' element= {<Setting/>} /> */}
-            
+            <Route path='Ads' element={<Ads />} />
+            <Route path='AddAds' element={<AddAds />} />
             <Route path='SiteSetting' element= {<SiteSetting/>} />
             <Route path='mailSetting' element={<Mailsetting />} />
             <Route path='Video_setting' element= {<Video_setting/>} />

@@ -100,7 +100,11 @@ const EditTenure = () => {
     
     
     return (
-        <div className='container3 mt-20'>
+        <div className="marquee-container">
+        <div className='AddArea'>
+              {/* <button className='btn btn-custom' onClick={() => handleClick("/admin/AdminPlan")}>Add Plan</button> */}
+            </div>  <br/>
+        <div className='container3 mt-10'>
         <ol className="breadcrumb mb-4">
           <li className="breadcrumb-item"><Link to="/admin/TenureList">Tenures</Link></li>
           <li className="breadcrumb-item active text-white">Edit Tenures</li>
@@ -176,7 +180,7 @@ const EditTenure = () => {
                     </form>
                 </div>
             </div>
-     
+     </div>
     );
 };
 
