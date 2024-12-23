@@ -847,7 +847,7 @@ const handleAudioDelete = async (index) => {
     </Dropdown>
     </div>
     <br />
-    <div className='container2'>
+    <div className='container3'>
         <ol className="breadcrumb mb-4 d-flex my-0">
           <li className="breadcrumb-item">
             <Link to="/admin/SiteSetting">Settings</Link>
@@ -855,6 +855,7 @@ const handleAudioDelete = async (index) => {
           <li className="breadcrumb-item active  text-white">Banner Settings</li>
         </ol>
         <div className="outer-container">
+
       {activeView === 'movie' && (
         <>
           <div className="row py-3" style={{ paddingLeft: '50px', paddingRight: '70px', marginTop: '10px' }}>
@@ -871,6 +872,7 @@ const handleAudioDelete = async (index) => {
               <button
                 className={`col-lg-6 custom-btn ${activeView === 'music' ? 'active-btn' : 'inactive-btn'}`}
                 onClick={() => handleViewChange('music')}
+                style={{ height: '35px' }}
               >
                 Music
               </button> 
@@ -889,7 +891,7 @@ const handleAudioDelete = async (index) => {
                 name="Audio Title Count"
                 id="audioContainer"
                 required
-                className="form-control border border-dark border-2 input-width"
+                className="form-control border border-dark input-width"
                 placeholder="Enter Number of Containers"
                 value={videoinputValue === 0 ? '' : videoinputValue}
                 min="0"
@@ -946,6 +948,7 @@ const handleAudioDelete = async (index) => {
               <button
                 className={`col-lg-6 custom-btn ${activeView === 'music' ? 'active-btn' : 'inactive-btn'}`}
                 onClick={() => handleViewChange('music')}
+                style={{ height: '35px' }}
               >
                 Music
               </button> 
@@ -964,7 +967,7 @@ const handleAudioDelete = async (index) => {
                 name="Audio Title Count"
                 id="audioContainer"
                 required
-                className="form-control border border-dark border-2 input-width"
+                className="form-control border border-dark input-width"
                 placeholder="Enter Number of Containers"
                 value={audioinputValue === 0 ? '' : audioinputValue}
                 min="0"
@@ -1036,7 +1039,7 @@ const handleAudioDelete = async (index) => {
                                     value={videoinputValues[index] || ""}
                                     onClick={() => handlevideoDropdownToggle(index)}
                                     onChange={(e) => handlevideoInputChanget(e, index)}
-                                    className="form-control border border-dark border-2 input-width col-lg-12"
+                                    className="form-control border border-dark input-width col-lg-12"
                                     style={{
                                       ...style.videodropdownInput,
                                       backgroundColor: snapshot.isDragging ? 'skyblue' : 'white', // Change color when dragging
@@ -1114,7 +1117,7 @@ const handleAudioDelete = async (index) => {
                                     value={audioinputValues[index] || ""}
                                     onClick={() => handleaudioDropdownToggle(index)}
                                     onChange={(e) => handleaudioInputChanget(e, index)}
-                                    className="form-control border border-dark border-2 input-width col-lg-12"
+                                    className="form-control border border-dark input-width col-lg-12"
                                     style={{
                                       ...style.videodropdownInput,
                                       backgroundColor: snapshot.isDragging ? 'skyblue' : 'white', // Change color when dragging
@@ -1176,7 +1179,7 @@ const handleAudioDelete = async (index) => {
                            <div className='col-lg-2'> 
                              <div className='col-lg-8'>
                            <button
-                             className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginLeft: '65px' }}
+                             className="btn border border-dark w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginTop:'-50px',marginLeft: '65px' }}
                              // onClick={'handleUpdatecontainervalue'}  // Using the function here
                            >
                              Cancel
@@ -1186,7 +1189,7 @@ const handleAudioDelete = async (index) => {
              
                            <div className='col-lg-1'><button
                              className="btn btn-primary"
-                             style={{ backgroundColor: 'blue' }} onClick={handleSubmit}  // Using the function here
+                             style={{ marginTop:'-50px',backgroundColor: 'blue' }} onClick={handleSubmit}  // Using the function here
                            >
                              Submit
                            </button>
@@ -1205,7 +1208,7 @@ const handleAudioDelete = async (index) => {
                            <div className='col-lg-2'> 
                              <div className='col-lg-8'>
                            <button
-                             className="btn border border-dark border-2  w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginLeft: '65px' }}
+                             className="btn border border-dark w-20 ml-11 text-black me-2 rounded-lg"  style={{ marginTop:'-50px',marginLeft: '65px' }}
                              // onClick={'handleUpdatecontainervalue'}  // Using the function here
                            >
                              Cancel
@@ -1215,7 +1218,7 @@ const handleAudioDelete = async (index) => {
              
                            <div className='col-lg-1'><button
                              className="btn btn-primary"
-                             style={{ backgroundColor: 'blue' }} onClick={handleAudioSubmit}  // Using the function here
+                             style={{ marginTop:'-50px',backgroundColor: 'blue' }} onClick={handleAudioSubmit}  // Using the function here
                            >
                              Submit
                            </button>

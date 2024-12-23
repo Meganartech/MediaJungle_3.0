@@ -84,6 +84,7 @@ public class LicenseController {
 	    	
 	    	  boolean isEmpty = licenseList.isEmpty();
 			    boolean valid = !(licenseList.isEmpty())?this.getall():false;
+	    	  
 	    	boolean type=true;
 //	    	System.out.println("licenseList.get(0).getType()"+(licenseList.get(0).getType().equals("Demo")));
 	    			if (!(licenseList.isEmpty())) {	

@@ -7,6 +7,8 @@ import API_URL from '../../../Config';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import UserNotification from '../../Screens/UserNotification';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+// import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const NavBar = () => {
     const hover = 'hover:text-subMain transitions text-white';
@@ -172,6 +174,7 @@ const NavBar = () => {
                           <img
                               src={`data:image/png;base64,${getall[0].logo}`}
                               alt="logo"
+                              loading="lazy"
                               className="h-20 lg:h-20 w-auto object-contain "
                           />
                       </Link>
@@ -243,7 +246,7 @@ const NavBar = () => {
                       <FaBell className="w-6 h-6 text-white hover:text-red-900 transition duration-300 ease-in-out" />
                   </div>
                   {/* Profile Icon */}
-                  {/* {token ? (
+                  {token ? (
                       <div className="relative">
                           <div className="flex items-center gap-2" onClick={toggleDropdown}>
                               <CgUser className="w-8 h-8" />
@@ -257,7 +260,7 @@ const NavBar = () => {
                       </div>
                   ) : (
                       <NavLink to="/UserLogin" className={hover}><FaUser /></NavLink>
-                  )} */}
+                  )}
               </div>
                {/* Burger Icon for Mobile */}
    <div className="lg:hidden flex items-left">

@@ -189,7 +189,7 @@ const Profile = () => {
   </div>
   <br/>
   {/* <Sample /> */}
-  <div className='container3 '>
+  <div className='container3'>
   <ol className="breadcrumb mb-4 d-flex my-0">
       <li className="breadcrumb-item text-white">Manage SubAdmin</li>
       <li className="ms-auto text-end text-white position-relative">
@@ -205,7 +205,7 @@ const Profile = () => {
       </li>
     </ol>
     <div class="outer-container">
-    <div className="table-container">
+    <div className="table-container2">
       <table className="table table-striped ">
         <thead>
           <tr className='table-header'>
@@ -237,14 +237,14 @@ const Profile = () => {
                 onChange={() => handleCheckboxChange(user.id)}
               />
               </td>
-              <td>{index + 1}</td>
-              <td>{user.username}</td>
-              <td>{user.mobnum}</td>
-              <td>{user.address}</td>
-              <td>{user.pincode}</td>
-              <td>{user.email.length > 15 ? user.email.substring(0, 15) + "..." : user.email}</td>
-              <td>{user.compname}</td>
-              <td>{user.country}</td>
+              <td className="truncate">{index + 1}</td>
+              <td className="truncate"  title={user.username}>{user.username.length> 20 ? `${user.username.substring(0, 10)}...` : user.username}</td>
+              <td className="truncate" title={user.mobnum}>{user.mobnum.length> 20 ? `${user.mobnum.substring(0, 10)}...` : user.mobnum}</td>
+              <td className="truncate" title={user.address}>  {user.address.length > 15 ? `${user.address.substring(0, 10)}...` : user.address}</td>
+              <td className="truncate" title={user.pincode}> {user.pincode.length > 10 ? `${user.pincode.substring(0, 10)}...` : user.pincode}</td>
+              <td className="truncate" title={user.email}>{user.email.length > 15 ? user.email.substring(0, 10) + "..." : user.email}</td>
+              <td className="truncate" title={user.compname}>{user.compname.length > 15 ? user.compname.substring(0, 10) + "..." : user.compname}</td>
+              <td className="truncate" title={user.country}>{user.country.length > 15 ? user.country.substring(0, 10) + "..." : user.country}</td>
               <td>
                 <button 
                   onClick={() => handlEdit(user.id)} 

@@ -7,6 +7,7 @@ import vector from '../user/UserIcon/list.png';
 import video from '../user/UserIcon/Video Playlist.png';
 import plus from '../user/UserIcon/plus button playlist.png';
 import { Toaster, toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const LibraryScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState("likedMusic");
@@ -16,7 +17,7 @@ const LibraryScreen = () => {
   const userid = sessionStorage.getItem("userId");
   const menuRef = useRef(null);
   
-
+  const navigate=useNavigate();
   const fetchWatchLater = async () => {
     try {
       const user = Number(userid);
@@ -140,6 +141,9 @@ const LibraryScreen = () => {
         console.error("Error creating playlist:", error.response?.data || error.message);
     
     }
+};
+const handleEdit = (id) => {
+  localStorage.setItem('id', id);
 };
 
 const handleSubmitplaylist = async (e) => {
@@ -292,7 +296,17 @@ const toggleRemovesongButtonplaylist=(index)=>{
         }
       }
     };
-    
+    const [play, setPlay] = useState(false);
+    const handlePlayClick = (videoid) => {
+      handleEdit(videoid);
+      setPlay(true);
+      if (userid) {
+        navigate("/play");
+      } else {
+        navigate("/UserLogin");
+      }
+    };
+  
 
     const removeWatchLater = async (userId, videoId) => {
       try {
@@ -776,63 +790,97 @@ console.log("visibleplaylist",visibleplaylist)
       )}
     </div>
         );
-      case "watchLater":
-        return (
-          <div>
-  <h3>Watch Later</h3>
-  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', marginTop: '30px' }}>
-    {watchLater.map((item, index) => (
-      <div className='watchlater' key={index}>
-        <img
-          src={`${API_URL}/api/v2/${item.videoId}/videothumbnail`}
-          alt="video"
-
-        />
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-          <p style={{ color: 'white', fontSize: '14px', marginRight: 'auto' }}>{item.videoTitle}</p>
-
-          {/* The three vertical dots */}
-          <div
-            onClick={() => toggleRemoveButton(index)}
-            style={{
-              cursor: 'pointer',
-              color: 'white',
-              fontSize: '20px',
-              marginLeft: '5px',
-              position: 'relative', // Keep relative positioning here for alignment with the remove button
-            }}
-          >
-            ⋮
-          </div>
-
-          {/* Display Remove button when visibleIndex matches */}
-          {visibleIndex === index && (
-            <button className='.remove' 
-            ref={menuRef}
-            style={{
-              
-              color: 'white',
-              border: 'none',
-              padding: '0px 10px',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              marginTop:'10px',
-              position: 'absolute', // Absolute positioning for the button
-              background:'rgb(50,50,50,0.5)',
-              top: '95%',  // Position the button directly under the three dots
-              left: '50%',  // Center the button horizontally under the dots
-              transform: 'translateX(-50%)',  // Adjust centering
-              zIndex: 1  // Ensure the button appears above other elements
-            }} onClick={() => handleRemove(item.videoId)}>
-              Remove
-            </button>
-          )}
-        </div>
-      </div>
-    ))}
-  </div>
-</div>       
-        );
+        case "watchLater":
+          return (
+            <div>
+              <h3>Watch Later</h3>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "40px",
+                  marginTop: "30px",
+                }}
+              >
+                {watchLater.map((item, index) => (
+                  <div className="watchlater" key={index}>
+                    {/* Wrap the image with a clickable action */}
+                    <div
+                      onClick={() => handlePlayClick(item.videoId)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <img
+                        src={`${API_URL}/api/v2/${item.videoId}/videothumbnail`}
+                        alt="video"
+                        style={{ width: "100%", borderRadius: "5px" }}
+                      />
+                    </div>
+        
+                    {/* Video Title */}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <p
+                        style={{
+                          color: "white",
+                          fontSize: "14px",
+                          marginRight: "auto",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handlePlayClick(item.videoId)} // Make the title clickable too
+                      >
+                        {item.videoTitle}
+                      </p>
+        
+                      {/* The three vertical dots */}
+                      <div
+                        onClick={() => toggleRemoveButton(index)}
+                        style={{
+                          cursor: "pointer",
+                          color: "white",
+                          fontSize: "20px",
+                          marginLeft: "5px",
+                          position: "relative",
+                        }}
+                      >
+                        ⋮
+                      </div>
+        
+                      {/* Display Remove button when visibleIndex matches */}
+                      {visibleIndex === index && (
+                        <button
+                          className="remove"
+                          ref={menuRef}
+                          style={{
+                            color: "white",
+                            border: "none",
+                            padding: "0px 10px",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            marginTop: "10px",
+                            position: "absolute",
+                            background: "rgba(50, 50, 50, 0.5)",
+                            top: "95%",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            zIndex: 1,
+                          }}
+                          onClick={() => handleRemove(item.videoId)}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
       case "playlist":
         return (
           <div>
@@ -1413,6 +1461,7 @@ Cancel
           style={{
             height: '110px',
             width: '75%',
+            
             backgroundColor:
               selectedCategory === 'playlist' ? '#2149B1' : 'rgba(50, 50, 50, 0.5)',
             color: 'white',

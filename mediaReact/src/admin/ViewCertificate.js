@@ -129,11 +129,11 @@ return (
               < th style={{border: 'none' }}>
                 <input type="checkbox" />
               </th>
-              <th style={{border: 'none' }}>S.NO</th>
-              <th style={{border: 'none' }}>CERTIFICATE NAME</th>
-              <th style={{border: 'none' }}>DESCRIPTION</th>
-              <th style={{border: 'none' }}>ISSUED BY</th>
-              <th style={{border: 'none' }}>ACTION</th>
+              <th style={{border: 'none' }}>S.No</th>
+              <th style={{border: 'none' }}>Certificate Name</th>
+              <th style={{border: 'none' }}>Description</th>
+              <th style={{border: 'none' }}>Issued By</th>
+              <th style={{border: 'none' }}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -143,9 +143,9 @@ return (
                   <input type="checkbox" />
                 </td>
                 <td>{index + 1}</td>
-                <td>{certificate.certificate ? certificate.certificate : 'No certificate available'}</td>
-                <td>{certificate.description}</td>
-                <td>{certificate.issuedby}</td>
+                <td className='truncate' title={certificate.certificate}>{certificate.certificate.length> 15 ? `${certificate.certificate.substring(0, 10)}...` : certificate.certificate} </td>
+                <td className='truncate' title={certificate.description}>{certificate.description.length> 15 ? `${certificate.description.substring(0, 10)}...` : certificate.description}</td>
+                <td className='truncate' title={certificate.issuedby}>{certificate.issuedby.length> 15 ? `${certificate.issuedby.substring(0, 10)}...` : certificate.issuedby}</td>
                 <td>
               <button onClick={() => handlEdit(certificate.id)} className="btn btn-primary me-2">
                     <i className="fas fa-edit" aria-hidden="true"></i> Edit

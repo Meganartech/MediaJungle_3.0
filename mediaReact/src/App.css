@@ -11964,8 +11964,17 @@ font-weight: 900;
   background-color: #f8f9fa;
   border-radius: 8px;
 }
+.registration-form1 {
+  overflow-x:auto;
+  padding: 10px;
+  border-radius: 8px;
+}
+
 
 .registration-form .form-group label {
+  font-weight: bold;
+}
+.registration-form1 .form-group label {
   font-weight: bold;
 }
 
@@ -11978,12 +11987,25 @@ font-weight: 900;
   box-sizing: border-box;
   margin-bottom: 10px;
 }
-
+.registration-form1 .form-group input,
+.registration-form1 .form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
 .registration-form .form-group textarea {
   resize: vertical;
 }
-
+.registration-form1 .form-group textarea {
+  resize: vertical;
+}
 .registration-form .text-center {
+  margin-top: 20px;
+}
+.registration-form1 .text-center {
   margin-top: 20px;
 }
 /* In your CSS file (e.g., App.css) */
@@ -12096,6 +12118,14 @@ input[type="text"], input[type="file"] {
   justify-content: flex-end;
   margin-top: -30px;
   margin-right:30px; /* Adjust this if needed */
+}
+
+.button-container1 {
+  display: flex;
+  justify-content: flex-end;
+margin-right:30px;
+margin-top:-20px;
+
 }
 
 .button-container .btn {
@@ -12294,4 +12324,8 @@ img {
   .content-area{
     display: block !important;
   }
+  }
+
+  .btn-custom1{
+    background-color:""
   }

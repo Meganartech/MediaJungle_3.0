@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import "../css/Sidebar.css";
+import API_URL from '../Config';
 
 const Footer_setting = () => {
   // State to manage all form data
@@ -32,7 +33,7 @@ const Footer_setting = () => {
   useEffect(() => {
     const fetchFooterSettings = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v2/footer-settings');
+        const response = await fetch(`${API_URL}/api/v2/footer-settings`);
         const data = await response.json();
         if (response.ok && data) {
           setFormData({
@@ -68,34 +69,45 @@ const Footer_setting = () => {
     }));
   };
 
-  const save = async (event) => {
-    event.preventDefault();
-    const formDataToSend = new FormData();
+const save = async (event) => {
+  event.preventDefault();
+  const formDataToSend = new FormData();
 
-    // Append form data to FormData object
-    for (const key in formData) {
+  // Append form data to FormData object
+  for (const key in formData) {
+    if (key === 'aboutUsImage' || key === 'contactUsImage') {
+      // Only append file if it's a new file or null
+      if (formData[key] && formData[key] !== 'null') {
+        formDataToSend.append(key, formData[key]);
+      } else {
+        formDataToSend.append(key, ''); // Send empty value if no new image
+      }
+    } else {
       formDataToSend.append(key, formData[key]);
     }
+  }
 
-    try {
-      const url = isUpdating
-        ? 'http://localhost:8080/api/v2/footer-settings/update' // Update URL
-        : 'http://localhost:8080/api/v2/footer-settings/submit'; // Submit URL
-      const response = await fetch(url, {
-        method: 'POST',
-        body: formDataToSend,
-      });
+  try {
+    const url = isUpdating
+      ? `${API_URL}/api/v2/footer-settings/update` // Update URL
+      : `${API_URL}/api/v2/footer-settings/submit`; // Submit URL
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formDataToSend,
+    });
 
-      if (response.ok) {
-        alert(isUpdating ? 'Form updated successfully!' : 'Form submitted successfully!');
-      } else {
-        alert('Failed to submit the form.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error submitting the form.');
+    if (response.ok) {
+      alert(isUpdating ? 'Form updated successfully!' : 'Form submitted successfully!');
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to submit the form: ${errorData.message || 'Unknown error'}`);
     }
-  };
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error submitting the form.');
+  }
+};
+
 
   // State for dropdown
   const [isOpen, setIsOpen] = useState(false);
@@ -108,7 +120,8 @@ const Footer_setting = () => {
     { name: "Payment Settings", path: "/admin/Payment_setting" },
     { name: "Banner Settings", path: "/admin/Banner_setting" },
     { name: "Footer Settings", path: "/admin/Footer_setting" },
-    { name: "Contact Settings", path: "/admin/Contact_setting" }
+    { name: "Contact Settings", path: "/admin/Contact_setting" },
+    { name: "Container Settings", path: "/admin/container" }
   ];
 
   // Handle dropdown setting change

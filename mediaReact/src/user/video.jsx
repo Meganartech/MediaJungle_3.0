@@ -1,8 +1,7 @@
 import React from 'react';
-import ReactPlayer from 'react-player';
-import { useLocation } from 'react-router-dom';
+
 import '../css/style.css';
-import API_URL from '../Config';
+
 
 function video() {
   // const [videoUrl, setVideoUrl] = useState('');
