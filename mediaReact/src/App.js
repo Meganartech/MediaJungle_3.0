@@ -223,12 +223,13 @@ const App = () => {
   {/* Place Toaster for notifications */}
         <Routes>
 
-<Route path='AudioHomescreen' element= {<AudioHomescreen/>} />
+
             
             <Route
         path="/"
         element={<UserPrivateRouter isAuthenticated={true} element={<MoviesPage />} />}
       />
+      <Route path='AudioHomescreen' element= {<AudioHomescreen/>} />
       <Route
         path="/AdminSignin"
         element={<AdminRouteGuard element={<AdminSignin />} />}

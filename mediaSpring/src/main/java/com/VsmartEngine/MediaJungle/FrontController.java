@@ -670,10 +670,10 @@ public class FrontController {
 		return LanguageController.editLanguage(languageId, editlanguage, token);
 	}
 
-//	@GetMapping("/GetAllUser")
-//	public ResponseEntity<UserWithStatus> getAllUser() {
-//		return LicenseController.getAllUser();
-//	}
+	@GetMapping("/GetAllUser")
+	public ResponseEntity<UserWithStatus> getAllUser() {
+		return LicenseController.getAllUser();
+	}
 
 	@GetMapping("/count")
 	public ResponseEntity<Integer> count() {
@@ -961,7 +961,7 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 //	}
 	
 	@GetMapping("/GetAllUsers")
-	 public ResponseEntity<List<UserRegister>> getAllUser() {
+	 public ResponseEntity<List<UserRegister>> getAllUserr() {
 		 return UserRegisterController.getAllUser();
 	 }
 	

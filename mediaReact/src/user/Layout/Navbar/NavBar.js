@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import UserNotification from '../../Screens/UserNotification';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import 'react-lazy-load-image-component/src/effects/blur.css';
+// import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const NavBar = () => {
     const hover = 'hover:text-subMain transitions text-white';

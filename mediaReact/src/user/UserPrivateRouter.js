@@ -3,8 +3,9 @@ import { Navigate } from 'react-router-dom';
 
 const UserPrivateRouter = ({ element, isAuthenticated }) => {
   const initial = sessionStorage.getItem('initialsignup');
+  console.log(initial);
   
-  if (!initial) {
+  if (initial === "false") {
     return <Navigate to="/AdminSignin" />;
   }
 
