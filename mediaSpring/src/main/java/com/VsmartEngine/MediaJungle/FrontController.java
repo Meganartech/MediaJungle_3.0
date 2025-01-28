@@ -1088,6 +1088,7 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 				@RequestParam("mainVideoDuration") String mainVideoDuration,
 				@RequestParam("trailerDuration") String trailerDuration,
 				@RequestParam("rating") String rating,
+				 @RequestParam("language") String language,
 				@RequestParam("certificateNumber") String certificateNumber,
 				@RequestParam("videoAccessType") boolean videoAccessType,
 				@RequestParam("description") String description,
@@ -1101,13 +1102,18 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 				@RequestParam("userBanner") MultipartFile userBanner,
 				@RequestParam("video") MultipartFile video,
 		        @RequestParam("trailervideo") MultipartFile trailervideo,
+		        @RequestParam("advertisementTimings") List<String> advertisementTimings,
 //		        @RequestParam("date") String date, // Add this line to accept the date as a string
 	            @RequestHeader("Authorization") String token){
-			return VideoController.uploadVideoDescription(videoTitle, mainVideoDuration, trailerDuration, rating, certificateNumber, videoAccessType,
+			return VideoController.uploadVideoDescription(videoTitle, mainVideoDuration, trailerDuration, rating, language,certificateNumber, videoAccessType,
                     description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
-                    videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,token);
+                    videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,advertisementTimings,token);
 		}
 		
+		@GetMapping("/get/getadtiming/{id}")
+		public ResponseEntity<List<Integer>> getVideoAdvertisementTiming(@PathVariable Long id) {
+			return VideoController.getVideoAdvertisementTiming(id);
+		}
 		
 		@GetMapping("/video/getall")
 		public ResponseEntity<List<VideoDescription>> getAllVideo() {
@@ -1142,11 +1148,12 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 		 @PatchMapping("/updateVideoDescription/{videoId}")
 		 @Transactional
 		 public ResponseEntity<?> updateVideoDescription(
-		         @PathVariable("videoId") Long videoId,
+				 @PathVariable("videoId") Long videoId,
 		         @RequestParam(value = "videoTitle", required = false) String videoTitle,
 		         @RequestParam(value = "mainVideoDuration", required = false) String mainVideoDuration,
 		         @RequestParam(value = "trailerDuration", required = false) String trailerDuration,
 		         @RequestParam(value = "rating", required = false) String rating,
+		         @RequestParam(value= "language",required = false) String language,
 		         @RequestParam(value = "certificateNumber", required = false) String certificateNumber,
 		         @RequestParam(value = "videoAccessType", required = false) Boolean videoAccessType,
 		         @RequestParam(value = "description", required = false) String description,
@@ -1160,11 +1167,11 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 		         @RequestParam(value = "userBanner", required = false) MultipartFile userBanner,
 		         @RequestParam(value = "video", required = false) MultipartFile video,
 		         @RequestParam(value = "trailervideo", required = false) MultipartFile trailervideo,
-		         @RequestHeader("Authorization") String token) {
-			 
-			 return VideoController.updateVideoDescription(videoId,videoTitle, mainVideoDuration, trailerDuration, rating, certificateNumber, videoAccessType,
+		         @RequestParam(value = "advertisementTimings", required = false) List<String> advertisementTimings,
+		         @RequestHeader("Authorization") String token) { 
+			 return VideoController.updateVideoDescription(videoId,videoTitle, mainVideoDuration, trailerDuration, rating,language, certificateNumber, videoAccessType,
 	                    description, productionCompany, certificateName, castandcrewlist, taglist, categorylist,
-	                    videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,token);
+	                    videoThumbnail, trailerThumbnail, userBanner,video,trailervideo,advertisementTimings,token);
 			}
 		 
 		 @DeleteMapping("/deletevideo/{videoId}")

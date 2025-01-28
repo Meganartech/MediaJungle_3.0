@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,17 +36,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
+import com.VsmartEngine.MediaJungle.model.AddAd;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.CastAndCrewModalDTO;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.FileModel;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
+import com.VsmartEngine.MediaJungle.repository.AddAdRepository;
 import com.VsmartEngine.MediaJungle.repository.AddNewCategoriesRepository;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.repository.CastandcrewRepository;
 import com.VsmartEngine.MediaJungle.service.FileService;
+import com.VsmartEngine.MediaJungle.service.FileStorageService;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
 import com.VsmartEngine.MediaJungle.userregister.UserRegisterRepository;
@@ -68,11 +73,14 @@ public class VideoController {
 	@Value("${project.videotrailer}")
 	private String trailervideoPath;
 	
+	@Value("${file.upload-dir}")
+	private String uploadDir;
+	
 	@Autowired
 	private VideoService videoService;
 
-//	@Autowired
-//	private VideoInterface service;
+	@Autowired
+    private FileStorageService fileStorageService;
 
 	@Autowired
 	private FileService fileSevice;
@@ -106,6 +114,8 @@ public class VideoController {
 	@Autowired
 	private AddNewCategoriesRepository addnewcategoriesrepository;
 	
+	@Autowired
+    private AddAdRepository adRepository;
 
 
 	public ResponseEntity<?> uploadVideoDescription(
@@ -113,6 +123,7 @@ public class VideoController {
 	        @RequestParam("mainVideoDuration") String mainVideoDuration,
 	        @RequestParam("trailerDuration") String trailerDuration,
 	        @RequestParam("rating") String rating,
+	        @RequestParam("language") String language,
 	        @RequestParam("certificateNumber") String certificateNumber,
 	        @RequestParam("videoAccessType") boolean videoAccessType,
 	        @RequestParam("description") String description,
@@ -126,9 +137,9 @@ public class VideoController {
 	        @RequestParam("userBanner") MultipartFile userBanner,
 	        @RequestParam("video") MultipartFile video,
 	        @RequestParam("trailervideo") MultipartFile trailervideo,
+	        @RequestParam("advertisementTimings") List<String> advertisementTimings,
 //	        @RequestParam("date") String date, // Add this line to accept the date as a string
 	        @RequestHeader("Authorization") String token) {
-		
 
 	    try {
 	        // Validate token
@@ -166,7 +177,9 @@ public class VideoController {
 	            newVideo.setVidofilename(videoname);
 	            newVideo.setVideotrailerfilename(trailervideoname);
 	            newVideo.setDate(parsedDate);
-
+	            newVideo.setAdvertisementTimings(advertisementTimings);
+	            newVideo.setLanguage(language);
+	        
 	            // Save and get the generated ID
 	            VideoDescription savedDescription = videodescriptionRepository.save(newVideo);
 	            long videoId = savedDescription.getId(); // Get the generated videoId
@@ -245,6 +258,51 @@ public class VideoController {
 	            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	        }
 	    }
+	 
+
+public ResponseEntity<List<Integer>> getVideoAdvertisementTiming(@PathVariable Long id) {
+    try {
+        // Retrieve the video description from the repository
+        Optional<VideoDescription> videoDetail = videodescriptionRepository.findById(id);
+        
+        // Check if the video exists
+        if (videoDetail.isPresent()) {
+            // Get advertisement timings as List<String> (e.g., "00:10:00")
+            List<String> advertisementTimings = videoDetail.get().getAdvertisementTimings();
+            
+            // Convert advertisement timings to seconds and collect as a List<Integer>
+            List<Integer> adTimingsInSeconds = advertisementTimings.stream()
+                .map(this::convertToSeconds) // Convert each time to seconds
+                .collect(Collectors.toList());
+            
+            // Return the advertisement timings in seconds as part of the response
+            return new ResponseEntity<>(adTimingsInSeconds, HttpStatus.OK);
+        } else {
+            // Return 404 if the video is not found
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    } catch (Exception e) {
+        // Log the exception (optional)
+        e.printStackTrace();
+        
+        // Return 400 if there is any exception
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+}
+
+// Helper method to convert "HH:mm:ss" format to total seconds
+private int convertToSeconds(String time) {
+    String[] parts = time.split(":");
+    
+    // Parse hours, minutes, and seconds
+    int hours = Integer.parseInt(parts[0]);
+    int minutes = Integer.parseInt(parts[1]);
+    int seconds = Integer.parseInt(parts[2]);
+    
+    // Convert to total seconds
+    return hours * 3600 + minutes * 60 + seconds;
+}
+
 	
 	
 	 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
@@ -362,7 +420,231 @@ public class VideoController {
      
  }
 	 
+//	 private long videoStartTime = 0; // Track the video start time
+//
+//	    public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
+//	        try {
+//	            // Fetch video description from the repository
+//	            VideoDescription videoDescription = videodescriptionRepository.findById(id)
+//	                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video not found"));
+//
+//	            String filename = videoDescription.getVidofilename();
+//	            List<String> adTimings = videoDescription.getAdvertisementTimings();
+//	            System.out.println("Ad timings: " + adTimings);
+//	            String mainVideoDuration = videoDescription.getMainVideoDuration();
+//	            System.out.println("Main video duration: " + mainVideoDuration);
+//
+//	            if (filename == null || mainVideoDuration == null) {
+//	                return ResponseEntity.badRequest().body("Video metadata is incomplete");
+//	            }
+//
+//	            // Convert main video duration to seconds
+//	            long totalDurationInSeconds = convertTimeToSeconds(mainVideoDuration);
+//	            long simulatedCurrentTime = calculateSimulatedCurrentTime(totalDurationInSeconds);
+//
+//	            System.out.println("Simulated Playback Time: " + simulatedCurrentTime);
+//
+//	            // Path to the main video file
+//	            Path videoFilePath = Paths.get(path, filename);
+//	            if (!Files.exists(videoFilePath)) {
+//	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Video file not found");
+//	            }
+//
+//	            // Check if current playback time matches an advertisement timing
+//	            for (String adTime : adTimings) {
+//	                long adTimeInSeconds = convertTimeToSeconds(adTime);
+//	                long tolerance = 5; // Tolerance of 5 seconds
+//	                System.out.println("Ad time in seconds: " + adTimeInSeconds);
+//
+//	                if (Math.abs(simulatedCurrentTime - adTimeInSeconds) <= tolerance) {
+//	                    // Fetch the first ad from the repository
+//	                    Optional<AddAd> optionalAd = adRepository.findFirstByOrderByCreatedAtAsc();
+//	                    if (optionalAd.isPresent()) {
+//	                        AddAd ad = optionalAd.get();
+//	                        String adFilename = ad.getVideoFilePath();
+//	                        Path adFilePath = Paths.get(uploadDir, adFilename);
+//	                        if (Files.exists(adFilePath)) {
+//	                            System.out.println("Playing ad video at time: " + simulatedCurrentTime);
+//	                            // Play the ad video
+//	                            ResponseEntity<?> adResponse = serveVideoChunk(adFilePath, request);
+//
+//	                            // After the ad finishes, serve the original video from where it stopped
+//	                            long resumeTime = simulatedCurrentTime; // Resume from where the ad was triggered
+//	                            System.out.println("Resuming original video at time: " + resumeTime);
+//	                            return serveVideoChunk(videoFilePath, request);
+//	                        } else {
+//	                            System.err.println("Ad video file not found: " + adFilePath);
+//	                        }
+//	                    }
+//	                }
+//	            }
+//
+//	            // Serve the main video if no ad is triggered
+//	            return serveVideoChunk(videoFilePath, request);
+//
+//	        } catch (Exception e) {
+//	            e.printStackTrace();
+//	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+//	        }
+//	    }
+//
+//	    // Helper method to convert time in "HH:mm:ss" format to seconds
+//	    private long convertTimeToSeconds(String time) {
+//	        String[] parts = time.split(":");
+//	        return Integer.parseInt(parts[0]) * 3600 + Integer.parseInt(parts[1]) * 60 + Integer.parseInt(parts[2]);
+//	    }
+//
+//	    // Helper method to calculate simulated playback time
+//	    private long calculateSimulatedCurrentTime(long totalDurationInSeconds) {
+//	        long currentTimeMillis = System.currentTimeMillis();
+//	        long startTimeMillis = getVideoStartTime(); // Retrieve the video start time
+//	        long elapsedTimeInSeconds = (currentTimeMillis - startTimeMillis) / 1000;
+//
+//	        // Simulate playback time based on elapsed time (looping if needed)
+//	        return elapsedTimeInSeconds % totalDurationInSeconds;
+//	    }
+//
+//	    // Method to retrieve the video start time
+//	    private long getVideoStartTime() {
+//	        if (videoStartTime == 0) {
+//	            videoStartTime = System.currentTimeMillis(); // Initialize when the video starts
+//	        }
+//	        return videoStartTime;
+//	    }
+//
+//	    // Serve video chunks for streaming
+//	    private ResponseEntity<?> serveVideoChunk(Path filePath, HttpServletRequest request) throws IOException {
+//	        String rangeHeader = request.getHeader(HttpHeaders.RANGE);
+//	        long fileSize = Files.size(filePath);
+//	        HttpHeaders headers = new HttpHeaders();
+//
+//	        if (rangeHeader != null) {
+//	            String[] ranges = rangeHeader.replace("bytes=", "").split("-");
+//	            long rangeStart = Long.parseLong(ranges[0]);
+//	            long rangeEnd = ranges.length > 1 ? Long.parseLong(ranges[1]) : fileSize - 1;
+//	            long contentLength = rangeEnd - rangeStart + 1;
+//
+//	            try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
+//	                file.seek(rangeStart);
+//	                byte[] buffer = new byte[(int) contentLength];
+//	                file.readFully(buffer);
+//
+//	                ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+//	                headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
+//
+//	                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+//	                        .headers(headers)
+//	                        .contentLength(contentLength)
+//	                        .body(byteArrayResource);
+//	            }
+//	        } else {
+//	            return ResponseEntity.ok().body("Range header missing");
+//	        }
+//	    }
+		
+	
+		
+	 
+//	 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {
+//		    try {
+//		        Optional<VideoDescription> optionalLesson = videodescriptionRepository.findById(id);
+//		        if (!optionalLesson.isPresent()) {
+//		            return ResponseEntity.notFound().build();
+//		        }
+//
+//		        VideoDescription videoDescription = optionalLesson.get();
+//		        String filename = videoDescription.getVidofilename();
+//
+//		        if (filename != null) {
+//		            Path filePath = Paths.get(path, filename);
+//		            System.out.println("filePath: " + filePath);
+//
+//		            if (filePath.toFile().exists() && filePath.toFile().isFile()) {
+//		                Resource videoResource = new UrlResource(filePath.toUri());
+//		                if (videoResource.exists() && videoResource.isReadable()) {
+//		                    HttpHeaders headers = new HttpHeaders();
+//		                    String mimeType = Files.probeContentType(filePath);
+//		                    if (mimeType == null) {
+//		                        mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+//		                    }
+//		                    headers.add(HttpHeaders.CONTENT_TYPE, mimeType);
+//		                    headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline");
+//
+//		                    long fileSize = Files.size(filePath);
+//		                    String rangeHeader = request.getHeader(HttpHeaders.RANGE);
+//		                    long rangeStart = 0;
+//		                    long rangeEnd = Math.min(5 * 1024 * 1024 - 1, fileSize - 1);
+//		                    if (rangeHeader != null) {
+//		                        String[] ranges = rangeHeader.replace("bytes=", "").split("-");
+//		                        rangeStart = Long.parseLong(ranges[0]);
+//		                        rangeEnd = ranges.length > 1 ? Long.parseLong(ranges[1]) : fileSize - 1;
+//		                    }
+//
+//		                    long contentLength = rangeEnd - rangeStart + 1;
+//		                    long currentTimeSeconds = (rangeStart * videoDurationInSeconds) / fileSize;
+//
+//		                    // Check for matching advertisement timings
+//		                    for (String adTime : videoDescription.getAdvertisementTimings()) {
+//		                        long adTimeSeconds = parseTimeToSeconds(adTime);
+//		                        if (currentTimeSeconds >= (adTimeSeconds - 30) && currentTimeSeconds <= (adTimeSeconds + 30)) {
+//		                            // Serve the advertisement video if current time is within the range
+//		                            System.out.println("Serving advertisement at timing: " + adTime);
+//
+//		                            // Replace with the actual ad file path
+//		                            String adFilePath = "path_to_ad_video"; // Update this with your ad video path
+//		                            Path adPath = Paths.get(adFilePath);
+//		                            if (adPath.toFile().exists()) {
+//		                                // Serve the advertisement as a resource
+//		                                Resource adResource = fileStorageService.getFile(adPath.toFile().getName());
+//		                                headers.setContentLength(Files.size(adPath));
+//		                                headers.set(HttpHeaders.CONTENT_TYPE, Files.probeContentType(adPath));
+//
+//		                                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+//		                                        .headers(headers)
+//		                                        .body(adResource);
+//		                            }
+//		                        }
+//		                    }
+//
+//		                    // Serve the main video content after handling the ad
+//		                    try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
+//		                        file.seek(rangeStart);
+//		                        byte[] buffer = new byte[(int) contentLength];
+//		                        file.readFully(buffer);
+//
+//		                        ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+//		                        headers.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", rangeStart, rangeEnd, fileSize));
+//		                        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+//		                                .headers(headers)
+//		                                .contentLength(contentLength)
+//		                                .body(byteArrayResource);
+//		                    }
+//		                }
+//		            }
+//		        }
+//
+//		        return ResponseEntity.notFound().build();
+//		    } catch (Exception e) {
+//		        e.printStackTrace();
+//		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//		    }
+//		}
+//
+//		// Helper method to convert time string to seconds
+//		private long parseTimeToSeconds(String time) {
+//		    String[] parts = time.split(":");
+//		    long hours = Long.parseLong(parts[0]);
+//		    long minutes = Long.parseLong(parts[1]);
+//		    long seconds = Long.parseLong(parts[2]);
+//		    return hours * 3600 + minutes * 60 + seconds;
+//		}
+//
+//		// Helper method to get total video duration in seconds
+//		private long getVideoDurationInSeconds(String duration) {
+//		    return parseTimeToSeconds(duration);
+//		}
 
+		
 	 public ResponseEntity<?> getVideotrailer(@PathVariable Long id, HttpServletRequest request) {
 		    try {
 		    	 Optional<VideoDescription> optionalLesson = videodescriptionRepository.findById(id);
@@ -449,6 +731,7 @@ public class VideoController {
 	         @RequestParam(value = "mainVideoDuration", required = false) String mainVideoDuration,
 	         @RequestParam(value = "trailerDuration", required = false) String trailerDuration,
 	         @RequestParam(value = "rating", required = false) String rating,
+	         @RequestParam(value= "language",required = false) String language,
 	         @RequestParam(value = "certificateNumber", required = false) String certificateNumber,
 	         @RequestParam(value = "videoAccessType", required = false) Boolean videoAccessType,
 	         @RequestParam(value = "description", required = false) String description,
@@ -462,6 +745,7 @@ public class VideoController {
 	         @RequestParam(value = "userBanner", required = false) MultipartFile userBanner,
 	         @RequestParam(value = "video", required = false) MultipartFile video,
 	         @RequestParam(value = "trailervideo", required = false) MultipartFile trailervideo,
+	         @RequestParam(value = "advertisementTimings", required = false) List<String> advertisementTimings,
 	         @RequestHeader("Authorization") String token) {
 
 	     try {
@@ -513,6 +797,7 @@ public class VideoController {
 	             if (mainVideoDuration != null) videoDescription.setMainVideoDuration(mainVideoDuration);
 	             if (trailerDuration != null) videoDescription.setTrailerDuration(trailerDuration);
 	             if (rating != null) videoDescription.setRating(rating);
+	             if (language != null) videoDescription.setLanguage(language);
 	             if (certificateNumber != null) videoDescription.setCertificateNumber(certificateNumber);
 	             if (videoAccessType != null) videoDescription.setVideoAccessType(videoAccessType);
 	             if (description != null) videoDescription.setDescription(description);
@@ -521,6 +806,8 @@ public class VideoController {
 	             if (castandcrewlist != null) videoDescription.setCastandcrewlist(castandcrewlist);
 	             if (taglist != null) videoDescription.setTaglist(taglist);
 	             if (categorylist != null) videoDescription.setCategorylist(categorylist);
+	             if (advertisementTimings != null) videoDescription.setAdvertisementTimings(advertisementTimings);
+	             
 
 	             // Save updated VideoDescription
 	             VideoDescription updatedVideoDescription = videodescriptionRepository.save(videoDescription);
