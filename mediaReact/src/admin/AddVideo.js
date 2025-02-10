@@ -14,6 +14,8 @@ const AddVideo = () => {
   /* submit mode */
   const [videoTitle,setVideoTitle] = useState('');
   const [mainVideoDuration , setMainVideoDuration] = useState('');
+  const [language,setLanguage] = useState('');
+  console.log('language',language);
   const [trailerDuration,setTrailerDuration] = useState('');
   const [certificateName,setCertificateName] = useState('');
   const [Certificate, setCertificate] = useState([]);
@@ -53,9 +55,55 @@ const AddVideo = () => {
   const [isOpencast, setIsOpencast] = useState(false);
   const [isOpentag, setIsOpentag] = useState(false);
   const [isOpencategory, setIsOpencategory] = useState(false);
+  const [numOfAds, setNumOfAds] = useState(""); // Input for number of ads
+  const [adTimes, setAdTimes] = useState([]); // List of ad times
+
+  const addAdTime = () => {
+    const adsToCreate = parseInt(numOfAds, 10);
+  
+    if (!isNaN(adsToCreate) && adsToCreate >= 0) {
+      if (adsToCreate < adTimes.length) {
+        // If number of ads is less than existing adTimes, show an alert
+        alert("The value must not be less than the current number of ads.");
+      } else if (adsToCreate > adTimes.length) {
+        // If number of ads is greater, add the required number of ads
+        const additionalAds = Array(adsToCreate - adTimes.length).fill("00:00:00"); // Default time
+        setAdTimes([...adTimes, ...additionalAds]);
+      }
+    } else {
+      alert("Please enter a valid number of ads.");
+    }
+  };
+  
+  const [editingIndex, setEditingIndex] = useState(null);
+const [tempAdTime, setTempAdTime] = useState("");
+
+const editAdTime = (index) => {
+  setEditingIndex(index);
+  setTempAdTime(adTimes[index]); // Store the current ad time in temporary state for editing
+};
+
+const saveAdTime = (index) => {
+  const updatedAdTimes = [...adTimes];
+  updatedAdTimes[index] = tempAdTime; // Update the ad time with the edited value
+  setAdTimes(updatedAdTimes);
+  setEditingIndex(null); // Exit editing mode
+};
+
+const cancelEditAdTime = () => {
+  setEditingIndex(null); // Exit editing mode without saving
+};
+
+  
+
+ const deleteAdTime = (index) => {
+  const updatedAdTimes = adTimes.filter((_, i) => i !== index);
+  setAdTimes(updatedAdTimes);
+};
+
  
 
-  const [language,setLanguage] = useState('');
+  
 
   const nextStep = () => {
     setCurrentStep(currentStep + 1);
@@ -260,20 +308,6 @@ const hasPaymentPlan = () => {
         console.error('Error fetching data:', error);
       });
 
-      fetch(`${API_URL}/api/v2/GetAllLanguage`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setLanguage(data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-
       fetch(`${API_URL}/api/v2/GetAllTag`)
       .then(response => {
         if (!response.ok) {
@@ -393,12 +427,24 @@ const handletrailerFileChange = (event) => {
 
 const handleVideoFileChange = (event) => {
   const file = event.target.files[0];
-  setvideofile(event.target.files[0]);
-  console.log('File selected:', file);
+  setvideofile(file);
+  console.log("File selected:", file);
+
   if (file) {
     const videoUrl = URL.createObjectURL(file);
-    console.log('Video URL:', videoUrl);
+    console.log("Video URL:", videoUrl);
     setVideoUrl(videoUrl);
+
+    // Create a temporary video element to calculate the duration
+    const videoElement = document.createElement("video");
+    videoElement.src = videoUrl;
+
+    videoElement.onloadedmetadata = () => {
+      const duration = videoElement.duration; // Duration in seconds
+      const formattedDuration = formatDuration(duration); // Convert to HH:mm:ss
+      setMainVideoDuration(formattedDuration); // Set the formatted duration
+      console.log("Video Duration:", formattedDuration);
+    };
   }
 };
 
@@ -407,11 +453,35 @@ const handleVideoDrop = (event) => {
   event.preventDefault();
   const file = event.dataTransfer.files[0];
   setvideofile(file);
+
   if (file) {
     const videoUrl = URL.createObjectURL(file);
     setVideoUrl(videoUrl);
+
+    // Create a temporary video element to calculate the duration
+    const videoElement = document.createElement("video");
+    videoElement.src = videoUrl;
+
+    videoElement.onloadedmetadata = () => {
+      const duration = videoElement.duration; // Duration in seconds
+      const formattedDuration = formatDuration(duration); // Convert to HH:mm:ss
+      setMainVideoDuration(formattedDuration); // Set the formatted duration
+    };
   }
 };
+
+// Helper function to format duration in seconds to HH:mm:ss
+const formatDuration = (durationInSeconds) => {
+  const hours = Math.floor(durationInSeconds / 3600);
+  const minutes = Math.floor((durationInSeconds % 3600) / 60);
+  const seconds = Math.floor(durationInSeconds % 60);
+
+  // Format as HH:mm:ss
+  return [hours, minutes, seconds]
+    .map((unit) => String(unit).padStart(2, "0"))
+    .join(":");
+};
+
 
 
 const handletrailerDrop = (event) => {
@@ -462,6 +532,7 @@ const save = async (e) => {
       const formData = new FormData();
       formData.append('videoTitle', videoTitle);
       formData.append('mainVideoDuration', mainVideoDuration);
+      formData.append('language',language);
       formData.append('trailerDuration', trailerDuration);
       formData.append('rating', rating);
       formData.append('certificateNumber', certificateNumber);
@@ -477,6 +548,7 @@ const save = async (e) => {
       formData.append('categorylist', category);
       formData.append('video', videofile);
       formData.append('trailervideo', trailerfile);
+      formData.append('advertisementTimings',adTimes);
 
       // Upload video description with progress updates
       await axios.post(`${API_URL}/api/v2/uploaddescription`, formData, {
@@ -556,6 +628,7 @@ useEffect(() => {
       .then(data => {
         console.log('Video Details:', data); // Log the video details
         setVideoTitle(data.videoTitle);
+        setLanguage(data.language);
         setMainVideoDuration(data.mainVideoDuration);
         setTrailerDuration(data.trailerDuration);
         setRating(data.rating);
@@ -567,12 +640,13 @@ useEffect(() => {
         setcastandcrewlist(data.castandcrewlist);
         console.log(data.castandcrewlist);
         settaglist(data.taglist);
+        setAdTimes(data.advertisementTimings);
         setCategory(data.categorylist);
         console.log('Category List:', data.categorylist);
 
         const videoFile = data.vidofilename;
         const trailerFile = data.videotrailerfilename;
-console.log("lolololol" +videoFile);
+
         if (videoFile) {
           // setVideoUrl(`${API_URL}/api/v2/${videoFile}/videofile`);
           setVideoUrl(`${API_URL}/api/v2/${videoId}/videofile`);
@@ -682,6 +756,7 @@ const handleUpdate = async (e) => {
       formData.append('mainVideoDuration', mainVideoDuration);
       formData.append('trailerDuration', trailerDuration);
       formData.append('rating', rating);
+      formData.append('language',language);
       formData.append('certificateNumber', certificateNumber);
       formData.append('videoAccessType', videoAccessType === 'free' ? 0 : 1);
       formData.append('description', description);
@@ -695,6 +770,7 @@ const handleUpdate = async (e) => {
       formData.append('categorylist', category);
       formData.append('video', videofile);
       formData.append('trailervideo', trailerfile);
+      formData.append('advertisementTimings',adTimes);
 
       // Upload video description with progress updates
       await axios.patch(`${API_URL}/api/v2/updateVideoDescription/${videoId}`, formData, {
@@ -767,7 +843,7 @@ const handleUpdate = async (e) => {
     <div className="table-container">
     {currentStep === 1 && (
             <>
-      <div className="row py-3 my-3 align-items-center w-100">
+      <div className="row py-2 my-3 align-items-center w-100">
 
         {/* Video Title */}
         <div className="col-md-6">
@@ -789,32 +865,28 @@ const handleUpdate = async (e) => {
           </div>
         </div>
 
-
-        {/* Main Video Duration */}
+        {/* language */}
         <div className="col-md-6">
           <div className="d-flex align-items-center">
             <div className="label-width">
-              <label className="custom-label">Main Video Duration</label>
+              <label className="custom-label">Language</label>
             </div>
             <div className="flex-grow-1">
               <input 
                 type='text'
-                name='mainVideoDuration'
+                name='language'
                 required
                 className="form-control border border-dark input-width" 
-                placeholder="Main Video Duration" 
-                value={mainVideoDuration}
-                onChange ={(e) => setMainVideoDuration(e.target.value) }
+                placeholder="Language" 
+                value={language}
+                onChange ={(e) => setLanguage(e.target.value) }
               />
             </div>
           </div>
         </div>
-
-
-        
       </div>
 
-      <div className="row py-3 my-3 align-items-center w-100">
+      <div className="row py-2 my-3 align-items-center w-100">
 
         {/* Trailer Duration */}
         <div className="col-md-6">
@@ -865,27 +937,9 @@ const handleUpdate = async (e) => {
 
       </div>
 
-      <div className="row py-3 my-3 align-items-center w-100">
+      <div className="row py-2 my-3 align-items-center w-100">
 
-        {/* Rating */}
-        <div className="col-md-6">
-          <div className="d-flex align-items-center">
-            <div className="label-width">
-              <label className="custom-label">Rating</label>
-            </div>
-            <div className="flex-grow-1">
-              <input 
-                type='text'
-                name='rating'
-                required
-                className="form-control border border-dark input-width" 
-                placeholder="/10" 
-                value={rating}
-                onChange ={(e) => setRating(e.target.value) }
-              />
-            </div>
-          </div>
-        </div>
+        
 
         {/* Certificate No */}
         <div className="col-md-6">
@@ -907,71 +961,8 @@ const handleUpdate = async (e) => {
           </div>
         </div>
 
-
-        
-
-      </div>
-
-      <div className="row py-3 my-3 align-items-center w-100">
-
-        {/* Subscription Type */}
-        <div className="col-md-6">
-          <div className="d-flex align-items-center">
-            <div className="label-width">
-              <label className="custom-label">Video Access Type</label>
-            </div>
-            <div className="flex-grow-1">
-              <div className="d-flex">
-                <div className="form-check form-check-inline">
-                  <input 
-                    className="form-check-input"
-                    type="radio"
-                    name="videoAccessType"
-                    id="free"
-                    value="free"
-                    checked={videoAccessType === 'free'}
-                    onChange={handleRadioChange}
-                  />
-                  <label className="form-check-label" htmlFor="free">Free</label>
-                </div>
-
-                <div className="form-check form-check-inline ms-3">
-                  <input 
-                    className={`form-check-input ${videoAccessType === 'paid' ? ' selected' : ''}`}
-                    type="radio"
-                    name="videoAccessType"
-                    id="Paid"
-                    value="Paid"
-                    checked={videoAccessType === 'paid'}
-                disabled={!hasPaymentPlan()}
-                onChange={() => {
-                    if (hasPaymentPlan()) {
-                        setVideoAccessType('paid');
-                    }
-
-                }}
-                
-                  />
-                  <label className={`form-check-label ${videoAccessType === 'paid' ? ' selected' : ''}`}
-                   htmlFor="Paid"
-                   onMouseEnter={handlePaidRadioHover}
-                            onClick={() => {
-                                if (hasPaymentPlan()) {
-                                    setVideoAccessType('paid');
-                                }
-                            }}
-                            >
-                              Paid</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-      
-        {/*  {/* Cast and Crew */}
-        <div className="col-md-6">
+         {/*  {/* Cast and Crew */}
+         <div className="col-md-6">
           <div className="d-flex align-items-center" >
             <div className="label-width">
               <label className="custom-label">Cast and Crew</label>
@@ -1012,6 +1003,52 @@ const handleUpdate = async (e) => {
           </div>
         </div>
 
+
+        
+
+      </div>
+
+      <div className="row py-2 my-3 align-items-center w-100">
+
+        
+
+
+      {/* Rating */}
+        <div className="col-md-6" style={{marginBottom:'80px'}}>
+          <div className="d-flex align-items-center">
+            <div className="label-width">
+              <label className="custom-label">Rating</label>
+            </div>
+            <div className="flex-grow-1">
+              <input 
+                type='text'
+                name='rating'
+                required
+                className="form-control border border-dark input-width" 
+                placeholder="/10" 
+                value={rating}
+                onChange ={(e) => setRating(e.target.value) }
+              />
+            </div>
+          </div>
+        </div>
+
+
+        {/* Empty Div with Border, Border Radius, and Increased Height */}
+  <div className="col-md-6" >
+    <div className="d-flex align-items-center">
+      <div className="flex-grow-1 border border-dark p-3" 
+           style={{ borderRadius: '13px', height: '130px', overflowY: 'auto' }}>
+        {castandcrewlist.map(id => (
+          <div key={id}>
+            {Getall.find(option => option.id === id)?.name} {/* Display name based on ID */}
+          </div>  
+        ))}
+      </div>
+    </div>
+  </div>
+       
+
         
         
 
@@ -1024,19 +1061,7 @@ const handleUpdate = async (e) => {
     
   </div>
 
-  {/* Empty Div with Border, Border Radius, and Increased Height */}
-  <div className="col-md-6">
-    <div className="d-flex align-items-center">
-      <div className="flex-grow-1 border border-dark p-3" 
-           style={{ borderRadius: '13px', height: '130px', overflowY: 'auto' }}>
-        {castandcrewlist.map(id => (
-          <div key={id}>
-            {Getall.find(option => option.id === id)?.name} {/* Display name based on ID */}
-          </div>  
-        ))}
-      </div>
-    </div>
-  </div>
+  
       </div>
 
       
@@ -1259,7 +1284,7 @@ const handleUpdate = async (e) => {
 
 {currentStep === 3 && (
   <>
-    <div className="row py-3 my-3 align-items-center w-100">
+    <div className="row py-1 my-3 align-items-center w-100">
     {/* First Instance */}
     <div className="col-md-6">
     <div className="d-flex align-items-center">
@@ -1362,7 +1387,7 @@ const handleUpdate = async (e) => {
     </div>
 
 
-    <div className="row py-3 my-3 align-items-center w-100">
+    <div className="row py-1 my-3 align-items-center w-100">
     {/* First Instance */}
     <div className="col-md-6">
     <div className="d-flex align-items-center">
@@ -1466,7 +1491,7 @@ const handleUpdate = async (e) => {
 
 
 
-    <div className="row py-3 my-3 align-items-center w-100">
+    <div className="row py-1 my-3 align-items-center w-100">
     {/* First Instance */}
     <div className="col-md-6">
     <div className="d-flex align-items-center">
@@ -1539,6 +1564,213 @@ const handleUpdate = async (e) => {
 )}
 
 {currentStep === 4 && (
+  <>
+    {/* Total Duration and Number of Ads */}
+    <div className="row py-1 my-3 align-items-center w-100">
+  {/* Total Duration */}
+  <div className="col-md-6 d-flex align-items-center">
+    <div className="label-width">
+      <label className="custom-label">Total Duration</label>
+    </div>
+    <div className="flex-grow-1 me-3">
+      <input
+        type='text'
+        name='mainVideoDuration'
+        required
+        className="form-control border border-dark input-width" 
+        placeholder="Main Video Duration" 
+        value={mainVideoDuration}
+        onChange ={(e) => setMainVideoDuration(e.target.value) }
+        disabled
+      />
+    </div>
+  </div>
+
+  {videoAccessType === "free" && (
+  <div className="col-md-6 d-flex align-items-center">
+    <div className="label-width">
+      <label className="custom-label">No of Ads</label>
+    </div>
+    <div className="flex-grow-1 me-3">
+      <input
+        type="text"
+        className="form-control border border-dark input-width"
+        placeholder="enter no of ads"
+        value={numOfAds}
+        onChange={(e) => setNumOfAds(e.target.value)}
+      />
+    </div>
+    {/* Create Button */}
+    <button
+    className="border border-dark p-1.5 w-20 text-white rounded-lg"
+    style={{ backgroundColor: 'blue' }}
+      // className="btn btn-primary"
+      type="button"
+      onClick={addAdTime}
+    >
+      Create
+    </button>
+  </div>
+  )}
+</div>
+
+    {/* Video Access Type */}
+    <div className="row py-1 my-3 align-items-center w-100">
+      <div className="col-md-6">
+        <div className="d-flex align-items-center">
+          <div className="label-width">
+            <label className="custom-label">Video Access Type</label>
+          </div>
+          <div className="flex-grow-1">
+            <div className="d-flex">
+              <div className="form-check form-check-inline">
+              <input 
+                    className="form-check-input"
+                    type="radio"
+                    name="videoAccessType"
+                    id="free"
+                    value="free"
+                    checked={videoAccessType === 'free'}
+                    onChange={handleRadioChange}
+                  />
+                  <label className="form-check-label" htmlFor="free">Free</label>
+                </div>
+
+
+
+              <div className="form-check form-check-inline ms-3">
+              <input 
+                    className={`form-check-input ${videoAccessType === 'paid' ? ' selected' : ''}`}
+                    type="radio"
+                    name="videoAccessType"
+                    id="Paid"
+                    value="Paid"
+                    checked={videoAccessType === 'paid'}
+                disabled={!hasPaymentPlan()}
+                onChange={() => {
+                    if (hasPaymentPlan()) {
+                        setVideoAccessType('paid');
+                    }
+
+                }}
+                
+                  />
+                  <label className={`form-check-label ${videoAccessType === 'paid' ? ' selected' : ''}`}
+                   htmlFor="Paid"
+                   onMouseEnter={handlePaidRadioHover}
+                            onClick={() => {
+                                if (hasPaymentPlan()) {
+                                    setVideoAccessType('paid');
+                                }
+                            }}
+                            >
+                              Paid</label>
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Video Thumbnail and Ad Times List */}
+    <div className="row py-1 align-items-center w-100">
+      <div className="col-md-6">
+        <img
+          src={videothumbnailUrl}
+          alt="Video Thumbnail"
+          className="img-fluid p-3 border border-dark"
+          style={{ height: "300px" }}
+        />
+      </div>
+
+      <div className="col-md-6">
+      {videoAccessType === "free" && (
+  <div
+    className="border border-dark p-3"
+    style={{ borderRadius: "13px", height: "300px", overflowY: "auto" }}
+  >
+    <ul className="list-group">
+  {adTimes.map((time, index) => (
+    <li
+      key={index}
+      className="list-group-item d-flex justify-content-between align-items-center"
+    >
+      {editingIndex === index ? (
+        <div className="d-flex align-items-center w-100">
+          <input
+            type="text"
+            className="form-control me-2"
+            value={tempAdTime}
+            onChange={(e) => setTempAdTime(e.target.value)}
+          />
+          <button
+            className="btn btn-sm btn-success me-2"
+            onClick={() => saveAdTime(index)}
+          >
+            Save
+          </button>
+          <button
+            className="btn btn-sm btn-secondary"
+            onClick={cancelEditAdTime}
+          >
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <div className="d-flex justify-content-between w-100">
+          <span>{time}</span>
+          <div>
+            <button
+              className="btn btn-sm btn-primary me-2"
+              onClick={() => editAdTime(index)}
+            >
+              <i className="fas fa-edit"></i> {/* FontAwesome Edit Icon */}
+            </button>
+            <button
+              className="btn btn-sm btn-danger"
+              onClick={() => deleteAdTime(index)}
+            >
+              <i className="fas fa-trash-alt"></i> {/* FontAwesome Delete Icon */}
+            </button>
+          </div>
+        </div>
+      )}
+    </li>
+  ))}
+</ul>
+
+  </div>
+      )}
+</div>
+
+    </div>
+
+    {/* Navigation Buttons */}
+    <div className="row py-1 my-1 w-100">
+    <div className="col-md-8 ms-auto text-end">
+                <button
+                  className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  type="button"
+                  onClick={prevStep}
+                >
+                  Back
+                </button>
+                <button
+                  className="border border-dark p-1.5 w-20 text-white rounded-lg"
+                  type="submit"
+                  style={{ backgroundColor: '#2b2a52' }}
+                  onClick={nextStep}
+                >
+                  Next
+                </button>
+              </div>
+    </div>
+  </>
+)}
+
+
+{currentStep === 5 && (
             <>
             <div className="preview-container d-flex justify-content-center align-items-center">
         <div className="d-flex">
