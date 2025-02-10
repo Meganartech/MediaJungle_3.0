@@ -11781,7 +11781,7 @@ nav {
   justify-content: flex-end;
   display:flex;
   align-items: center;
-  gap:70px;
+  gap:20px;
 
 }
 .contain {
@@ -11964,8 +11964,17 @@ font-weight: 900;
   background-color: #f8f9fa;
   border-radius: 8px;
 }
+.registration-form1 {
+  overflow-x:auto;
+  padding: 10px;
+  border-radius: 8px;
+}
+
 
 .registration-form .form-group label {
+  font-weight: bold;
+}
+.registration-form1 .form-group label {
   font-weight: bold;
 }
 
@@ -11978,12 +11987,25 @@ font-weight: 900;
   box-sizing: border-box;
   margin-bottom: 10px;
 }
-
+.registration-form1 .form-group input,
+.registration-form1 .form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
 .registration-form .form-group textarea {
   resize: vertical;
 }
-
+.registration-form1 .form-group textarea {
+  resize: vertical;
+}
 .registration-form .text-center {
+  margin-top: 20px;
+}
+.registration-form1 .text-center {
   margin-top: 20px;
 }
 /* In your CSS file (e.g., App.css) */
@@ -12098,7 +12120,212 @@ input[type="text"], input[type="file"] {
   margin-right:30px; /* Adjust this if needed */
 }
 
+.button-container1 {
+  display: flex;
+  justify-content: flex-end;
+margin-right:30px;
+margin-top:-20px;
+
+}
+
 .button-container .btn {
   /* Optional: Additional styling for the button */
   margin-left: 10px; /* Adjust this if needed */
 }
+@media (max-width: 576px) {
+    .con5 {
+      justify-content: space-between;
+    }
+
+    /* Display burger icon */
+    .burger-icon {
+      display: block;
+    }
+    .mobile-logo {
+      width: 180px;
+      height: 60px;
+  }
+    /* Full-width search bar */
+    .search-bar {
+      width: 100%;
+    }
+
+}
+/* Default styles for larger screens */
+.banner-container .banner-items {
+  display: flex;
+  transition: transform 0.5s ease-in-out; 
+}
+
+.banner-item {
+  flex: 0 0 100%; /* Each banner item takes up full width */
+}
+
+.container-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.customcontainer {
+  flex: 1;
+  min-width: 300px;
+}
+
+.items {
+  display: flex;
+  transition: transform 0.3s ease; 
+  flex-wrap: nowrap; /* Ensure the videos stay in one row */
+  gap: 15px;
+}
+
+.item {
+  flex: 0 0 auto; /* Prevent items from shrinking */
+  margin-right: 10px; /* Optional: space between items */
+  min-width: 200px; /* Adjust the min-width for each video item */
+  text-align: center;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  /* Adjust banner size for mobile */
+  .banner-container .banner-items {
+    display: flex;
+    transition: transform 0.5s ease-in-out; /* Stack the banners vertically */
+  }
+
+  .banner-item img {
+    width: 100%; /* Adjust banner image to take full width */
+    height: auto;
+  }
+
+  /* Adjust the container to be more mobile-friendly */
+  .container-list {
+    display: block; /* Stack items vertically */
+    padding: 10px;
+  }
+
+  .customcontainer {
+    min-width: 100%; /* Full width on mobile */
+    margin-bottom: 20px; /* Add space between containers */
+  }
+
+  /* Keep videos in a row with the arrow buttons */
+  .items {
+    display: flex; /* Keep videos in a row */
+    transition: transform 0.3s ease; /* Smooth transition when sliding */
+    width: 100%;
+    flex-wrap: nowrap; /* Ensure no wrapping */
+    justify-content: space-between; /* Distribute space between the videos */
+  }
+
+  .item {
+    flex: 0 0 auto; /* Prevent items from shrinking */
+  margin-right: 10px; /* Optional: space between items */
+    min-width: 20%; /* Reduce width for mobile screens */
+ 
+  }
+
+  /* Adjust navigation buttons (Left and Right) */
+  .navigation button {
+    display: block;
+    margin: 10px auto; /* Center align buttons */
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .banner-container {
+    padding: 0 10px;
+    height:250px;
+  }
+
+  .item {
+    flex: 1;
+    min-width: 100%; /* Ensure items are side by side on small screens */
+    margin-right: 5px; /* Reduce margin on small screens */
+  }
+
+  .navigation button {
+    width: 40px; /* Smaller navigation buttons */
+  }
+}
+@media (max-width: 768px) {
+  button {
+    height: auto !important;  /* Remove height */
+    width: auto !important;   /* Remove width */
+    padding: 20px;            /* Adjust padding if necessary */
+  }
+
+  button img {
+    width: 40px; /* Adjust icon size on mobile if needed */
+  }
+  .playlisthead {
+    display: block; /* Change to block for mobile */
+    gap: 0; /* Remove the large gap in mobile */
+  }
+}
+
+  .library-footer {
+    display: none;
+    position: fixed;
+    bottom: 60px; /* Adjust based on your main footer height */
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .library-footer button {
+    background-color: rgba(50, 50, 50, 0.5);
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    flex: 1;
+    margin: 0 5px;
+    text-align: center;
+  }
+
+  .library-footer button.active-footer-btn {
+    background-color: #2149B1;
+  }
+
+  @media (min-width: 768px) {
+    .library-footer {
+      display: none; /* Show footer for mobile only */
+    }
+  }
+
+  @media(max-width: 768px){
+   
+    .divss{
+   display:none !important;
+    }
+ .playlisthead{
+  gap:0 !important;
+ }
+   .sss{
+    margin-left:30px !important;
+   }
+   .div22{
+    margin-top:10px !important;
+   }
+  .content-area{
+    display: block !important;
+  }
+  }
+
+  .btn-custom1{
+    background-color:""
+  }

@@ -20,13 +20,13 @@ import com.VsmartEngine.MediaJungle.service.PlanFeatureMergeService;
 
 @RestController
 @RequestMapping("/api/v2")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class PlanFeatureMergeController {
 
     @Autowired
     private PlanFeatureMergeService service;
 
-    @PutMapping("/planfeaturemerge")
+    
     public ResponseEntity<List<PlanFeatureMerge>> updatePlanFeatureMerge(
             @RequestBody List<PlanFeatureMerge> planFeatureMerges) {
         try {
@@ -38,7 +38,7 @@ public class PlanFeatureMergeController {
         }
     }
 
-    @PatchMapping("/planfeaturemerge")
+   
     public ResponseEntity<List<PlanFeatureMerge>> patchPlanFeatureMerge(
             @RequestBody List<PlanFeatureMerge> planFeatureMerges) {
         try {
@@ -58,7 +58,6 @@ public class PlanFeatureMergeController {
         }
     }
 
-    @DeleteMapping("/planfeaturemerge")
     public ResponseEntity<HttpStatus> deleteFeaturesByPlanId(
             @RequestParam Long planId) {
         try {
@@ -69,8 +68,7 @@ public class PlanFeatureMergeController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/GetFeaturesByPlanId")
+    
     public ResponseEntity<List<PlanFeatureMerge>> getFeaturesByPlanId(@RequestParam Long planId) {
         try {
             List<PlanFeatureMerge> features = service.getFeaturesByPlanId(planId);

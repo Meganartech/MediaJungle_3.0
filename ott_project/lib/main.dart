@@ -6,8 +6,9 @@ import 'package:ott_project/components/music_folder/audio_provider.dart';
 
 import 'package:ott_project/pages/Sign_up.dart';
 import 'package:ott_project/pages/forget_password.dart';
-import 'package:ott_project/pages/home_page.dart';
+
 import 'package:ott_project/pages/login_page.dart';
+import 'package:ott_project/service/playlist_service.dart';
 import 'package:provider/provider.dart';
 
 import 'components/music_folder/recently_played.dart';
@@ -19,7 +20,8 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AudioProvider()),
+        Provider<PlaylistService>(create:(_) => PlaylistService()),
+        ChangeNotifierProvider(create: (context) => AudioProvider(Provider.of<PlaylistService>(context, listen: false))),
         ChangeNotifierProvider(create: (context) => RecentlyPlayed()),
       ],
       child: const MyApp(),
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OTT Play',
+      title: 'Media Sharing',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme:

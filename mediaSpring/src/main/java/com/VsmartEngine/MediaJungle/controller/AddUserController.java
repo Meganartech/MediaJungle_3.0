@@ -46,9 +46,16 @@ public class AddUserController {
     
     @Autowired
     private NotificationService notificationservice;
+    
    
     public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
 		try {
+	        
+	        Optional<AddUser> adduser = adduserrepository.findByEmail(data.getEmail());
+	        if(adduser.isPresent()) {
+	        	return ResponseEntity.badRequest().body("Email is already registered.");
+	        }
+	        
 			Optional<AddUser> userOptional = adduserrepository.findByRole("ADMIN");
 			
 			 // If an ADMIN role already exists, set the role to SUBADMIN, otherwise set it to ADMIN
@@ -83,6 +90,11 @@ public class AddUserController {
             if (!"ADMIN".equals(role)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\": \"Only admin can add subadmins\"}");
             }
+	        
+	        Optional<AddUser> adduser = adduserrepository.findByEmail(data.getEmail());
+	        if(adduser.isPresent()) {
+	        	return ResponseEntity.badRequest().body("Email is already registered.");
+	        }
 
             Optional<AddUser> userOptional = adduserrepository.findByRole("ADMIN");
 
@@ -106,6 +118,7 @@ public class AddUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed");
         }
     }
+    
 	
 
 	public ResponseEntity<?> loginadmin(@RequestBody Map<String, String> loginRequest) {
@@ -362,6 +375,5 @@ public class AddUserController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check admin role");
 	    }
 	}
-	
 
 }

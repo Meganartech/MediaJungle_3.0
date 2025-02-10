@@ -19,7 +19,7 @@ import com.VsmartEngine.MediaJungle.repository.SocialSettingsRepository;
 import com.VsmartEngine.MediaJungle.service.SocialSettingsService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v2/social-settings")
 public class SocialSettingsController {
 

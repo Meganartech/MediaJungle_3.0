@@ -112,9 +112,9 @@ const handleDeleteTag = (tagId) => {
               < th style={{border: 'none' }}>
                 <input type="checkbox" />
               </th>
-              <th style={{border: 'none' }}>S.NO</th>
-              <th style={{border: 'none' }}>NAME TAGS</th>
-              <th style={{border: 'none' }}>ACTION</th>
+              <th style={{border: 'none' }}>S.No</th>
+              <th style={{border: 'none' }}>Tags Name</th>
+              <th style={{border: 'none' }}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -124,7 +124,7 @@ const handleDeleteTag = (tagId) => {
                   <input type="checkbox" />
                 </td>
                 <td>{index + 1}</td>
-                <td>{tag.tag}</td>
+                <td className='truncate' title={tag.tag}>{tag.tag.length> 15 ? `${tag.tag.substring(0, 10)}...` : tag.tag} </td>
                 <td>
                   <button onClick={() => handlEdit(tag.tag_id)} className="btn btn-primary me-2">
                     <i className="fas fa-edit" aria-hidden="true"></i> Edit

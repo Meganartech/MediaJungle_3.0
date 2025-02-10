@@ -25,7 +25,7 @@ import com.VsmartEngine.MediaJungle.repository.PlanFeatureMergeRepository;
 import com.VsmartEngine.MediaJungle.repository.PlanFeaturesRepository;
 import com.VsmartEngine.MediaJungle.userregister.JwtUtil;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @Controller
 public class FeatureController {
 

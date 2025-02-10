@@ -20,43 +20,7 @@ public class videoBannerController {
 	@Autowired
 	private VideoBannerRepository videobannerrepository;
 	
-	
-//	public ResponseEntity<String> createVideoBanner(@RequestBody VideoBannerRequest videoBannerRequest) {
-//	    try {
-//	        int noOfSlides = videoBannerRequest.getNoOfSlides(); // Assuming this is a property in your request
-//	        List<Long> videoIds = videoBannerRequest.getVideoIds(); // Assuming you have a list of video IDs
-//
-//	        // Check if the number of video IDs exceeds the allowed number of slides
-//	        if (videoIds.size() > noOfSlides) {
-//	            return ResponseEntity.badRequest()
-//	                                 .body("Error: Number of video IDs exceeds the number of slides allowed.");
-//	        }
-//
-//	        // Map the requests to entities
-//	        for (Long videoId : videoIds) {
-//	            VideoBanner videobanner = new VideoBanner();
-//	            videobanner.setVideoId(videoId);
-//	            
-//	            // Save to the database
-//	            videobannerrepository.save(videobanner);
-//	        }
-//
-//	        // Return a success response
-//	        return ResponseEntity.ok("VideoBanner processed successfully");
-//
-//	    } catch (Exception e) {
-//	        // Log the exception (optional)
-//	        // logger.error("Error processing video banners", e);
-//
-//	        // Return an error response
-//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//	                             .body("Error processing video banners: " + e.getMessage());
-//	    }
-//	}
-	
-	
-	
-	
+		
 	
 	public ResponseEntity<?> createVideoBanner(@RequestBody List<VideoBanner> videoBannerRequest) {
 		try {

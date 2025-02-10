@@ -27,52 +27,53 @@ class AudioContainer {
 class AudioDescription {
   final int id;
   final String audioTitle;
-  final String movieName;
-  final String rating;
-  final String description;
-  final String productionCompany;
+  //final String movieName;
+  final String? rating;
+  final String? description;
+  final String? productionCompany;
   final bool paid;
-  final String audioFileName;
-  final String certificateName;
-  final String audioDuration;
-  final String certificateNo;
+  final String? audioFileName;
+  final String? certificateName;
+  final String? audioDuration;
+  final String? certificateNo;
 
    Uint8List? thumbnail;
 
   AudioDescription({
     required this.id,
     required this.audioTitle,
-    required this.movieName,
-    required this.rating,
-    required this.description,
-    required this.productionCompany,
+   // required this.movieName,
+     this.rating,
+     this.description,
+     this.productionCompany,
     required this.paid,
-    required this.audioFileName,
-    required this.certificateName,
-    required this.audioDuration,
-    required this.certificateNo,
+     this.audioFileName,
+     this.certificateName,
+     this.audioDuration,
+     this.certificateNo,
+    
   });
 
   factory AudioDescription.fromJson(Map<String, dynamic> json) {
     return AudioDescription(
-      id: json['id'],
-      audioTitle: json['audio_title'],
-      movieName: json['movie_name'],
-      rating: json['rating'],
-      description: json['description'],
-      productionCompany: json['production_company'],
-      paid: json['paid'],
-      audioFileName: json['audio_file_name'],
-      certificateName: json['certificate_name'],
-      audioDuration: json['audio_Duration'],
-      certificateNo: json['certificate_no'],
+      id: json['id'] ?? 0,
+      audioTitle: json['audio_title'] ?? json['audioTitle'],
+     // movieName: json['movie_name'] as String,
+      rating: json['rating']?.toString(),
+      description: json['description']?.toString(),
+      productionCompany: json['production_company']?.toString(),
+      paid: json['paid'] ?? false,
+      audioFileName: json['audio_file_name']?.toString(),
+      certificateName: json['certificate_name']?.toString(),
+      audioDuration: json['audio_Duration']?.toString(),
+      certificateNo: json['certificate_no']?.toString(),
     );
   }
   Map<String, dynamic> toJson(){
     return{
       'id':id,
-      'audioTitle' : audioTitle,
-      'movieName' : movieName,
+      'audio_title' : audioTitle,
+      //'movieName' : movieName,
       'rating' : rating,
       'description': description,
       'productionCompany' :productionCompany,
@@ -82,6 +83,11 @@ class AudioDescription {
       'audioDuration' : audioDuration,
       'certificateNo' : certificateNo
     };
+  }
+
+  @override
+  String toString(){
+    return 'AudioDescription(id:$id,audioTitle:$audioTitle,rating:$rating,description:$description,audioFileName:$audioFileName)';
   }
 
   Future<Uint8List?> get thumbnailImage async {

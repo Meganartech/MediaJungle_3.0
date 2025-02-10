@@ -103,8 +103,13 @@ class VideoDescription {
   }
 
   @override
+  String toString(){
+    return 'VideoDescription(id:$id,title:$videoTitle)';
+  }
+
+  @override
   bool operator ==(Object other) {
-    // TODO: implement ==
+    
     if(identical(this, other)) return true;
 
     return other is VideoDescription &&  other.id ==id && other.videoTitle == videoTitle;

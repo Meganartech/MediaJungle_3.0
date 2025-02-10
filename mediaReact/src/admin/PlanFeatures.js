@@ -118,9 +118,9 @@ const handleDeleteFeature = (featureId) => {
               < th style={{border: 'none' }}>
                 <input type="checkbox" />
               </th>
-              <th style={{border: 'none' }}>S.NO</th>
-              <th style={{border: 'none' }}>FEATURE NAME</th>
-              <th style={{border: 'none' }}>ACTION</th>
+              <th style={{border: 'none' }}>S.No</th>
+              <th style={{border: 'none' }}>Feature Name</th>
+              <th style={{border: 'none' }}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -129,8 +129,8 @@ const handleDeleteFeature = (featureId) => {
                 <td>
                   <input type="checkbox" />
                 </td>
-                <td>{index + 1}</td>
-                <td>{feature.features ? feature.features : 'No feature available'}</td>
+                <td className='truncate' title={index}>{index + 1}</td>
+                <td className='truncate' title={feature.features}>{feature.features.length> 15 ? `${feature.features.substring(0, 10)}...` : feature.features}</td>
                 <td>
                   <button onClick={() => handlEdit(feature.id)} className="btn btn-primary me-2">
                     <i className="fas fa-edit" aria-hidden="true"></i> Edit

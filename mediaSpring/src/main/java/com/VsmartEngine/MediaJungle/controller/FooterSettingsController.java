@@ -1,9 +1,5 @@
 package com.VsmartEngine.MediaJungle.controller;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,7 +15,7 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
 
 @RestController
 @RequestMapping("/api/v2/footer-settings")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
     public class FooterSettingsController {
 
         @Autowired
@@ -52,14 +48,6 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
                 String aboutUsImagePath = null;
                 String contactUsImagePath = null;
 
-                if (!aboutUsImage.isEmpty()) {
-                    aboutUsImagePath = saveImage(aboutUsImage); // Save aboutUsImage
-                }
-                
-                if (!contactUsImage.isEmpty()) {
-                    contactUsImagePath = saveImage(contactUsImage); // Save contactUsImage
-                }
-
                 // Create and save entity
                 FooterSettings footerSettings = new FooterSettings();
                 footerSettings.setAboutUsHeaderScript(aboutUsHeaderScript);
@@ -68,14 +56,14 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
                 footerSettings.setFeatureBox1BodyScript(featureBox1BodyScript);
                 footerSettings.setFeatureBox2HeaderScript(featureBox2HeaderScript);
                 footerSettings.setFeatureBox2BodyScript(featureBox2BodyScript);
-                footerSettings.setAboutUsImage(aboutUsImagePath); // Save aboutUs image path
+                footerSettings.setAboutUsImage(extractImageBytes(aboutUsImage)); // Save aboutUs image path
                 footerSettings.setContactUsEmail(contactUsEmail);
                 footerSettings.setContactUsBodyScript(contactUsBodyScript);
                 footerSettings.setCallUsPhoneNumber(callUsPhoneNumber);
                 footerSettings.setCallUsBodyScript(callUsBodyScript);
                 footerSettings.setLocationMapUrl(locationMapUrl);
                 footerSettings.setLocationAddress(locationAddress);
-                footerSettings.setContactUsImage(contactUsImagePath); // Save contactUs image path
+                footerSettings.setContactUsImage(extractImageBytes(contactUsImage)); // Save contactUs image path
                 footerSettings.setAppUrlPlaystore(appUrlPlaystore);
                 footerSettings.setAppUrlAppStore(appUrlAppStore);
                 footerSettings.setCopyrightInfo(copyrightInfo);
@@ -85,6 +73,73 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
                 return ResponseEntity.ok("Form submitted successfully!");
             } catch (Exception e) {
                 return ResponseEntity.status(500).body("Error submitting the form: " + e.getMessage());
+            }
+        }
+
+        
+        @PostMapping("/update")
+        public ResponseEntity<?> updateFooterSettings(
+                @RequestParam("id") Long id, // FooterSettings ID to be updated
+                @RequestParam("aboutUsHeaderScript") String aboutUsHeaderScript,
+                @RequestParam("aboutUsBodyScript") String aboutUsBodyScript,
+                @RequestParam("featureBox1HeaderScript") String featureBox1HeaderScript,
+                @RequestParam("featureBox1BodyScript") String featureBox1BodyScript,
+                @RequestParam("featureBox2HeaderScript") String featureBox2HeaderScript,
+                @RequestParam("featureBox2BodyScript") String featureBox2BodyScript,
+                @RequestParam(value = "aboutUsImage", required = false) MultipartFile aboutUsImage,
+                @RequestParam("contactUsEmail") String contactUsEmail,
+                @RequestParam("contactUsBodyScript") String contactUsBodyScript,
+                @RequestParam("callUsPhoneNumber") String callUsPhoneNumber,
+                @RequestParam("callUsBodyScript") String callUsBodyScript,
+                @RequestParam("locationMapUrl") String locationMapUrl,
+                @RequestParam("locationAddress") String locationAddress,
+                @RequestParam(value = "contactUsImage", required = false) MultipartFile contactUsImage,
+                @RequestParam("appUrlPlaystore") String appUrlPlaystore,
+                @RequestParam("appUrlAppStore") String appUrlAppStore,
+                @RequestParam("copyrightInfo") String copyrightInfo) {
+            try {
+                // Find the existing FooterSettings record by id
+                FooterSettings footerSettings = repository.findById(id).orElse(null);
+
+                if (footerSettings == null) {
+                    return ResponseEntity.status(404).body("FooterSettings not found with id: " + id);
+                }
+
+                // Update the fields
+                footerSettings.setAboutUsHeaderScript(aboutUsHeaderScript);
+                footerSettings.setAboutUsBodyScript(aboutUsBodyScript);
+                footerSettings.setFeatureBox1HeaderScript(featureBox1HeaderScript);
+                footerSettings.setFeatureBox1BodyScript(featureBox1BodyScript);
+                footerSettings.setFeatureBox2HeaderScript(featureBox2HeaderScript);
+                footerSettings.setFeatureBox2BodyScript(featureBox2BodyScript);
+
+                // Update the About Us image only if a new file is uploaded
+                if (aboutUsImage != null && !aboutUsImage.isEmpty()) {
+                    footerSettings.setAboutUsImage(extractImageBytes(aboutUsImage));
+                }
+
+                footerSettings.setContactUsEmail(contactUsEmail);
+                footerSettings.setContactUsBodyScript(contactUsBodyScript);
+                footerSettings.setCallUsPhoneNumber(callUsPhoneNumber);
+                footerSettings.setCallUsBodyScript(callUsBodyScript);
+                footerSettings.setLocationMapUrl(locationMapUrl);
+                footerSettings.setLocationAddress(locationAddress);
+
+                // Update the Contact Us image only if a new file is uploaded
+                if (contactUsImage != null && !contactUsImage.isEmpty()) {
+                    footerSettings.setContactUsImage(extractImageBytes(contactUsImage));
+                }
+
+                footerSettings.setAppUrlPlaystore(appUrlPlaystore);
+                footerSettings.setAppUrlAppStore(appUrlAppStore);
+                footerSettings.setCopyrightInfo(copyrightInfo);
+
+                // Save the updated record to the database
+                repository.save(footerSettings);
+
+                return ResponseEntity.ok("FooterSettings updated successfully!");
+            } catch (Exception e) {
+                return ResponseEntity.status(500).body("Error updating the FooterSettings: " + e.getMessage());
             }
         }
 
@@ -103,19 +158,12 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
                 return ResponseEntity.status(500).body("Error retrieving footer settings: " + e.getMessage());
             }
         }
-        private String saveImage(MultipartFile image) throws Exception {
-            // Set the full path for saving the image
-            String fileName = image.getOriginalFilename();
-            String imagePath = UPLOAD_DIR + fileName.replace("\\", "/");
-
-            Path path = Paths.get(imagePath);
-            // Create directories if they don't exist
-            Files.createDirectories(path.getParent());
-            // Write the image to disk
-            Files.write(path, image.getBytes());
-
-            // Return the relative path for the database
-            return "uploads/" + fileName; // This will save "uploads/contactus.png" in the database
+        private byte[] extractImageBytes(MultipartFile image) throws Exception {
+            if (image != null && !image.isEmpty()) {
+                System.out.println("File received: " + image.getOriginalFilename() + ", Size: " + image.getSize());
+                return image.getBytes(); // Convert the image to a byte array
+            }
+            return null; // Handle the case where no image is provided
         }
 
 

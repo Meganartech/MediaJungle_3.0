@@ -122,7 +122,11 @@ const handleSubmit = (e) => {
 };
 
   return (
-    <div className='container3 mt-20'>
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* <button className='btn btn-custom' onClick={() => handleClick("/admin/addAudio")}>Add Audio</button> */}
+    </div><br/>
+    <div className='container3 mt-10'>
       <ol className="breadcrumb mb-4">
         <li className="breadcrumb-item"><Link to="/admin/ViewLanguage">Languages</Link></li>
         <li className="breadcrumb-item active  text-white">{isEditMode ? 'Edit Language':'Add Language'}</li>
@@ -140,24 +144,24 @@ const handleSubmit = (e) => {
               required
               value={languageName}
               onChange={(e) => setlanguageName(e.target.value)}
-              className="form-control border border-dark border-2" 
+              className="form-control border border-dark" 
               placeholder="Language" 
             />
       </div>
     </div>
-    <div className="row py-3 my-5">
+    <div className="row py-2 my-5">
       <div className="col-md-12" style={{ height: '200px' }}></div> {/* Placeholder div for spacing */}
     </div>
-    <div className="row py-3 my-5">
-      <div className="col-md-8 ms-auto text-end">
-      <button className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
-        <button className="border border-dark border-2 p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode ? handleUpdate :handleSubmit} style={{backgroundColor:'blue'}}
-        >Submit</button>
+  
+      <div className="mt-20 col-md-8 ms-auto text-end">
+      <button className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg">Cancel</button>
+        <button className="border border-dark p-1.5 w-20 mr-10 text-white rounded-lg " onClick={isEditMode ? handleUpdate :handleSubmit} style={{backgroundColor:'#2b2a52'}}
+      >{isEditMode ? "Update" : "Submit"}</button>
       </div>
     </div>
   </div>
 </div>
-     
+  
     
 
   );

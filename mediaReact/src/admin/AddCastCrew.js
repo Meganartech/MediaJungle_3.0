@@ -145,7 +145,11 @@ const handleUpdate = async (e) => {
 };
 
   return (
-    <div className='container3 mt-20'>
+    <div className="marquee-container">
+    <div className='AddArea'>
+      {/* <button className='btn btn-custom' onClick={() => handleClick("/admin/addAudio")}>Add Audio</button> */}
+    </div><br/>
+    <div className='container3 mt-10'>
       <ol className="breadcrumb mb-4 d-flex my-0">
         <li className="breadcrumb-item">
           <Link to="/admin/Viewcastandcrew">Cast and Crews</Link>
@@ -164,7 +168,7 @@ const handleUpdate = async (e) => {
                 <input 
                   type="text" 
                   id="textbox" 
-                  className="form-control border border-dark border-2" 
+                  className="form-control border border-dark" 
                   placeholder="Enter your name" 
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -180,7 +184,7 @@ const handleUpdate = async (e) => {
                 <input 
                   type="text" 
                   id="textbox" 
-                  className="form-control border border-dark border-2" 
+                  className="form-control border border-dark" 
                   placeholder="Description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -194,7 +198,7 @@ const handleUpdate = async (e) => {
               </div>
               <div className="col-md-2 w-100 h-100">
                 <div
-                  className="drag-drop-area border border-dark border-2  text-center"
+                  className="drag-drop-area border border-dark text-center"
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
                   style={{
@@ -226,7 +230,7 @@ const handleUpdate = async (e) => {
                 />
                 <button
                   type="button"
-                  className="border border-dark border-2 mt-4 p-1 bg-silver ml-2"
+                  className="border border-dark mt-4 p-1 bg-silver ml-2"
                   onClick={() => document.getElementById('fileInput').click()}
                 >
                   Choose File
@@ -237,17 +241,17 @@ const handleUpdate = async (e) => {
             <div className="row py-1 my-1 w-100">
               <div className="col-md-8 ms-auto text-end">
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
+                  className="border border-dark p-1.5 w-20 mr-5 text-black me-2 rounded-lg"
                   type="button"
                 >
                   Cancel
                 </button>
                 <button
-                  className="border border-dark border-2 p-1.5 w-20 text-white rounded-lg"
+                  className="mt-20 border border-dark p-1.5 w-20 text-white rounded-lg"
                   type="submit"
-                  style={{ backgroundColor: 'blue' }}
+                  style={{ backgroundColor: '#2b2a52' }}
                 >
-                  {isEditMode?'Edit':'Submit'}
+                  {isEditMode?'Update':'Submit'}
                 </button>
               </div>
             </div>
@@ -255,6 +259,7 @@ const handleUpdate = async (e) => {
           </div>
         </div>
       </form>
+    </div>
     </div>
   );
 };
