@@ -38,6 +38,7 @@ class AudioDescription {
   final String? certificateNo;
 
    Uint8List? thumbnail;
+   Uint8List? bannerthumbnail;
 
   AudioDescription({
     required this.id,
@@ -51,6 +52,8 @@ class AudioDescription {
      this.certificateName,
      this.audioDuration,
      this.certificateNo,
+     this.thumbnail,
+     this.bannerthumbnail,
     
   });
 
@@ -85,9 +88,16 @@ class AudioDescription {
     };
   }
 
+  static Future<AudioDescription> fromJsonAsync(Map<String, dynamic> json) async {
+    final audio = AudioDescription.fromJson(json);
+    await audio.fetchImage();
+    await audio.fetchBannerImage();
+    return audio;
+  }
+
   @override
   String toString(){
-    return 'AudioDescription(id:$id,audioTitle:$audioTitle,rating:$rating,description:$description,audioFileName:$audioFileName)';
+    return 'AudioDescription(id:$id,audioTitle:$audioTitle,rating:$rating,description:$description,audioFileName:$audioFileName,thumbnail:$thumbnail)';
   }
 
   Future<Uint8List?> get thumbnailImage async {
@@ -97,10 +107,30 @@ class AudioDescription {
     return thumbnail;
   }
 
+  Future<Uint8List?> get bannerImage async{
+    if(bannerthumbnail == null){
+      await fetchBannerImage();
+    }
+    return bannerthumbnail;
+  }
+
   Future<void> fetchImage() async {
     try {
       thumbnail = await AudioService.fetchMusicImage(id);
       if (thumbnail != null) {
+        print('Thumbnail fetched successfully for music ID: $id');
+      } else {
+        print('Thumbnail not found for music ID: $id');
+      }
+    } catch (e) {
+      print('Error in fetching image:$e');
+    }
+  }
+
+  Future<void> fetchBannerImage() async {
+    try {
+      bannerthumbnail = await AudioService.fetchMusicBanner(id);
+      if (bannerthumbnail != null) {
         print('Thumbnail fetched successfully for music ID: $id');
       } else {
         print('Thumbnail not found for music ID: $id');

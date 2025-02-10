@@ -164,80 +164,80 @@ class _PlayListPageState extends State<PlayListPage> {
             BackgroundImage(),
             Column(
               children: [
-                AppBar(
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.transparent,
-                  title: _showSearch
-                      ? TextField(
-                          controller: _searchController,
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'Search Playlists...',
-                            hintStyle: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(color: Colors.white60),
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (value) {
-                            // _filterAudioList(value);
-                          },
-                        )
-                      : Row(
-                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            SizedBox(
-                              height:  MediaQuery.sizeOf(context).height * 0.02,
-                            ),
-                            if (iconData != null)
-                              Image.memory(
-                                iconData!.imageBytes,
-                                height: 60,
-                              )
-                            else
-                              Image.asset('assets/images/bgimg2.jpg',
-                                  height:  MediaQuery.sizeOf(context).height * 0.05),
-                            Spacer(),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.cast_connected_rounded,
-                                  color: kWhite,
-                                )),
-                            SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.04,
-                            ),
-                            IconButton(
-                                onPressed: _showNotification,
-                                icon: Icon(
-                                  Icons.notifications,
-                                  color: kWhite,
-                                )),
-                          ],
-                        ),
-                  actions: [
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _showSearch = !_showSearch;
-                            if (!_showSearch) {
-                              _searchController.clear();
-                            }
-                          });
-                        },
-                        icon: Icon(
-                          Icons.search_rounded,
-                          color: kWhite,
-                        )),
-                    SizedBox(
-                      width:  MediaQuery.sizeOf(context).width * 0.05,
-                    ),
+                // AppBar(
+                //   automaticallyImplyLeading: false,
+                //   backgroundColor: Colors.transparent,
+                //   title: _showSearch
+                //       ? TextField(
+                //           controller: _searchController,
+                //           style: TextStyle(color: Colors.white),
+                //           decoration: InputDecoration(
+                //             hintText: 'Search Playlists...',
+                //             hintStyle: Theme.of(context)
+                //                 .textTheme
+                //                 .bodyLarge!
+                //                 .copyWith(color: Colors.white60),
+                //             border: InputBorder.none,
+                //           ),
+                //           onChanged: (value) {
+                //             // _filterAudioList(value);
+                //           },
+                //         )
+                //       : Row(
+                //           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //           children: [
+                //             SizedBox(
+                //               height:  MediaQuery.sizeOf(context).height * 0.02,
+                //             ),
+                //             if (iconData != null)
+                //               Image.memory(
+                //                 iconData!.imageBytes,
+                //                 height: 60,
+                //               )
+                //             else
+                //               Image.asset('assets/images/bgimg2.jpg',
+                //                   height:  MediaQuery.sizeOf(context).height * 0.05),
+                //             Spacer(),
+                //             IconButton(
+                //                 onPressed: () {},
+                //                 icon: Icon(
+                //                   Icons.cast_connected_rounded,
+                //                   color: kWhite,
+                //                 )),
+                //             SizedBox(
+                //               width: MediaQuery.sizeOf(context).width * 0.04,
+                //             ),
+                //             IconButton(
+                //                 onPressed: _showNotification,
+                //                 icon: Icon(
+                //                   Icons.notifications,
+                //                   color: kWhite,
+                //                 )),
+                //           ],
+                //         ),
+                //   actions: [
+                //     IconButton(
+                //         onPressed: () {
+                //           setState(() {
+                //             _showSearch = !_showSearch;
+                //             if (!_showSearch) {
+                //               _searchController.clear();
+                //             }
+                //           });
+                //         },
+                //         icon: Icon(
+                //           Icons.search_rounded,
+                //           color: kWhite,
+                //         )),
+                //     SizedBox(
+                //       width:  MediaQuery.sizeOf(context).width * 0.05,
+                //     ),
                    
                     
-                  ],
-                ),
+                //   ],
+                // ),
                 SizedBox(
-                  height:  MediaQuery.sizeOf(context).height * 0.04,
+                  height:  MediaQuery.sizeOf(context).height * 0.15,
                 ),
                 Container(
                   margin: EdgeInsets.only(right:  MediaQuery.sizeOf(context).width * 0.05,

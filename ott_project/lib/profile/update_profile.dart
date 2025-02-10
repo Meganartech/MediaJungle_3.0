@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,8 +24,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController mobilenumberController = TextEditingController();
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
-  String base64Image = '';
+  //String base64Image = '';
   File? _profilePicture;
+  Uint8List? profile;
 
   @override
   void initState() {
@@ -47,10 +49,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     try {
       var response = await http.get(
         Uri.parse(
-         // 'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
-          'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
+          'https://testtomcat.vsmartengine.com/media/api/v2/GetUserById/$userId'),
+       //   'http://192.168.156.243:8080/api/v2/GetUserById/$userId'),
          
-        //   'http://localhost:8080/api/v2/GetUserById/$userId'),
+         //  'http://localhost:8080/api/v2/GetUserById/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -61,15 +63,15 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
       if (response.statusCode == 200) {
         var userData = jsonDecode(response.body);
-        //print(userData);
-        //_image = userData['profile'];
-        // setState(() {
+       Uint8List? profileImage = await fetchProfileImage(userId!); 
         usernameController.text = userData['username'] ?? '';
         emailController.text = userData['email'] ?? '';
         mobilenumberController.text = userData['mobnum'] ?? '';
-        base64Image = userData['profile'];
+       // base64Image = userData['profile'];
         // });
-        setState(() {});
+        setState(() {
+          profile = profileImage;
+        });
         //  await fetchProfileImage(userId);
       } else {
         // Handle error
@@ -86,17 +88,17 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     String? userId = await secureStorage.read(key: 'userId');
     try {
       var url = Uri.parse(
-          //'http://localhost:8080/api/v2/UpdateUser/mobile/$userId');
-          //'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
-          'http://192.168.156.243:8080/api/v2/UpdateUser/mobile/$userId');
-      var request = http.MultipartRequest('PATCH', url);
+        //  'http://localhost:8080/api/v2/UpdateUser/mobile/$userId');
+          'https://testtomcat.vsmartengine.com/media/api/v2/UpdateUser/mobile/$userId');
+         // 'http://192.168.156.243:8080/api/v2/updateUser/$userId');
+      var request = http.MultipartRequest('PUT', url);
       //..headers.addAll({'Content-Type': 'application/json'});
       request.fields['username'] = usernameController.text;
       request.fields['email'] = emailController.text;
       request.fields['mobnum'] = mobilenumberController.text;
       if (_profilePicture != null) {
         request.files.add(await http.MultipartFile.fromPath(
-          'profile',
+          'profileImage',
           _profilePicture!.path,
         ));
       }
@@ -104,11 +106,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       var response = await http.Response.fromStream(streamedResponse);
       //print(response.statusCode);
       // Handle the response
-      //await fetchProfileImage(userId!);
+     
 
       if (response.statusCode == 200) {
+         if(_profilePicture != null){
+          Uint8List image = await _profilePicture!.readAsBytes();
+          setState(() {
+            profile = image;
+          });
+         }
+        await fetchUserProfile(context);
         showProfileUpdatedDialog();
-        fetchUserProfile(context);
+        
       } else {
         showErrorProfileUpdateDialog();
       }
@@ -130,10 +139,36 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     if (pickedImage != null) {
       setState(() {
         _profilePicture = File(pickedImage.path);
-        base64Image = '';
+         profile = _profilePicture!.readAsBytesSync();
       });
     }
   }
+
+   Future<Uint8List?> fetchProfileImage(String userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://testtomcat.vsmartengine.com/media/api/v2/mobile/GetThumbnailsById/$userId'
+          //  'http://192.168.156.243:8080/api/v2/GetProfileImage/$userId'
+            //'http://localhost:8080/api/v2/GetUserById/$userId'
+            ),
+      );
+      print('Profile image status:${response.statusCode}');
+      print('Profile image:${response.bodyBytes}');
+      if (response.statusCode == 200) {
+        setState(() {
+          profile = response.bodyBytes;
+        });
+        return response.bodyBytes;
+      } else {
+        print('Failed to load profile image: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching profile image: $e');
+    }
+    return null;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -166,11 +201,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     child: CircleAvatar(
                       backgroundColor: const Color.fromARGB(255, 51, 49, 49),
                       radius: 50,
-                      backgroundImage: _profilePicture != null
-                          ? FileImage(_profilePicture!)
-                          : base64Image.isNotEmpty
-                              ? Image.memory(base64Decode(base64Image)).image
-                              : null,
+                      backgroundImage:  profile != null ? MemoryImage(profile!) : null,
                     ),
                   ),
                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),

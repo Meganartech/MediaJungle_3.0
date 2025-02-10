@@ -10,39 +10,39 @@ import '../components/music_folder/audio_container.dart';
 
 class AudioService {
   static const String baseUrl =
-  //'https://testtomcat.vsmartengine.com/media/api/v2';
-  //  'http://localhost:8080/api/v2';
-   'http://192.168.156.243:8080/api/v2';
-  static Future<List<Audio>> fetchAudio() async {
-    final response = await http.get(Uri.parse('$baseUrl/getaudiodetailsdto'));
-    //print(response.statusCode);
-    if (response.statusCode == 200) {
-      //print(response.statusCode);
+   'https://testtomcat.vsmartengine.com/media/api/v2';
+   // 'http://localhost:8080/api/v2';
+   //   'http://192.168.156.243:8080/api/v2';
+  // static Future<List<Audio>> fetchAudio() async {
+  //   final response = await http.get(Uri.parse('$baseUrl/getaudiodetailsdto'));
+  //   //print(response.statusCode);
+  //   if (response.statusCode == 200) {
+  //     //print(response.statusCode);
 
-      List<dynamic> body = jsonDecode(response.body);
-      //print(response.body);
-      return body.map((audio) => Audio.fromJson(audio)).toList();
-    } else {
-      throw Exception("Failed to load songs");
-    }
-  }
+  //     List<dynamic> body = jsonDecode(response.body);
+  //     //print(response.body);
+  //     return body.map((audio) => Audio.fromJson(audio)).toList();
+  //   } else {
+  //     throw Exception("Failed to load songs");
+  //   }
+  // }
 
-  static Future<List<Music>> fetchMusic() async {
-    final response = await http.get(Uri.parse('$baseUrl/getaudiodetailsdto'));
-    // print(response.statusCode);
-    if (response.statusCode == 200) {
-      //print(response.statusCode);
+  // static Future<List<Music>> fetchMusic() async {
+  //   final response = await http.get(Uri.parse('$baseUrl/getaudiodetailsdto'));
+  //   // print(response.statusCode);
+  //   if (response.statusCode == 200) {
+  //     //print(response.statusCode);
 
-      List<dynamic> body = jsonDecode(response.body);
-      //print(response.body);
-      List<Music> musicList =
-          body.map((audio) => Music.fromJson(audio)).toList();
-      //await fetchMusicImage(id);
-      return musicList;
-    } else {
-      throw Exception("Failed to load songs");
-    }
-  }
+  //     List<dynamic> body = jsonDecode(response.body);
+  //     //print(response.body);
+  //     List<Music> musicList =
+  //         body.map((audio) => Music.fromJson(audio)).toList();
+  //     //await fetchMusicImage(id);
+  //     return musicList;
+  //   } else {
+  //     throw Exception("Failed to load songs");
+  //   }
+  // }
 
   static Future<List<AudioContainer>> fetchAudioContainer() async {
     final response =
@@ -106,40 +106,40 @@ class AudioService {
     return null;
   }
 
-  static Future<Map<String, List<Music>>> fetchMusicByCategory() async {
-    final allMusic = await fetchAllMusic();
-    print('All Music:$allMusic');
-    Map<String, List<Music>> musicByCategory = {};
-    for (var music in allMusic) {
-      //final image = await music.thumbnailImage;
-      print('Music name:${music.songname}');
-      //print('Music image:$image');
-      print('Categories: ${music.categories}');
-      for (var category in music.categories) {
-        if (!musicByCategory.containsKey(category.category_name)) {
-          musicByCategory[category.category_name] = [];
-        }
-        musicByCategory[category.category_name]?.add(music);
-      }
-    }
-    return musicByCategory;
-  }
+  // static Future<Map<String, List<Music>>> fetchMusicByCategory() async {
+  //   final allMusic = await fetchAllMusic();
+  //   print('All Music:$allMusic');
+  //   Map<String, List<Music>> musicByCategory = {};
+  //   for (var music in allMusic) {
+  //     //final image = await music.thumbnailImage;
+  //     print('Music name:${music.songname}');
+  //     //print('Music image:$image');
+  //     print('Categories: ${music.categories}');
+  //     for (var category in music.categories) {
+  //       if (!musicByCategory.containsKey(category.category_name)) {
+  //         musicByCategory[category.category_name] = [];
+  //       }
+  //       musicByCategory[category.category_name]?.add(music);
+  //     }
+  //   }
+  //   return musicByCategory;
+  // }
 
-  static Future<List<Music>> fetchAllMusic() async {
-    List<Music> allMusic = [];
-    for (int i = 1; i <= 16; i++) {
-      try {
-        Music music = await AudioApiService().fetchMusicDetail(i);
+  // static Future<List<Music>> fetchAllMusic() async {
+  //   List<Music> allMusic = [];
+  //   for (int i = 1; i <= 16; i++) {
+  //     try {
+  //       Music music = await AudioApiService().fetchMusicDetail(i);
 
-        print(
-            'Music: ${music.songname}, Categories: ${music.categories},thumbnail:${music.thumbnailImage}');
-        allMusic.add(music);
-        print('Fetching music: $allMusic');
-      } catch (e) {
-        print('Error fetching music with id $i: $e');
-        // Continue to the next id if there's an error
-      }
-    }
-    return allMusic;
-  }
+  //       print(
+  //           'Music: ${music.songname}, Categories: ${music.categories},thumbnail:${music.thumbnailImage}');
+  //       allMusic.add(music);
+  //       print('Fetching music: $allMusic');
+  //     } catch (e) {
+  //       print('Error fetching music with id $i: $e');
+  //       // Continue to the next id if there's an error
+  //     }
+  //   }
+  //   return allMusic;
+  // }
 }

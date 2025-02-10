@@ -44,6 +44,8 @@ dependencies:
   provider: ^6.1.2
   video_player: ^2.8.6
   audio_service: ^0.18.13
+  carousel_slider: ^5.0.0
+  dots_indicator: ^3.0.0
   get: ^4.6.6
   on_audio_query: ^2.9.0
   just_audio: ^0.9.37

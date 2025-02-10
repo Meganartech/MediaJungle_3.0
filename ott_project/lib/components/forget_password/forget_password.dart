@@ -6,6 +6,8 @@ import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/myTextField.dart';
 import 'package:ott_project/components/pallete.dart';
 import 'package:http/http.dart' as http;
+import 'package:ott_project/pages/login_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgetPassword extends StatefulWidget {
   ForgetPassword({super.key});
@@ -15,12 +17,13 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
-  final TextEditingController emailController = TextEditingController();
+ 
 
   final TextEditingController passwordController = TextEditingController();
 
   final TextEditingController confirmPasswordController =
       TextEditingController();
+  String? savedEmail;
 
   bool visiblePassword = false;
 
@@ -29,10 +32,18 @@ class _ForgetPasswordState extends State<ForgetPassword> {
  void initState(){
   visiblePassword = false;
   confirmVisiblePassword = false;
+  _loadSavedEmail();
  }
 
+ Future<void> _loadSavedEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      savedEmail = prefs.getString('savedEmail');
+    });
+  }
+
   Future<void> resetPassword(BuildContext context) async {
-    final String email = emailController.text;
+   
     final String password = passwordController.text;
     final String confirmpassword = confirmPasswordController.text;
 
@@ -56,12 +67,12 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     }
     final response = await http.post(
       Uri.parse(
-        // "https://testtomcat.vsmartengine.com/media/api/v2/forgetPassword"),
-           'http://192.168.156.243:8080/api/v2/forgetPassword'),
+         "https://testtomcat.vsmartengine.com/media/api/v2/forgetPassword"),
+        //   'http://192.168.156.243:8080/api/v2/forgetPassword'),
         //"http://192.168.40.165:8080/api/v2/forgetPassword"),
       headers: <String, String>{'Content-Type': 'application/json'},
       body: jsonEncode(<String, String>{
-        'email': email,
+        'email': savedEmail!,
         'password': password,
         'confirmPassword': confirmpassword,
       }),
@@ -71,6 +82,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Password reset successfully')),
       );
+      Future.delayed(Duration(seconds: 5),(){
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> LoginPage()), (route)=> false);
+      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to reset password: ${response.body}')),
@@ -116,17 +130,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         width: size.width * 0.9,
                         height: size.height * 0.09,
                         child: Text(
-                            'Enter your email and new password to reset your password',
+                            'Enter New password to reset your password',
                             style: kBodyText),
                       ),
-                      //SizedBox(height: 15),
-                      MyTextField(
-                          controller: emailController,
-                          icon: FontAwesomeIcons.envelope,
-                          hint: 'Email',
-                          inputType: TextInputType.emailAddress,
-                          inputAction: TextInputAction.next,
-                          obscureText: false),
                       SizedBox(
                         height: MediaQuery.sizeOf(context).height * 0.01,
                       ),
@@ -170,7 +176,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                             onPressed: () {
                               resetPassword(context);
                              setState(() {
-                               emailController.clear();
+                              
                                passwordController.clear();
                                confirmPasswordController.clear();
                              });

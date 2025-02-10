@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -7,10 +8,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ott_project/components/background_image.dart';
 import 'package:ott_project/components/myTextField.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:ott_project/components/pallete.dart';
 import 'package:ott_project/pages/login_page.dart';
 import 'package:ott_project/service/service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -27,10 +29,15 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController confirmpasswordController =
       TextEditingController();
   final TextEditingController mobilenumberController = TextEditingController();
+   final TextEditingController codeController = TextEditingController();
+  bool isLoading = false;
+  bool visibleOTP = false;
    bool visiblePassword = false;
    bool confirmVisiblePassword = false;
   File? _imageFile;
   final Service service = Service();
+  String verifyButtonText = 'Verify'; 
+  bool isVerifying = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   _pickImage() async {
     try {
@@ -53,6 +60,83 @@ class _SignUpState extends State<SignUp> {
     confirmVisiblePassword = false;
     super.initState();
   }
+
+
+//  Future<void> sendVerificationcode(String email) async{
+//     const String baseUrl = 
+//     //'http://localhost:8080/api/v2/send-code';
+//     'https://testtomcat.vsmartengine.com/media/api/v2/send-code';
+//     //'http://192.168.156.243:8080/api/v2/send-code';
+//     setState(() {
+//       isLoading = true;
+//     });
+//     try{
+//       final response = await http.post(
+//         Uri.parse(baseUrl),
+//         body: {'email' : email}
+//       );
+//       if(response.statusCode == 200){
+//         final data = jsonDecode(response.body);
+//         final receivedOTP = data['code'];
+//         SharedPreferences prefs = await SharedPreferences.getInstance();
+//         await prefs.setString('savedEmail', email);
+//         await prefs.setString('storedOTP', receivedOTP);
+//         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Verification code sent successfully')));
+
+//       }else if (response.statusCode == 400 && response.body.contains('Invalid email')) {
+//       // Email not found in the backend
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(content: Text('Email not found. Please try again.')),
+//       );
+//     }else{
+//         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred while processing your request. Please try again later.')));
+//       }
+//     }catch(e){
+//       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred while processing your request. Please try again later.')));
+//     }finally{
+//       setState(() {
+//         isLoading = false;
+//       });
+//     }
+//   }
+
+// Future<void> verifyCode(String email,String code) async{
+//    setState(() {
+//       isVerifying = true; // Start verifying
+//     });
+
+//     const String baseUrl =
+//     // 'http://localhost:8080/api/v2/verify-code';
+//      //'http://192.168.156.243:8080/api/v2/verify-code';
+//     'https://testtomcat.vsmartengine.com/media/api/v2/verify-code';
+//      setState(() {
+//       isLoading = true;
+//     });
+//     try{
+//       final response = await http.post(Uri.parse(baseUrl),
+//       body: {'email':email, 'code': code},
+//       );
+//       if(response.statusCode == 200){
+//          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Code verified')));
+//           setState(() {
+//             verifyButtonText = 'Verified';
+//           });
+//       } else if (response.statusCode == 400 && response.body.contains('Invalid verification code')) {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           const SnackBar(content: Text('Invalid verification code. Please try again.')),
+//         );
+//       } else if (response.statusCode == 400 && response.body.contains('Verification code expired')) {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           const SnackBar(content: Text('Verification code expired. Please resend code.')),
+//         );
+//       }else{
+//           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred while processing your request. Please try again later.')));
+//       }
+//     }catch(e){
+//         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred while processing your request. Please try again later.')));
+//     }
+//   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +201,7 @@ class _SignUpState extends State<SignUp> {
                           controller: usernameController,
                           icon: FontAwesomeIcons.user,
                           hint: 'User Name',
+                          
                           inputType: TextInputType.name,
                           inputAction: TextInputAction.next,
                           obscureText: false,
@@ -127,23 +212,136 @@ class _SignUpState extends State<SignUp> {
                             return null;
                           },
                         ),
-                        MyTextField(
-                          controller: emailController,
-                          icon: FontAwesomeIcons.envelope,
-                          hint: 'Email',
-                          inputType: TextInputType.emailAddress,
-                          inputAction: TextInputAction.next,
-                          obscureText: false,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return '  Please enter your email';
-                            }
-                            if (!isValidEmail(value)) {
-                              return '  Please enter a valid email';
-                            }
-                            return null;
-                          },
-                        ),
+                      //    SizedBox(
+                      //   height: MediaQuery.sizeOf(context).height * 0.01,
+                      // ),
+                       Padding(
+                         padding: const EdgeInsets.only(left: 20,top: 8,bottom: 8,right: 20),
+                         child: TextField(
+                           controller: emailController,
+                           
+                           decoration: InputDecoration(
+                             hintText: 'Email',
+                              hintStyle: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(color: Colors.white54),
+                             prefixIcon: Icon(
+                               FontAwesomeIcons.envelope,
+                               color: Colors.white,
+                             ),
+                             suffixIcon: Padding(
+                               padding: EdgeInsets.only(top: 8,bottom: 8,left: 20,right: MediaQuery.sizeOf(context).width * 0.04), // Adjust padding as needed
+                               child: TextButton(
+                                 onPressed: () {
+                                   final email = emailController.text.trim();
+                                   if (email.isEmpty) {
+                                     ScaffoldMessenger.of(context).showSnackBar(
+                                       const SnackBar(content: Text('Please enter an email.')),
+                                     );
+                                   } else if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+                                       .hasMatch(email)) {
+                                     ScaffoldMessenger.of(context).showSnackBar(
+                                       const SnackBar(content: Text('Please enter a valid email address.')),
+                                     );
+                                   } else {
+                                     //sendVerificationcode(email);
+                                   }
+                                 },
+                                 child: Text(
+                                   'Get OTP',
+                                   style: TextStyle(color: Colors.white),
+                                 ),
+                                 style: TextButton.styleFrom(
+                                   backgroundColor: Color(0xFF3FD2FB),
+                                   shape: RoundedRectangleBorder(
+                                     borderRadius: BorderRadius.circular(8),
+                                   ),
+                                 ),
+                               ),
+                             ),
+                             enabledBorder: OutlineInputBorder(
+                               borderSide: BorderSide(color: Colors.white),
+                               borderRadius: BorderRadius.circular(10),
+                             ),
+                             focusedBorder: OutlineInputBorder(
+                               borderSide: BorderSide(color: Colors.white),
+                               borderRadius: BorderRadius.circular(10),
+                             ),
+                           ),
+                           style: TextStyle(color: Colors.white),
+                           
+                           keyboardType: TextInputType.emailAddress,
+                           textInputAction: TextInputAction.next,
+                         ),
+                       ),
+ 
+                         Padding(
+                           padding: EdgeInsets.only(top: 8,bottom: 8,left: 20,right: MediaQuery.sizeOf(context).width * 0.09),
+                           child: Row(
+                             children: [
+                               Expanded(
+                                flex: 3,
+                                 child: TextField( 
+                                  controller: codeController,
+                                  decoration: InputDecoration(
+                                   hintText: 'Enter OTP',
+                                    hintStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(color: Colors.white54),
+                                   prefixIcon: Icon(FontAwesomeIcons.lock,color: Colors.white.withOpacity(0.9),size: 20,),
+                                   suffixIcon: IconButton(onPressed: (){
+
+                                    setState(() {
+                                      visibleOTP = !visibleOTP;
+                                    });
+                                   }, icon: Icon(visibleOTP ? Icons.visibility :Icons.visibility_off,color: Colors.white,size: 20,),),
+                                   enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(10),
+                                   ),
+                                   focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                   
+                                  ),
+                                  style: TextStyle(color: Colors.white),
+                                  keyboardType: TextInputType.visiblePassword,
+                                  textInputAction: TextInputAction.next,
+                                  obscureText: !visibleOTP,
+                                 ),
+                               ),
+                               SizedBox(width: MediaQuery.sizeOf(context).width * 0.06,),
+                               Padding(
+                                 padding: const EdgeInsets.only(top: 0),
+                                 child: TextButton(
+                                       onPressed: (){
+                                         final code = codeController.text.trim();
+                                         final email = emailController.text.trim();
+                               if (code.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Please enter code.')),
+                                  );
+                                }else{
+                                 // verifyCode(email, code);
+                                }
+                                        }, 
+                                       child: Text(verifyButtonText,style: TextStyle(color: Colors.white),),
+                                       style: TextButton.styleFrom(
+                                  backgroundColor: const Color.fromARGB(255, 48, 138, 51),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  )
+                                                               ),),
+                               ),
+                             ],
+                           ),
+                         ),
+                      // SizedBox(
+                      //   height: MediaQuery.sizeOf(context).height * 0.01,
+                      // ),
                         MyTextField(
                           controller: mobilenumberController,
                           icon: FontAwesomeIcons.phone,
@@ -161,6 +359,7 @@ class _SignUpState extends State<SignUp> {
                             return null;
                           },
                         ),
+                      
                         MyTextField(
                           controller: passwordController,
                           icon: FontAwesomeIcons.lock,
