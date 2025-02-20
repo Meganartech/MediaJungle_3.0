@@ -17,6 +17,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.AddAd;
 import com.VsmartEngine.MediaJungle.model.AddUser;
@@ -117,6 +120,7 @@ public class VideoController {
 	@Autowired
     private AddAdRepository adRepository;
 
+	private static final Logger logger = LoggerFactory.getLogger(VideoController.class);
 
 	public ResponseEntity<?> uploadVideoDescription(
 	        @RequestParam("videoTitle") String videoTitle,
@@ -234,6 +238,7 @@ public class VideoController {
 	        }
 	    } catch (IOException e) {
 	        e.printStackTrace();
+	        logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	    }
 	}
@@ -255,6 +260,7 @@ public class VideoController {
 	                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	            }
 	        } catch (Exception e) {
+	        	logger.error("", e);
 	            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	        }
 	    }
@@ -284,7 +290,7 @@ public ResponseEntity<List<Integer>> getVideoAdvertisementTiming(@PathVariable L
     } catch (Exception e) {
         // Log the exception (optional)
         e.printStackTrace();
-        
+        logger.error("", e);
         // Return 400 if there is any exception
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -403,6 +409,7 @@ private int convertToSeconds(String time) {
  		    } catch (Exception e) {
  		        // Handle exceptions
  		        e.printStackTrace();
+ 		       logger.error("", e);
  		    }
 
  		    // Return a 404 Not Found response if the file does not exist
@@ -414,6 +421,7 @@ private int convertToSeconds(String time) {
      } catch (Exception e) {
          // Log the exception (you can use a proper logging library)
          e.printStackTrace();
+         logger.error("", e);
          // Return an internal server error response
          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
      }
@@ -719,6 +727,7 @@ private int convertToSeconds(String time) {
 		    } catch (Exception e) {
 		        // Log the exception
 		        e.printStackTrace();
+		        logger.error("", e);
 		        // Return an internal server error response
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		    }
@@ -849,6 +858,7 @@ private int convertToSeconds(String time) {
 	         }
 	     } catch (IOException e) {
 	         e.printStackTrace();
+	         logger.error("", e);
 	         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	     }
 	 }
@@ -900,6 +910,7 @@ private int convertToSeconds(String time) {
 	            }
 	        } catch (IOException e) {
 	            e.printStackTrace();
+	            logger.error("", e);
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	        }
 	    }
@@ -940,6 +951,7 @@ private int convertToSeconds(String time) {
 	                            } catch (IOException e) {
 	                                // Log and continue deleting other videos
 	                                e.printStackTrace();
+	                                logger.error("", e);
 	                                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 	                                        .body("{\"message\": \"Error deleting video file for video ID " + videoId + ".\"}");
 	                            }
@@ -953,6 +965,7 @@ private int convertToSeconds(String time) {
 	                            } catch (IOException e) {
 	                                // Log and continue deleting other videos
 	                                e.printStackTrace();
+	                                logger.error("", e);
 	                                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 	                                        .body("{\"message\": \"Error deleting trailer file for video ID " + videoId + ".\"}");
 	                            }
@@ -988,6 +1001,7 @@ private int convertToSeconds(String time) {
 	        } catch (Exception e) {
 	            // Handle general exceptions
 	            e.printStackTrace();
+	            logger.error("", e);
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                    .body("{\"message\": \"An error occurred while deleting videos.\"}");
 	        }

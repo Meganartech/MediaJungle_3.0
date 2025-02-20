@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.mobile.favouriteRepository;
 import com.VsmartEngine.MediaJungle.model.Audiodescription;
 import com.VsmartEngine.MediaJungle.repository.AddAudioRepository;
@@ -43,6 +46,7 @@ public class LibraryController {
     @Autowired
    	private AddVideoDescriptionRepository videodescriptionRepository;
  
+    private static final Logger logger = LoggerFactory.getLogger(LibraryController.class);
    
     public ResponseEntity<String> watchlaterVideo(@RequestBody Map<String, Long> requestData) {
         try {
@@ -83,6 +87,7 @@ public class LibraryController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding to favourites: " + e.getMessage());
         }
     }
@@ -122,6 +127,7 @@ public class LibraryController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error checking watch later status: " + e.getMessage());
         }
     }
@@ -200,6 +206,7 @@ public class LibraryController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error removing video from watchlater: " + e.getMessage());
         }
     }
@@ -255,6 +262,7 @@ public class LibraryController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding to favourites: " + e.getMessage());
         }
     }
@@ -332,6 +340,7 @@ public class LibraryController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error removing audio from favorites: " + e.getMessage());
         }
     }

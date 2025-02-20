@@ -323,7 +323,7 @@ const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isopen,setisopen]=useState(false);
   
   const token =sessionStorage.getItem("tokenn");
-  console.log("token",token)
+  // console.log("token",token)
 
  
   useEffect(() => {
@@ -351,6 +351,7 @@ const [dropdownOpen, setDropdownOpen] = useState(false);
     })
     .catch(error => {
       console.error('Error fetching data:', error);
+      throw error;
     });
   }, []);
 
@@ -418,10 +419,11 @@ const handlePlanClick = () => {
       })
       .then(data => {
         setGetAll(data);
-        console.log(data);
+        // console.log(data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 

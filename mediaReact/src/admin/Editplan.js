@@ -49,6 +49,7 @@ const EditPlan = () => {
         setFeatureStates(existingFeatureStates);
       } catch (error) {
         console.error('Error fetching plan or features:', error);
+        throw error;
       }
     };
   
@@ -111,7 +112,8 @@ const EditPlan = () => {
       navigate('/admin/PlanDetailsList');
     } catch (error) {
       console.error('Error updating plan details:', error.response ? error.response.data : error.message);
-      Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to update plan details. Please try again later.' });
+      throw error;
+      // Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to update plan details. Please try again later.' });
     }
   };
   

@@ -52,12 +52,12 @@ const AddFeature = () => {
     })
     .catch(error => {
       console.error('Error:', error);
-  
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Error occurred while inserting feature.',
-      });
+      throw error;
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: 'Error occurred while inserting feature.',
+      // });
     });
   };
   

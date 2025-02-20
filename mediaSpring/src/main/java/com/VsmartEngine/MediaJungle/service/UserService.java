@@ -2,10 +2,13 @@ package com.VsmartEngine.MediaJungle.service;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.repository.PaymentRepository;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
@@ -21,6 +24,8 @@ public class UserService {
 
     @Autowired
     private UserRegisterRepository userRegisterRepository;
+    
+    private static final Logger logger = LoggerFactory.getLogger(AudioService.class);
     
     public String getPlanDetailsByUserId(Long userId) {
         Optional<PaymentUser> userOptional = userRepository.findByUserId(userId);
@@ -53,6 +58,7 @@ public class UserService {
                 byte[] imageBytes = profileImage.getBytes();
                 user.setProfile(imageBytes); // Set the new profile image
             } catch (IOException e) {
+            	logger.error("", e);
                 throw new RuntimeException("Failed to upload image", e);
             }
         }

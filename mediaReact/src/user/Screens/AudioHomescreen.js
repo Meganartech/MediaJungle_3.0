@@ -34,6 +34,8 @@ const AudioHomescreen = () => {
       setVideoBanners(response.data)
     } catch (error) {
       console.error('Error fetching video banners:', error);
+    throw error;
+
     }
   };
 
@@ -55,6 +57,8 @@ const AudioHomescreen = () => {
           // setVideoBanners(data[0]?.audiolist || []); // Safe access
         } catch (error) {
           console.error('Error fetching data:', error);
+    throw error;
+
         } finally {
           setLoading(false); // Set loading to false once data is fetched
         }

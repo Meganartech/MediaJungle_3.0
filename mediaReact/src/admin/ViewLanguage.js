@@ -30,6 +30,7 @@ const ViewLanguage = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -74,20 +75,21 @@ const handleDeleteLanguage = (languageId) => {
           );
         } else {
           console.error('Error deleting language:', data.error); // Log error message from server
-          Swal.fire(
-            'Error!',
-            `Failed to delete language: ${data.error}`,
-            'error'
-          );
+          // Swal.fire(
+          //   'Error!',
+          //   `Failed to delete language: ${data.error}`,
+          //   'error'
+          // );
         }
       })
       .catch(error => {
         console.error('Error deleting language:', error);
-        Swal.fire(
-          'Error!',
-          'There was a problem deleting your language. Please try again later.',
-          'error'
-        );
+        throw error;
+        // Swal.fire(
+        //   'Error!',
+        //   'There was a problem deleting your language. Please try again later.',
+        //   'error'
+        // );
       });
     }
   });

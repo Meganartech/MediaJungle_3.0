@@ -42,7 +42,7 @@ const AddCategory = () => {
           text: 'Category inserted successfully!',
         });
       } else {
-        
+      
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -52,12 +52,12 @@ const AddCategory = () => {
     })
     .catch(error => {
       console.error('Error:', error);
-  
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Error occurred while inserting category.',
-      });
+      throw error;
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: 'Error occurred while inserting category.',
+      // });
     });
   };
   
@@ -79,7 +79,7 @@ useEffect(() => {
         console.log('Video Details:', data); // Log the video details
         setCategoryName(data.categories);
       })
-      .catch(error => console.error('Error fetching video details:', error));
+      .catch(error => {console.error('Error fetching video details:', error);throw error;});
   }
 }, [categoryId]);
 
@@ -117,11 +117,12 @@ const handleUpdate = (e) => {
   })
   .catch((error) => {
     console.log('Error updating category:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An error occurred while updating the category',
-    });
+    throw error;
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Error',
+    //   text: 'An error occurred while updating the category',
+    // });
   });
 };
 

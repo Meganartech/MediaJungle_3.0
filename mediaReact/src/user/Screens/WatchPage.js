@@ -74,6 +74,8 @@ useEffect(() => {
     } catch (error) {
       console.error('Error fetching data:', error);
       setError(error.message);
+    throw error;
+
     }
   };
 
@@ -90,6 +92,8 @@ useEffect(() => {
   } catch (error) {
     console.error('Error fetching user:', error);
     setError(error.message);
+    throw error;
+
   }
 };
 
@@ -115,6 +119,8 @@ useEffect(() => {
       } catch (error) {
         console.error('Error fetching thumbnail:', error);
         setError(error.message);
+    throw error;
+
       }
     };
 
@@ -188,20 +194,22 @@ useEffect(() => {
     });
     } catch (error) {
       // Handle error and display message
-      if (error.response) {
-        console.error(error.response.data); // Log the error message
-        toast.error('Already added to watchlist', {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      } else {
-        console.error("Error adding to watch later");
-      }
+      // if (error.response) {
+      //   console.error(error.response.data); // Log the error message
+      //   toast.error('Already added to watchlist', {
+      //     position: "top-center",
+      //     autoClose: 3000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //   });
+      // } else {
+      //   console.error("Error adding to watch later");
+      // }
+    throw error;
+
     }
   };
   
@@ -225,6 +233,8 @@ useEffect(() => {
       } catch (error) {
         console.error("Error checking watch later status:", error);
         setIsInWatchLater(null); // Reset state on error
+    throw error;
+
       } finally {
         setLoading(false); // Set loading to false when request completes
       }

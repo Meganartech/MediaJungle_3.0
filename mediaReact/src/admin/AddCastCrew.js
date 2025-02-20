@@ -78,12 +78,13 @@ const AddCastCrew = () => {
       setImageUrl(null); 
     } catch (error) {
       console.error('Error uploading cast and crew:', error);
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error uploading the cast and crew.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
+      throw error;
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'There was an error uploading the cast and crew.',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK',
+      // });
     }
   };
 
@@ -108,7 +109,7 @@ useEffect(() => {
         setImage(data.image);
 
       })
-      .catch(error => console.error('Error fetching video details:', error));
+      .catch(error =>{console.error('Error fetching video details:', error);throw error;});
   }
 }, [castId]);
 
@@ -135,12 +136,13 @@ const handleUpdate = async (e) => {
       });
   } catch (error) {
       console.error('Error updating:', error);
-      Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to update. Please try again later.', // Customize your error message
-          showConfirmButton: true
-      });
+      // Swal.fire({
+      //     icon: 'error',
+      //     title: 'Error',
+      //     text: 'Failed to update. Please try again later.', // Customize your error message
+      //     showConfirmButton: true
+      // });
+      throw error;
   }
 };
 

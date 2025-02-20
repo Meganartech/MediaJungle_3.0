@@ -57,6 +57,7 @@ const AddAudio = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -68,6 +69,7 @@ const AddAudio = () => {
         // console.log(categories)
       } catch (error) {
         console.error(error);
+        throw error;
       }
     };
 
@@ -76,19 +78,20 @@ const AddAudio = () => {
 
   useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllCertificate`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      setCertificate(data);
-      // console.log(data);
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setCertificate(data);
+        // console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        throw error;
+      });
   }, []);
 
   useEffect(() => {
@@ -105,13 +108,14 @@ const AddAudio = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
   useEffect(() => {
     if (audioId) {
       const audiofilename = "";
-    
+
       fetch(`${API_URL}/api/v2/getaudio/${audioId}`)
         .then(response => {
           if (!response.ok) {
@@ -123,11 +127,12 @@ const AddAudio = () => {
           setgetalldata(data);
           // Store the fetched data in state
           setaudiofilename(data.audio_file_name);
-         
+
           // console.log(data);
         })
         .catch(error => {
           console.error('Error fetching data:', error);
+          throw error;
         });
 
       fetch(`${API_URL}/api/v2/getaudiothumbnailsbyid/${audioId}`)
@@ -141,7 +146,7 @@ const AddAudio = () => {
 
           const base64Thumbnail = data.thumbnail;
           // console.log(base64Thumbnail)
-          
+
           setThumbnail(base64Thumbnail);
           if (base64Thumbnail) {
             setThumbnailimageUrl(`data:image/jpeg;base64,${base64Thumbnail}`);
@@ -151,6 +156,7 @@ const AddAudio = () => {
         })
         .catch(error => {
           console.error('Error fetching data:', error);
+          throw error;
         });
 
       fetch(`${API_URL}/api/v2/getbannerthumbnailsbyid/${audioId}`)
@@ -172,14 +178,15 @@ const AddAudio = () => {
         })
         .catch(error => {
           console.error('Error fetching data:', error);
+          throw error;
         });
 
 
     }
 
-  }, []); 
+  }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     fetch(`${API_URL}/api/v2/GetAllCategories`)
       .then(response => {
         if (!response.ok) {
@@ -193,6 +200,7 @@ const AddAudio = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
 
     fetch(`${API_URL}/api/v2/GetAllTag`)
@@ -210,6 +218,7 @@ const AddAudio = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
 
   }, []);
@@ -362,7 +371,7 @@ const AddAudio = () => {
 
 
 
- 
+
 
 
 
@@ -428,7 +437,7 @@ const AddAudio = () => {
       zIndex: 1,
       scrollbarColor: "#2b2a52",
     },
-   
+
     audiodropdownItem: {
       padding: "8px",
       cursor: "pointer",
@@ -439,96 +448,97 @@ const AddAudio = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown visibility
   const [options, setOptions] = useState([]); // State for options fetched from the API
   const [filteredOptions, setFilteredOptions] = useState([]); // State for filtered options
-  const dropdownRefmoviename= useRef(null);
+  const dropdownRefmoviename = useRef(null);
 
 
 
- // Fetch categories from API
- useEffect(() => {
-  const fetchMovieNames = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/v2/movename`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchMovieNames = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/v2/movename`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        const MovieNames = data.map(item => item.movie_name); // Assuming item.categories contains the category names
+        setOptions(MovieNames); // Set the full list of options
+        setFilteredOptions(MovieNames); // Set the filtered options initially
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error;
       }
-      const data = await response.json();
-      const MovieNames = data.map(item => item.movie_name); // Assuming item.categories contains the category names
-      setOptions(MovieNames); // Set the full list of options
-      setFilteredOptions(MovieNames); // Set the filtered options initially
-    } catch (error) {
-      console.error('Error fetching data:', error);
+    };
+
+    fetchMovieNames();
+  }, []); // Run once when component mounts
+
+  // Toggle dropdown visibility
+  const handleDropdownToggle = () => {
+    setDropdownOpen(!dropdownOpen);
+    const MovieNames = options;
+
+    // Separate options that start with the value from those that contain it elsewhere
+    if (Movie_name != null) {
+      const startsWithValue = MovieNames.filter(optione =>
+        optione.toLowerCase().startsWith(Movie_name.toLowerCase())  // Options that start with the input
+      );
+      setFilteredOptions(startsWithValue);
     }
+    // console.log(Movie_name)
   };
 
-  fetchMovieNames();
-}, []); // Run once when component mounts
+  // Handle input change to filter options
+  const handleInputChange = (e) => {
 
-// Toggle dropdown visibility
-const handleDropdownToggle = () => {
-  setDropdownOpen(!dropdownOpen);
-  const MovieNames = options;
-  
-  // Separate options that start with the value from those that contain it elsewhere
-  if(Movie_name!=null){
-  const startsWithValue = MovieNames.filter(optione =>
-    optione.toLowerCase().startsWith(Movie_name.toLowerCase())  // Options that start with the input
-  );
-  setFilteredOptions(startsWithValue); 
-}
-  // console.log(Movie_name)
-};
-
- // Handle input change to filter options
- const handleInputChange = (e) => {
-  
-  const value = e.target.value.toLowerCase();
-  const value2=e.target.value;
-  const MovieNames = options;
+    const value = e.target.value.toLowerCase();
+    const value2 = e.target.value;
+    const MovieNames = options;
 
 
-  // Separate options that start with the value from those that contain it elsewhere
-  const startsWithValue = MovieNames.filter(option =>
-    option.toLowerCase().startsWith(value)  // Options that start with the input
-  );
+    // Separate options that start with the value from those that contain it elsewhere
+    const startsWithValue = MovieNames.filter(option =>
+      option.toLowerCase().startsWith(value)  // Options that start with the input
+    );
 
-  const containsValue = MovieNames.filter(option =>
-    option.toLowerCase().includes(value) && !option.toLowerCase().startsWith(value)  // Options that contain but don't start with the input
-  );
+    const containsValue = MovieNames.filter(option =>
+      option.toLowerCase().includes(value) && !option.toLowerCase().startsWith(value)  // Options that contain but don't start with the input
+    );
 
-  // Combine the two lists, with starting matches first
-  const filtered = [...startsWithValue, ...containsValue];
- 
-  setFilteredOptions(filtered); 
-  setDropdownOpen(true);
-  setMovie_name(value2);
-};
+    // Combine the two lists, with starting matches first
+    const filtered = [...startsWithValue, ...containsValue];
 
-const handleOptionClick = (option) => {
-  setMovie_name(option);
-  setDropdownOpen(false);
-  const MovieNames = options;
-  
-  // Separate options that start with the value from those that contain it elsewhere
-  const startsWithValue = MovieNames.filter(optione =>
-    optione.toLowerCase().startsWith(option.toLowerCase())  // Options that start with the input
-  );
-  setFilteredOptions(startsWithValue); 
-  
-};
-
- // Close dropdown if clicked outside
- useEffect(() => {
-  const handleClickOutsidemoviename = (event) => {
-    if (dropdownRefmoviename.current && !dropdownRefmoviename.current.contains(event.target)) {
- 
-      setDropdownOpen(false);
-    }
+    setFilteredOptions(filtered);
+    setDropdownOpen(true);
+    setMovie_name(value2);
   };
-  document.addEventListener('mousedown', handleClickOutsidemoviename);
-  return () => {
-    document.removeEventListener('mousedown', handleClickOutsidemoviename);
+
+  const handleOptionClick = (option) => {
+    setMovie_name(option);
+    setDropdownOpen(false);
+    const MovieNames = options;
+
+    // Separate options that start with the value from those that contain it elsewhere
+    const startsWithValue = MovieNames.filter(optione =>
+      optione.toLowerCase().startsWith(option.toLowerCase())  // Options that start with the input
+    );
+    setFilteredOptions(startsWithValue);
+
   };
-}, []);
+
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    const handleClickOutsidemoviename = (event) => {
+      if (dropdownRefmoviename.current && !dropdownRefmoviename.current.contains(event.target)) {
+
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutsidemoviename);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsidemoviename);
+    };
+  }, []);
 
 
 
@@ -585,7 +595,7 @@ const handleOptionClick = (option) => {
   const toggleDropdowntag = () => {
     setIsOpentag(!isOpentag);
   };
-  
+
   const handleCheckboxChangecategory = (option) => (e) => {
     // console.log();
     const isChecked = e.target.checked;
@@ -613,7 +623,7 @@ const handleOptionClick = (option) => {
 
     if (isChecked) {
       settaglist((prevList) => [...prevList, id]);
-      settaglistName((prevList) => [...prevList,`${name},`]);
+      settaglistName((prevList) => [...prevList, `${name},`]);
     } else {
       settaglist((prevList) => prevList.filter((item) => item !== id));
       settaglistName((prevList) => prevList.filter((item) => item !== `${name},`));
@@ -622,15 +632,15 @@ const handleOptionClick = (option) => {
 
   useEffect(() => {
     if (getalldata) {
-      setaudio_title(getalldata.audioTitle); 
+      setaudio_title(getalldata.audioTitle);
       setMovie_name(getalldata.movie_name);
-      
+
 
       const selectedCertificate = Certificate.find(cert => cert.certificate === getalldata.certificate_name);
       // console.log(getalldata.certificate_name)
       // console.log(Certificate.certificate)
       // console.log("selectedCertificate"+selectedCertificate)
-      
+
       if (selectedCertificate) {
         setCertificateid(selectedCertificate.id); // Set the ID for the select box
         setCertificate_name(selectedCertificate.certificate); // Set the name as well
@@ -646,20 +656,20 @@ const handleOptionClick = (option) => {
       setDescription(getalldata.description);
       const audioUrl1 = `${API_URL}/api/v2/${audiofilename}/file`;
       setAudioUrl(audioUrl1);
-           if (getalldata && getalldata.category) {
-               getalldata.category.forEach(category => {
+      if (getalldata && getalldata.category) {
+        getalldata.category.forEach(category => {
           const id = (category.category_id);
-          const name= (category.categories);// Convert ID to number
+          const name = (category.categories);// Convert ID to number
           setcategorylistName((prevList) => [...prevList, `${name},`]);
           setcategorylist((prevList) => [...prevList, id]);
         });
       } else {
         console.log('Category data is undefined or null');
       }
-           if (getalldata && getalldata.tag) {
-            getalldata.tag.forEach(tag => {
+      if (getalldata && getalldata.tag) {
+        getalldata.tag.forEach(tag => {
           const id = (tag.tag_id);
-          const name= (tag.tag);// Convert ID to number
+          const name = (tag.tag);// Convert ID to number
           settaglistName((prevList) => [...prevList, `${name},`]);
           settaglist((prevList) => [...prevList, id]);
 
@@ -669,14 +679,14 @@ const handleOptionClick = (option) => {
       }
       if (getalldata && getalldata.castandCrew) {
         getalldata.castandCrew.forEach(castandCrew => {
-      const id = (castandCrew.id);
-      const name= (castandCrew.name);// Convert ID to number
-      setcastandcrewlistName((prevList) => [...prevList, `${name},`]);
-      setcastandcrewlist((prevList) => [...prevList, id]);
-    });
-  } else {
-    console.log('Tag data is undefined or null');
-  }
+          const id = (castandCrew.id);
+          const name = (castandCrew.name);// Convert ID to number
+          setcastandcrewlistName((prevList) => [...prevList, `${name},`]);
+          setcastandcrewlist((prevList) => [...prevList, id]);
+        });
+      } else {
+        console.log('Tag data is undefined or null');
+      }
     }
   }, [getalldata]); // Dependency on getalldata
 
@@ -703,9 +713,9 @@ const handleOptionClick = (option) => {
           AudioData.append('paid', selectedOption === 'paid');
           AudioData.append('production_company', Production_Company);
           AudioData.append('Description', Description);
-         thumbnailedited===null?AudioData.append('thumbnail', null):AudioData.append('thumbnail', thumbnail);
-         Banneredited===null?AudioData.append('Bannerthumbnail', null):AudioData.append('Bannerthumbnail', Bannerthumbnail);
-         audioFileedited===null?AudioData.append('audioFile', null):AudioData.append('audioFile', audioFile);
+          thumbnailedited === null ? AudioData.append('thumbnail', null) : AudioData.append('thumbnail', thumbnail);
+          Banneredited === null ? AudioData.append('Bannerthumbnail', null) : AudioData.append('Bannerthumbnail', Bannerthumbnail);
+          audioFileedited === null ? AudioData.append('audioFile', null) : AudioData.append('audioFile', audioFile);
           castandcrewlist.forEach((id) => {
             AudioData.append('castAndCrewIds', id);
           });
@@ -720,7 +730,7 @@ const handleOptionClick = (option) => {
           for (let [key, value] of AudioData.entries()) {
             console.log(key + " :", value);
           }
-          const saveResponse = await axios.post(`${API_URL}/api/v2/${(audioId === 'null' || audioId === "")?'test':'update'}`, AudioData, {
+          const saveResponse = await axios.post(`${API_URL}/api/v2/${(audioId === 'null' || audioId === "") ? 'test' : 'update'}`, AudioData, {
             headers: {
               Authorization: token, // Pass the token in the Authorization header
               'Content-Type': 'multipart/form-data',
@@ -734,22 +744,10 @@ const handleOptionClick = (option) => {
               icon: 'success',
               confirmButtonText: 'OK'
             });
-          } else {
-            Swal.fire({
-              title: 'Error!',
-              text: 'Error saving cast and crew data',
-              icon: 'error',
-              confirmButtonText: 'OK'
-            });
           }
         } catch (error) {
           console.error('Error uploading video:', error);
-          Swal.fire({
-            title: 'Error!',
-            text: 'Error uploading video',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+          throw error;
         }
       } else {
         Swal.fire({
@@ -761,12 +759,13 @@ const handleOptionClick = (option) => {
       }
     } catch (error) {
       console.error('Error:', error);
-      Swal.fire({
-        title: 'Error!',
-        text: 'An error occurred',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'An error occurred',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK'
+      // });
+      throw error;
     }
   };
   function mapIdsToNames(castandcrewlist, GetAllCategory) {
@@ -777,7 +776,7 @@ const handleOptionClick = (option) => {
 
   }
 
- 
+
 
 
   return (
@@ -862,39 +861,39 @@ const handleOptionClick = (option) => {
                         value={Movie_name}
                       /> */}
                       <div className="dropdown-container" style={styles.audiodropdownContainer} ref={dropdownRefmoviename} >
-                      <input
-        type="text"
-        value={Movie_name || ''}
-        onClick={handleDropdownToggle} // Open the dropdown on input click
-        onChange={handleInputChange} // Update input value on change
-        className="form-control border border-dark border-2 input-width col-lg-12"
-        style={{ padding: '10px', cursor: 'pointer' }}
-        placeholder="Select an option"
-      />
+                        <input
+                          type="text"
+                          value={Movie_name || ''}
+                          onClick={handleDropdownToggle} // Open the dropdown on input click
+                          onChange={handleInputChange} // Update input value on change
+                          className="form-control border border-dark border-2 input-width col-lg-12"
+                          style={{ padding: '10px', cursor: 'pointer' }}
+                          placeholder="Select an option"
+                        />
 
 
-                            {dropdownOpen && filteredOptions.length > 0 && (
-        <div
-          className=" col-lg-12 custom-scrollbar"
-          // style={{ maxHeight: '150px', overflowY: 'auto', position: 'absolute', zIndex: 1, background: 'white', border: '1px solid #ccc' }}
-          style={styles.audiodropdownList}
-          // ref={dropdownRef}
-        >
-          {filteredOptions.map((option, idx) => (
-            <div
-              key={idx}
-              className="dropdown-item col-lg-12"
-              style={{ padding: '10px', cursor: 'pointer' }}
-              onClick={() => handleOptionClick(option)} // Set value on option click
-              // ref={dropdownRef}
-            >
-              {option}
-            </div>
-          ))}
-        </div>
-      )}
-                             <br />
-                           </div>
+                        {dropdownOpen && filteredOptions.length > 0 && (
+                          <div
+                            className=" col-lg-12 custom-scrollbar"
+                            // style={{ maxHeight: '150px', overflowY: 'auto', position: 'absolute', zIndex: 1, background: 'white', border: '1px solid #ccc' }}
+                            style={styles.audiodropdownList}
+                          // ref={dropdownRef}
+                          >
+                            {filteredOptions.map((option, idx) => (
+                              <div
+                                key={idx}
+                                className="dropdown-item col-lg-12"
+                                style={{ padding: '10px', cursor: 'pointer' }}
+                                onClick={() => handleOptionClick(option)} // Set value on option click
+                              // ref={dropdownRef}
+                              >
+                                {option}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <br />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -936,7 +935,7 @@ const handleOptionClick = (option) => {
 
                           setCertificateid(certificateValue);
                           setCertificate_name(certificateName);
-                          
+
                         }}
                       >
                         <option value="">Select Certificate</option>
@@ -1038,7 +1037,7 @@ const handleOptionClick = (option) => {
                         <div className="form-check form-check-inline ms-3">
                           <div
                             className={`radio-button${selectedOption === 'paid' ? ' selected' : ''}`}
-                           
+
                             disabled={!hasPaymentPlan()}
                             onClick={() => {
                               if (hasPaymentPlan()) {
@@ -1058,16 +1057,16 @@ const handleOptionClick = (option) => {
                             }}
 
                           />
-                           <label className={`form-check-label ${selectedOption === 'paid' ? ' selected' : ''}`}
-                   htmlFor="Paid"
-                   onMouseEnter={handlePaidRadioHover}
+                          <label className={`form-check-label ${selectedOption === 'paid' ? ' selected' : ''}`}
+                            htmlFor="Paid"
+                            onMouseEnter={handlePaidRadioHover}
                             onClick={() => {
-                                if (hasPaymentPlan()) {
-                                  setSelectedOption('paid');
-                                }
+                              if (hasPaymentPlan()) {
+                                setSelectedOption('paid');
+                              }
                             }}
-                            >
-                              Paid</label>
+                          >
+                            Paid</label>
                           {/* <label className="form-check-label" htmlFor="free">Paid</label> */}
                         </div>
                       </div>
@@ -1132,7 +1131,7 @@ const handleOptionClick = (option) => {
                           <label>Selected:</label>
                           {castandcrewlist.map(id => (
                             <div key={id}>
-                              {Array.isArray(Getall) && Getall.find(option => option.id === id)?.name}  
+                              {Array.isArray(Getall) && Getall.find(option => option.id === id)?.name}
                             </div>
                           ))}
                         </div>

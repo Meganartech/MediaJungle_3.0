@@ -21,6 +21,8 @@ const MoviesPage = () => {
       setVideoBanners(response.data)
     } catch (error) {
       console.error('Error fetching video banners:', error);
+    throw error;
+
     }
   };
   console.log("videoBanners",videoBanners)
@@ -33,6 +35,8 @@ const MoviesPage = () => {
       console.log("videocontainer",response.data);
     } catch (error) {
       console.error('Error fetching video container:', error);
+    throw error;
+
     }
   };
   useEffect(() => {

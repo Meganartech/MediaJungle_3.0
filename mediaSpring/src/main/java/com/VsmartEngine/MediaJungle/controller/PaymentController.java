@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.PaymentUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
 import com.VsmartEngine.MediaJungle.repository.PaymentRepository;
@@ -52,6 +55,8 @@ public class PaymentController {
 //    @Autowired
 //    private PaymentUser PaymentUser;
     
+    private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
+
 
     public ResponseEntity<List<PaymentUser>> getPaymentHistory(@PathVariable Long userId) {
         try {
@@ -62,6 +67,7 @@ public class PaymentController {
             return new ResponseEntity<>(paymentHistory, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace(); // Log the exception
+            logger.error("", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -146,9 +152,11 @@ public class PaymentController {
             }
         } catch (NumberFormatException e) {
             response.put("message", "Invalid number format");
+            logger.error("", e);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             response.put("message", "An error occurred while confirming the payment");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -235,11 +243,14 @@ public class PaymentController {
                 return "User not found";
             }
         } catch (NumberFormatException e) {
+        	logger.error("", e);
             return "Invalid data format";
         } catch (RazorpayException e) {
+        	logger.error("", e);
             e.printStackTrace();
             return "Error creating order: " + e.getMessage();
         } catch (Exception e) {
+        	logger.error("", e);
             e.printStackTrace();
             return "Error creating order: " + e.getMessage();
         }

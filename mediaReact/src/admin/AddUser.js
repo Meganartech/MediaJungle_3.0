@@ -153,23 +153,16 @@ const AddUser = () => {
             confirm_Password: ''
           });
           console.log(data)
-        } else {
-          const message = response.data.message || 'An unexpected error occurred';
-          Swal.fire({
-            title: 'Error!',
-            text: message,
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
         }
       } catch (error) {
         console.error('Error:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: error.response?.data?.message || 'An error occurred while registering. Please try again.',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
+        throw error;
+        // Swal.fire({
+        //   title: 'Error!',
+        //   text: error.response?.data?.message || 'An error occurred while registering. Please try again.',
+        //   icon: 'error',
+        //   confirmButtonText: 'OK'
+        // });
       }
     }
   };

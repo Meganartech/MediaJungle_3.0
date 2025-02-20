@@ -40,6 +40,7 @@ const Other_setting = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -100,14 +101,14 @@ const Other_setting = () => {
       });
     } catch (error) {
       console.error('Error uploading:', error);
-
+      throw error;
       // Show error message
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error adding settings.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'There was an error adding settings.',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK',
+      // });
     }
   };
 
@@ -141,21 +142,22 @@ const Other_setting = () => {
         });
       } else {
         console.log('Error updating settings');
-        Swal.fire({
-          title: 'Error!',
-          text: 'There was an error updating the settings.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
+        // Swal.fire({
+        //   title: 'Error!',
+        //   text: 'There was an error updating the settings.',
+        //   icon: 'error',
+        //   confirmButtonText: 'OK',
+        // });
       }
     } catch (error) {
       console.log('Error updating razorpay:', error);
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error updating the settings.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
+      throw error;
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'There was an error updating the settings.',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK',
+      // });
     }
   };
 

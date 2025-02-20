@@ -110,6 +110,7 @@ function EditUserdetails() {
         })
         .catch((error) => {
           console.log('Error updating user:', error);
+          throw error;
         });
     }
   };

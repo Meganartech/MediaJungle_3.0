@@ -62,12 +62,13 @@ function EditComponent() {
       })
       .catch((error) => {
         console.error('Error:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'An error occurred while deleting the users. Please try again.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
+        throw error;
+        // Swal.fire({
+        //   title: 'Error!',
+        //   text: 'An error occurred while deleting the users. Please try again.',
+        //   icon: 'error',
+        //   confirmButtonText: 'OK',
+        // });
       });
   };
   const validateForm = () => {
@@ -149,6 +150,7 @@ function EditComponent() {
             }
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
+            throw error;
         }
     };
 
@@ -187,22 +189,23 @@ const handleSubmit = (e) => {
           // Example: setUpdatedUser(data);
         } else {
           console.log('Error updating user');
-          Swal.fire({
-            title: 'Error!',
-            text: 'Error updating user',
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+          // Swal.fire({
+          //   title: 'Error!',
+          //   text: 'Error updating user',
+          //   icon: 'error',
+          //   confirmButtonText: 'OK',
+          // });
         }
       })
       .catch((error) => {
         console.log('Error updating user:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'An error occurred while updating user. Please try again.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
+        throw error;
+        // Swal.fire({
+        //   title: 'Error!',
+        //   text: 'An error occurred while updating user. Please try again.',
+        //   icon: 'error',
+        //   confirmButtonText: 'OK',
+        // });
       });
   }
 };

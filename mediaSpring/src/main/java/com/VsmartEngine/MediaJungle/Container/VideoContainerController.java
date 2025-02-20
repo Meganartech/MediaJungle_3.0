@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.test.AudioContainer;
 import com.VsmartEngine.MediaJungle.video.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
@@ -34,6 +37,8 @@ public class VideoContainerController {
 	@Autowired
 	private AddVideoDescriptionRepository videodescriptionRepository;
 	
+	private static final Logger logger = LoggerFactory.getLogger(VideoContainerController.class);
+
 	
 //	public ResponseEntity<String> createVideoContainer(@RequestBody List<VideoContainer> videoContainerRequests) {
 //        // Map the requests to entities
@@ -103,6 +108,7 @@ public class VideoContainerController {
 	        return ResponseEntity.ok().build();
 	    } catch (Exception e) {
 	        e.printStackTrace();  // Print the stack trace for debugging
+	        logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                             .body("An error occurred while processing the containers: " + e.getMessage());
 	    }

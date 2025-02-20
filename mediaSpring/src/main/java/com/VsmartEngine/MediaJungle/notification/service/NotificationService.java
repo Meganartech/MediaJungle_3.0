@@ -5,10 +5,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.notification.NotificationAdmin;
@@ -53,6 +56,7 @@ public class NotificationService {
     }
 	
 //Create Notification with Multipart
+	private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
 	
     public Long  createNotification(String username, String createdBy,String heading ,Optional<MultipartFile> file) {
         
@@ -64,6 +68,7 @@ public class NotificationService {
                 Details.setNotimage(ImageUtils.compressImage(file.get().getBytes()));; 
             } catch (IOException e) {
                 e.printStackTrace();
+                logger.error("", e);
             }
         }
         
@@ -87,6 +92,7 @@ public class NotificationService {
                 Details.setNotimage(ImageUtils.compressImage(file.get().getBytes()));; 
             } catch (IOException e) {
                 e.printStackTrace();
+                logger.error("", e);
             }
         }
         

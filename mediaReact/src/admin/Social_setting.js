@@ -42,6 +42,7 @@ const Social_setting = () => {
         }
       } catch (error) {
         console.error('Error fetching social settings:', error);
+        throw error;
       }
     };
     fetchSettings();
@@ -65,6 +66,7 @@ const Social_setting = () => {
         })
         .catch(error => {
           console.error('Error updating settings:', error);
+          throw error;
         });
     } else {
       // If the setting does not exist, send a POST request to create new data
@@ -75,6 +77,7 @@ const Social_setting = () => {
         })
         .catch(error => {
           console.error('Error creating new settings:', error);
+          throw error;
         });
     }
   };

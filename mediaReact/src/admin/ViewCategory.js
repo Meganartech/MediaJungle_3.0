@@ -25,6 +25,7 @@ const ViewCategory = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -76,11 +77,12 @@ const handleDeleteCategory = (categoryId) => {
       
       .catch(error => {
         console.error('Error deleting category:', error);
-        Swal.fire(
-          'Error!',
-          'There was a problem deleting your category. Please try again later.',
-          'error'
-        );
+        throw error;
+        // Swal.fire(
+        //   'Error!',
+        //   'There was a problem deleting your category. Please try again later.',
+        //   'error'
+        // );
       });
       //Remove the deleted category from the local state
       setCategories(prevCategories => prevCategories.filter(category => category.id !== categoryId));

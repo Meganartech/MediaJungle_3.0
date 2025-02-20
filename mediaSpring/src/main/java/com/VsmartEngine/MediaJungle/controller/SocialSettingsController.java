@@ -2,6 +2,8 @@ package com.VsmartEngine.MediaJungle.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.SocialSettings;
 import com.VsmartEngine.MediaJungle.repository.SocialSettingsRepository;
 import com.VsmartEngine.MediaJungle.service.SocialSettingsService;
@@ -28,6 +31,8 @@ public class SocialSettingsController {
 
     @Autowired
     private SocialSettingsRepository repository;
+    private static final Logger logger = LoggerFactory.getLogger(SocialSettingsController.class);
+
     // Get all social settings
     @GetMapping
     public List<SocialSettings> getAllSettings() {
@@ -62,6 +67,7 @@ public class SocialSettingsController {
             }
         } catch (Exception e) {
             e.printStackTrace(); // Print stack trace for debugging
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }

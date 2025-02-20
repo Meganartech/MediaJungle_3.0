@@ -72,6 +72,8 @@ const ForgetPasswordUser = () => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
+    throw error;
+
             });
     }, []);
 
@@ -124,6 +126,7 @@ const ForgetPasswordUser = () => {
     
         } catch (error) {
             console.error('Error:', error);
+
             setTimeout(() => {
                 toast.dismiss(toastId);
             // Check if the error response is available
@@ -138,6 +141,8 @@ const ForgetPasswordUser = () => {
                 toast.error('An unexpected error occurred. Please try again.');
             }
             }, 3000);  // Delay of 5 seconds before removing the toast
+    throw error;
+
         }
     };
 
@@ -182,12 +187,14 @@ const ForgetPasswordUser = () => {
                         setTimeout(() => {
                             toast.error(message);
                         }, 1000); // Adjust time (1000ms = 1 second)
-                    } else {
-                        setTimeout(() => {
-                            toast.error(message);
-                        }, 1000); // Adjust time (1000ms = 1 second)
+                    // } else {
+                        // setTimeout(() => {
+                        //     toast.error(message);
+                        // }, 1000); // Adjust time (1000ms = 1 second)
                     }
                     return false; // Indicate verification failure
+    throw error;
+
                 }
             };
 
@@ -227,6 +234,8 @@ const ForgetPasswordUser = () => {
                 } catch (error) {
                     // Handle exceptions here
                     console.error("An error occurred", error);
+    throw error;
+
                 }
             };
             

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.User;
 import com.VsmartEngine.MediaJungle.service.UserService;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
@@ -36,6 +39,8 @@ public class ProfileImageController {
     @Value("${upload.Profile.directory}")
     private String uploadDirectory;
     
+    private static final Logger logger = LoggerFactory.getLogger(ProfileImageController.class);
+
    
     public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("username") String username,
                                          @RequestParam("email") String email, @RequestParam("mobnum") String mobnum,
@@ -45,6 +50,7 @@ public class ProfileImageController {
             UserRegister user = userService.updateUser(userId, username, email, mobnum, profileImage);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
+        	logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user: " + e.getMessage());
         }
     }
@@ -78,6 +84,7 @@ public class ProfileImageController {
         } 
     catch (IOException e) {
         // Log the error and send an error response in JSON format
+    	logger.error("", e);
         e.printStackTrace();
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", "Failed to process image file");
@@ -85,11 +92,13 @@ public class ProfileImageController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     } catch (RuntimeException e) {
         // Handle user not found or other runtime issues
+    	logger.error("", e);
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", "User not found");
         errorResponse.put("details", e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     } catch (Exception e) {
+    	logger.error("", e);
         // Generic exception handling for unexpected errors
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", "An unexpected error occurred");
@@ -116,9 +125,11 @@ public ResponseEntity<byte[]> getProfileImage(@PathVariable Long userId) {
         }
     } catch (RuntimeException e) {
         // Handle user not found or other runtime issues
+    	logger.error("", e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     } catch (Exception e) {
         // Handle other unexpected errors
+    	logger.error("", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 }

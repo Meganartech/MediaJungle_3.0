@@ -44,6 +44,7 @@ const Footer_setting = () => {
         }
       } catch (error) {
         console.error('Error fetching footer settings:', error);
+        throw error;
       }
     };
     fetchFooterSettings();
@@ -104,7 +105,8 @@ const save = async (event) => {
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('Error submitting the form.');
+    throw error;
+    // alert('Error submitting the form.');
   }
 };
 

@@ -26,6 +26,7 @@ const ViewTag = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -70,11 +71,12 @@ const handleDeleteTag = (tagId) => {
       })
       .catch(error => {
         console.error('Error deleting tag:', error);
-        Swal.fire(
-          'Error!',
-          'There was a problem deleting your tag. Please try again later.',
-          'error'
-        );
+        throw error;
+        // Swal.fire(
+        //   'Error!',
+        //   'There was a problem deleting your tag. Please try again later.',
+        //   'error'
+        // );
       });
     }
   });

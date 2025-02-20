@@ -35,6 +35,8 @@ const UserProfileScreen = () => {
         } catch (err) {
             console.error('Error fetching image:', err);
             setImageSrc(null); // Set imageSrc to null to display "No Image" placeholder
+    throw error;
+
         }
     };
 
@@ -73,20 +75,22 @@ const UserProfileScreen = () => {
                     localStorage.setItem('login', false);
                     console.log("Logged out successfully");
                     return;
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Logout failed',
-                        text: 'Please try again later.',
-                    });
+                // } else {
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Logout failed',
+                //         text: 'Please try again later.',
+                //     });
                 }
             }
         } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred while logging out. Please try again later.',
-            });
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Error',
+            //     text: 'An error occurred while logging out. Please try again later.',
+            // });
+    throw error;
+
         }
     };
 
@@ -114,6 +118,8 @@ const UserProfileScreen = () => {
             } catch (err) {
                 console.error('Error uploading image:', err);
                 setError(err.message);
+    throw err;
+
             }
         }
     };
@@ -138,6 +144,8 @@ const UserProfileScreen = () => {
             .catch(error => {
                 setError(error.message);
                 setLoading(false);
+    throw error;
+
             });
     }, [jwtToken, userId]);
 
@@ -154,6 +162,8 @@ const UserProfileScreen = () => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
+    throw error;
+
             });
     }, []);
 

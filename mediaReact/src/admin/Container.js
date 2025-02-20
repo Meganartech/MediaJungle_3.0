@@ -92,6 +92,7 @@ useEffect(() => {
     })
     .catch(error => {
       console.error('Error fetching data:', error);
+      throw error;
     });
   fetchVideoContainers();
 }, []);
@@ -118,6 +119,7 @@ useEffect(() => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
     };
 
@@ -270,22 +272,23 @@ const handleVideoInputChange = (e, index, field) => {
                     fetchVideoContainers();
                 }
             });
-        } else {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Error saving VideoContainers and Categories data',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+        // } else {
+        //     Swal.fire({
+        //         title: 'Error!',
+        //         text: 'Error saving VideoContainers and Categories data',
+        //         icon: 'error',
+        //         confirmButtonText: 'OK'
+        //     });
         }
     } catch (error) {
         console.error('Error uploading data:', error);
-        Swal.fire({
-            title: 'Error!',
-            text: 'Error uploading data',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
+        throw error;
+        // Swal.fire({
+        //     title: 'Error!',
+        //     text: 'Error uploading data',
+        //     icon: 'error',
+        //     confirmButtonText: 'OK'
+        // });
     }
 };
 
@@ -316,12 +319,13 @@ const handleVideoDelete = async (index) => {
         });
       } catch (error) {
         console.error(error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'Failed to delete the VideoContainer',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
+        throw error;
+        // Swal.fire({
+        //   title: 'Error!',
+        //   text: 'Failed to delete the VideoContainer',
+        //   icon: 'error',
+        //   confirmButtonText: 'OK'
+        // });
       }
     }
     else{
@@ -546,6 +550,7 @@ fetch(`${API_URL}/api/v2/GetAllCategories`)
   })
   .catch(error => {
     console.error('Error fetching data:', error);
+    throw error;
   });
   fetchAudioContainers();
 }, []);
@@ -570,6 +575,7 @@ fetch(`${API_URL}/api/v2/audiocontainer`)
   })
   .catch(error => {
     console.error('Error fetching data:', error);
+    throw error;
   });
 };
 
@@ -721,22 +727,23 @@ const handleSubmitAudio =async () => {
           fetchAudioContainers();
         }
       });
-    } else {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Error saving Containers and Categoryes  data',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+    // } else {
+    //   Swal.fire({
+    //     title: 'Error!',
+    //     text: 'Error saving Containers and Categoryes  data',
+    //     icon: 'error',
+    //     confirmButtonText: 'OK'
+    //   });
     }
   } catch (error) {
     console.error('Error uploading data:', error);
-    Swal.fire({
-      title: 'Error!',
-      text: 'Error uploading data',
-      icon: 'error',
-      confirmButtonText: 'OK'
-    });
+    throw error;
+    // Swal.fire({
+    //   title: 'Error!',
+    //   text: 'Error uploading data',
+    //   icon: 'error',
+    //   confirmButtonText: 'OK'
+    // });
   }
 
 };
@@ -766,12 +773,13 @@ if (index >= 0 && index < tableData.length) {
       });
     } catch (error) {
       console.error(error);
-      Swal.fire({
-        title: 'Error!',
-        text: 'Failed to delete the AudioContainer',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      throw error;
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'Failed to delete the AudioContainer',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK'
+      // });
     }
   }
   else{

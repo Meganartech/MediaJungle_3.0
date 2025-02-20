@@ -39,21 +39,23 @@ const MobileFooter = () => {
                 if (response.ok) {
                     sessionStorage.clear();
                     localStorage.clear();
-                    window.location.href = "/UserLogin";
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Logout failed',
-                        text: 'Please try again later.',
-                    });
+                   window.location.href = "/UserLogin";
+                // } else {
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Logout failed',
+                //         text: 'Please try again later.',
+                //     }); 
                 }
             }
         } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred while logging out. Please try again later.',
-            });
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Error',
+            //     text: 'An error occurred while logging out. Please try again later.',
+            // });
+    throw error;
+
         }
     };
 

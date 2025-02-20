@@ -39,6 +39,8 @@ export const Test = () => {
     })
     .catch(error => {
       console.error('Error fetching data:', error);
+    throw error;
+
     });
   
     fetchData();
@@ -70,6 +72,8 @@ export const Test = () => {
         }
       } catch (error) {
         console.error('Error fetching or processing image data:', error);
+    throw error;
+
       }
     };
   

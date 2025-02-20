@@ -126,6 +126,8 @@ const AboutUs = () => {
         });
       } catch (error) {
         console.error('Error fetching About Us data:', error);
+    throw error;
+
       }
     };
 

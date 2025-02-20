@@ -18,6 +18,7 @@ const PlanDescription = () => {
       setGetAll(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
+      throw error;
     }
   };
 
@@ -55,11 +56,12 @@ const PlanDescription = () => {
       });
     } catch (error) {
       console.error('Error uploading plan description:', error.response || error.message);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.response ? error.response.data.message : 'Failed to add feature. Please try again later.',
-      });
+      throw error;
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: error.response ? error.response.data.message : 'Failed to add feature. Please try again later.',
+      // });
     }
   };
 
@@ -86,6 +88,7 @@ const PlanDescription = () => {
       setGetAll({ ...getall, descriptions: updatedDescriptions });
     } catch (error) {
       console.error(`Error setting plan description ${descId} active=${active}:`, error);
+      throw error;
     }
   };
 
@@ -100,6 +103,7 @@ const PlanDescription = () => {
       fetchData(); // Refresh data after deletion
     } catch (error) {
       console.error(`Error deleting plan description ${descId}:`, error);
+      throw error;
     }
   };
 

@@ -35,6 +35,8 @@ const EditCertificate = () => {
       })
       .catch(error => {
         console.error('Error fetching certificate:', error);
+    throw error;
+
       });
   }, [id]);
 
@@ -60,20 +62,22 @@ const EditCertificate = () => {
         });
       } else {
         console.log('Error updating certificate');
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Error updating certificate',
-        });
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: 'Error',
+        //   text: 'Error updating certificate',
+        // });
       }
     })
     .catch((error) => {
       console.log('Error updating certificate:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while updating the certificate',
-      });
+    throw error;
+
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: 'An error occurred while updating the certificate',
+      // });
     });
   };
   

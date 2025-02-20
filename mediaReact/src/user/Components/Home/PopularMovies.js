@@ -58,6 +58,8 @@ const PopularMovies = () => {
     })
     .catch(error => {
       console.error('Error fetching data:', error);
+    throw error;
+
     });
 
       // fetch(`${API_URL}/api/GetvideoThumbnail`)
@@ -108,6 +110,8 @@ const PopularMovies = () => {
       }
     } catch (error) {
       console.error('Error fetching or processing image data:', error);
+    throw error;
+
     }
   };
 

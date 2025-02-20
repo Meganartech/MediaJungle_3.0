@@ -10,10 +10,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.model.FileModel;
 
 @Service
@@ -25,7 +28,7 @@ public class FileServiceImplementation implements FileService {
 	 
 	 @Value("${project.videotrailer}")
 	 private String videotraileruploadDirectory;
-
+	 private static final Logger logger = LoggerFactory.getLogger(AudioService.class);
 //	@Override
 //	public FileModel uploadVideo(String path, MultipartFile file) throws IOException {
 //		FileModel fileModel = new FileModel();
@@ -187,6 +190,7 @@ public class FileServiceImplementation implements FileService {
 	            return deleted; // Return the result to the caller
 	        } catch (IOException e) {
 	            e.printStackTrace();
+	            logger.error("", e);
 	            System.out.println("Error occurred while deleting the file");
 	            return false; // Return false in case of an exception
 	        }
@@ -210,6 +214,7 @@ public class FileServiceImplementation implements FileService {
 	            return deleted; // Return the result to the caller
 	        } catch (IOException e) {
 	            e.printStackTrace();
+	            logger.error("", e);
 	            System.out.println("Error occurred while deleting the file");
 	            return false; // Return false in case of an exception
 	        }

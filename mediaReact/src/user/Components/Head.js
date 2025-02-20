@@ -52,6 +52,8 @@ const Head = ({title}) => {
         });
       } catch (error) {
         console.error('Error fetching contact Us data:', error);
+    throw error;
+
       }
     };
   

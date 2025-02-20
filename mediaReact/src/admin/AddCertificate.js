@@ -50,11 +50,12 @@ const AddCertificate = () => {
       setissuedby('');
     } catch (error) {
       console.error('File upload failed:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'File upload failed. Please try again later.',
-      });
+      throw error;
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: 'File upload failed. Please try again later.',
+      // });
     }
   };
   
@@ -78,7 +79,7 @@ useEffect(() => {
         setissuedby(data.issuedby)
         
       })
-      .catch(error => console.error('Error fetching video details:', error));
+      .catch(error => {console.error('Error fetching video details:', error);throw error;});
   }
 }, [certificateId]);
 
@@ -120,11 +121,12 @@ const handleUpdate = async (e) => {
     setissuedby('');
   } catch (error) {
     console.error('File upload failed:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'File upload failed. Please try again later.',
-    });
+    throw error;
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Error',
+    //   text: 'File upload failed. Please try again later.',
+    // });
   }
 };
 

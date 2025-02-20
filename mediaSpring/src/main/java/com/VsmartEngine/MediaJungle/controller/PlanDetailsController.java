@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.PlanDetails;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
@@ -52,6 +55,8 @@ public class PlanDetailsController {
 	private AddUserRepository adduserrepository;
 	
 	
+	private static final Logger logger = LoggerFactory.getLogger(PlanDetailsController.class);
+
 
 	public ResponseEntity<?> planDetails(@RequestParam("planname")String planname,
 			@RequestParam("amount") double amount,
@@ -97,6 +102,7 @@ public class PlanDetailsController {
 			            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 			        }
 			    } catch (Exception e) {
+			    	logger.error("", e);
 			        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
 			    }
 			}
@@ -163,6 +169,7 @@ public class PlanDetailsController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal server error"));
         }
     }
@@ -224,10 +231,10 @@ public class PlanDetailsController {
 
             return new ResponseEntity<>("Plan details updated successfully", HttpStatus.OK);
         } catch (RuntimeException e) {
-            
+        	logger.error("", e);
             return new ResponseEntity<>("Plan not found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            
+        	logger.error("", e);
             return new ResponseEntity<>("Error updating plan details", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

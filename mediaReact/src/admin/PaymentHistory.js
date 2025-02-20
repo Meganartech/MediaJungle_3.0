@@ -98,6 +98,7 @@ const PaymentHistory = () => {
       setPaymentHistory(response.data); // Ensure response.data is an array
     } catch (error) {
       console.log('Error fetching payment history:', error);
+      throw error;
     }
   };
   

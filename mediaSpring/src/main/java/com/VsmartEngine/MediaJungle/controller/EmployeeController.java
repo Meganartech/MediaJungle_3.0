@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.Companysiteurl;
@@ -77,6 +80,9 @@ public class EmployeeController {
 	@Autowired
 	private AddUserRepository adduserrepository;
 	
+	private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
+	
 //	@GetMapping("/employees")
 //	public List<sample> getAllEmployees() {
 //		return employeeRepository.findAll();
@@ -128,6 +134,7 @@ public class EmployeeController {
 		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 		        }
 		    } catch (Exception e) {
+		    	logger.error("", e);
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
 		    }
 		}
@@ -192,10 +199,12 @@ public class EmployeeController {
 
         } catch (RuntimeException e) {
             // Handle not found exception
+        	logger.error("", e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Setting not found");
 
         } catch (Exception e) {
             // Handle other exceptions
+        	logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error when updating");
         }
     }
@@ -271,6 +280,7 @@ public class EmployeeController {
 		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 		        }
 		    } catch (Exception e) {
+		    	logger.error("", e);
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
 		    }
 		}
@@ -348,11 +358,13 @@ public ResponseEntity<String> editcontact(@PathVariable Long id,
 
         } catch (RuntimeException e) {
             // Log the error for debugging
+        	logger.error("", e);
             System.err.println("Runtime exception: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contact setting not found");
 
         } catch (Exception e) {
             // Log the error for debugging
+        	logger.error("", e);
             System.err.println("Exception: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error when updating contact");
         }
@@ -448,6 +460,7 @@ public ResponseEntity<String> editcontact(@PathVariable Long id,
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 	        }
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
 	    }
 	}
@@ -485,6 +498,7 @@ public ResponseEntity<String> editcontact(@PathVariable Long id,
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();  // Replace with proper logging in production
+	        logger.error("", e);
 	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 	}
@@ -557,10 +571,12 @@ public ResponseEntity<String> editcontact(@PathVariable Long id,
 	            return new ResponseEntity<>("Settings updated successfully", HttpStatus.OK);
 	        } catch (RuntimeException e) {
 	            // Log the error for debugging
+	        	logger.error("", e);
 	            System.err.println("Runtime exception: " + e.getMessage());
 	            return new ResponseEntity<>("Setting not found", HttpStatus.NOT_FOUND);
 	        } catch (Exception e) {
 	            // Log the error for debugging
+	        	logger.error("", e);
 	            System.err.println("Exception: " + e.getMessage());
 	            return new ResponseEntity<>("Error when updating settings", HttpStatus.INTERNAL_SERVER_ERROR);
 	        }

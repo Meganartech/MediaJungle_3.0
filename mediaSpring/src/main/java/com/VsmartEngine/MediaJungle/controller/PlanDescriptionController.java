@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.PlanDescription;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
@@ -31,6 +34,8 @@ public class PlanDescriptionController {
 	@Autowired
 	private AddUserRepository adduserrepository;
 	
+	private static final Logger logger = LoggerFactory.getLogger(PlanDescriptionController.class);
+
 
 	public ResponseEntity<?> addPlanDescription(@RequestParam("description") String description,
 	        @RequestHeader("Authorization") String token) {
@@ -64,6 +69,7 @@ public class PlanDescriptionController {
 	        
 	        return ResponseEntity.ok(savedPlanDescription);
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding plan description.");
 	    }
 	}
@@ -114,6 +120,7 @@ public class PlanDescriptionController {
 	            return ResponseEntity.notFound().build(); // Return 404 Not Found if plan with id is not found
 	        }
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating active status.");
 	    }
 	}
@@ -141,6 +148,7 @@ public class PlanDescriptionController {
 
 	        return ResponseEntity.noContent().build();
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	    }
 	}

@@ -37,6 +37,7 @@ const Ads = () => {
         })
         .catch((error) => {
           console.error('Error fetching ads:', error);
+          throw error;
         });
     }, []);
     
@@ -87,11 +88,12 @@ const Ads = () => {
             })
             .catch((error) => {
               console.error('Error deleting ad:', error);
-              Swal.fire(
-                'Error!',
-                'There was a problem deleting your ad. Please try again later.',
-                'error'
-              );
+              // Swal.fire(
+              //   'Error!',
+              //   'There was a problem deleting your ad. Please try again later.',
+              //   'error'
+              // );
+              throw error;
             });
         }
       });

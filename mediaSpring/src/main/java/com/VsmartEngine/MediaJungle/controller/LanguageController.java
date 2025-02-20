@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.AddLanguage;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
@@ -38,7 +41,8 @@ public class LanguageController {
 	@Autowired
 	private AddUserRepository adduserrepository;
 	
-	
+	private static final Logger logger = LoggerFactory.getLogger(LanguageController.class);
+
 
 	public ResponseEntity<String> createEmployee(@RequestHeader("Authorization") String token,@RequestBody AddLanguage data) {
 		try {
@@ -75,6 +79,7 @@ public class LanguageController {
 		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 		        }
 		    } catch (Exception e) {
+		    	logger.error("", e);
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
 		    }
 		}
@@ -139,6 +144,7 @@ public class LanguageController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authorized"));
         }
     } catch (Exception e) {
+    	logger.error("", e);
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
@@ -192,6 +198,7 @@ public class LanguageController {
 		        return new ResponseEntity<>("Language details updated successfully", HttpStatus.OK);
 		   }
 		   catch (Exception e) {
+			   logger.error("", e);
 		        return new ResponseEntity<>("Error updating Language details", HttpStatus.INTERNAL_SERVER_ERROR);
 		    }
 	}

@@ -26,6 +26,7 @@
           setfeatures(updatedFeatures);
         } catch (error) {
           console.error('Error fetching features:', error);
+          throw error;
         }
       };
       fetchFeatures();
@@ -35,7 +36,7 @@
       fetch(`${API_URL}/api/v2/getrazorpay`)
         .then(response => response.ok ? response.json() : Promise.reject('Network response was not ok'))
         .then(data => setgetall(data))
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => {console.error('Error fetching data:', error); throw error;});
     }, []);
 
     const hasPaymentPlan = () => getall && getall.length > 0;
@@ -112,7 +113,8 @@
         // setfeatures([]); // Clear the features array
       } catch (error) {
         console.error('Error uploading plan details:', error.response ? error.response.data : error.message);
-        Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to upload plan details. Please try again later.' });
+        // Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to upload plan details. Please try again later.' });
+        throw error;
       }
     };
     

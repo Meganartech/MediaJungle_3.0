@@ -48,6 +48,7 @@ fetch(`${API_URL}/api/v2/GetAllCategories`)
   })
   .catch(error => {
     console.error('Error fetching data:', error);
+    throw error;
   });
 }, []);
 
@@ -73,6 +74,7 @@ fetch(`${API_URL}/api/v2/GetAllCategories`)
         }
       } catch (error) {
         console.error('Error fetching or processing image data:', error);
+        throw error;
       }
     };
     fetchData();
@@ -92,6 +94,7 @@ useEffect(() => {
       setUpdatedget(data);
     } catch (error) {
       console.error('Error fetching data:', error);
+      throw error;
     }
   };
 
@@ -118,6 +121,7 @@ const fetchAudio = async () => {
 
   } catch (error) {
     console.error('Error fetching audio:', error);
+    throw error;
   }
 };
 fetchAudio(); // Replace 'yourDefaultFileName' with the desired default file name
@@ -233,20 +237,21 @@ fetchAudio(); // Replace 'yourDefaultFileName' with the desired default file nam
       } else {
         // Handle error response
         console.error("Update failed", data);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: `Update failed: ${data.message || 'Unknown error'}`,
-        });
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: 'Error',
+        //   text: `Update failed: ${data.message || 'Unknown error'}`,
+        // });
       }
     } catch (error) {
       // Handle network errors or other exceptions
       console.error("Error:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while updating the audio.',
-      });
+      throw error;
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: 'An error occurred while updating the audio.',
+      // });
     }
   };
 

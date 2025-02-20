@@ -46,22 +46,23 @@ const TenureList = () => {
                   'Your Tenure has been deleted.',
                   'success'
                 );
-              } else {
-                console.error('Error deleting tenure:', data.error); // Log error message from server
-                Swal.fire(
-                  'Error!',
-                  'Failed to delete tenure. Please try again later.',
-                  'error'
-                );
+              // } else {
+              //   console.error('Error deleting tenure:', data.error); // Log error message from server
+              //   Swal.fire(
+              //     'Error!',
+              //     'Failed to delete tenure. Please try again later.',
+              //     'error'
+              //   );
               }
             })
             .catch(error => {
               console.error('Error deleting tenure:', error);
-              Swal.fire(
-                'Error!',
-                'Failed to delete tenure. Please try again later.',
-                'error'
-              );
+              // Swal.fire(
+              //   'Error!',
+              //   'Failed to delete tenure. Please try again later.',
+              //   'error'
+              // );
+              throw error;
             });
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             console.log('Delete operation cancelled');
@@ -84,6 +85,7 @@ const TenureList = () => {
           })
           .catch(error => {
             console.error('Error fetching data:', error);
+            throw error;
           });
     }, []);
 

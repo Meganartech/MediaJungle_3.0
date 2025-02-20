@@ -25,6 +25,7 @@ const AudioHomecreeenContainer = () => {
           })
           .catch(error => {
             console.error('Error fetching data:', error);
+            throw error;
           });
       }, []);
     //  useEffect(() => {

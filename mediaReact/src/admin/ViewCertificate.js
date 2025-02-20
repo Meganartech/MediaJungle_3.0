@@ -26,6 +26,7 @@ const ViewCertificate= () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -69,20 +70,21 @@ const handleDeleteCertificate = (certificateId) => {
           );
         } else {
           console.error('Error deleting certificate:', data.error); // Log error message from server
-          Swal.fire(
-            'Error!',
-            `Failed to delete certificate: ${data.error}`,
-            'error'
-          );
+          // Swal.fire(
+          //   'Error!',
+          //   `Failed to delete certificate: ${data.error}`,
+          //   'error'
+          // );
         }
       })
       .catch(error => {
         console.error('Error deleting certificate:', error);
-        Swal.fire(
-          'Error!',
-          'There was a problem deleting your certificate. Please try again later.',
-          'error'
-        );
+        throw error;
+        // Swal.fire(
+        //   'Error!',
+        //   'There was a problem deleting your certificate. Please try again later.',
+        //   'error'
+        // );
       });
     }
   });

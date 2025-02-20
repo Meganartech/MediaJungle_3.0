@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.AddAd;
 import com.VsmartEngine.MediaJungle.repository.AddAdRepository;
 import com.VsmartEngine.MediaJungle.service.AdService;
@@ -53,6 +56,8 @@ public class AddAdController {
 
     @Autowired
     private FileStorageService fileStorageService;
+    private static final Logger logger = LoggerFactory.getLogger(AddAdController.class);
+
 
     @PostMapping("/AddAds")
     public ResponseEntity<?> addAd(
@@ -77,6 +82,7 @@ public class AddAdController {
             return ResponseEntity.ok(savedAd);
         }catch (IOException e) {
             e.printStackTrace(); // or use a logger to log the exception
+            logger.error("", e);
             return ResponseEntity.status(500).body("Error uploading video: " + e.getMessage());
         }
 
@@ -291,6 +297,7 @@ public class AddAdController {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    logger.error("", e);
                 }
 
                 // If file does not exist or is not valid
@@ -301,6 +308,7 @@ public class AddAdController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -348,8 +356,10 @@ public class AddAdController {
             AddAd updatedAd = adService.updateAd(id, ad); // Update the ad in the database
             return ResponseEntity.ok(updatedAd);
         } catch (RuntimeException e) {
+        	logger.error("", e);
             return ResponseEntity.status(404).body("Ad not found with id " + id);
         } catch (IOException e) {
+        	logger.error("", e);
             return ResponseEntity.status(500).body("Error uploading video: " + e.getMessage());
         }
     }
@@ -359,6 +369,7 @@ public class AddAdController {
             adService.deleteAdById(id);
             return ResponseEntity.ok("Ad deleted successfully");
         } catch (RuntimeException e) {
+        	logger.error("", e);
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }

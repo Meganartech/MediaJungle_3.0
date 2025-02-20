@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.Addaudio1;
 import com.VsmartEngine.MediaJungle.model.Audiodescription;
@@ -37,7 +40,7 @@ import com.VsmartEngine.MediaJungle.video.AddVideoDescriptionRepository;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin()
 @RestController
 @RequestMapping("/api/v2/")
 public class MobileAppController {
@@ -51,6 +54,7 @@ public class MobileAppController {
     @Autowired
     private TokenBlacklist tokenBlacklist;
     
+    private static final Logger logger = LoggerFactory.getLogger(MobileAppController.class);
 //	@PostMapping("/register/mobile")
 //    public ResponseEntity<UserRegister> registerMobile(@RequestParam("username") String username,
 //                                                       @RequestParam("email") String email,
@@ -109,6 +113,7 @@ public class MobileAppController {
             }
         } catch (Exception e) {
             e.printStackTrace(); // Log the exception for debugging
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -184,8 +189,10 @@ public class MobileAppController {
 
             return new ResponseEntity<>("User details updated successfully", HttpStatus.OK);
         } catch (IOException e) {
+        	logger.error("", e);
             return new ResponseEntity<>("Error processing profile image", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
+        	logger.error("", e);
             return new ResponseEntity<>("Error updating user details", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -276,6 +283,7 @@ public class MobileAppController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding to favourites: " + e.getMessage());
         }
     }
@@ -335,6 +343,7 @@ public ResponseEntity<String> removeFavoriteVideo(@PathVariable Long userId, @Re
         }
     } catch (Exception e) {
         e.printStackTrace();
+        logger.error("", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error removing video from favorites: " + e.getMessage());
     }
 }

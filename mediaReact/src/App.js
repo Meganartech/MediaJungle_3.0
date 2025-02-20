@@ -138,13 +138,14 @@ const App = () => {
         }
   
         const data = await response.json();
-        console.log("data", data.adminExists);
+        // console.log("data", data.adminExists);
         // Set session storage based on admin existence
         sessionStorage.setItem('initialsignup', data.adminExists.toString());
       } catch (error) {
         console.error('Failed to check admin role:', error);
         // Mark as error in session storage
         sessionStorage.setItem('initialsignup', 'error');
+        throw error
       } finally {
         setLoading(false);
       }
@@ -172,12 +173,12 @@ const App = () => {
     const fetchData = async () => {
       const storedData = localStorage.getItem('mySessionData')
       const val2=localStorage.getItem('login')
-      console.log("inadd"+log)
+      // console.log("inadd"+log)
       setIsLogged(localStorage.getItem('mySessionData'));
       setIsuserLogged(val2);
-      console.log("inside the app.js sessionvakue :", storedData);
-      console.log("inside the app.js val2 :", val2);
-      console.log("inside the app.js Logged 2:", isLogged);
+      // console.log("inside the app.js sessionvakue :", storedData);
+      // console.log("inside the app.js val2 :", val2);
+      // console.log("inside the app.js Logged 2:", isLogged);
           
     
   };
@@ -195,10 +196,10 @@ const App = () => {
     const val2=localStorage.getItem('login')
     setIsLogged(val);
     setIsuserLogged(val2);
-    console.log("inside the app.js val :", val);
-    console.log("inside the app.js val2 :", val2);
-    console.log("inside the app.js Logged 2:", isuserLogged);
-    console.log("inside the app.js Logged :", isLogged);// Log the state after it's updated
+    // console.log("inside the app.js val :", val);
+    // console.log("inside the app.js val2 :", val2);
+    // console.log("inside the app.js Logged 2:", isuserLogged);
+    // console.log("inside the app.js Logged :", isLogged);// Log the state after it's updated
   };
 
 

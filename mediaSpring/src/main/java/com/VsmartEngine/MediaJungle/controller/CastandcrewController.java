@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
@@ -49,6 +52,7 @@ public class CastandcrewController {
 	@Autowired
 	private AddUserRepository adduserrepository;
 	
+	private static final Logger logger = LoggerFactory.getLogger(CastandcrewController.class);
 
 	public ResponseEntity<?> addCast(@RequestParam("image") MultipartFile image,
 	                                 @RequestParam("name") String name,
@@ -96,8 +100,10 @@ public class CastandcrewController {
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 	        }
 	    } catch (IOException e) {
+	    	logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing image");
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
 	    }
 	}
@@ -143,6 +149,7 @@ public class CastandcrewController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
+        	logger.error("", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -168,6 +175,7 @@ public class CastandcrewController {
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();  // Replace with proper logging in production
+	        logger.error("", e);
 	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 	}
@@ -209,6 +217,7 @@ public class CastandcrewController {
             }
         } catch (Exception e) {
             e.printStackTrace(); // Log the exception for debugging
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -257,7 +266,9 @@ public class CastandcrewController {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authorized"));
 	        }
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	        
 	    }
 	}
 
@@ -324,6 +335,7 @@ public class CastandcrewController {
 
 	        return ResponseEntity.ok("Cast and crew updated successfully.");
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating cast and crew.");
 	    }
 	}

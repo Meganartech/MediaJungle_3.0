@@ -2,9 +2,12 @@ package com.VsmartEngine.MediaJungle.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.model.SocialSettings;
 import com.VsmartEngine.MediaJungle.repository.SocialSettingsRepository;
 
@@ -13,6 +16,7 @@ public class SocialSettingsService {
 
     @Autowired
     private SocialSettingsRepository repository;
+    
 
     public SocialSettings saveSocialSettings(SocialSettings settings) {
         return repository.save(settings);

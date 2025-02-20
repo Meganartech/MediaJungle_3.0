@@ -37,6 +37,7 @@ const ViewAudio = () => {
         }
       } catch (error) {
         console.error('Error fetching or processing image data:', error);
+        throw error;
       }
     };
 
@@ -56,6 +57,7 @@ const ViewAudio = () => {
         setAudioData(response.data);
       } catch (error) {
         console.error('Error fetching audio:', error);
+        throw error;
       }
     };
 

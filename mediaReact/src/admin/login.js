@@ -49,7 +49,7 @@ const Login = () => {
     try {
       const response = await axios.get(`${API_URL}/api/v2/GetAllUser`);
       setUsers(response.data.userList);
-      console.log(response.data.userList)
+      // console.log(response.data.userList)
       setIsEmpty(response.data.empty); // Corrected from setisEmpty to setIsEmpty
       setValid(response.data.valid);
       // console.log("Is empty: " + isEmpty); // Corrected from empty to isEmpty
@@ -59,6 +59,7 @@ const Login = () => {
       // const userFound = response.data.find(userData => userData.username === user.username);
     } catch (error) {
       console.log('Error fetching users:', error);
+      throw error;
     }
 
   }
@@ -139,36 +140,38 @@ const handleSubmit = async (e) => {
         sessionStorage.setItem('name', true);
         sessionStorage.setItem('role', role);
 
-        console.log(name, jwtToken, userId,role);
+        // console.log(name, jwtToken, userId,role);
 
         // Navigate to the dashboard after successful login
         navigate('/admin/Dashboard');
       } catch (jsonError) {
         console.error('Error parsing JSON:', jsonError);
-        Swal.fire({
-          icon: 'error',
-          title: 'Login Error',
-          text: 'An error occurred while processing the response. Please try again later.',
-        });
+        throw jsonError;
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: 'Login Error',
+        //   text: 'An error occurred while processing the response. Please try again later.',
+        // });
       }
     } else {
       // Handle invalid username or password based on status code
       const errorData = await response.json().catch(() => ({})); // Handle cases where response is not JSON
       const message = errorData.message || 'Invalid username or password';
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: message,
-      });
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Login Failed',
+      //   text: message,
+      // });
     }
   } catch (error) {
     console.error('Error during login:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Login Error',
-      text: 'An error occurred during login. Please try again later.',
-    });
+    throw error;
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Login Error',
+    //   text: 'An error occurred during login. Please try again later.',
+    // });
   }
 };
 

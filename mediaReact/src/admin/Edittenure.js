@@ -46,6 +46,7 @@ const EditTenure = () => {
             })
             .catch(error => {
                 console.error('Error fetching tenure:', error);
+                throw error;
             });
     }, [id]);
 
@@ -81,20 +82,21 @@ const EditTenure = () => {
                     text: 'Tenure details successfully updated',
                 });
                 navigate("/admin/TenureList");
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Error updating tenure',
-                });
+            // } else {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Error',
+            //         text: 'Error updating tenure',
+            //     });
             }})
         .catch(error => {
             console.error('Fetch error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message || 'An error occurred while updating the tenure',
-            });
+            throw error;
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Error',
+            //     text: error.message || 'An error occurred while updating the tenure',
+            // });
         });
     };
     

@@ -22,7 +22,7 @@ const [userImage, setUserImage] = useState(null);
   };
 
   const token = sessionStorage.getItem("tokenn");
-  console.log("token", token);
+  // console.log("token", token);
 
   const handleLogout = async () => {
     try {
@@ -30,7 +30,7 @@ const [userImage, setUserImage] = useState(null);
       const token = sessionStorage.getItem("tokenn");
   
       if (!token) {
-        console.error("Token not found");
+        // console.error("Token not found");
         return;
       }
   
@@ -64,23 +64,24 @@ const [userImage, setUserImage] = useState(null);
   
           // Redirect to the admin page
           navigate('/admin');
-          console.log("Logged out successfully");
+          // console.log("Logged out successfully");
         } else {
-          console.error("Logout failed. Server responded with status:", response.status);
-          Swal.fire({
-            icon: 'error',
-            title: 'Logout failed',
-            text: 'Please try again later.',
-          });
+          // console.error("Logout failed. Server responded with status:", response.status);
+          // Swal.fire({
+          //   icon: 'error',
+          //   title: 'Logout failed',
+          //   text: 'Please try again later.',
+          // });
         }
       }
     } catch (error) {
       console.error("An error occurred during logout:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while logging out. Please try again later.',
-      });
+      // throw error;
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: 'An error occurred while logging out. Please try again later.',
+      // });
     }
   };
   
@@ -99,10 +100,11 @@ const [userImage, setUserImage] = useState(null);
       if (response.status === 200) {
         const data = response.data;
         setcount(data);
-        console.log("count",data)
+        // console.log("count",data)
       }
     } catch (error) {
       console.error("Error fetching unread count:", error);
+      // throw error;
     }
   };
 
@@ -119,6 +121,7 @@ const [userImage, setUserImage] = useState(null);
         }
     } catch (error) {
         console.error("Error marking all notifications as read:", error);
+        // throw error;
     }
 };
 

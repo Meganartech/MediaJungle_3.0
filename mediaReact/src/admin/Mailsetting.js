@@ -65,12 +65,13 @@ const Mailsetting = () => {
       }
     } catch (error) {
       console.error("Error configuring mail:", error);
-      Swal.fire({
-        title: "Error!",
-        text: "There was an error configuring the mail settings.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+      throw error;
+      // Swal.fire({
+      //   title: "Error!",
+      //   text: "There was an error configuring the mail settings.",
+      //   icon: "error",
+      //   confirmButtonText: "OK",
+      // });
     }
   };
 
@@ -87,6 +88,7 @@ const Mailsetting = () => {
       }
     } catch (err) {
       console.error("Error fetching mail configuration:", err);
+      throw err;
     }
   };
 

@@ -29,6 +29,7 @@ const Editcastandcrew = () => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
+                throw error;
             });
     }, [id]);
 
@@ -47,6 +48,7 @@ const Editcastandcrew = () => {
                 }
             } catch (error) {
                 console.error('Error fetching or processing image data:', error);
+                throw error;
             }
         };
         fetchData();
@@ -90,12 +92,13 @@ const Editcastandcrew = () => {
             });
         } catch (error) {
             console.error('Error updating:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Failed to update. Please try again later.', // Customize your error message
-                showConfirmButton: true
-            });
+            throw error;
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Error',
+            //     text: 'Failed to update. Please try again later.', // Customize your error message
+            //     showConfirmButton: true
+            // });
         }
     };
 

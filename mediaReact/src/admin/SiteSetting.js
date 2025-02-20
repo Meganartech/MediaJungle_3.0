@@ -40,6 +40,7 @@ const SiteSetting = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -111,12 +112,13 @@ const SiteSetting = () => {
         confirmButtonText: 'OK',
       });
     } catch (error) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error adding settings.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'There was an error adding settings.',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK',
+      // });
+      throw error;
     }
   };
 

@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.Container.VideoContainer;
 
 @Controller
@@ -20,7 +23,8 @@ public class videoBannerController {
 	@Autowired
 	private VideoBannerRepository videobannerrepository;
 	
-		
+	private static final Logger logger = LoggerFactory.getLogger(videoBannerController.class);
+
 	
 	public ResponseEntity<?> createVideoBanner(@RequestBody List<VideoBanner> videoBannerRequest) {
 		try {
@@ -48,6 +52,7 @@ public class videoBannerController {
 	        return ResponseEntity.ok().build();
 	    } catch (Exception e) {
 	        e.printStackTrace();  // Print the stack trace for debugging
+	        logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                             .body("An error occurred while processing the banner: " + e.getMessage());
 	    }
@@ -84,7 +89,7 @@ public class videoBannerController {
 	    } catch (Exception e) {
 	        // Log the exception if needed
 	        e.printStackTrace(); // Optional: Print the stack trace for debugging
-
+	        logger.error("", e);
 	        // Return an error response
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                             .body(null); // You might want to return a specific message here

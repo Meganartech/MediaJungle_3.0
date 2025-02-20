@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 
 @Controller
@@ -22,6 +25,8 @@ public class VideoImageController {
 	@Autowired
 	private VideoImageRepository videoimagerepository;
 
+	private static final Logger logger = LoggerFactory.getLogger(VideoImageController.class);
+	
 	public ResponseEntity<Map<String, byte[]>> getVideoImagesByVideoId(@PathVariable Long id) {
 	    try {
 	        // Fetching the video images from the repository
@@ -50,6 +55,7 @@ public class VideoImageController {
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();  // Replace with proper logging in production
+	        logger.error("", e);
 	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 	}
@@ -106,6 +112,7 @@ public class VideoImageController {
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();  // Replace with proper logging in production
+	        logger.error("", e);
 	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 	}
@@ -132,6 +139,7 @@ public class VideoImageController {
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();  // Replace with proper logging in production
+	        logger.error("", e);
 	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 	}

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.notification.NotificationDetails;
@@ -47,6 +50,8 @@ public class NotificationController {
 	 
 	 @Autowired
 	 private NotificationService notificationservice;
+	 
+	 private static final Logger logger = LoggerFactory.getLogger(NotificationController.class);
 
 	 
 	 public ResponseEntity<?>GetAllNotification(@RequestHeader("Authorization") String token){
@@ -74,6 +79,7 @@ public class NotificationController {
 		        				 notidetails.setNotimage(images);
 		        	            } catch (Exception e) {
 		        	                e.printStackTrace();
+		        	                logger.error("", e);
 		        	            }
 		        			 }
 		        			 notimap.add(notidetails);
@@ -87,6 +93,7 @@ public class NotificationController {
 		         }
 		         
 			}catch (Exception e) {
+				logger.error("", e);
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
 	        }
 		}
@@ -117,6 +124,7 @@ public class NotificationController {
 		        				 notidetails.setNotimage(images);
 		        	            } catch (Exception e) {
 		        	                e.printStackTrace();
+		        	                logger.error("", e);
 		        	            }
 		        			 }
 		        			 notimap.add(notidetails);
@@ -130,6 +138,7 @@ public class NotificationController {
 		         }
 		         
 			}catch (Exception e) {
+				logger.error("", e);
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
 	        }
 		}
@@ -152,6 +161,7 @@ public class NotificationController {
 	                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	            }
 	        } catch (Exception e) {
+	        	logger.error("", e);
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
 	        }
 	    }
@@ -173,6 +183,7 @@ public class NotificationController {
 	                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	            }
 	        } catch (Exception e) {
+	        	logger.error("", e);
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
 	        }
 	    }
@@ -196,6 +207,7 @@ public class NotificationController {
 		        	 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		         }	
 		}catch (Exception e) {
+			logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
 	    }
 
@@ -222,6 +234,7 @@ public class NotificationController {
 		         
 			
 		}catch (Exception e) {
+			logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
 	    }
 
@@ -251,6 +264,7 @@ public class NotificationController {
 	         }
 			}catch (Exception e) {
 				e.printStackTrace();
+				logger.error("", e);
 	             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
 	         }
 		}
@@ -280,6 +294,7 @@ public class NotificationController {
 	         }
 			}catch (Exception e) {
 				e.printStackTrace();
+				logger.error("", e);
 	             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
 	         }
 		}

@@ -39,6 +39,7 @@ const ListAudio = () => {
         console.log(response.data) 
       } catch (error) {
         console.log('Error fetching users:', error);
+        throw error;
       }
     };
     
@@ -76,20 +77,21 @@ const ListAudio = () => {
               'The video has been deleted.',
               'success'
             );
-          } else {
-            Swal.fire(
-              'Error!',
-              'There was a problem deleting the video.',
-              'error'
-            );
+          // } else {
+          //   Swal.fire(
+          //     'Error!',
+          //     'There was a problem deleting the video.',
+          //     'error'
+          //   );
           }
         } catch (error) {
           console.error('Error:', error);
-          Swal.fire(
-            'Error!',
-            'There was a problem deleting the video.',
-            'error'
-          );
+          throw error;
+          // Swal.fire(
+          //   'Error!',
+          //   'There was a problem deleting the video.',
+          //   'error'
+          // );
         }
       }
     });

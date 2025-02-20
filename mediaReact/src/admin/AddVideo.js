@@ -226,6 +226,7 @@ const cancelEditAdTime = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -243,6 +244,7 @@ const cancelEditAdTime = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -292,6 +294,7 @@ const hasPaymentPlan = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
 
     fetch(`${API_URL}/api/v2/GetAllCertificate`)
@@ -306,6 +309,7 @@ const hasPaymentPlan = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
 
       fetch(`${API_URL}/api/v2/GetAllTag`)
@@ -320,6 +324,7 @@ const hasPaymentPlan = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
     }, []);
 
@@ -592,15 +597,16 @@ const save = async (e) => {
     }
   } catch (error) {
     // Handle other errors
-    await swalWithProgress.fire({
-      icon: 'error',
-      title: 'Error!',
-      text: 'An error occurred',
-      timer: 2000,
-      didOpen: () => {
-        Swal.showLoading(); // Show the loading spinner
-      }
-    });
+    // await swalWithProgress.fire({
+    //   icon: 'error',
+    //   title: 'Error!',
+    //   text: 'An error occurred',
+    //   timer: 2000,
+    //   didOpen: () => {
+    //     Swal.showLoading(); // Show the loading spinner
+    //   }
+    // });
+    throw error;
   }
 };
 
@@ -668,7 +674,8 @@ useEffect(() => {
               setcategoriesvaluelist(categoryNames);
               // Handle the category names as needed
             })
-            .catch(error => console.error('Error fetching category names:', error));
+            .catch(error => {console.error('Error fetching category names:', error);
+              throw error;});
         }
 
         // Now fetch the cast and crew names by IDs
@@ -682,7 +689,7 @@ if (data.castandcrewlist && data.castandcrewlist.length > 0) {  // Corrected con
       console.log('Cast and Crew Names:', castNames); // Updated logging
       setcastandcrewlistvalue(castNames); // Ensure this function exists and handles the data correctly
     })
-    .catch(error => console.error('Error fetching cast and crew names:', error));
+    .catch(error => {console.error('Error fetching cast and crew names:', error); throw error;});
 }
 
 // Now fetch the cast and crew names by IDs
@@ -696,12 +703,12 @@ if (data.taglist && data.taglist.length > 0) {  // Corrected condition
       console.log('tag Names:', tagNames); // Updated logging
       settaglistvalue(tagNames); // Ensure this function exists and handles the data correctly
     })
-    .catch(error => console.error('Error fetching tag names:', error));
+    .catch(error => {console.error('Error fetching tag names:', error); throw error;});
 }
 
 
       })
-      .catch(error => console.error('Error fetching video details:', error));
+      .catch(error => {console.error('Error fetching video details:', error); throw error;});
 
     // Fetch the video images based on videoId
     fetch(`${API_URL}/api/v2/videoimage/${videoId}`)
@@ -711,7 +718,7 @@ if (data.taglist && data.taglist.length > 0) {  // Corrected condition
         settrailerthumbnailUrl(`data:image/png;base64,${data.trailerThumbnail}`);
         setuserbannerUrl(`data:image/png;base64,${data.userBanner}`);
       })
-      .catch(error => console.error('Error fetching video images:', error));
+      .catch(error => {console.error('Error fetching video images:', error);});
   }
 }, [videoId]);
 
@@ -814,15 +821,16 @@ const handleUpdate = async (e) => {
     }
   } catch (error) {
     // Handle other errors
-    await swalWithProgress.fire({
-      icon: 'error',
-      title: 'Error!',
-      text: 'An error occurred',
-      timer: 2000,
-      didOpen: () => {
-        Swal.showLoading(); // Show the loading spinner
-      }
-    });
+    // await swalWithProgress.fire({
+    //   icon: 'error',
+    //   title: 'Error!',
+    //   text: 'An error occurred',
+    //   timer: 2000,
+    //   didOpen: () => {
+    //     Swal.showLoading(); // Show the loading spinner
+    //   }
+    // });
+    throw error;
   }
 };
 

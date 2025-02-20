@@ -29,6 +29,7 @@ const PlanDetailsList = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -87,6 +88,7 @@ const PlanDetailsList = () => {
             .catch(error => {
                 console.error('Error deleting plan:', error);
                 Swal.fire('Error!', 'Failed to delete plan. Please try again later.', 'error');
+                throw error;
             });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
             console.log('Delete operation cancelled');

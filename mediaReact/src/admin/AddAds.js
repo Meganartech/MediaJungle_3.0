@@ -99,11 +99,12 @@ const AddAds = () => {
     })
     .catch(error => {
         console.error('Error:', error); // Log any error during the fetch
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'An error occurred while inserting the ad.',
-        });
+        // Swal.fire({
+        //     icon: 'error',
+        //     title: 'Error',
+        //     text: 'An error occurred while inserting the ad.',
+        // });
+        throw error
     });
 };
 
@@ -146,6 +147,7 @@ const AddAds = () => {
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
+        throw error
       });
   }, []);
   useEffect(() => {
@@ -163,7 +165,7 @@ const AddAds = () => {
           setVideoUrl(`${API_URL}/${data.videoFilePath.replace(/\\/g, '/')}`); // For preview
           setVideofile(null); // Reset file input
         })
-        .catch(error => console.error('Error fetching ad details:', error));
+        .catch(error => {console.error('Error fetching ad details:', error);throw error; })
     }
   }, [adId]);
   
@@ -196,20 +198,15 @@ const AddAds = () => {
             title: 'Success',
             text: 'Ad details successfully updated',
           });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error updating ad',
-          });
-        }
+        } 
       })
       .catch(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'An error occurred while updating the ad',
-        });
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: 'Error',
+        //   text: 'An error occurred while updating the ad',
+        // });
+        throw error;
       });
   };
   
