@@ -27,6 +27,7 @@ const PlanFeature = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
   const handleClick = (link) => {
@@ -76,11 +77,12 @@ const handleDeleteFeature = (featureId) => {
       })
       .catch(error => {
         console.error('Error deleting feature:', error);
-        Swal.fire(
-          'Error!',
-          'There was a problem deleting your feature. Please try again later.',
-          'error'
-        );
+        throw error;
+        // Swal.fire(
+        //   'Error!',
+        //   'There was a problem deleting your feature. Please try again later.',
+        //   'error'
+        // );
       });
     }
   });

@@ -111,6 +111,7 @@ const Email_setting = () => {
       }
     } catch (error) {
       console.error('Error:', error);
+      throw error;
       // Handle the error here
     }
   };

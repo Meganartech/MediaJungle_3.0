@@ -4,7 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.VsmartEngine.MediaJungle.Banner.videoBannerController;
+
 public class ImageUtils {
+	private static final Logger logger = LoggerFactory.getLogger(ImageUtils.class);
 
 	public static byte[] compressImage(byte[] data) {
         Deflater deflater = new Deflater();
@@ -21,6 +27,8 @@ public class ImageUtils {
         try {
             outputStream.close();
         } catch (Exception ignored) {
+        	logger.error("", ignored);
+
         }
         return outputStream.toByteArray();
     }
@@ -37,6 +45,7 @@ public class ImageUtils {
             }
             outputStream.close();
         } catch (Exception ignored) {
+        	logger.error("", ignored);
         }
         return outputStream.toByteArray();
     }

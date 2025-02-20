@@ -38,6 +38,7 @@ const EditTag = () => {
       })
       .catch(error => {
         console.error('Error fetching tag:', error);
+        throw error;
       });
   }, [id]);
 
@@ -65,22 +66,23 @@ const handleSubmit = (e) => {
         title: 'Success',
         text: 'Tag details successfully updated',
       });
-    } else {
-      console.log('Error updating Tag');
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Error updating tag',
-      });
+    // } else {
+    //   console.log('Error updating Tag');
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: 'Error',
+    //     text: 'Error updating tag',
+    //   });
     }
   })
   .catch((error) => {
     console.log('Error updating tag:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An error occurred while updating the tag',
-    });
+    throw error;
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Error',
+    //   text: 'An error occurred while updating the tag',
+    // });
   });
 };
 

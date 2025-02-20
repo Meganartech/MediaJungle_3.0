@@ -50,11 +50,12 @@ const handleSubmit = (e) => {
   })
   .catch(error => {
     console.error('Error:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An error occurred while inserting the language.',
-    });
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Error',
+    //   text: 'An error occurred while inserting the language.',
+    // });
+    throw error;
   });
 };
 
@@ -74,7 +75,7 @@ const handleSubmit = (e) => {
        .then(data => {
          setlanguageName(data.language);  
        })
-       .catch(error => console.error('Error fetching video details:', error));
+       .catch(error => {console.error('Error fetching video details:', error);throw error;});
    }
  }, [languageId]);
  
@@ -113,11 +114,12 @@ const handleSubmit = (e) => {
   })
   .catch((error) => {
     console.log('Error updating language:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An error occurred while updating the language',
-    });
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Error',
+    //   text: 'An error occurred while updating the language',
+    // });
+    throw error;
   });
 };
 

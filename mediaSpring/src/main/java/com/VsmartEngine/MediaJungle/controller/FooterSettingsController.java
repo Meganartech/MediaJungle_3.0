@@ -1,5 +1,7 @@
 package com.VsmartEngine.MediaJungle.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.FooterSettings;
 import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
 
@@ -22,6 +25,9 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
         private FooterSettingsRepository repository;
 
         private final String UPLOAD_DIR = "src/main/resources/static/uploads/";
+        
+        private static final Logger logger = LoggerFactory.getLogger(FooterSettingsController.class);
+
 
         @PostMapping("/submit")
         public ResponseEntity<?> submitFooterSettings(
@@ -72,6 +78,7 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
                 
                 return ResponseEntity.ok("Form submitted successfully!");
             } catch (Exception e) {
+            	logger.error("", e);
                 return ResponseEntity.status(500).body("Error submitting the form: " + e.getMessage());
             }
         }
@@ -139,6 +146,7 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
 
                 return ResponseEntity.ok("FooterSettings updated successfully!");
             } catch (Exception e) {
+            	logger.error("", e);
                 return ResponseEntity.status(500).body("Error updating the FooterSettings: " + e.getMessage());
             }
         }
@@ -155,6 +163,7 @@ import com.VsmartEngine.MediaJungle.repository.FooterSettingsRepository;
 
                 return ResponseEntity.ok(footerSettings);
             } catch (Exception e) {
+            	logger.error("", e);
                 return ResponseEntity.status(500).body("Error retrieving footer settings: " + e.getMessage());
             }
         }

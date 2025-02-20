@@ -28,6 +28,7 @@ const Viewcastandcrew = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -72,20 +73,21 @@ const Viewcastandcrew = () => {
           .catch(error => {
             console.error('Error deleting cast and crew:', error);
 
-            Swal.fire({
-              title: 'Error!',
-              text: 'There was an error deleting the cast and crew.',
-              icon: 'error',
-              confirmButtonText: 'OK',
-            });
+            // Swal.fire({
+            //   title: 'Error!',
+            //   text: 'There was an error deleting the cast and crew.',
+            //   icon: 'error',
+            //   confirmButtonText: 'OK',
+            // });
+            throw error;
           });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: 'Cancelled',
-          text: 'Your cast and crew are safe :)',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
+        // Swal.fire({
+        //   title: 'Cancelled',
+        //   text: 'Your cast and crew are safe :)',
+        //   icon: 'error',
+        //   confirmButtonText: 'OK',
+        // });
       }
     });
   };

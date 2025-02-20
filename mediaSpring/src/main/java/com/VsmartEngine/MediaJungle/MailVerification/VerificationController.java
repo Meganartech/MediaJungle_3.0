@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
 import com.VsmartEngine.MediaJungle.userregister.UserRegister;
@@ -34,6 +37,8 @@ public class VerificationController {
 	private AddUserRepository adduserrepository;
     
     private final ConcurrentHashMap<String, String> verificationCodeStore = new ConcurrentHashMap<>();
+    
+    private static final Logger logger = LoggerFactory.getLogger(VerificationController.class);
      
     public ResponseEntity<String> sendCodewhileRegister(@RequestParam String email) {
         try {        
@@ -65,7 +70,7 @@ public class VerificationController {
         } catch (Exception e) {
             // Log the exception
             System.err.println("Error occurred: " + e.getMessage());
-
+            logger.error("", e);
             // Return a generic error response
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while processing your request. Please try again later.");
@@ -102,7 +107,7 @@ public class VerificationController {
         } catch (Exception e) {
             // Log the exception
             System.err.println("Error occurred: " + e.getMessage());
-
+            logger.error("", e);
             // Return a generic error response
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while processing your request. Please try again later.");
@@ -131,6 +136,7 @@ public class VerificationController {
         } catch (Exception e) {
             // Log the exception
             System.err.println("Error during verification: " + e.getMessage());
+            logger.error("", e);
             // Return generic server error
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("{\"message\": \"An error occurred during verification. Please try again later.\"}"+ e.getMessage());

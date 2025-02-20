@@ -121,6 +121,7 @@ const [videoexistingData, setvideoExistingData] = useState([]); // Create a ref 
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
     fetchbannerContainers();
   }, []);
@@ -147,6 +148,7 @@ const [videoexistingData, setvideoExistingData] = useState([]); // Create a ref 
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
     };
 
@@ -290,22 +292,23 @@ const handlevideoDropdownToggle = (index) => {
                     fetchbannerContainers();
                 }
             });
-        } else {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Error saving Videobanners',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+        // } else {
+        //     Swal.fire({
+        //         title: 'Error!',
+        //         text: 'Error saving Videobanners',
+        //         icon: 'error',
+        //         confirmButtonText: 'OK'
+        //     });
         }
     } catch (error) {
         console.error('Error uploading data:', error);
-        Swal.fire({
-            title: 'Error!',
-            text: 'Error uploading data',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
+        throw error;
+        // Swal.fire({
+        //     title: 'Error!',
+        //     text: 'Error uploading data',
+        //     icon: 'error',
+        //     confirmButtonText: 'OK'
+        // });
     }
 };
 
@@ -406,12 +409,13 @@ const handleVideoDelete = async (index) => {
         });
       } catch (error) {
         console.error(error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'Failed to delete the VideoContainer',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
+        throw error;
+        // Swal.fire({
+        //   title: 'Error!',
+        //   text: 'Failed to delete the VideoContainer',
+        //   icon: 'error',
+        //   confirmButtonText: 'OK'
+        // });
       }
     }
     else{
@@ -500,6 +504,7 @@ useEffect(() => {
     })
     .catch(error => {
       console.error('Error fetching data:', error);
+      throw error;
     });
     fetchAudiobanner();
 }, []);
@@ -527,6 +532,7 @@ const fetchAudiobanner = async () => {
     })
     .catch(error => {
       console.error('Error fetching data:', error);
+      throw error;
     });
   };
 
@@ -730,22 +736,23 @@ const handleaudioOptionClick = (option, index) => {
                     fetchbannerContainers();
                 }
             });
-        } else {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Error saving Audiobanners',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+        // } else {
+        //     Swal.fire({
+        //         title: 'Error!',
+        //         text: 'Error saving Audiobanners',
+        //         icon: 'error',
+        //         confirmButtonText: 'OK'
+        //     });
         }
     } catch (error) {
         console.error('Error uploading data:', error);
-        Swal.fire({
-            title: 'Error!',
-            text: 'Error uploading data',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
+        throw error;
+        // Swal.fire({
+        //     title: 'Error!',
+        //     text: 'Error uploading data',
+        //     icon: 'error',
+        //     confirmButtonText: 'OK'
+        // });
     }
 };
 
@@ -776,12 +783,13 @@ const handleAudioDelete = async (index) => {
         });
       } catch (error) {
         console.error(error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'Failed to delete the AudioBanner',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
+        throw error;
+        // Swal.fire({
+        //   title: 'Error!',
+        //   text: 'Failed to delete the AudioBanner',
+        //   icon: 'error',
+        //   confirmButtonText: 'OK'
+        // });
       }
     }
     else{

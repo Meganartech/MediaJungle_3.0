@@ -75,11 +75,12 @@ const AddTenure = () => {
         .catch(error => {
             setErrorMessage('Error occurred while inserting tenure.');
             console.error('Error:', error); // Log the error
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred while inserting the tenure.',
-            });
+            throw error;
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Error',
+            //     text: 'An error occurred while inserting the tenure.',
+            // });
         });
     };
 

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.controller.CategoryController;
 import com.VsmartEngine.MediaJungle.controller.VideoCastAndCrewController;
@@ -80,6 +83,7 @@ public class AudioContainerController {
 	@Autowired
 	private CastandcrewRepository CastandcrewRepository;
 	
+	private static final Logger logger = LoggerFactory.getLogger(AudioContainerController.class);
     @PostMapping("/audiocontainer")
 	public ResponseEntity<?> Audioconatiner(@RequestBody List<AudioContainer> data) {
 		
@@ -198,6 +202,7 @@ public class AudioContainerController {
 				return new ResponseEntity<>("Audio not found with ID: " + id, HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
+			logger.error("", e);
 			return new ResponseEntity<>("An error occurred while deleting audio with ID: " + id,
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}

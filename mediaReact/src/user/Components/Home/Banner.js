@@ -32,6 +32,8 @@ const Banner = () => {
             console.log(data)
         } catch (error) {
             console.error('Error fetching data:', error);
+    throw error;
+
         }
     };
 
@@ -50,6 +52,8 @@ const Banner = () => {
             }
         } catch (error) {
             console.error('Error fetching or processing image data:', error);
+    throw error;
+
         }
     };
 

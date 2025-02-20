@@ -3,12 +3,15 @@ package com.VsmartEngine.MediaJungle.MailVerification;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.model.MailSetting;
 import com.VsmartEngine.MediaJungle.repository.MailsettingRepository;
 
@@ -21,6 +24,7 @@ public class EmailService {
 	 @Autowired
 	 private MailsettingRepository mailsettingrepository;
 	 	 
+	 private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 	// Send email with dynamic configuration and return success status
 	 public boolean sendEmail(String to, String subject, String body) {
 	     try {
@@ -71,6 +75,7 @@ public class EmailService {
 	     } catch (Exception e) {
 	         // Log the error (use proper logging in production)
 	         e.printStackTrace();
+	         logger.error("", e);
 	         return false; // Email sending failed
 	     }
 	 }

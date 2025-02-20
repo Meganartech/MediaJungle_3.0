@@ -66,6 +66,7 @@ const Video = () => {
         console.log(response.data) 
       } catch (error) {
         console.log('Error fetching users:', error);
+        throw error;
       }
     };
     
@@ -102,19 +103,20 @@ const Video = () => {
               'success'
             );
           } else {
-            Swal.fire(
-              'Error!',
-              'There was a problem deleting the video.',
-              'error'
-            );
+            // Swal.fire(
+            //   'Error!',
+            //   'There was a problem deleting the video.',
+            //   'error'
+            // );
           }
         } catch (error) {
           console.error('Error:', error);
-          Swal.fire(
-            'Error!',
-            'There was a problem deleting the video.',
-            'error'
-          );
+          throw error;
+          // Swal.fire(
+          //   'Error!',
+          //   'There was a problem deleting the video.',
+          //   'error'
+          // );
         }
       }
     });
@@ -172,12 +174,13 @@ const Video = () => {
       })
       .catch((error) => {
         console.error('Error:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'An error occurred while deleting the videos. Please try again.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
+        throw error;
+        // Swal.fire({
+        //   title: 'Error!',
+        //   text: 'An error occurred while deleting the videos. Please try again.',
+        //   icon: 'error',
+        //   confirmButtonText: 'OK',
+        // });
       });
   };
 

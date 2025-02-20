@@ -131,7 +131,8 @@ const AdminSignin = () => {
             }
           } catch (error) {
             console.error('Error:', error);
-            swal.fire('Error', 'An error occurred while registering. Please try again.', 'error');
+            // swal.fire('Error', 'An error occurred while registering. Please try again.', 'error');
+            throw error;
           }
         }
       };

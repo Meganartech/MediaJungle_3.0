@@ -48,11 +48,12 @@ const handleSubmit = (e) => {
   })
   .catch(error => {
     console.error('Error:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An error occurred while inserting the tag.',
-    });
+    throw error;
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Error',
+    //   text: 'An error occurred while inserting the tag.',
+    // });
   });
 };
 
@@ -74,7 +75,7 @@ const handleSubmit = (e) => {
          console.log('Video Details:', data); // Log the video details
          setTagName(data.tag);
        })
-       .catch(error => console.error('Error fetching video details:', error));
+       .catch(error => {console.error('Error fetching video details:', error);throw error;});
    }
  }, [tagId]);
  
@@ -113,11 +114,12 @@ const handleSubmit = (e) => {
   })
   .catch((error) => {
     console.log('Error updating tag:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An error occurred while updating the tag',
-    });
+    throw error;
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Error',
+    //   text: 'An error occurred while updating the tag',
+    // });
   });
 };
 

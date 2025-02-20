@@ -43,6 +43,8 @@ function Subscription_details() {
           .catch(error => {
               setError(error.message);
               setLoading(false);
+    throw error;
+
           });
   }, [jwtToken, userId]);
  
@@ -60,6 +62,8 @@ function Subscription_details() {
           })
           .catch(error => {
               console.error('Error fetching data:', error);
+    throw error;
+
           });
   }, []);
 

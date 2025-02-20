@@ -23,7 +23,7 @@
           setTenures(data);
           console.log('Fetched Tenures:', data);
         })
-        .catch((error) => console.error('Error fetching tenures:', error));
+    .catch((error) => {console.error('Error fetching tenures:', error);throw error;} );
     }, []);
     useEffect(() => {
       fetch(`${API_URL}/api/v2/GetAllPlans`)
@@ -40,7 +40,7 @@
           const planIds = data.map(plan => plan.id);
           fetchFeaturesForPlans(planIds);
         })
-        .catch((error) => console.error('Error fetching plans:', error));
+        .catch((error) => {console.error('Error fetching plans:', error);throw error;});
     }, []);
     
 
@@ -52,7 +52,7 @@
             setFeaturesByPlan((prev) => ({ ...prev, [planId]: data }));
             console.log(`Fetched Features for Plan ${planId}:`, data);
           })
-          .catch((error) => console.error(`Error fetching features for plan ${planId}:`, error));
+          .catch((error) => {console.error(`Error fetching features for plan ${planId}:`, error);throw error;});
       });
     };
 
@@ -63,7 +63,7 @@
           setFeatures(data);
           console.log('Fetched Features:', data);
         })
-        .catch((error) => console.error('Error fetching all features:', error));
+        .catch((error) => {console.error('Error fetching all features:', error);throw error;});
     }, []);
 
     const userId = sessionStorage.getItem('userId');
@@ -159,7 +159,8 @@
           pay.open();
   
       } catch (error) {
-          Swal.fire('Error', error.message || 'Error calculating discount or processing payment', 'error');
+          // Swal.fire('Error', error.message || 'Error calculating discount or processing payment', 'error');
+          throw error;
       }
   };
   
@@ -199,6 +200,7 @@
         console.log('Payment Confirmation:', result);
     } catch (error) {
         console.error('Error confirming payment:', error);
+        throw error;
     }
 };
 
@@ -244,6 +246,7 @@ useEffect(() => {
 
       } catch (error) {
         console.error('Error fetching discounted amounts:', error);
+        throw error;
       }
     };
 
@@ -266,6 +269,7 @@ useEffect(() => {
         })
         .catch(error => {
           console.error('Error fetching data:', error);
+          throw error;
         });
     }, []);
     // const sendPaymentIdToServer = async (Amount, paymentId, orderId, statusCode, planname, userId, tenureId, signature) => {

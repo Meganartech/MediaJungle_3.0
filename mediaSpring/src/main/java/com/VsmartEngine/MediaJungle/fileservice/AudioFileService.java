@@ -8,9 +8,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile; 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.VsmartEngine.MediaJungle.LogManagement; 
 
 @Service
 public class AudioFileService {
@@ -18,6 +22,8 @@ public class AudioFileService {
     @Value("${upload.audio.directory}")
     private String audioUploadDirectory;
 
+    private static final Logger logger = LoggerFactory.getLogger(AudioFileService.class);
+    
     public String saveAudioFile(MultipartFile audioFile) throws IOException {
         // Generate a unique file name (you can use other strategies)
         String uniqueFileName = System.currentTimeMillis() + "_" + audioFile.getOriginalFilename();
@@ -76,6 +82,7 @@ public class AudioFileService {
             return deleted; // Return the result to the caller
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("", e);
             System.out.println("Error occurred while deleting the file");
             return false; // Return false in case of an exception
         }

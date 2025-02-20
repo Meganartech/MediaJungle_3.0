@@ -37,6 +37,7 @@ const EditLanguage = () => {
       })
       .catch(error => {
         console.error('Error fetching language:', error);
+        throw error;
       });
   }, [id]);
 
@@ -74,11 +75,12 @@ const handleSubmit = (e) => {
   })
   .catch((error) => {
     console.log('Error updating language:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An error occurred while updating the language',
-    });
+    throw error;
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Error',
+    //   text: 'An error occurred while updating the language',
+    // });
   });
 };
 

@@ -55,6 +55,8 @@ const ContactUs = () => {
             });
           } catch (error) {
             console.error('Error fetching contact Us data:', error);
+    throw error;
+
           }
         };
       

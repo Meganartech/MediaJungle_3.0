@@ -22,6 +22,7 @@ const EditCategory = () => {
       })
       .catch(error => {
         console.error('Error fetching category:', error);
+        throw error;
       });
   }, [id]);
 
@@ -57,20 +58,21 @@ const handleSubmit = (e) => {
       });
     } else {
       console.log('Error updating category');
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Error updating category',
-      });
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: 'Error updating category',
+      // });
     }
   })
   .catch((error) => {
     console.log('Error updating category:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An error occurred while updating the category',
-    });
+    throw error;
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Error',
+    //   text: 'An error occurred while updating the category',
+    // });
   });
 };
 

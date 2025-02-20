@@ -7,10 +7,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.exception.AudioNotFoundException;
 import com.VsmartEngine.MediaJungle.fileservice.AudioFileService;
@@ -37,6 +40,7 @@ public class AudioService {
     @Autowired
     private licenseRepository licenseRepository;
     
+    private static final Logger logger = LoggerFactory.getLogger(AudioService.class);
     
     public Addaudio1 saveAudioWithFile(MultipartFile audioFile, MultipartFile thumbnail, Long categoryId ,boolean paid) throws IOException {
         // Save the audio file to the server and get the file path
@@ -197,6 +201,7 @@ public class AudioService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return false; // Delete operation failed
         }
     }

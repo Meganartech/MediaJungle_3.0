@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.MailVerification.EmailService;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
@@ -45,6 +48,8 @@ public class UserRegisterController {
     
 	@Autowired
     private NotificationService notificationservice;  
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserRegisterController.class);
 
 	   public ResponseEntity<?> register(
 		        @RequestParam("username") String username,
@@ -80,6 +85,7 @@ public class UserRegisterController {
 
 		    } catch (Exception e) {
 		        // Handle exceptions
+		    	logger.error("", e);
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 		                .body("{\"message\": \"An error occurred while registering the user: \"}" + e.getMessage());
 		    }
@@ -111,6 +117,7 @@ public class UserRegisterController {
             return new ResponseEntity<>(getUser, HttpStatus.OK);
         } catch (Exception e) {
             // Handle exceptions and return 500 Internal Server Error
+        	logger.error("", e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -134,6 +141,9 @@ public class UserRegisterController {
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         String email = loginRequest.get("email");
         String password = loginRequest.get("password");
+        BCryptPasswordEncoder passwordEncoderr = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoderr.encode(password);
+        System.out.print(encodedPassword);
         Optional<UserRegister> userOptional = userregisterrepository.findByEmail(email);
         if (!userOptional.isPresent()) {
             // User with the provided email doesn't exist
@@ -141,6 +151,7 @@ public class UserRegisterController {
         }
         UserRegister user = userOptional.get();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        
         if (!passwordEncoder.matches(password, user.getPassword())) {
             // Incorrect password
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Incorrect password\"}");
@@ -176,6 +187,7 @@ public class UserRegisterController {
                     }
                 } catch (Exception e) {
                     // Handle any exceptions during notification creation
+                	logger.error("", e);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\": \"Error creating notification\"}");
                 }
             }
@@ -233,6 +245,7 @@ public class UserRegisterController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
@@ -282,8 +295,10 @@ public class UserRegisterController {
 
             return new ResponseEntity<>("User details updated successfully", HttpStatus.OK);
         } catch (IOException e) {
+        	logger.error("", e);
             return new ResponseEntity<>("Error processing profile image", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
+        	logger.error("", e);
             return new ResponseEntity<>("Error updating user details", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

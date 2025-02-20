@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.Paymentsettings;
 import com.VsmartEngine.MediaJungle.notification.service.NotificationService;
@@ -38,6 +41,8 @@ public class PaymentSettingController {
 	@Autowired
 	private AddUserRepository adduserrepository;
 	
+
+	private static final Logger logger = LoggerFactory.getLogger(PaymentSettingController.class);
 
 	public ResponseEntity<?>  Addpaymentsetting (@RequestParam("razorpay_key") String razorpay_key,
 			@RequestParam("razorpay_secret_key")String razorpay_secret_key,
@@ -77,6 +82,7 @@ public class PaymentSettingController {
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 	        }
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
 	    }
 	}
@@ -137,10 +143,10 @@ public class PaymentSettingController {
 
             return new ResponseEntity<>(" updated successfully", HttpStatus.OK);
         } catch (RuntimeException e) {
-            
+        	logger.error("", e);
             return new ResponseEntity<>("not found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            
+        	logger.error("", e);
             return new ResponseEntity<>("Error when updating", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

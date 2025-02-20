@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.VsmartEngine.MediaJungle.Banner.VideoBanner;
@@ -90,6 +91,8 @@ import com.VsmartEngine.MediaJungle.video.VideoController;
 import com.VsmartEngine.MediaJungle.video.VideoDescription;
 import com.VsmartEngine.MediaJungle.video.VideoImageController;
 import com.VsmartEngine.MediaJungle.video.VideoScreenDTO;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -180,6 +183,9 @@ public class FrontController {
 	private VerificationController verificationcontroller;
 	
 	@Autowired MailSettingController mailsettingcontroller;
+	
+	@Autowired 
+	private LogManagement logManagement;
 
 	
 	@PostMapping("/AdminRegister")
@@ -1400,6 +1406,26 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 		    	return mailsettingcontroller.getMailConfiguration();
 		    }
 		    
+		    @GetMapping("/test")
+		    public int getMailCon()  throws Exception {
+		    	 String url = "http://localhost:8010/v3/api-docs";
+		         RestTemplate restTemplate = new RestTemplate();
+		         String response = restTemplate.getForObject(url, String.class);
+
+		         ObjectMapper objectMapper = new ObjectMapper();
+		         JsonNode rootNode = objectMapper.readTree(response);
+		         JsonNode pathsNode = rootNode.path("paths");
+
+		         int totalApis = pathsNode.size();
+		         System.out.println("Total APIs: " + totalApis);
+		    	
+		    	return totalApis;
+		    }
+		    
+			@GetMapping("/log/time/{id}")
+			public ResponseEntity<?> errorSendindToMail(@PathVariable int id) {
+				return logManagement.logdetails(id);
+			}
 		    
 		    
 		    

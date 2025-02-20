@@ -48,6 +48,8 @@ function Footer() {
       })
       .catch(error => {
         console.error('Error fetching social settings:', error);
+    throw error;
+
       });
   }, []);
 
@@ -65,6 +67,8 @@ function Footer() {
       })
       .catch(error => {
         console.error('Error fetching contact settings:', error);
+    throw error;
+
       });
   }, []);
 

@@ -61,6 +61,7 @@ const ContactSetting = () => {
       }
     } catch (error) {
       console.error('Error fetching contact settings:', error);
+      throw error;
     }
   };
 
@@ -138,13 +139,14 @@ const ContactSetting = () => {
       });
     } catch (error) {
       console.error('Error adding contact settings:', error);
+      throw error;
 
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error adding contact settings.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'There was an error adding contact settings.',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK',
+      // });
     }
   };
 
@@ -178,23 +180,23 @@ const ContactSetting = () => {
           icon: 'success',
           confirmButtonText: 'OK',
         });
-      } else {
-        Swal.fire({
-          title: 'Error!',
-          text: 'There was an error updating contact settings.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
+      // } else {
+      //   Swal.fire({
+      //     title: 'Error!',
+      //     text: 'There was an error updating contact settings.',
+      //     icon: 'error',
+      //     confirmButtonText: 'OK',
+      //   });
       }
     } catch (error) {
       console.error('Error updating contact settings:', error);
-
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error updating contact settings.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
+      throw error;
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'There was an error updating contact settings.',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK',
+      // });
     }
   };
 

@@ -21,6 +21,7 @@ const Notification = ({ setisopen, isopen, setcount, handlemarkallasRead }) => {
         }
       } catch (error) {
         console.error('Error fetching data:', error);
+        throw error
       }
     };
 
@@ -41,6 +42,7 @@ const Notification = ({ setisopen, isopen, setcount, handlemarkallasRead }) => {
       }
     } catch (error) {
       console.error('Error clearing notifications:', error);
+      throw error
     }
   };
 

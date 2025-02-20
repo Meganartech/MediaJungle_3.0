@@ -25,6 +25,7 @@ const LibraryScreen = () => {
       setWatchlater(response.data);
     } catch (error) {
       console.error('Error fetching Watch Later videos:', error);
+      throw error;
     }
   };
 
@@ -35,6 +36,7 @@ const LibraryScreen = () => {
       setLikesSongs(response.data);
     } catch (error) {
       console.error('Error fetching Watch Later videos:', error);
+      throw error;
     }
   };
 
@@ -45,6 +47,7 @@ const LibraryScreen = () => {
       setPlaylist(response.data);
     } catch (error) {
       console.error('Error fetching Watch Later videos:', error);
+      throw error;
     }
   };
 
@@ -56,9 +59,9 @@ const LibraryScreen = () => {
     fetchPlaylist();
   }, []);
 
-  console.log("watchLater",watchLater);
-  console.log("likedSongs",likedSongs);
-  console.log("playlist",playlist);
+  // console.log("watchLater",watchLater);
+  // console.log("likedSongs",likedSongs);
+  // console.log("playlist",playlist);
 
   const [visibleIndex, setVisibleIndex] = useState(null);
   const [watchLaterList, setWatchLaterList] = useState(watchLater); 
@@ -139,6 +142,7 @@ const LibraryScreen = () => {
       } catch (error) {
         toast.error("Not created");
         console.error("Error creating playlist:", error.response?.data || error.message);
+        throw error;
     
     }
 };
@@ -168,6 +172,7 @@ const handleSubmitplaylist = async (e) => {
     } catch (error) {
       toast.error('Error creating playlist');
       console.error("Error creating playlist:", error.response?.data || error.message);
+      throw error;
   
   }
 };
@@ -193,6 +198,7 @@ const handleEditplaylistdetail = async (e, id) => {
   } catch (error) {
     console.error("Error editing playlist:", error.response?.data || error.message);
     toast.error("Error editing playlist:", error.response?.data || error.message);
+    throw error;
   }
 };
 
@@ -294,6 +300,7 @@ const toggleRemovesongButtonplaylist=(index)=>{
         } else {
           alert("Error occurred: " + error.message);
         }
+        throw error;
       }
     };
     const [play, setPlay] = useState(false);
@@ -331,7 +338,9 @@ const toggleRemovesongButtonplaylist=(index)=>{
       } catch (error) {
         console.error("Error removing video from watchlater", error);
         toast.error("Error removing video from watchlater");
+        
         return false;
+        throw error;
       }
     };
     
@@ -359,6 +368,7 @@ const toggleRemovesongButtonplaylist=(index)=>{
         console.error("Error removing video from watchlater", error);
         toast.error("Error removing song from playlist");
         return false;
+        throw error;
       }
     };
 
@@ -384,6 +394,7 @@ const toggleRemovesongButtonplaylist=(index)=>{
         toast.error(error);
         console.error("Error removing video from watchlater", error);
         return false;
+        throw error;
       }
     };
 
@@ -439,6 +450,7 @@ const toggleRemovesongButtonplaylist=(index)=>{
       console.error("Error removing playlist", error);
       toast.error(error);
       return false;
+      throw error;
     }
   };
 
@@ -466,6 +478,7 @@ const toggleRemovesongButtonplaylist=(index)=>{
     } catch (error) {
       console.error('Error adding audio to playlist:', error);
       toast.error("Error adding audio to playlist");
+      throw error;
       // Optionally, show an error message to the user
     }
   };
@@ -486,6 +499,7 @@ const toggleRemovesongButtonplaylist=(index)=>{
             } catch (err) {
                 // Handle errors, if any
                 setError('Playlist not found');
+                throw err;
             }
         };
         console.log("editplaylist",editplaylist);
@@ -502,6 +516,7 @@ const toggleRemovesongButtonplaylist=(index)=>{
       console.log("item",response.data)
     } catch (error) {
       console.error('Error fetching Watch Later videos:', error);
+      throw error;
     }
   };
 

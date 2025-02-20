@@ -55,6 +55,7 @@ const Profile = () => {
         console.log(response.data.userList)
       } catch (error) {
         console.log('Error fetching users:', error);
+        throw error;
       }
     };
 
@@ -108,21 +109,22 @@ const Profile = () => {
                   // Handle unsuccessful deletion and parse response
                   const resBody = await response.json().catch(() => null);
         
-                  Swal.fire({
-                    title: 'Error!',
-                    text: resBody?.message || 'An error occurred while deleting the user.',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                  });
+                  // Swal.fire({
+                  //   title: 'Error!',
+                  //   text: resBody?.message || 'An error occurred while deleting the user.',
+                  //   icon: 'error',
+                  //   confirmButtonText: 'OK',
+                  // });
                 }
               } catch (error) {
                 console.error('Error deleting user:', error);
-                Swal.fire({
-                  title: 'Error!',
-                  text: error.message || 'An error occurred. Please try again later.',
-                  icon: 'error',
-                  confirmButtonText: 'OK',
-                });
+                throw error;
+                // Swal.fire({
+                //   title: 'Error!',
+                //   text: error.message || 'An error occurred. Please try again later.',
+                //   icon: 'error',
+                //   confirmButtonText: 'OK',
+                // });
               }
             }
           });
@@ -168,12 +170,13 @@ const Profile = () => {
         })
         .catch((error) => {
           console.error('Error:', error);
-          Swal.fire({
-            title: 'Error!',
-            text: 'An error occurred while deleting the users. Please try again.',
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
+          throw error;
+          // Swal.fire({
+          //   title: 'Error!',
+          //   text: 'An error occurred while deleting the users. Please try again.',
+          //   icon: 'error',
+          //   confirmButtonText: 'OK',
+          // });
         });
     };
     

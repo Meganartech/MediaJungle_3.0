@@ -125,6 +125,8 @@ const Userplayer = () => {
         }
       } catch (error) {
         console.error('Error fetching ad timings:', error);
+    throw error;
+
       }
     };
 

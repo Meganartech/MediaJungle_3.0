@@ -36,6 +36,7 @@ const About_us = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error
       });
   }, []);
 
@@ -76,6 +77,7 @@ const About_us = () => {
       console.log('Upload successful:', data);
     } catch (error) {
       console.error('Error uploading audio:', error);
+      throw error
     }
 
     // Reset state after upload

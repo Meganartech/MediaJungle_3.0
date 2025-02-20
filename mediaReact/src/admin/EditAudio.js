@@ -23,6 +23,7 @@ const EditAudio = () => {
         setCategories(categoriesResponse.data);
       } catch (error) {
         console.error(error);
+        throw error;
       }
     };
     fetchData();
@@ -76,6 +77,7 @@ const EditAudio = () => {
       })
       .catch((error) => {
         console.log('Error updating category:', error);
+        throw error;
         // Handle errors more specifically as needed
       });
   };

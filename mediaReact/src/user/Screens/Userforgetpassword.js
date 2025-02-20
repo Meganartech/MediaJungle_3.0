@@ -30,6 +30,8 @@ const Userforgetpassword = () => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
+    throw error;
+
             });
     }, []);
 
@@ -72,6 +74,8 @@ const Userforgetpassword = () => {
         } catch (error) {
             // Handle exceptions here
             console.error("An error occurred", error);
+    throw error;
+
         }
     };
 

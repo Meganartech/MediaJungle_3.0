@@ -35,6 +35,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.License;
 import com.VsmartEngine.MediaJungle.repository.AddUserRepository;
@@ -65,14 +66,14 @@ public class LicenseController {
 		private String LicenceDirectory;
 	
 	
-	 
+	 private static final Logger logger = LoggerFactory.getLogger(LicenseController.class);
+
 
 	 
 	 private String valu;
 	 private String valu1;
 	 private String file;
-	 
-	 private  Logger logger = LoggerFactory.getLogger(LicenseController.class);
+	
 
 
 		public ResponseEntity<UserWithStatus> getAllUser() {
@@ -144,6 +145,7 @@ public class LicenseController {
 	    			 }
 	    			 catch(Exception e) {
 		                 e.printStackTrace();
+		                 logger.error("", e);
 		             }
 	    			
 	    		       
@@ -289,6 +291,7 @@ public class LicenseController {
 				             catch (Exception e) {
 				                 e.printStackTrace();
 				                 this.valu="123344";
+				                 logger.error("", e);
 				             }
 		    	
 		    	
@@ -463,6 +466,7 @@ public class LicenseController {
 		        } catch (ParserConfigurationException | SAXException |DateTimeParseException| IOException e) {
 		            e.printStackTrace();
 		            System.err.println("Error parsing date string:"+e.getMessage());
+		            logger.error("", e);
 		            return ResponseEntity.badRequest().build();
 		        }
 		    }

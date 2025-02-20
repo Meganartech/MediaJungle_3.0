@@ -1,8 +1,12 @@
 package com.VsmartEngine.MediaJungle.userregister;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+
+import com.VsmartEngine.MediaJungle.LogManagement;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,6 +19,7 @@ public class JwtUtil {
 	 private JwtConfig jwtConfig;
 	 
 	 public static final long JWT_EXPIRATION_MS = 86400000;
+	 private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
 	    public String generateToken(String username, String role) {
 	        Date now = new Date();
@@ -36,6 +41,7 @@ public class JwtUtil {
 	                .parseClaimsJws(token);
 	            return true;
 	        } catch (Exception e) {
+	        	logger.error("", e);
 	            return false;
 	        }
 	    }
@@ -49,6 +55,7 @@ public class JwtUtil {
 	            return claims.get("username", String.class);
 	        } catch (Exception e) {
 	            // Print or log the exception for debugging
+	        	logger.error("", e);
 	            e.printStackTrace();
 	            return null;
 	        }

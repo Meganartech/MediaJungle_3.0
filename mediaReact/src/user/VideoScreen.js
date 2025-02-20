@@ -45,6 +45,8 @@ const VideoScreen = () => {
       console.log(response.data)
     } catch (error) {
       console.error('Error fetching data:', error);
+    throw error;
+
     }
   };
 
@@ -58,6 +60,8 @@ const VideoScreen = () => {
         }
       } catch (error) {
         console.error('Error fetching thumbnail:', error);
+    throw error;
+
       }
     };
 

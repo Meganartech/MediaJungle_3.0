@@ -48,6 +48,7 @@ const Payment_setting = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -110,14 +111,14 @@ const Payment_setting = () => {
       });
     } catch (error) {
       console.error('Error uploading:', error);
-  
+      throw error;
       // Show error message
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error adding Razorpay settings.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'There was an error adding Razorpay settings.',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK',
+      // });
     }
   };
   
@@ -161,12 +162,13 @@ const Payment_setting = () => {
       }
     } catch (error) {
       console.log('Error updating razorpay:', error);
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error updating the razorpay.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
+      throw error;
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'There was an error updating the razorpay.',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK',
+      // });
     }
   };
 

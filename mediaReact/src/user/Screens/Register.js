@@ -279,6 +279,8 @@ const Register = () => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
+    throw error;
+                
             });
     }, []);
 
@@ -430,20 +432,22 @@ const Register = () => {
                         title: 'Server Error',
                         text: backendMessage || 'An internal server error occurred.',
                     });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Unexpected Error',
-                        text: backendMessage || 'An unexpected error occurred. Please try again.',
-                    });
+                // } else {
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Unexpected Error',
+                //         text: backendMessage || 'An unexpected error occurred. Please try again.',
+                //     });
                 }
             } else {
                 // If no response from the server
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Network Error',
-                    text: 'Failed to connect to the server. Please check your connection.',
-                });
+    throw sendError;
+
+                // Swal.fire({
+                //     icon: 'error',
+                //     title: 'Network Error',
+                //     text: 'Failed to connect to the server. Please check your connection.',
+                // });
             }
         }
     };
@@ -497,12 +501,14 @@ const Register = () => {
                 setErrors({ code: message });
             } else {
                 // Default fallback for other errors
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: message, // Fallback message
-                });
+                // Swal.fire({
+                //     icon: 'error',
+                //     title: 'Error',
+                //     text: message, // Fallback message
+                // });
                 setErrors({ code: message });
+    throw error;
+
             }
             return false; // Indicate verification failure
         }
@@ -549,11 +555,13 @@ const Register = () => {
             }
         } catch (error) {
             console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Operation Failed',
-                text: error.response.data ||'An error occurred. Please try again.',
-            });
+    throw error;
+
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Operation Failed',
+            //     text: error.response.data ||'An error occurred. Please try again.',
+            // });
         }
     };
 

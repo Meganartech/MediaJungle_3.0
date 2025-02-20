@@ -6,7 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Objects;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.exception.ResourceNotFoundException;
 import com.VsmartEngine.MediaJungle.model.Audiodescription;
@@ -39,6 +41,7 @@ public class PlaylistController {
 	@Autowired
 	private AddAudiodescription audio ;
 	
+	private static final Logger logger = LoggerFactory.getLogger(PlaylistController.class);
     public ResponseEntity<Playlist> createPlaylist(
         @RequestParam String title, @RequestParam String description,@RequestParam Long userId) {
 		Playlist playlist = new Playlist();
@@ -194,6 +197,7 @@ public class PlaylistController {
 
             return new ResponseEntity<>("playlist updated successfully", HttpStatus.OK);
         } catch (Exception e) {
+        	logger.error("", e);
             return new ResponseEntity<>("Error updating playlist", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -237,6 +241,7 @@ public class PlaylistController {
             return new ResponseEntity<>("Audio moved successfully", HttpStatus.OK);
 
         } catch (Exception e) {
+        	logger.error("", e);
             return new ResponseEntity<>("Error moving audio: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -21,6 +21,7 @@ const Users = () => {
         setUsers(response.data);
       } catch (error) {
         console.log('Error fetching users:', error);
+        throw error;
       }
     };
 
@@ -41,6 +42,7 @@ const Users = () => {
         }
       } catch (error) {
         console.log('Error deleting user:', error);
+        throw error;
       }
     }
   };

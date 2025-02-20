@@ -16,6 +16,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.fileservice.AudioFileService;
 import com.VsmartEngine.MediaJungle.model.AddUser;
@@ -87,6 +90,7 @@ public class AudioController1 {
 
 	 
 	 
+	 private static final Logger logger = LoggerFactory.getLogger(AudioController1.class);
 
 
 	 public ResponseEntity<Addaudio1> uploadAudio(@RequestParam("category") Long categoryId,
@@ -133,6 +137,7 @@ public class AudioController1 {
 	         }
 	     } catch (IOException e) {
 	         e.printStackTrace();
+	         logger.error("", e);
 	         return ResponseEntity.badRequest().build();
 	     }
 	 }
@@ -278,6 +283,7 @@ public class AudioController1 {
 	        } catch (Exception e) {
 	            // Handle exceptions
 	            e.printStackTrace();
+	            logger.error("", e);
 	        }
 
 	        // Return a 404 Not Found response if the file does not exist
@@ -302,6 +308,7 @@ public class AudioController1 {
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        logger.error("", e);
 	        return ResponseEntity.badRequest().build();
 	    }
 	}
@@ -373,7 +380,9 @@ public class AudioController1 {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
+        	logger.error("", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            
         }
     }
     
@@ -384,6 +393,7 @@ public class AudioController1 {
             return ResponseEntity.ok().body(filename);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -423,6 +433,7 @@ public class AudioController1 {
             }
         } catch (Exception e) {
             e.printStackTrace(); // Log the exception for debugging
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -469,6 +480,7 @@ public class AudioController1 {
             }
         } catch (Exception e) {
             e.printStackTrace(); // Log the exception for debugging
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -499,6 +511,7 @@ public class AudioController1 {
              }
          } catch (Exception e) {
              e.printStackTrace(); // Log the exception for debugging
+             logger.error("", e);
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
          }
     }
@@ -554,6 +567,7 @@ public class AudioController1 {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "An error occurred"));
         }
     }
@@ -615,6 +629,7 @@ public class AudioController1 {
            
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.badRequest().build();
         }
     }

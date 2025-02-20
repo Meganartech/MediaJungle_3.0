@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.AddNewCategories;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.AudioCategories;
@@ -69,6 +72,7 @@ public class CategoryController {
 	@Autowired
 	private TagRepository TagRepository;
 	
+	private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
 	public ResponseEntity<String> createCategory(@RequestHeader("Authorization") String token, @RequestBody AddNewCategories data) {
 	    try {
@@ -109,6 +113,7 @@ public class CategoryController {
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 	        }
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
 	    }
 	}
@@ -151,6 +156,7 @@ public class CategoryController {
 	            return ResponseEntity.status(HttpStatus.CREATED).build();
 	        } catch (Exception e) {
 	            e.printStackTrace();
+	            logger.error("", e);
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	        }
 	    }
@@ -186,6 +192,7 @@ public class CategoryController {
 	            return ResponseEntity.status(HttpStatus.CREATED).build();
 	        } catch (Exception e) {
 	            e.printStackTrace();
+	            logger.error("", e);
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	        }
 	    }
@@ -253,6 +260,7 @@ public class CategoryController {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authorized"));
 	        }
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
@@ -309,6 +317,7 @@ public class CategoryController {
 		        return new ResponseEntity<>("Category details updated successfully", HttpStatus.OK);
 		   }
 		   catch (Exception e) {
+			   logger.error("", e);
 		        return new ResponseEntity<>("Error updating Category details", HttpStatus.INTERNAL_SERVER_ERROR);
 		    }
 	}

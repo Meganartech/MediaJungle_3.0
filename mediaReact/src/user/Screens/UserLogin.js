@@ -24,6 +24,8 @@ const UserLogin = () => {
       }
     } catch (err) {
       console.error('Error fetching mail configuration:', err);
+    throw err;
+
     }
   };
 
@@ -47,6 +49,8 @@ const UserLogin = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+    throw error;
+
       });
   }, []);
 
@@ -94,6 +98,8 @@ const UserLogin = () => {
       } catch (error) {
           // Handle exceptions here
           console.error("An error occurred", error);
+    throw error;
+
       }
   };
   return (

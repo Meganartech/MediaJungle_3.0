@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.controller.CategoryController;
 import com.VsmartEngine.MediaJungle.controller.VideoCastAndCrewController;
@@ -84,6 +87,8 @@ public class test {
 	
 	@Autowired
 	private AudioMovieNameBannerRepository audiomovienamebannerrepository;
+	
+	private static final Logger logger = LoggerFactory.getLogger(test.class);
 	
 //	@PostMapping("/test")
 //	public ResponseEntity<?> testaudio( @RequestParam("audio_title") String audioTitle,
@@ -282,6 +287,7 @@ public class test {
 			return ResponseEntity.ok().build();
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
 	    }
 	}
@@ -310,6 +316,7 @@ public class test {
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
@@ -339,6 +346,7 @@ public class test {
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();  // Replace with proper logging in production
+	        logger.error("", e);
 	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 	}
@@ -365,6 +373,7 @@ public class test {
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();  // Replace with proper logging in production
+	        logger.error("", e);
 	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 	}
@@ -529,6 +538,7 @@ public class test {
 			return ResponseEntity.ok().build();
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("", e);
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data");
 		}
 	}

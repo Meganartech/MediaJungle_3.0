@@ -24,9 +24,9 @@ const Dashboard = () => {
         throw new Error('Network response was not ok');
         // setValid(response.data.valid);
       setIsEmpty(response.data.empty);
-      console.log("Is empty: " + isEmpty); 
-      // console.log("Valid: " + valid);
-      console.log("--------------------------------------------------------------------");
+      // console.log("Is empty: " + isEmpty); 
+      // // console.log("Valid: " + valid);
+      // console.log("--------------------------------------------------------------------");
       
       }
       return response.json();
@@ -36,12 +36,13 @@ const Dashboard = () => {
       setIsEmpty(data.empty);
       setIsvalid(data.valid)
       // console.log(" Empty "+data.empty+" not empty"+!data.empty);
-      console.log(" valid "+data.valid+" not valid"+!data.valid);
+      // console.log(" valid "+data.valid+" not valid"+!data.valid);
       // // console.log(test);
      
     })
     .catch(error => {
       console.error('Error fetching data:', error);
+      throw error;
     });
   }, []);
   //..............................Admin Functions..........................................
@@ -52,7 +53,7 @@ const Dashboard = () => {
       const storedData = localStorage.getItem('mySessionData')
       // const val2=localStorage.getItem('login')
       // console.log("inadd"+log)
-      console.log("session data"+localStorage.getItem('mySessionData'));
+      // console.log("session data"+localStorage.getItem('mySessionData'));
       // setIsuserLogged(val2);
       // console.log("inside the app.js sessionvakue :", storedData);
       // console.log("inside the app.js val2 :", val2);
@@ -67,8 +68,8 @@ const Dashboard = () => {
   //..............................User Functions..........................................
   const username = sessionStorage.getItem('username');
   const userid =sessionStorage.getItem('id');
-  console.log('Retrieved username:', username);
-  console.log('Retrieved username:', name);
+  // console.log('Retrieved username:', username);
+  // console.log('Retrieved username:', name);
   const [all, setall] = useState(null);
   const [getall, setGetall] = useState(null);
   const [GetUser,setGetUser] = useState(null)
@@ -89,6 +90,7 @@ const Dashboard = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -117,11 +119,12 @@ const Dashboard = () => {
                 [video.id]: `data:image/png;base64,${data.videoThumbnail}`,
               }));
             })
-            .catch(error => console.error('Error fetching video images:', error));
+            .catch(error => {console.error('Error fetching video images:', error);throw error;});
         });
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
   
@@ -144,6 +147,7 @@ const Dashboard = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -162,6 +166,7 @@ const Dashboard = () => {
     })
     .catch(error =>{
       console.error('Error fetching data:',error)
+      throw error;
     });
    },[]);
 
@@ -179,6 +184,7 @@ const Dashboard = () => {
     })
     .catch(error =>{
       console.error('Error fetching data:',error)
+      throw error;
     });
    },[]);
 
@@ -289,7 +295,9 @@ const Dashboard = () => {
     <div className="latest-users">
     <h4>Latest users <span>Last 15 Days</span></h4>
     <div className="users-list">
-        {getuser.map(user => (
+    {getuser.length === 0 ? (
+        <p>No users found.</p>
+    ) : (getuser.map(user => (
             <div key={user.id} className="user-container">
                 <div className="user-icon">
                     <i className="fas fa-user"></i> {/* Person icon */}
@@ -299,7 +307,8 @@ const Dashboard = () => {
                     <span className="time-ago">{getTimeAgo(user.date)}</span> {/* Time */}
                 </div>
             </div>
-        ))}
+        ))
+      )}
     </div>
 </div>
 

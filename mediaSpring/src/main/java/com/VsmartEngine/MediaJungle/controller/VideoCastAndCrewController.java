@@ -4,6 +4,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
 import com.VsmartEngine.MediaJungle.model.CastandCrew;
 import com.VsmartEngine.MediaJungle.model.VideoCastAndCrew;
@@ -42,6 +45,7 @@ public class VideoCastAndCrewController {
 	private AudioCastandCrewRepository Audiocastandcrewrepository;
 	
 	
+	private static final Logger logger = LoggerFactory.getLogger(VideoCastAndCrewController.class);
 
 
     public ResponseEntity<?> saveVideoCastAndCrew(
@@ -74,6 +78,7 @@ public class VideoCastAndCrewController {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

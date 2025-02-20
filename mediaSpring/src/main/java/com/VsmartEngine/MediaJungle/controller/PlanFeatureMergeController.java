@@ -2,6 +2,8 @@ package com.VsmartEngine.MediaJungle.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.PlanFeatureMerge;
 import com.VsmartEngine.MediaJungle.service.PlanFeatureMergeService;
 
@@ -26,7 +29,8 @@ public class PlanFeatureMergeController {
     @Autowired
     private PlanFeatureMergeService service;
 
-    
+    private static final Logger logger = LoggerFactory.getLogger(PlanFeatureMergeController.class);
+
     public ResponseEntity<List<PlanFeatureMerge>> updatePlanFeatureMerge(
             @RequestBody List<PlanFeatureMerge> planFeatureMerges) {
         try {
@@ -34,6 +38,7 @@ public class PlanFeatureMergeController {
             return new ResponseEntity<>(updatedRecords, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace(); // For debugging, replace with proper logging
+            logger.error("", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -54,6 +59,7 @@ public class PlanFeatureMergeController {
             }
         } catch (Exception e) {
             e.printStackTrace(); // Replace with proper logging
+            logger.error("", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -65,6 +71,7 @@ public class PlanFeatureMergeController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace(); // For debugging, replace with proper logging
+            logger.error("", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -75,6 +82,7 @@ public class PlanFeatureMergeController {
             return new ResponseEntity<>(features, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace(); // For debugging, replace with proper logging
+            logger.error("", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

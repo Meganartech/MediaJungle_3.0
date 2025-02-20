@@ -71,6 +71,7 @@ const EditVideo = (receivedData) => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -89,6 +90,7 @@ const EditVideo = (receivedData) => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
   }, []);
 
@@ -141,6 +143,7 @@ const hasPaymentPlan = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
 
     fetch(`${API_URL}/api/v2/GetAllCertificate`)
@@ -155,6 +158,7 @@ const hasPaymentPlan = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
 
       fetch(`${API_URL}/api/v2/GetAllLanguage`)
@@ -169,6 +173,7 @@ const hasPaymentPlan = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
 
       fetch(`${API_URL}/api/v2/GetAllTag`)
@@ -183,6 +188,7 @@ const hasPaymentPlan = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        throw error;
       });
 
       const fetchData = async () => {
@@ -209,6 +215,7 @@ const hasPaymentPlan = () => {
         // Log the movie name here
         } catch (error) {
             console.error('Error fetching data:', error);
+            throw error;
         }
     };
 
@@ -292,6 +299,7 @@ const hasPaymentPlan = () => {
       console.log('Upload successful!', response.data);
     } catch (error) {
       console.error('Error uploading file:', error);
+      throw error;
     }
   };
   
@@ -335,12 +343,13 @@ const hasPaymentPlan = () => {
         });
     } catch (error) {
         console.error('Error updating video description:', error);
-        Swal.fire({
-            title: 'Error',
-            text: 'There was an error updating the video description.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
+        throw error;
+        // Swal.fire({
+        //     title: 'Error',
+        //     text: 'There was an error updating the video description.',
+        //     icon: 'error',
+        //     confirmButtonText: 'OK'
+        // });
     }
 };
 

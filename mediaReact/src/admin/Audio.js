@@ -43,6 +43,7 @@ const Audio = () => {
       console.log('Fetched Audios:', response.data); // Added console.log()
     } catch (error) {
       console.error('Error:', error);
+      throw error;
     }
   };
 
@@ -73,7 +74,7 @@ const Audio = () => {
     } catch (error) {
       console.error('Error:', error);
       // setDeleteStatus('Error deleting audio');
-      console.log("deleteStatus");
+      throw error;
     }
     
   };

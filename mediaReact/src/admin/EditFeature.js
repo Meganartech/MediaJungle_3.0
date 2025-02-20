@@ -22,6 +22,7 @@ const EditFeature = () => {
       })
       .catch(error => {
         console.error('Error fetching feature:', error);
+        throw error;
       });
   }, [id]);
 
@@ -57,20 +58,21 @@ const handleSubmit = (e) => {
       });
     } else {
       console.log('Error updating feature');
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Error updating feature',
-      });
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error',
+      //   text: 'Error updating feature',
+      // });
     }
   })
   .catch((error) => {
     console.log('Error updating feature:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An error occurred while updating the feature',
-    });
+    throw error;
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Error',
+    //   text: 'An error occurred while updating the feature',
+    // });
   });
 };
 

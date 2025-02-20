@@ -142,6 +142,7 @@ useEffect(() => {
     })
     .catch(error => {
       console.error('Error fetching data:', error);
+      throw error;
     });
     fetchAudioContainers();
 }, []);
@@ -166,6 +167,7 @@ const fetchAudioContainers = async () => {
     })
     .catch(error => {
       console.error('Error fetching data:', error);
+      throw error;
     });
 };
 // console.log(audiocontainer)
@@ -324,12 +326,13 @@ const handleSubmit1 =async () => {
       }
     } catch (error) {
       console.error('Error uploading data:', error);
-      Swal.fire({
-        title: 'Error!',
-        text: 'Error uploading data',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+      throw error;
+      // Swal.fire({
+      //   title: 'Error!',
+      //   text: 'Error uploading data',
+      //   icon: 'error',
+      //   confirmButtonText: 'OK'
+      // });
     }
 
 };
@@ -359,12 +362,13 @@ const handleDelete = async (index) => {
         });
       } catch (error) {
         console.error(error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'Failed to delete the AudioContainer',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
+        throw error;
+        // Swal.fire({
+        //   title: 'Error!',
+        //   text: 'Failed to delete the AudioContainer',
+        //   icon: 'error',
+        //   confirmButtonText: 'OK'
+        // });
       }
     }
     else{

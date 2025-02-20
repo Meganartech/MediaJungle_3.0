@@ -48,6 +48,8 @@ const NavBar = () => {
             .catch(error => {
                 setError(error.message);
                 setLoading(false);
+    throw error;
+
             });
     }, [jwtToken, userId]);
 
@@ -64,6 +66,8 @@ const NavBar = () => {
           })
           .catch(error => {
             console.error('Error fetching data:', error);
+    throw error;
+
           });
     }, []);
 
@@ -114,20 +118,22 @@ const NavBar = () => {
                     sessionStorage.clear();
                     localStorage.clear();
                     window.location.href = "/UserLogin";
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Logout failed',
-                        text: 'Please try again later.',
-                    });
+                // } else {
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Logout failed',
+                //         text: 'Please try again later.',
+                //     });
                 }
             }
         } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred while logging out. Please try again later.',
-            });
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Error',
+            //     text: 'An error occurred while logging out. Please try again later.',
+            // });
+    throw error;
+
         }
     };
 
@@ -151,11 +157,17 @@ const NavBar = () => {
             }
         } catch (error) {
             console.error("Error fetching unread count:", error);
+    throw error;
+
         }
     };
 
     useEffect(() => { 
-        fetchUnreadCount();
+
+        if (token) {
+            fetchUnreadCount().then(count => console.log(count)).catch(error => console.error(error));
+        }
+        
     }, [count]);
 
     const isFreshUser = !user || !user.paymentId || !user.paymentId.expiryDate;

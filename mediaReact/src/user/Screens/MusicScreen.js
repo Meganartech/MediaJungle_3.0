@@ -50,6 +50,8 @@ const MusicScreen = () => {
       setPlaylist(response.data);
     } catch (error) {
       console.error('Error fetching Watch Later videos:', error);
+    throw error;
+
     }
   };
 
@@ -63,6 +65,8 @@ const MusicScreen = () => {
       }
     } catch (error) {
       console.error('Error fetching music list:', error);
+    throw error;
+
     }
   };
 
@@ -82,6 +86,7 @@ const MusicScreen = () => {
       if (isPlaying) {
         audioRef.current.play().catch((err) =>
           console.error("Error playing audio:", err)
+        
         );
       }
     }
@@ -220,6 +225,8 @@ const MusicScreen = () => {
     } catch (error) {
       console.log('Error adding to favorites: ' + error.message); // Handle error
       toast.error("Already Added")
+    throw error;
+
     } 
   };
 
@@ -236,6 +243,8 @@ const MusicScreen = () => {
       fetchMusicList();
     } catch (error) {
       console.log('Error adding to favorites: ' + error.message); // Handle error
+    throw error;
+
       
     } 
   };
@@ -294,6 +303,8 @@ const MusicScreen = () => {
    } catch (error) {
      console.error('Error adding audio to playlist:', error);
      toast.error("Error adding audio to playlist");
+    throw error;
+
      // Optionally, show an error message to the user
    }
  };
@@ -321,6 +332,8 @@ const MusicScreen = () => {
     } catch (error) {
       toast.error("Not created");
       console.error("Error creating playlist:", error.response?.data || error.message);
+    throw error;
+
   
   }
 };

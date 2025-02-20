@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import com.VsmartEngine.MediaJungle.Container.VideoContainerController;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.License;
 import com.VsmartEngine.MediaJungle.model.UserListWithStatus;
@@ -47,6 +50,8 @@ public class AddUserController {
     @Autowired
     private NotificationService notificationservice;
     
+    private static final Logger logger = LoggerFactory.getLogger(AddUserController.class);
+
    
     public ResponseEntity<?> adminRegister(@RequestBody AddUser data) {
 		try {
@@ -76,6 +81,7 @@ public class AddUserController {
 			adduserrepository.save(data);
 			return ResponseEntity.ok("success");
         } catch (Exception e) {
+        	logger.error("", e);
         	 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed");
         }
 	
@@ -115,6 +121,7 @@ public class AddUserController {
             adduserrepository.save(data);
             return ResponseEntity.ok("success");
         } catch (Exception e) {
+        	logger.error("", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed");
         }
     }
@@ -159,6 +166,7 @@ public class AddUserController {
 	    } catch (Exception e) {
 	        // Log the exception for further investigation if needed
 	        e.printStackTrace();
+	        logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during login");
 	    }
 	}
@@ -267,6 +275,7 @@ public class AddUserController {
 		                             .body("{\"message\": \"Admin deleted successfully\"}");
 		    } catch (Exception e) {
 		        // Return an internal server error in case of any exception
+		    	logger.error("", e);
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 		                             .body("{\"message\": \"An error occurred while deleting the admin.\"}");
 		    }
@@ -305,6 +314,7 @@ public class AddUserController {
 
 	        } catch (Exception e) {
 	            // Return an internal server error in case of any exception
+	        	logger.error("", e);
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                    .body("{\"message\": \"An error occurred while deleting admins.\"}");
 	        }
@@ -363,6 +373,7 @@ public class AddUserController {
 
 	        return new ResponseEntity<>("User details updated successfully", HttpStatus.OK);
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return new ResponseEntity<>("Error updating user details", HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
@@ -372,6 +383,7 @@ public class AddUserController {
 	        Optional<AddUser> adminOptional = adduserrepository.findByRole("ADMIN");
 	        return ResponseEntity.ok(Collections.singletonMap("adminExists", adminOptional.isPresent()));
 	    } catch (Exception e) {
+	    	logger.error("", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check admin role");
 	    }
 	}

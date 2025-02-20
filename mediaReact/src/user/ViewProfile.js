@@ -36,6 +36,8 @@ const ViewProfile = () => {
         } catch (err) {
             console.error('Error fetching image:', err);
             setImageSrc(null); // Set imageSrc to null to use a placeholder image
+    throw error;
+
         }
     };
     
@@ -63,6 +65,8 @@ const ViewProfile = () => {
             .catch(error => {
                 setError(error.message);
                 setLoading(false);
+    throw error;
+
             });
     }, [jwtToken, userId]);
 
@@ -116,11 +120,13 @@ const ViewProfile = () => {
             setEditMode(false);
         } catch (error) {
             console.error('Error updating profile:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Failed to update profile',
-                text: 'Please try again later.',
-            });
+    throw error;
+
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Failed to update profile',
+            //     text: 'Please try again later.',
+            // });
         }
     };
     

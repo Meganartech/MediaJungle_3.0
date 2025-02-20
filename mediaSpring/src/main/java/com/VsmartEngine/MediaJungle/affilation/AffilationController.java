@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.VsmartEngine.MediaJungle.LogManagement;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.mail.MessagingException;
@@ -29,6 +33,7 @@ public class AffilationController {
 
 	@Autowired
 	private AffilatersRepository AffilatersRepository;
+	private static final Logger logger = LoggerFactory.getLogger(AffilationController.class);
 
 	public String generateHtmlContent(String referralid, String coupon10, String coupon20) {
 		String htmlContent = """
@@ -299,6 +304,7 @@ public class AffilationController {
 		} catch (MessagingException e) {
 			// Handle the exception
 			e.printStackTrace();
+			logger.error("", e);
 			// You can log the error or rethrow it as a runtime exception, depending on your
 			// needs
 			throw new RuntimeException("Failed to send email", e);

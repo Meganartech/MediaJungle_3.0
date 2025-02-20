@@ -47,6 +47,7 @@ const Licence = () => {
       console.log("audio updated successfully");
     } catch (error) {
       console.error('Error uploading audio:', error);
+      throw error;
     }
     setCategoryId('')
     setAudioFile(null)
