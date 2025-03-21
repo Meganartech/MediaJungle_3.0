@@ -1,5 +1,6 @@
 package com.VsmartEngine.MediaJungle.video;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -42,6 +44,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.VsmartEngine.MediaJungle.LogManagement;
 import com.VsmartEngine.MediaJungle.compresser.ImageUtils;
+import com.VsmartEngine.MediaJungle.ffmpeg.FFmpegService;
 import com.VsmartEngine.MediaJungle.model.AddAd;
 import com.VsmartEngine.MediaJungle.model.AddUser;
 import com.VsmartEngine.MediaJungle.model.CastAndCrewModalDTO;
@@ -73,6 +76,9 @@ public class VideoController {
 	@Value("${project.video}")
 	private String path;
 	
+	@Value("$project.testoutput}")
+	private String testoutput;
+	
 	@Value("${project.videotrailer}")
 	private String trailervideoPath;
 	
@@ -84,6 +90,9 @@ public class VideoController {
 
 	@Autowired
     private FileStorageService fileStorageService;
+	
+	@Autowired
+	private FFmpegService ffmpegservice;
 
 	@Autowired
 	private FileService fileSevice;
@@ -122,126 +131,266 @@ public class VideoController {
 
 	private static final Logger logger = LoggerFactory.getLogger(VideoController.class);
 
-	public ResponseEntity<?> uploadVideoDescription(
-	        @RequestParam("videoTitle") String videoTitle,
-	        @RequestParam("mainVideoDuration") String mainVideoDuration,
-	        @RequestParam("trailerDuration") String trailerDuration,
-	        @RequestParam("rating") String rating,
-	        @RequestParam("language") String language,
-	        @RequestParam("certificateNumber") String certificateNumber,
-	        @RequestParam("videoAccessType") boolean videoAccessType,
-	        @RequestParam("description") String description,
-	        @RequestParam("productionCompany") String productionCompany,
-	        @RequestParam("certificateName") String certificateName,
-	        @RequestParam("castandcrewlist") List<Long> castandcrewlist,
-	        @RequestParam("taglist") List<Long> taglist,
-	        @RequestParam("categorylist") List<Long> categorylist,
-	        @RequestParam("videoThumbnail") MultipartFile videoThumbnail,
-	        @RequestParam("trailerThumbnail") MultipartFile trailerThumbnail,
-	        @RequestParam("userBanner") MultipartFile userBanner,
-	        @RequestParam("video") MultipartFile video,
-	        @RequestParam("trailervideo") MultipartFile trailervideo,
-	        @RequestParam("advertisementTimings") List<String> advertisementTimings,
-//	        @RequestParam("date") String date, // Add this line to accept the date as a string
-	        @RequestHeader("Authorization") String token) {
-
-	    try {
-	        // Validate token
-	        if (!jwtUtil.validateToken(token)) {
-	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-	        }
-	        String email = jwtUtil.getUsernameFromToken(token);
-	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
-
-	        if (opUser.isPresent()) {
-	            AddUser user = opUser.get();
-	            String username = user.getUsername();
-	            
-	            FileModel upload= fileSevice.uploadVideo(path, video);
-	        	String videoname=upload.getVideoFileName();
-	        	FileModel uploadtrailervideo = fileSevice.uploadTrailerVideo(trailervideoPath,trailervideo);
-	        	String trailervideoname = uploadtrailervideo.getVideotrailerfilename();   
-	        	 // Parse the date string into a LocalDate object
-	            LocalDate parsedDate = LocalDate.now();
-	            
-	            // Create and save VideoDescription
-	            VideoDescription newVideo = new VideoDescription();
-	            newVideo.setVideoTitle(videoTitle);
-	            newVideo.setMainVideoDuration(mainVideoDuration);
-	            newVideo.setTrailerDuration(trailerDuration);
-	            newVideo.setVideoAccessType(videoAccessType);
-	            newVideo.setTaglist(taglist);
-	            newVideo.setRating(rating);
-	            newVideo.setProductionCompany(productionCompany);
-	            newVideo.setDescription(description);
-	            newVideo.setCertificateNumber(certificateNumber);
-	            newVideo.setCertificateName(certificateName);
-	            newVideo.setCategorylist(categorylist);
-	            newVideo.setCastandcrewlist(castandcrewlist);
-	            newVideo.setVidofilename(videoname);
-	            newVideo.setVideotrailerfilename(trailervideoname);
-	            newVideo.setDate(parsedDate);
-	            newVideo.setAdvertisementTimings(advertisementTimings);
-	            newVideo.setLanguage(language);
-	        
-	            // Save and get the generated ID
-	            VideoDescription savedDescription = videodescriptionRepository.save(newVideo);
-	            long videoId = savedDescription.getId(); // Get the generated videoId
-
-	            // Create and save VideoImage
-	            VideoImage videoImage = new VideoImage();
-	            videoImage.setVideoId(videoId);
-	            byte[] videothumbnailBytes = ImageUtils.compressImage(videoThumbnail.getBytes());
-	            videoImage.setVideoThumbnail(videothumbnailBytes);
-	            byte[] trailerthumbnailBytes = ImageUtils.compressImage(trailerThumbnail.getBytes());
-	            videoImage.setTrailerThumbnail(trailerthumbnailBytes);
-	            byte[] userbannerBytes = ImageUtils.compressImage(userBanner.getBytes());
-	            videoImage.setUserBanner(userbannerBytes);
-
-	            // Save the VideoImage entity
-	            videoimagerepository.save(videoImage);
-
-	         // Prepare response map
-	            Map<String, Object> response = new HashMap<>();
-	            response.put("videoDescription", savedDescription);
-	            response.put("videoImage", videoImage);
-	            
-	            
-	            String movieName = savedDescription.getVideoTitle();
-	            String heading = movieName +" New Video Added!";
-	            String Description = savedDescription.getDescription();
-	            String link = "/MoviesPage";
-	            String detail = "Sit back, watch, and enjoy this movie.";
-	            
-	         // Create notification with optional file (thumbnail)
-	            Long notifyId = notificationservice.createNotification(username, email, heading, Description,link,detail,Optional.ofNullable(userBanner));
-	            if (notifyId != null) {
-	                Set<String> notiUserSet = new HashSet<>();
-	                // Fetch all admins from AddUser table
-	                List<AddUser> adminUsers = adduserrepository.findAll();
-	                for (AddUser admin : adminUsers) {
-	                    notiUserSet.add(admin.getEmail());
-	                }
-	                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
-	                List<UserRegister> Users = userregisterrepository.findAll();
-	                for (UserRegister userss : Users) {
-	                    notiUserSet.add(userss.getEmail());
-	                }
-	                notificationservice.CommoncreateNotificationUser(notifyId, new ArrayList<>(notiUserSet));
-	                
-	            }
+//	public ResponseEntity<?> uploadVideoDescription(
+//	        @RequestParam("videoTitle") String videoTitle,
+//	        @RequestParam("mainVideoDuration") String mainVideoDuration,
+//	        @RequestParam("trailerDuration") String trailerDuration,
+//	        @RequestParam("rating") String rating,
+//	        @RequestParam("language") String language,
+//	        @RequestParam("certificateNumber") String certificateNumber,
+//	        @RequestParam("videoAccessType") boolean videoAccessType,
+//	        @RequestParam("description") String description,
+//	        @RequestParam("productionCompany") String productionCompany,
+//	        @RequestParam("certificateName") String certificateName,
+//	        @RequestParam("castandcrewlist") List<Long> castandcrewlist,
+//	        @RequestParam("taglist") List<Long> taglist,
+//	        @RequestParam("categorylist") List<Long> categorylist,
+//	        @RequestParam("videoThumbnail") MultipartFile videoThumbnail,
+//	        @RequestParam("trailerThumbnail") MultipartFile trailerThumbnail,
+//	        @RequestParam("userBanner") MultipartFile userBanner,
+//	        @RequestParam("video") MultipartFile video,
+//	        @RequestParam("trailervideo") MultipartFile trailervideo,
+//	        @RequestParam("advertisementTimings") List<String> advertisementTimings,
+////	        @RequestParam("date") String date, // Add this line to accept the date as a string
+//	        @RequestHeader("Authorization") String token) {
+//
+//	    try {
+//	        // Validate token
+//	        if (!jwtUtil.validateToken(token)) {
+//	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//	        }
+//	        String email = jwtUtil.getUsernameFromToken(token);
+//	        Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+//
+//	        if (opUser.isPresent()) {
+//	            AddUser user = opUser.get();
+//	            String username = user.getUsername();
+//	            
+//	            FileModel upload= fileSevice.uploadVideo(path, video);
+//	        	String videoname=upload.getVideoFileName();
+//	        	FileModel uploadtrailervideo = fileSevice.uploadTrailerVideo(trailervideoPath,trailervideo);
+//	        	String trailervideoname = uploadtrailervideo.getVideotrailerfilename();   
+//	        	 // Parse the date string into a LocalDate object
+//	            LocalDate parsedDate = LocalDate.now();
+//	            
+//	            // Create and save VideoDescription
+//	            VideoDescription newVideo = new VideoDescription();
+//	            newVideo.setVideoTitle(videoTitle);
+//	            newVideo.setMainVideoDuration(mainVideoDuration);
+//	            newVideo.setTrailerDuration(trailerDuration);
+//	            newVideo.setVideoAccessType(videoAccessType);
+//	            newVideo.setTaglist(taglist);
+//	            newVideo.setRating(rating);
+//	            newVideo.setProductionCompany(productionCompany);
+//	            newVideo.setDescription(description);
+//	            newVideo.setCertificateNumber(certificateNumber);
+//	            newVideo.setCertificateName(certificateName);
+//	            newVideo.setCategorylist(categorylist);
+//	            newVideo.setCastandcrewlist(castandcrewlist);
+//	            newVideo.setVidofilename(videoname);
+//	            newVideo.setVideotrailerfilename(trailervideoname);
+//	            newVideo.setDate(parsedDate);
+//	            newVideo.setAdvertisementTimings(advertisementTimings);
+//	            newVideo.setLanguage(language);
+//	        
+//	            // Save and get the generated ID
+//	            VideoDescription savedDescription = videodescriptionRepository.save(newVideo);
+//	            long videoId = savedDescription.getId(); // Get the generated videoId
+//
+//	            // Create and save VideoImage
+//	            VideoImage videoImage = new VideoImage();
+//	            videoImage.setVideoId(videoId);
+//	            byte[] videothumbnailBytes = ImageUtils.compressImage(videoThumbnail.getBytes());
+//	            videoImage.setVideoThumbnail(videothumbnailBytes);
+//	            byte[] trailerthumbnailBytes = ImageUtils.compressImage(trailerThumbnail.getBytes());
+//	            videoImage.setTrailerThumbnail(trailerthumbnailBytes);
+//	            byte[] userbannerBytes = ImageUtils.compressImage(userBanner.getBytes());
+//	            videoImage.setUserBanner(userbannerBytes);
+//
+//	            // Save the VideoImage entity
+//	            videoimagerepository.save(videoImage);
+//
+//	         // Prepare response map
+//	            Map<String, Object> response = new HashMap<>();
+//	            response.put("videoDescription", savedDescription);
+//	            response.put("videoImage", videoImage);
+//	            
+//	            
+//	            String movieName = savedDescription.getVideoTitle();
+//	            String heading = movieName +" New Video Added!";
+//	            String Description = savedDescription.getDescription();
+//	            String link = "/MoviesPage";
+//	            String detail = "Sit back, watch, and enjoy this movie.";
+//	            
+//	         // Create notification with optional file (thumbnail)
+//	            Long notifyId = notificationservice.createNotification(username, email, heading, Description,link,detail,Optional.ofNullable(userBanner));
+//	            if (notifyId != null) {
+//	                Set<String> notiUserSet = new HashSet<>();
+//	                // Fetch all admins from AddUser table
+//	                List<AddUser> adminUsers = adduserrepository.findAll();
+//	                for (AddUser admin : adminUsers) {
+//	                    notiUserSet.add(admin.getEmail());
+//	                }
+//	                notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+//	                List<UserRegister> Users = userregisterrepository.findAll();
+//	                for (UserRegister userss : Users) {
+//	                    notiUserSet.add(userss.getEmail());
+//	                }
+//	                notificationservice.CommoncreateNotificationUser(notifyId, new ArrayList<>(notiUserSet));
+//	                
+//	            }
+//	
+//
+//	            return ResponseEntity.ok().body(response);
+//	        } else {
+//	            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//	        }
+//	    } catch (IOException e) {
+//	        e.printStackTrace();
+//	        logger.error("", e);
+//	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//	    }
+//	}
 	
+	public ResponseEntity<?> uploadVideoDescription(
+            @RequestParam("videoTitle") String videoTitle,
+            @RequestParam("mainVideoDuration") String mainVideoDuration,
+            @RequestParam("trailerDuration") String trailerDuration,
+            @RequestParam("rating") String rating,
+            @RequestParam("language") String language,
+            @RequestParam("certificateNumber") String certificateNumber,
+            @RequestParam("videoAccessType") boolean videoAccessType,
+            @RequestParam("description") String description,
+            @RequestParam("productionCompany") String productionCompany,
+            @RequestParam("certificateName") String certificateName,
+            @RequestParam("castandcrewlist") List<Long> castandcrewlist,
+            @RequestParam("taglist") List<Long> taglist,
+            @RequestParam("categorylist") List<Long> categorylist,
+            @RequestParam("videoThumbnail") MultipartFile videoThumbnail,
+            @RequestParam("trailerThumbnail") MultipartFile trailerThumbnail,
+            @RequestParam("userBanner") MultipartFile userBanner,
+            @RequestParam("video") MultipartFile video,
+            @RequestParam("trailervideo") MultipartFile trailervideo,
+            @RequestParam("advertisementTimings") List<String> advertisementTimings,
+            @RequestHeader("Authorization") String token) {
 
-	            return ResponseEntity.ok().body(response);
-	        } else {
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-	        }
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        logger.error("", e);
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-	    }
-	}
+        try {
+            // Validate token
+            if (!jwtUtil.validateToken(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            String email = jwtUtil.getUsernameFromToken(token);
+            Optional<AddUser> opUser = adduserrepository.findByUsername(email);
+
+            if (opUser.isPresent()) {
+                AddUser user = opUser.get();
+                String username = user.getUsername();
+                
+             // ✅ Generate a unique hash-based folder name
+                String hashValue = UUID.randomUUID().toString().replace("-", "");
+                Path videoFolder = Paths.get(path, hashValue);
+                Path dashFolder = videoFolder.resolve("dash");
+
+                // ✅ Create directories if they don’t exist
+                Files.createDirectories(videoFolder);
+                Files.createDirectories(dashFolder);
+
+                // Upload the main video and trailer
+                FileModel upload = fileSevice.uploadVideo(videoFolder.toString(), video);
+                String videoname = upload.getVideoFileName();
+                FileModel uploadtrailervideo = fileSevice.uploadTrailerVideo(trailervideoPath, trailervideo);
+                String trailervideoname = uploadtrailervideo.getVideotrailerfilename();
+                
+                System.out.println("videopath "+videoFolder.toString());
+                System.out.println("testoutput" + dashFolder.toString());   
+                
+                try {
+                	ffmpegservice.generateDASH(videoFolder.resolve(videoname).toString(), dashFolder.toString());
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}  // Generate DASH files for the uploaded video
+                // Create and save VideoDescription
+                VideoDescription newVideo = new VideoDescription();
+                newVideo.setVideoTitle(videoTitle);
+                newVideo.setMainVideoDuration(mainVideoDuration);
+                newVideo.setTrailerDuration(trailerDuration);
+                newVideo.setVideoAccessType(videoAccessType);
+                newVideo.setTaglist(taglist);
+                newVideo.setRating(rating);
+                newVideo.setProductionCompany(productionCompany);
+                newVideo.setDescription(description);
+                newVideo.setCertificateNumber(certificateNumber);
+                newVideo.setCertificateName(certificateName);
+                newVideo.setCategorylist(categorylist);
+                newVideo.setCastandcrewlist(castandcrewlist);
+                newVideo.setVidofilename(videoname);
+                newVideo.setVideotrailerfilename(trailervideoname);
+                newVideo.setFoldername(videoFolder.toString());
+                newVideo.setDate(LocalDate.now());
+                newVideo.setAdvertisementTimings(advertisementTimings);
+                newVideo.setLanguage(language);
+
+                // Set the path to the generated DASH manifest file
+//                String dashManifestPath = "/videos/output/manifest.mpd";  // Set path to your generated manifest file
+//                newVideo.setDashManifestPath(dashManifestPath);
+
+                // Save and get the generated ID
+                VideoDescription savedDescription = videodescriptionRepository.save(newVideo);
+                long videoId = savedDescription.getId(); // Get the generated videoId
+
+                // Create and save VideoImage (thumbnails)
+                VideoImage videoImage = new VideoImage();
+                videoImage.setVideoId(videoId);
+                byte[] videothumbnailBytes = ImageUtils.compressImage(videoThumbnail.getBytes());
+                videoImage.setVideoThumbnail(videothumbnailBytes);
+                byte[] trailerthumbnailBytes = ImageUtils.compressImage(trailerThumbnail.getBytes());
+                videoImage.setTrailerThumbnail(trailerthumbnailBytes);
+                byte[] userbannerBytes = ImageUtils.compressImage(userBanner.getBytes());
+                videoImage.setUserBanner(userbannerBytes);
+
+                // Save the VideoImage entity
+                videoimagerepository.save(videoImage);
+
+                // Prepare response map
+                Map<String, Object> response = new HashMap<>();
+                response.put("videoDescription", savedDescription);
+                response.put("videoImage", videoImage);
+
+                // Send notification about the new video
+                String movieName = savedDescription.getVideoTitle();
+                String heading = movieName + " New Video Added!";
+                String Description = savedDescription.getDescription();
+                String link = "/MoviesPage";
+                String detail = "Sit back, watch, and enjoy this movie.";
+
+                // Create notification with optional file (thumbnail)
+                Long notifyId = notificationservice.createNotification(username, email, heading, description, link, detail, Optional.ofNullable(userBanner));
+                if (notifyId != null) {
+                    Set<String> notiUserSet = new HashSet<>();
+                    // Fetch all admins from AddUser table
+                    List<AddUser> adminUsers = adduserrepository.findAll();
+                    for (AddUser admin : adminUsers) {
+                        notiUserSet.add(admin.getEmail());
+                    }
+                    notificationservice.CommoncreateNotificationAdmin(notifyId, new ArrayList<>(notiUserSet));
+                    List<UserRegister> Users = userregisterrepository.findAll();
+                    for (UserRegister userss : Users) {
+                        notiUserSet.add(userss.getEmail());
+                    }
+                    notificationservice.CommoncreateNotificationUser(notifyId, new ArrayList<>(notiUserSet));
+                }
+
+                return ResponseEntity.ok().body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 	
 
 	public ResponseEntity<List<VideoDescription>> getAllVideo() {
@@ -319,9 +468,13 @@ private int convertToSeconds(String time) {
              return ResponseEntity.notFound().build();
          }
          String filename =optionalLesson.get().getVidofilename();
-
+         //-----new-----
+         String folder = optionalLesson.get().getFoldername();
+         //---end----
+         
          if (filename != null) {
-         	Path filePath = Paths.get(path, filename);
+//         	Path filePath = Paths.get(path, filename);
+        	 Path filePath = Paths.get(folder,filename);
          	System.out.println("filePath"+ filePath);
  		    try {
  		        if (filePath.toFile().exists() && filePath.toFile().isFile()) {
@@ -428,6 +581,58 @@ private int convertToSeconds(String time) {
      
  }
 	 
+
+	 
+	 public ResponseEntity<Resource> getVideoSegment(@PathVariable Long id, @PathVariable String filename) {
+		    try {
+		        Optional<VideoDescription> optionalVideo = videodescriptionRepository.findById(id);
+		        if (!optionalVideo.isPresent()) {
+		            return ResponseEntity.notFound().build();
+		        }
+
+		        // Get the folder path from database
+		        String folder = optionalVideo.get().getFoldername();
+		        Path videoDirectory = Paths.get(folder, "dash").toAbsolutePath().normalize();
+		        Path filePath = videoDirectory.resolve(filename).normalize();
+
+		        // Debugging
+		        System.out.println("Requested file: " + filePath);
+
+		        // Prevent Path Traversal Attacks
+		        if (!filePath.startsWith(videoDirectory)) {
+		            System.out.println("Forbidden access attempt: " + filePath);
+		            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		        }
+
+		        // Load the file as a resource
+		        Resource resource = new UrlResource(filePath.toUri());
+		        if (!resource.exists() || !resource.isReadable()) {
+		            System.out.println("File not found: " + filePath);
+		            return ResponseEntity.notFound().build();
+		        }
+
+		        // Determine Content-Type
+		        String contentType = Files.probeContentType(filePath);
+		        if (contentType == null) {
+		            if (filename.endsWith(".mpd")) {
+		                contentType = "application/dash+xml"; // MPD files
+		            } else if (filename.endsWith(".m4s")) {
+		                contentType = "application/octet-stream"; // Video segments
+		            } else {
+		                contentType = "video/mp4"; // Default for videos
+		            }
+		        }
+
+		        HttpHeaders headers = new HttpHeaders();
+		        headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+
+		        return ResponseEntity.ok().headers(headers).body(resource);
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		    }
+		}
+
 //	 private long videoStartTime = 0; // Track the video start time
 //
 //	    public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {

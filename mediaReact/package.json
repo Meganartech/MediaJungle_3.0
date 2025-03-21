@@ -22,6 +22,7 @@
     "core-js-pure": "^3.35.0",
     "cross-env": "^7.0.3",
     "crypto-browserify": "^3.12.0",
+    "dashjs": "^5.0.0",
     "lit": "^2.8.0",
     "rc-drawer": "^6.5.2",
     "react": "^18.2.0",
@@ -46,6 +47,7 @@
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.11.1",
     "swiper": "^11.1.4",
+    "video.js": "^8.22.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
