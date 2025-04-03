@@ -31,6 +31,7 @@ public class VideoDescription {
 	private String certificateName;
 	private String vidofilename;
 	private String videotrailerfilename;
+	private String foldername;
 	
 	private List<Long> castandcrewlist = new ArrayList<>();
 	private List<Long> taglist = new ArrayList<>();
@@ -47,7 +48,7 @@ public class VideoDescription {
 
 	public VideoDescription(long id, String videoTitle, String mainVideoDuration, String trailerDuration, String rating,
 			String language, String certificateNumber, boolean videoAccessType, String description,
-			String productionCompany, String certificateName, String vidofilename, String videotrailerfilename,
+			String productionCompany, String certificateName, String vidofilename, String videotrailerfilename, String foldername,
 			List<Long> castandcrewlist, List<Long> taglist, List<Long> categorylist, LocalDate date,
 			List<String> advertisementTimings) {
 		super();
@@ -64,6 +65,7 @@ public class VideoDescription {
 		this.certificateName = certificateName;
 		this.vidofilename = vidofilename;
 		this.videotrailerfilename = videotrailerfilename;
+		this.foldername = foldername;
 		this.castandcrewlist = castandcrewlist;
 		this.taglist = taglist;
 		this.categorylist = categorylist;
@@ -214,6 +216,16 @@ public class VideoDescription {
 	public void setAdvertisementTimings(List<String> advertisementTimings) {
 		this.advertisementTimings = advertisementTimings;
 	}
+
+	public String getFoldername() {
+		return foldername;
+	}
+
+	public void setFoldername(String foldername) {
+		this.foldername = foldername;
+	}
+	
+	
 	
 	
 	

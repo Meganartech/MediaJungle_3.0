@@ -1145,6 +1145,11 @@ public ResponseEntity<HttpStatus> deleteTenure(@PathVariable long id){
 		 public ResponseEntity<?> getVideo(@PathVariable Long id, HttpServletRequest request) {	
 			return VideoController.getVideo(id, request);
 		}
+		 
+		 @GetMapping("/{id}/dash/{filename:.+}")
+		 public ResponseEntity<Resource> getVideoSegment(@PathVariable Long id, @PathVariable String filename) {
+			 return VideoController.getVideoSegment(id, filename);
+		 }
 		
 		 @GetMapping("/{id}/trailerfile")
 		 public ResponseEntity<?> getVideotrailer(@PathVariable Long id, HttpServletRequest request) {
