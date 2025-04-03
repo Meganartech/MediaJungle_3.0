@@ -13,6 +13,31 @@ const MoviesPage = () => {
   const [bannerIndex, setBannerIndex] = useState(0); // Track banner index for sliding
   const userid = sessionStorage.getItem("userId");
 
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // useEffect(() => {
+  //   // Fetch user information from your backend
+  //   fetch('http://localhost:8080/auth/userinfo', {
+  //     credentials: 'include' // Ensures cookies (session details) are sent
+  //   })
+  //     .then(response => {
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch user info');
+  //       }
+  //       return response.json();
+  //     })
+  //     .then(data => {
+  //       setUserInfo(data);
+  //       console.log(data);
+  //       setLoading(false);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching user info:', error);
+  //       setLoading(false);
+  //     });
+  // }, []);
+
   // Fetch video banners (if needed, but not used in your current code)
   const fetchVideoBanners = async () => {
     try {
